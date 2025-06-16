@@ -1,0 +1,132 @@
+# Build directories
+build/
+build-*/
+out/
+cmake-build-*/
+
+# Visual Studio
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# CPack
+_CPack_Packages/
+*.dmg
+*.gz
+*.sh
+*.Z
+
+# IDE
+*.cbp
+*.workspace
+*.layout
+*.depend
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.tlog
+*.ilk
+*.meta
+*.pdb
+*.idb
+*.ipdb
+*.iobj
+*.ipch
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Package managers
+conan.lock
+vcpkg_installed/
+
+# Documentation builds
+docs/_build/
+docs/html/
+docs/latex/
+
+# Test results
+Testing/
+test_results/
+*.gcov
+*.gcda
+*.gcno
+
+# Backup files
+*~
+*.bak
+*.swp
+*.swo
+
+# Local configuration
+local_config.json
+vaporcore_local.ini
+*.local
+
+# Archives
+*.7z
+*.rar
+*.zip
+*.tar.gz
+*.tgz 
