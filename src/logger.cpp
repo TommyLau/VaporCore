@@ -1,6 +1,6 @@
 /*
  * VaporCore Steam API Implementation
- * Copyright (c) 2024 Tommy Lau <tommy.lhg@gmail.com>
+ * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
  * 
  * This file is part of VaporCore.
  * 

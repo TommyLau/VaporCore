@@ -1,6 +1,6 @@
 /*
  * VaporCore Steam API Implementation
- * Copyright (c) 2024 Tommy Lau <tommy.lhg@gmail.com>
+ * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
  * 
  * This file is part of VaporCore.
  * 
@@ -13,9 +13,10 @@
 #include <cstdlib>
 #include "../include/sdk/100/steam_api.h"
 #include "logger.h"
+#include "steam_client.h"
 
 // Global Steam client interface pointer
-static ISteamClient* g_pSteamClient = nullptr;
+static Steam_Client* g_pSteamClient = nullptr;
 
 // Global interface pointers
 static ISteamUser* g_pSteamUser = nullptr;
@@ -31,6 +32,9 @@ static ISteamMatchmakingServers* g_pSteamMatchmakingServers = nullptr;
 static HSteamPipe g_hSteamPipe = 0;
 static HSteamUser g_hSteamUser = 0;
 
+// Global initialization counter
+static uintp g_uSteamAPICallCounter = 0;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 //	Steam API setup & shutdown
 //
@@ -40,21 +44,34 @@ static HSteamUser g_hSteamUser = 0;
 
 // S_API void SteamAPI_Init(); (see below)
 S_API void SteamAPI_Shutdown() {
+    // TODO: Implement SteamAPI_Shutdown
     VLOG_INFO("SteamAPI_Shutdown called");
     
-    // Clean up global interface pointers
-    g_pSteamClient = nullptr;
+    if (g_pSteamClient && g_hSteamPipe) {
+        // Release user and pipe through Steam client
+        //g_pSteamClient->ReleaseUser(g_hSteamPipe, g_hSteamUser);
+        g_pSteamClient->BReleaseSteamPipe(g_hSteamPipe);
+    }
+
+    // Clean up global interface pointers in the order as in the header
+    g_uSteamAPICallCounter--;
+
     g_pSteamUser = nullptr;
     g_pSteamFriends = nullptr;
     g_pSteamUtils = nullptr;
     g_pSteamMatchmaking = nullptr;
+    g_pSteamMatchmakingServers = nullptr;
     g_pSteamUserStats = nullptr;
     g_pSteamApps = nullptr;
     g_pSteamNetworking = nullptr;
-    g_pSteamMatchmakingServers = nullptr;
-    
-    g_hSteamPipe = 0;
+
     g_hSteamUser = 0;
+    g_hSteamPipe = 0;
+
+    if (g_uSteamAPICallCounter == 0) {
+        Steam_Client::ReleaseInstance();
+        g_pSteamClient = nullptr;
+    }
     
     VLOG_INFO("SteamAPI_Shutdown completed");
 }
@@ -97,7 +114,43 @@ S_API bool SteamAPI_Init() {
 #endif
 
     VLOG_INFO("SteamAPI_Init called");
+
+    if(g_hSteamPipe) {
+        VLOG_INFO("SteamAPI_Init already initialized");
+        return true;
+    }
+    
+    // Initialize Steam client
+    g_pSteamClient = Steam_Client::GetInstance();
+    if (!g_pSteamClient) {
+        VLOG_ERROR("Failed to create Steam client instance");
+        return false;
+    }
+    
+    // Create steam pipe and connect to global user
+    g_hSteamPipe = g_pSteamClient->CreateSteamPipe();
+    g_hSteamUser = g_pSteamClient->ConnectToGlobalUser(g_hSteamPipe);
+    g_uSteamAPICallCounter++;
+
+    /*
+    if (g_hSteamPipe == 0 || g_hSteamUser == 0) {
+        VLOG_ERROR("Failed to create Steam pipe or connect to user");
+        return false;
+    }
+    
+    // Get interface pointers
+    g_pSteamUser = g_pSteamClient->GetISteamUser(g_hSteamUser, g_hSteamPipe, STEAMUSER_INTERFACE_VERSION);
+    g_pSteamFriends = g_pSteamClient->GetISteamFriends(g_hSteamUser, g_hSteamPipe, STEAMFRIENDS_INTERFACE_VERSION);
+    g_pSteamUtils = g_pSteamClient->GetISteamUtils(g_hSteamPipe, STEAMUTILS_INTERFACE_VERSION);
+    g_pSteamMatchmaking = g_pSteamClient->GetISteamMatchmaking(g_hSteamUser, g_hSteamPipe, STEAMMATCHMAKING_INTERFACE_VERSION);
+    g_pSteamUserStats = g_pSteamClient->GetISteamUserStats(g_hSteamUser, g_hSteamPipe, STEAMUSERSTATS_INTERFACE_VERSION);
+    g_pSteamApps = g_pSteamClient->GetISteamApps(g_hSteamUser, g_hSteamPipe, STEAMAPPS_INTERFACE_VERSION);
+    g_pSteamNetworking = g_pSteamClient->GetISteamNetworking(g_hSteamUser, g_hSteamPipe, STEAMNETWORKING_INTERFACE_VERSION);
+    g_pSteamMatchmakingServers = g_pSteamClient->GetISteamMatchmakingServers(g_hSteamUser, g_hSteamPipe, STEAMMATCHMAKINGSERVERS_INTERFACE_VERSION);
+
     VLOG_INFO("SteamAPI_Init completed successfully");
+    */
+
     return true;
 }
 
