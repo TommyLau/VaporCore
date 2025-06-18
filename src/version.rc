@@ -1,0 +1,39 @@
+#include <windows.h>
+#include "version.h"
+
+#ifdef _WIN32
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     VAPORCORE_VERSION_MAJOR, VAPORCORE_VERSION_MINOR, VAPORCORE_VERSION_PATCH, VAPORCORE_VERSION_BUILD
+PRODUCTVERSION  VAPORCORE_VERSION_MAJOR, VAPORCORE_VERSION_MINOR, VAPORCORE_VERSION_PATCH, VAPORCORE_VERSION_BUILD
+FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+#ifdef _DEBUG
+FILEFLAGS       VS_FF_DEBUG
+#else
+FILEFLAGS       0x0L
+#endif
+FILEOS          VOS__WINDOWS32
+FILETYPE        VFT_DLL
+FILESUBTYPE     VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"  // US English, Unicode
+        BEGIN
+            VALUE "CompanyName",      VAPORCORE_COMPANY_NAME
+            VALUE "FileDescription",  VAPORCORE_DESCRIPTION
+            VALUE "FileVersion",      VAPORCORE_VERSION_STRING
+            VALUE "InternalName",     VAPORCORE_INTERNAL_NAME
+            VALUE "LegalCopyright",   VAPORCORE_COPYRIGHT
+            VALUE "OriginalFilename", VAPORCORE_FILENAME ".dll"
+            VALUE "ProductName",      VAPORCORE_PRODUCT_NAME
+            VALUE "ProductVersion",   VAPORCORE_VERSION_STRING_SHORT
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200  // US English, Unicode
+    END
+END
+
+#endif // _WIN32 

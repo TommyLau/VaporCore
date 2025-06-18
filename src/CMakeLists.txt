@@ -20,10 +20,18 @@ file(GLOB_RECURSE VAPORCORE_HEADERS
     "*.hxx"
 )
 
+# Add Windows resource file
+if(WIN32)
+    set(VAPORCORE_RESOURCES
+        version.rc
+    )
+endif()
+
 # Define the main library target
 add_library(steam_api SHARED
     ${VAPORCORE_SOURCES}
     ${VAPORCORE_HEADERS}
+    ${VAPORCORE_RESOURCES}
 )
 
 # Set target properties
@@ -35,6 +43,9 @@ set_target_properties(steam_api PROPERTIES
 
 # Platform-specific configurations
 if(WIN32)
+    # Enable resource compiler
+    enable_language(RC)
+    
     # Windows-specific settings
     set_target_properties(steam_api PROPERTIES
         SUFFIX ".dll"
