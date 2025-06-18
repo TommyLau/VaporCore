@@ -146,7 +146,6 @@ if %BUILD_RELEASE%==1 if %BUILD_X86%==1 echo Release x86:   %BUILD_ROOT%\release
 if %BUILD_RELEASE%==1 if %BUILD_X64%==1 echo Release x64:   %BUILD_ROOT%\release\steam_api64.dll
 echo ====================================================================
 
-pause
 goto :eof
 
 :BuildConfiguration

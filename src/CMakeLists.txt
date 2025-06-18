@@ -1,4 +1,11 @@
-# VaporCore Steam API Library
+#
+# VaporCore Steam API Implementation
+# Copyright (c) 2024 Tommy Lau <tommy.lhg@gmail.com>
+# 
+# This file is part of VaporCore.
+# 
+# Author: Tommy Lau <tommy.lhg@gmail.com>
+#
 
 # Collect all source files
 file(GLOB_RECURSE VAPORCORE_SOURCES
@@ -87,6 +94,7 @@ if(MSVC)
     target_compile_options(steam_api PRIVATE
         $<$<CONFIG:Release>:/O2 /Ob2 /DNDEBUG>
         $<$<CONFIG:Debug>:/Od /Zi>
+        /wd4819  # Disable C4819: character encoding warning
     )
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     target_compile_options(steam_api PRIVATE

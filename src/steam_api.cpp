@@ -1,12 +1,18 @@
-//====== Copyright © 1996-2008, Valve Corporation, All rights reserved. =======
-//
-// Purpose: Steam API implementation
-//
-//=============================================================================
+/*
+ * VaporCore Steam API Implementation
+ * Copyright (c) 2024 Tommy Lau <tommy.lhg@gmail.com>
+ * 
+ * This file is part of VaporCore.
+ * 
+ * Author: Tommy Lau <tommy.lhg@gmail.com>
+ * 
+ * Purpose: Steam API implementation
+ */
 
 #include <cstring>
 #include <cstdlib>
 #include "../include/sdk/100/steam_api.h"
+#include "logger.h"
 
 // Global Steam client interface pointer
 static ISteamClient* g_pSteamClient = nullptr;
@@ -34,7 +40,23 @@ static HSteamUser g_hSteamUser = 0;
 
 // S_API void SteamAPI_Init(); (see below)
 S_API void SteamAPI_Shutdown() {
-    // TODO: Implement SteamAPI_Shutdown
+    VLOG_INFO("SteamAPI_Shutdown called");
+    
+    // Clean up global interface pointers
+    g_pSteamClient = nullptr;
+    g_pSteamUser = nullptr;
+    g_pSteamFriends = nullptr;
+    g_pSteamUtils = nullptr;
+    g_pSteamMatchmaking = nullptr;
+    g_pSteamUserStats = nullptr;
+    g_pSteamApps = nullptr;
+    g_pSteamNetworking = nullptr;
+    g_pSteamMatchmakingServers = nullptr;
+    
+    g_hSteamPipe = 0;
+    g_hSteamUser = 0;
+    
+    VLOG_INFO("SteamAPI_Shutdown completed");
 }
 
 // crash dump recording functions
@@ -69,11 +91,19 @@ S_API bool SteamAPI_InitSafe() {
 
 S_API bool SteamAPI_Init() {
     // TODO: Implement SteamAPI_Init
+#ifdef VAPORCORE_ENABLE_LOGGING
+    // Initialize logger
+    VaporCore::Logger::getInstance().initialize("vaporcore_log.txt");
+#endif
+
+    VLOG_INFO("SteamAPI_Init called");
+    VLOG_INFO("SteamAPI_Init completed successfully");
     return true;
 }
 
 S_API ISteamUser *SteamUser() {
     // TODO: Implement SteamUser
+    VLOG_DEBUG("SteamUser() called");
     return g_pSteamUser;
 }
 

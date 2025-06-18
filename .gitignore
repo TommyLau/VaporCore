@@ -88,6 +88,9 @@ _CPack_Packages/
 *.iobj
 *.ipch
 
+# VaporCore log files
+vaporcore_log.txt
+
 # OS generated files
 .DS_Store
 .DS_Store?
