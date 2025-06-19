@@ -19,6 +19,7 @@
 #include <fstream>
 #include <mutex>
 #include <memory>
+#include <sstream>
 
 namespace VaporCore {
 
@@ -38,10 +39,33 @@ public:
     void setEnabled(bool enabled);
     
     void log(LogLevel level, const std::string& message);
-    void debug(const std::string& message);
-    void info(const std::string& message);
-    void warning(const std::string& message);
-    void error(const std::string& message);
+
+    // Variadic template methods for format-style logging
+    template<typename... Args>
+    void debug(const char* format, Args... args) {
+        log(LogLevel::DEBUG, formatMessage(format, args...));
+    }
+
+    template<typename... Args>
+    void info(const char* format, Args... args) {
+        log(LogLevel::INFO, formatMessage(format, args...));
+    }
+
+    template<typename... Args>
+    void warning(const char* format, Args... args) {
+        log(LogLevel::WARNING, formatMessage(format, args...));
+    }
+
+    template<typename... Args>
+    void error(const char* format, Args... args) {
+        log(LogLevel::ERROR, formatMessage(format, args...));
+    }
+
+    // Single string overloads
+    void debug(const std::string& message) { log(LogLevel::DEBUG, message); }
+    void info(const std::string& message) { log(LogLevel::INFO, message); }
+    void warning(const std::string& message) { log(LogLevel::WARNING, message); }
+    void error(const std::string& message) { log(LogLevel::ERROR, message); }
     
     ~Logger();
 
@@ -52,6 +76,18 @@ private:
     
     std::string getCurrentTimestamp();
     std::string levelToString(LogLevel level);
+
+    template<typename... Args>
+    std::string formatMessage(const char* format, Args... args) {
+        int size = snprintf(nullptr, 0, format, args...);
+        if (size <= 0) return "Format error";
+        
+        std::string result;
+        result.resize(size + 1);
+        snprintf(&result[0], size + 1, format, args...);
+        result.pop_back(); // Remove null terminator
+        return result;
+    }
     
     std::ofstream m_logFile;
     std::mutex m_mutex;
@@ -60,21 +96,21 @@ private:
     bool m_initialized = false;
 };
 
-// Convenience macros
-#define VLOG_DEBUG(msg) VaporCore::Logger::getInstance().debug(msg)
-#define VLOG_INFO(msg) VaporCore::Logger::getInstance().info(msg)
-#define VLOG_WARNING(msg) VaporCore::Logger::getInstance().warning(msg)
-#define VLOG_ERROR(msg) VaporCore::Logger::getInstance().error(msg)
+// Convenience macros with variadic arguments support
+#define VLOG_DEBUG(...) VaporCore::Logger::getInstance().debug(__VA_ARGS__)
+#define VLOG_INFO(...) VaporCore::Logger::getInstance().info(__VA_ARGS__)
+#define VLOG_WARNING(...) VaporCore::Logger::getInstance().warning(__VA_ARGS__)
+#define VLOG_ERROR(...) VaporCore::Logger::getInstance().error(__VA_ARGS__)
 
 } // namespace VaporCore
 
 #else
 
 // When logging is disabled, define empty macros
-#define VLOG_DEBUG(msg) ((void)0)
-#define VLOG_INFO(msg) ((void)0)
-#define VLOG_WARNING(msg) ((void)0)
-#define VLOG_ERROR(msg) ((void)0)
+#define VLOG_DEBUG(...) ((void)0)
+#define VLOG_INFO(...) ((void)0)
+#define VLOG_WARNING(...) ((void)0)
+#define VLOG_ERROR(...) ((void)0)
 
 #endif // VAPORCORE_ENABLE_LOGGING
 

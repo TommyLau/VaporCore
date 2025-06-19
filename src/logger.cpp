@@ -9,12 +9,13 @@
 
 #ifdef VAPORCORE_ENABLE_LOGGING
 
-#include "logger.h"
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <chrono>
 #include <ctime>
+
+#include "logger.h"
 
 namespace VaporCore {
 
@@ -79,22 +80,6 @@ void Logger::log(LogLevel level, const std::string& message) {
     if (level >= LogLevel::WARNING) {
         std::cerr << "[" << levelToString(level) << "] " << message << std::endl;
     }
-}
-
-void Logger::debug(const std::string& message) {
-    log(LogLevel::DEBUG, message);
-}
-
-void Logger::info(const std::string& message) {
-    log(LogLevel::INFO, message);
-}
-
-void Logger::warning(const std::string& message) {
-    log(LogLevel::WARNING, message);
-}
-
-void Logger::error(const std::string& message) {
-    log(LogLevel::ERROR, message);
 }
 
 Logger::~Logger() {
