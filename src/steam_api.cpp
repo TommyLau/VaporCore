@@ -11,7 +11,7 @@
 
 #include <cstring>
 #include <cstdlib>
-#include "../include/sdk/100/steam_api.h"
+#include "../include/sdk/steam_api.h"
 #include "logger.h"
 #include "steam_client.h"
 

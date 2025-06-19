@@ -17,7 +17,7 @@
 
 #include <mutex>
 
-#include "../include/sdk/100/steam_api.h"
+#include "../include/sdk/steam_api.h"
 
 namespace VaporCore {
     

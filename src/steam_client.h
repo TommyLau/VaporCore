@@ -17,7 +17,7 @@
 
 #include <map>
 
-#include "../include/sdk/100/steam_api.h"
+#include "../include/sdk/steam_api.h"
 
 // Steam pipe state enumeration
 enum Steam_Pipe {
