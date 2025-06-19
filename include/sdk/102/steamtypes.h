@@ -1,11 +1,8 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//========= Copyright © 1996-2008, Valve LLC, All rights reserved. ============
+//
+// Purpose:
+//
+//=============================================================================
 
 #ifndef STEAMTYPES_H
 #define STEAMTYPES_H
@@ -61,12 +58,7 @@ typedef unsigned int uintp;
 
 #endif // else _WIN32
 
-// Removed from Steam SDK v1.02, backward compatibility
-const int k_cubDigestSize = 20;							// CryptoPP::SHA::DIGESTSIZE
 const int k_cubSaltSize   = 8;
-
-// Removed from Steam SDK v1.02, backward compatibility
-typedef	uint8 SHADigest_t[ k_cubDigestSize ];
 typedef	uint8 Salt_t[ k_cubSaltSize ];
 
 typedef uint64 GID_t;		// globally unique identifier

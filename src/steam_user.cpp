@@ -107,6 +107,46 @@ void Steam_User::RefreshSteam2Login()
     VLOG_DEBUG("RefreshSteam2Login called");
 }
 
+// get the local storage folder for current Steam account to write application data, e.g. save games, configs etc.
+// this will usually be something like "C:\Progam Files\Steam\userdata\<SteamID>\<AppID>\local"
+bool Steam_User::GetUserDataFolder( char *pchBuffer, int cubBuffer )
+{
+    VLOG_DEBUG("GetUserDataFolder called - Buffer: %s, Size: %d", pchBuffer, cubBuffer);
+    strcpy(pchBuffer, "C:\\Progam Files\\Steam\\userdata\\1234567890\\1234567890\\local");
+    return false;
+}
+
+// Starts voice recording. Once started, use GetCompressedVoice() to get the data
+void Steam_User::StartVoiceRecording( )
+{
+    VLOG_DEBUG("StartVoiceRecording called");
+}
+
+// Stops voice recording. Because people often release push-to-talk keys early, the system will keep recording for
+// a little bit after this function is called. GetCompressedVoice() should continue to be called until it returns
+// k_eVoiceResultNotRecording
+void Steam_User::StopVoiceRecording( )
+{
+    VLOG_DEBUG("StopVoiceRecording called");
+}
+
+// Gets the latest voice data. It should be called as often as possible once recording has started.
+// nBytesWritten is set to the number of bytes written to pDestBuffer. 
+EVoiceResult Steam_User::GetCompressedVoice( void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
+{
+    VLOG_DEBUG("GetCompressedVoice called - Buffer: %s, Size: %d", pDestBuffer, cbDestBufferSize);
+    return EVoiceResult::k_EVoiceResultNotRecording;
+}
+
+// Decompresses a chunk of data produced by GetCompressedVoice(). nBytesWritten is set to the 
+// number of bytes written to pDestBuffer. The output format of the data is 16-bit signed at 
+// 11025 samples per second.
+EVoiceResult Steam_User::DecompressVoice( void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
+{
+    VLOG_DEBUG("DecompressVoice called - Compressed: %s, Size: %d, DestBuffer: %s, DestBufferSize: %d", pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize);
+    return EVoiceResult::k_EVoiceResultNotRecording;
+}
+
 // Helper methods
 Steam_User* Steam_User::GetInstance()
 {

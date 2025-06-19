@@ -55,6 +55,10 @@ public:
 	// returns the appID of the current process
 	uint32 GetAppID() override;
 
+	// Sets the position where the overlay instance for the currently calling game should show notifications.
+	// This position is per-game and if this function is called from outside of a game context it will do nothing.
+	void SetOverlayNotificationPosition( ENotificationPosition eNotificationPosition ) override;
+
     // Helper methods
     static Steam_Utils* GetInstance();
     static void ReleaseInstance();

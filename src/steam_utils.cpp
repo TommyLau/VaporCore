@@ -102,6 +102,13 @@ uint32 Steam_Utils::GetAppID()
     return 0;
 }
 
+// Sets the position where the overlay instance for the currently calling game should show notifications.
+// This position is per-game and if this function is called from outside of a game context it will do nothing.
+void Steam_Utils::SetOverlayNotificationPosition( ENotificationPosition eNotificationPosition )
+{
+    VLOG_DEBUG("SetOverlayNotificationPosition called - Position: %d", eNotificationPosition);
+}
+
 // Helper methods
 Steam_Utils* Steam_Utils::GetInstance()
 {

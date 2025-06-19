@@ -94,9 +94,16 @@ const char *Steam_Friends::GetFriendPersonaName( CSteamID steamIDFriend )
 }
 
 // gets the avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
+// Removed from Steam SDK v1.02, backward compatibility
 int Steam_Friends::GetFriendAvatar( CSteamID steamIDFriend )
 {
     VLOG_DEBUG("GetFriendAvatar called");
+    return 0;
+}
+
+int Steam_Friends::GetFriendAvatar( CSteamID steamIDFriend, int eAvatarSize )
+{
+    VLOG_DEBUG("GetFriendAvatar called - Avatar Size: %d", eAvatarSize);
     return 0;
 }
 

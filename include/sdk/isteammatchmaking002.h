@@ -7,64 +7,53 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef VAPORCORE_STEAM_MATCHMAKING_H
-#define VAPORCORE_STEAM_MATCHMAKING_H
+#ifndef ISTEAMMATCHMAKING002_H
+#define ISTEAMMATCHMAKING002_H
 #ifdef _WIN32
 #pragma once
 #endif
-
-#include <sdk/isteammatchmaking.h>
-#include <sdk/isteammatchmaking002.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for match making services for clients to get to favorites
 //			and to operate on game lobbies.
 //-----------------------------------------------------------------------------
-class Steam_Matchmaking :
-	public ISteamMatchmaking,
-    public ISteamMatchmaking002
+class ISteamMatchmaking002
 {
 public:
-    Steam_Matchmaking();
-    ~Steam_Matchmaking();
+	// game server favorites storage
+	// saves basic details about a multiplayer game server locally
 
 	// returns the number of favorites servers the user has stored
-	int GetFavoriteGameCount() override;
+	virtual int GetFavoriteGameCount() = 0;
 	
 	// returns the details of the game server
 	// iGame is of range [0,GetFavoriteGameCount())
 	// *pnIP, *pnConnPort are filled in the with IP:port of the game server
 	// *punFlags specify whether the game server was stored as an explicit favorite or in the history of connections
 	// *pRTime32LastPlayedOnServer is filled in the with the Unix time the favorite was added
-	bool GetFavoriteGame( int iGame, AppId_t *pnAppID, uint32 *pnIP, uint16 *pnConnPort, uint16 *pnQueryPort, uint32 *punFlags, uint32 *pRTime32LastPlayedOnServer ) override;
+	virtual bool GetFavoriteGame( int iGame, AppId_t *pnAppID, uint32 *pnIP, uint16 *pnConnPort, uint16 *pnQueryPort, uint32 *punFlags, uint32 *pRTime32LastPlayedOnServer ) = 0;
 
 	// adds the game server to the local list; updates the time played of the server if it already exists in the list
-	int AddFavoriteGame( AppId_t nAppID, uint32 nIP, uint16 nConnPort, uint16 nQueryPort, uint32 unFlags, uint32 rTime32LastPlayedOnServer ) override;
+	virtual int AddFavoriteGame( AppId_t nAppID, uint32 nIP, uint16 nConnPort, uint16 nQueryPort, uint32 unFlags, uint32 rTime32LastPlayedOnServer ) =0;
 	
 	// removes the game server from the local storage; returns true if one was removed
-    bool RemoveFavoriteGame( AppId_t nAppID, uint32 nIP, uint16 nConnPort, uint16 nQueryPort, uint32 unFlags ) override;
+    virtual bool RemoveFavoriteGame( AppId_t nAppID, uint32 nIP, uint16 nConnPort, uint16 nQueryPort, uint32 unFlags ) = 0;
+
+	///////
+	// Game lobby functions
 
 	// Get a list of relevant lobbies
 	// this is an asynchronous request
 	// results will be returned by LobbyMatchList_t callback, with the number of servers requested
 	// if the user is not currently connected to Steam (i.e. SteamUser()->BLoggedOn() returns false) then
 	// a LobbyMatchList_t callback will be posted immediately with no servers
-	void RequestLobbyList() override;
-
-	// filters for lobbies
-	// this needs to be called before RequestLobbyList() to take effect
-	// these are cleared on each call to RequestLobbyList()
-	void AddRequestLobbyListFilter( const char *pchKeyToMatch, const char *pchValueToMatch ) override;
-	// numerical comparison - 0 is equal, -1 is the lobby value is less than nValueToMatch, 1 is the lobby value is greater than nValueToMatch
-	void AddRequestLobbyListNumericalFilter( const char *pchKeyToMatch, int nValueToMatch, int nComparisonType /* 0 is equal, -1 is less than, 1 is greater than */ ) override;
-	// sets RequestLobbyList() to only returns lobbies which aren't yet full - needs SetLobbyMemberLimit() called on the lobby to set an initial limit
-	void AddRequestLobbyListSlotsAvailableFilter() override;
+	virtual void RequestLobbyList() = 0;
 
 	// returns the CSteamID of a lobby, as retrieved by a RequestLobbyList call
 	// should only be called after a LobbyMatchList_t callback is received
 	// iLobby is of the range [0, LobbyMatchList_t::m_nLobbiesMatching)
 	// the returned CSteamID::IsValid() will be false if iLobby is out of range
-	CSteamID GetLobbyByIndex( int iLobby ) override;
+	virtual CSteamID GetLobbyByIndex( int iLobby ) = 0;
 
 	// Create a lobby on the Steam servers.
 	// If bPrivate is true, then the lobby will not be returned by any RequestLobbyList() call; the CSteamID
@@ -73,88 +62,76 @@ public:
 	// results will be returned by LobbyCreated_t callback when the lobby has been created;
 	// local user will the join the lobby, resulting in an additional LobbyEnter_t callback being sent
 	// operations on the chat room can only proceed once the LobbyEnter_t has been received
-	void CreateLobby( bool bPrivate ) override;
+	virtual void CreateLobby( bool bPrivate ) = 0;
 
 	// Joins an existing lobby
 	// this is an asynchronous request
 	// results will be returned by LobbyEnter_t callback when the lobby has been joined
-	void JoinLobby( CSteamID steamIDLobby ) override;
+	virtual void JoinLobby( CSteamID steamIDLobby ) = 0;
 
 	// Leave a lobby; this will take effect immediately on the client side
 	// other users in the lobby will be notified by a LobbyChatUpdate_t callback
-	void LeaveLobby( CSteamID steamIDLobby ) override;
+	virtual void LeaveLobby( CSteamID steamIDLobby ) = 0;
 
 	// Invite another user to the lobby
 	// the target user will receive a LobbyInvite_t callback
 	// will return true if the invite is successfully sent, whether or not the target responds
 	// returns false if the local user is not connected to the Steam servers
-	bool InviteUserToLobby( CSteamID steamIDLobby, CSteamID steamIDInvitee ) override;
+	virtual bool InviteUserToLobby( CSteamID steamIDLobby, CSteamID steamIDInvitee ) = 0;
 
+	// Lobby iteration, for viewing details of users in a lobby
+	// only accessible if the lobby user is a member of the specified lobby
+	// persona information for other lobby members (name, avatar, etc.) will be asynchronously received
+	// and accessible via ISteamFriends interface
+	
 	// returns the number of users in the specified lobby
-	int GetNumLobbyMembers( CSteamID steamIDLobby ) override;
+	virtual int GetNumLobbyMembers( CSteamID steamIDLobby ) = 0;
 	// returns the CSteamID of a user in the lobby
 	// iMember is of range [0,GetNumLobbyMembers())
-	CSteamID GetLobbyMemberByIndex( CSteamID steamIDLobby, int iMember ) override;
+	virtual CSteamID GetLobbyMemberByIndex( CSteamID steamIDLobby, int iMember ) = 0;
 
 	// Get data associated with this lobby
 	// takes a simple key, and returns the string associated with it
 	// "" will be returned if no value is set, or if steamIDLobby is invalid
-	const char *GetLobbyData( CSteamID steamIDLobby, const char *pchKey ) override;
+	virtual const char *GetLobbyData( CSteamID steamIDLobby, const char *pchKey ) = 0;
 	// Sets a key/value pair in the lobby metadata
 	// each user in the lobby will be broadcast this new value, and any new users joining will receive any existing data
 	// this can be used to set lobby names, map, etc.
 	// to reset a key, just set it to ""
 	// other users in the lobby will receive notification of the lobby data change via a LobbyDataUpdate_t callback
-	bool SetLobbyData( CSteamID steamIDLobby, const char *pchKey, const char *pchValue ) override;
+	virtual bool SetLobbyData( CSteamID steamIDLobby, const char *pchKey, const char *pchValue ) = 0;
 
 	// As above, but gets per-user data for someone in this lobby
-	const char *GetLobbyMemberData( CSteamID steamIDLobby, CSteamID steamIDUser, const char *pchKey ) override;
+	virtual const char *GetLobbyMemberData( CSteamID steamIDLobby, CSteamID steamIDUser, const char *pchKey ) = 0;
 	// Sets per-user metadata (for the local user implicitly)
-	void SetLobbyMemberData( CSteamID steamIDLobby, const char *pchKey, const char *pchValue ) override;
+	virtual void SetLobbyMemberData( CSteamID steamIDLobby, const char *pchKey, const char *pchValue ) = 0;
 	
 	// Broadcasts a chat message to the all the users in the lobby
 	// users in the lobby (including the local user) will receive a LobbyChatMsg_t callback
 	// returns true if the message is successfully sent
-	bool SendLobbyChatMsg( CSteamID steamIDLobby, const void *pvMsgBody, int cubMsgBody ) override;
+	// pvMsgBody can be binary or text data, up to 4k
+	// if pvMsgBody is text, cubMsgBody should be strlen( text ) + 1, to include the null terminator
+	virtual bool SendLobbyChatMsg( CSteamID steamIDLobby, const void *pvMsgBody, int cubMsgBody ) = 0;
 	// Get a chat message as specified in a LobbyChatMsg_t callback
 	// iChatID is the LobbyChatMsg_t::m_iChatID value in the callback
 	// *pSteamIDUser is filled in with the CSteamID of the member
 	// *pvData is filled in with the message itself
 	// return value is the number of bytes written into the buffer
-	int GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, CSteamID *pSteamIDUser, void *pvData, int cubData, EChatEntryType *peChatEntryType ) override;
+	virtual int GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, CSteamID *pSteamIDUser, void *pvData, int cubData, EChatEntryType *peChatEntryType ) = 0;
 
 	// Fetch metadata for a lobby you're not necessarily in right now
 	// this will send down all the metadata associated with a lobby
 	// this is an asynchronous call
 	// returns false if the local user is not connected to the Steam servers
-	bool RequestLobbyData( CSteamID steamIDLobby ) override;
+	virtual bool RequestLobbyData( CSteamID steamIDLobby ) = 0;
 	
 	// sets the game server associated with the lobby
 	// usually at this point, the users will leave the lobby and join the specified game server
 	// either the IP/Port or the steamID of the game server has to be valid, depending on how you want the clients to be able to connect
-	void SetLobbyGameServer( CSteamID steamIDLobby, uint32 unGameServerIP, uint16 unGameServerPort, CSteamID steamIDGameServer ) override;
-	// returns the details of a game server set in a lobby - returns false if there is no game server set, or that lobby doesn't exist
-	bool GetLobbyGameServer( CSteamID steamIDLobby, uint32 *punGameServerIP, uint16 *punGameServerPort, CSteamID *psteamIDGameServer ) override;
+	virtual void SetLobbyGameServer( CSteamID steamIDLobby, uint32 unGameServerIP, uint16 unGameServerPort, CSteamID steamIDGameServer ) = 0;
 
-	// set the limit on the # of users who can join the lobby
-	bool SetLobbyMemberLimit( CSteamID steamIDLobby, int cMaxMembers ) override;
-	// returns the current limit on the # of users who can join the lobby; returns 0 if no limit is defined
-	int GetLobbyMemberLimit( CSteamID steamIDLobby ) override;
-
-	// asks the Steam servers for a list of lobbies that friends are in
-	// returns results by posting one RequestFriendsLobbiesResponse_t callback per friend/lobby pair
-	// if no friends are in lobbies, RequestFriendsLobbiesResponse_t will be posted but with 0 results
-	// filters don't apply to lobbies (currently)
-	bool RequestFriendsLobbies() override;
-
-    // Helper methods
-    static Steam_Matchmaking* GetInstance();
-    static void ReleaseInstance();
-
-private:
-    // Singleton instance
-    static Steam_Matchmaking* s_pInstance;
 };
 
-#endif // VAPORCORE_STEAM_MATCHMAKING_H
+#define STEAMMATCHMAKING_INTERFACE_VERSION002 "SteamMatchMaking002"
 
+#endif // ISTEAMMATCHMAKING002_H

@@ -67,6 +67,26 @@ void Steam_Matchmaking::RequestLobbyList()
     VLOG_DEBUG("RequestLobbyList called");
 }
 
+// filters for lobbies
+// this needs to be called before RequestLobbyList() to take effect
+// these are cleared on each call to RequestLobbyList()
+void Steam_Matchmaking::AddRequestLobbyListFilter( const char *pchKeyToMatch, const char *pchValueToMatch )
+{
+    VLOG_DEBUG("AddRequestLobbyListFilter called - Key: %s, Value: %s", pchKeyToMatch, pchValueToMatch);
+}
+
+// numerical comparison - 0 is equal, -1 is the lobby value is less than nValueToMatch, 1 is the lobby value is greater than nValueToMatch
+void Steam_Matchmaking::AddRequestLobbyListNumericalFilter( const char *pchKeyToMatch, int nValueToMatch, int nComparisonType /* 0 is equal, -1 is less than, 1 is greater than */ )
+{
+    VLOG_DEBUG("AddRequestLobbyListNumericalFilter called - Key: %s, Value: %d, Comparison Type: %d", pchKeyToMatch, nValueToMatch, nComparisonType);
+}
+
+// sets RequestLobbyList() to only returns lobbies which aren't yet full - needs SetLobbyMemberLimit() called on the lobby to set an initial limit
+void Steam_Matchmaking::AddRequestLobbyListSlotsAvailableFilter()
+{
+    VLOG_DEBUG("AddRequestLobbyListSlotsAvailableFilter called");
+}
+
 // returns the CSteamID of a lobby, as retrieved by a RequestLobbyList call
 // should only be called after a LobbyMatchList_t callback is received
 // iLobby is of the range [0, LobbyMatchList_t::m_nLobbiesMatching)
@@ -202,6 +222,38 @@ void Steam_Matchmaking::SetLobbyGameServer( CSteamID steamIDLobby, uint32 unGame
 {
     VLOG_DEBUG("SetLobbyGameServer called - Lobby: %llu, ServerIP: %u, ServerPort: %u, GameServer: %llu", 
                steamIDLobby.ConvertToUint64(), unGameServerIP, unGameServerPort, steamIDGameServer.ConvertToUint64());
+}
+
+// returns the details of a game server set in a lobby - returns false if there is no game server set, or that lobby doesn't exist
+bool Steam_Matchmaking::GetLobbyGameServer( CSteamID steamIDLobby, uint32 *punGameServerIP, uint16 *punGameServerPort, CSteamID *psteamIDGameServer )
+{
+    VLOG_DEBUG("GetLobbyGameServer called - Lobby: %llu, ServerIP: %u, ServerPort: %u, GameServer: %llu", 
+               steamIDLobby.ConvertToUint64(), punGameServerIP, punGameServerPort, psteamIDGameServer->ConvertToUint64());
+    return false;
+}
+
+// set the limit on the # of users who can join the lobby
+bool Steam_Matchmaking::SetLobbyMemberLimit( CSteamID steamIDLobby, int cMaxMembers )
+{
+    VLOG_DEBUG("SetLobbyMemberLimit called - Lobby: %llu, MaxMembers: %d", steamIDLobby.ConvertToUint64(), cMaxMembers);
+    return false;
+}
+
+// returns the current limit on the # of users who can join the lobby; returns 0 if no limit is defined
+int Steam_Matchmaking::GetLobbyMemberLimit( CSteamID steamIDLobby )
+{
+    VLOG_DEBUG("GetLobbyMemberLimit called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+    return 0;
+}
+
+// asks the Steam servers for a list of lobbies that friends are in
+// returns results by posting one RequestFriendsLobbiesResponse_t callback per friend/lobby pair
+// if no friends are in lobbies, RequestFriendsLobbiesResponse_t will be posted but with 0 results
+// filters don't apply to lobbies (currently)
+bool Steam_Matchmaking::RequestFriendsLobbies()
+{
+    VLOG_DEBUG("RequestFriendsLobbies called");
+    return false;
 }
 
 // Helper methods

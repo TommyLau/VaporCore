@@ -15,6 +15,7 @@
 
 #include <sdk/isteamuser.h>
 #include <sdk/isteamuser009.h>
+#include <sdk/isteamuser010.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing and manipulating a steam account
@@ -22,7 +23,8 @@
 //-----------------------------------------------------------------------------
 class Steam_User :
     public ISteamUser,
-    public ISteamUser009
+    public ISteamUser009,
+    public ISteamUser010
 {
 public:
     Steam_User();
@@ -69,6 +71,27 @@ public:
 	// this is only needed under very specific circumstances
 	// Removed from Steam SDK v1.01, backward compatibility
 	void RefreshSteam2Login() override;
+
+	// get the local storage folder for current Steam account to write application data, e.g. save games, configs etc.
+	// this will usually be something like "C:\Progam Files\Steam\userdata\<SteamID>\<AppID>\local"
+	bool GetUserDataFolder( char *pchBuffer, int cubBuffer ) override;
+
+	// Starts voice recording. Once started, use GetCompressedVoice() to get the data
+	void StartVoiceRecording( ) override;
+
+	// Stops voice recording. Because people often release push-to-talk keys early, the system will keep recording for
+	// a little bit after this function is called. GetCompressedVoice() should continue to be called until it returns
+	// k_eVoiceResultNotRecording
+	void StopVoiceRecording( ) override;
+
+	// Gets the latest voice data. It should be called as often as possible once recording has started.
+	// nBytesWritten is set to the number of bytes written to pDestBuffer. 
+	EVoiceResult GetCompressedVoice( void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten ) override;
+
+	// Decompresses a chunk of data produced by GetCompressedVoice(). nBytesWritten is set to the 
+	// number of bytes written to pDestBuffer. The output format of the data is 16-bit signed at 
+	// 11025 samples per second.
+	EVoiceResult DecompressVoice( void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten ) override;
 
     // Helper methods
     static Steam_User* GetInstance();
