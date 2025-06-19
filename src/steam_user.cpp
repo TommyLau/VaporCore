@@ -78,6 +78,14 @@ int Steam_User::InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSte
     return 64;
 }
 
+int Steam_User::InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer, bool bSecure )
+{
+    VLOG_DEBUG("InitiateGameConnection called - GameServer: %llu, Server: %u:%u, Secure: %s", 
+               steamIDGameServer.ConvertToUint64(), unIPServer, usPortServer, bSecure ? "true" : "false");
+    
+    return 0;
+}
+
 // notify of disconnect
 // needs to occur when the game client leaves the specified game server, needs to match with the InitiateGameConnection() call
 void Steam_User::TerminateGameConnection( uint32 unIPServer, uint16 usPortServer )

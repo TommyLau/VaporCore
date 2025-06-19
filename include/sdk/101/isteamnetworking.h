@@ -1,11 +1,8 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright © 1996-2008, Valve Corporation, All rights reserved. =======
+//
+// Purpose: interface to steam managing network connections between game clients & servers
+//
+//=============================================================================
 
 #ifndef ISTEAMNETWORKING
 #define ISTEAMNETWORKING
@@ -13,7 +10,8 @@
 #pragma once
 #endif
 
-#include "isteamclient.h"
+#include "steamtypes.h"
+#include "steamclientpublic.h"
 
 // handle to a socket
 typedef uint32 SNetSocket_t;

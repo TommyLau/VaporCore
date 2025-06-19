@@ -28,6 +28,7 @@ Steam_Apps::~Steam_Apps()
 // returns 0 if the key does not exist
 // this may be true on first call, since the app data may not be cached locally yet
 // If you expect it to exists wait for the AppDataChanged_t after the first failure and ask again
+// Removed from Steam SDK v1.01, backward compatibility
 int Steam_Apps::GetAppData( AppId_t nAppID, const char *pchKey, char *pchValue, int cchValueMax )
 {
     VLOG_DEBUG("GetAppData called - AppID: %u, Key: %s", nAppID, pchKey ? pchKey : "null");
@@ -40,6 +41,42 @@ int Steam_Apps::GetAppData( AppId_t nAppID, const char *pchKey, char *pchValue, 
     // Return empty string for now - can be extended later
     pchValue[0] = '\0';
     return 0;
+}
+
+bool Steam_Apps::BIsSubscribed()
+{
+    return false;
+}
+
+bool Steam_Apps::BIsLowViolence()
+{
+    return false;
+}
+
+bool Steam_Apps::BIsCybercafe()
+{
+    return false;
+}
+
+bool Steam_Apps::BIsVACBanned()
+{
+    return false;
+}
+
+const char *Steam_Apps::GetCurrentGameLanguage()
+{
+    return nullptr;
+}
+
+const char *Steam_Apps::GetAvailableGameLanguages()
+{
+    return nullptr;
+}
+
+// only use this member if you need to check ownership of another game related to yours, a demo for example
+bool Steam_Apps::BIsSubscribedApp( AppId_t appID )
+{
+    return false;
 }
 
 // Helper methods

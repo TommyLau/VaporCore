@@ -7,40 +7,34 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef VAPORCORE_STEAM_USER_H
-#define VAPORCORE_STEAM_USER_H
+#ifndef ISTEAMUSER009_H
+#define ISTEAMUSER009_H
 #ifdef _WIN32
 #pragma once
 #endif
-
-#include <sdk/isteamuser.h>
-#include <sdk/isteamuser009.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing and manipulating a steam account
 //			associated with one client instance
 //-----------------------------------------------------------------------------
-class Steam_User :
-    public ISteamUser,
-    public ISteamUser009
+class ISteamUser009
 {
 public:
-    Steam_User();
-    ~Steam_User();
-
 	// returns the HSteamUser this interface represents
 	// this is only used internally by the API, and by a few select interfaces that support multi-user
-	HSteamUser GetHSteamUser() override;
+	virtual HSteamUser GetHSteamUser() = 0;
 
 	// returns true if the Steam client current has a live connection to the Steam servers. 
 	// If false, it means there is no active connection due to either a networking issue on the local machine, or the Steam server is down/busy.
 	// The Steam client will automatically be trying to recreate the connection as often as possible.
-	bool BLoggedOn() override;
+	virtual bool BLoggedOn() = 0;
 
 	// returns the CSteamID of the account currently logged into the Steam client
 	// a CSteamID is a unique identifier for an account, and used to differentiate users in all parts of the Steamworks API
-	CSteamID GetSteamID() override;
+	virtual CSteamID GetSteamID() = 0;
 
+	// Multiplayer Authentication functions
+	
 	// InitiateGameConnection() starts the state machine for authenticating the game client with the game server
 	// It is the client portion of a three-way handshake between the client, the game server, and the steam servers
 	//
@@ -54,30 +48,22 @@ public:
 	//
 	// return value - returns the number of bytes written to pBlob. If the return is 0, then the buffer passed in was too small, and the call has failed
 	// The contents of pBlob should then be sent to the game server, for it to use to complete the authentication process.
-	// Removed from Steam SDK v1.01, backward compatibility
-	int InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, CGameID gameID, uint32 unIPServer, uint16 usPortServer, bool bSecure ) override;
-	int InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer, bool bSecure ) override;
+	virtual int InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, CGameID gameID, uint32 unIPServer, uint16 usPortServer, bool bSecure ) = 0;
 
 	// notify of disconnect
 	// needs to occur when the game client leaves the specified game server, needs to match with the InitiateGameConnection() call
-	void TerminateGameConnection( uint32 unIPServer, uint16 usPortServer ) override;
+	virtual void TerminateGameConnection( uint32 unIPServer, uint16 usPortServer ) = 0;
+
+	// Legacy functions
 
 	// used by only a few games to track usage events
-	void TrackAppUsageEvent( CGameID gameID, int eAppUsageEvent, const char *pchExtraInfo = "" ) override;
+	virtual void TrackAppUsageEvent( CGameID gameID, int eAppUsageEvent, const char *pchExtraInfo = "" ) = 0;
 
 	// legacy authentication support - need to be called if the game server rejects the user with a 'bad ticket' error
 	// this is only needed under very specific circumstances
-	// Removed from Steam SDK v1.01, backward compatibility
-	void RefreshSteam2Login() override;
-
-    // Helper methods
-    static Steam_User* GetInstance();
-    static void ReleaseInstance();
-
-private:
-    // Singleton instance
-    static Steam_User* s_pInstance;
+	virtual void RefreshSteam2Login() = 0;
 };
 
-#endif // VAPORCORE_STEAM_USER_H
+#define STEAMUSER_INTERFACE_VERSION009 "STEAMUSER_INTERFACE_VERSION009"
 
+#endif // ISTEAMUSER009_H

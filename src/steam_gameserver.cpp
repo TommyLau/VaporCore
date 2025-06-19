@@ -25,6 +25,7 @@ static ISteamGameServer* g_pSteamGameServer = nullptr;
 static ISteamUtils* g_pSteamGameServerUtils = nullptr;
 static ISteamMasterServerUpdater* g_pSteamMasterServerUpdater = nullptr;
 static ISteamNetworking* g_pSteamGameServerNetworking = nullptr;
+S_API ISteamClient *g_pSteamClientGameServer;
 
 // Global pipe and user handles for game server
 static HSteamPipe g_hSteamGameServerPipe = 0;
@@ -45,12 +46,16 @@ static CSteamID g_steamGameServerID;
 //
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-S_API bool SteamGameServer_Init( uint32 unIP, uint16 usPort, uint16 usGamePort, uint16 usSpectatorPort, uint16 usQueryPort, EServerMode eServerMode, int nGameAppId, const char *pchGameDir, const char *pchVersionString )
+// Steam SDK v1.00
+// S_API bool SteamGameServer_Init( uint32 unIP, uint16 usPort, uint16 usGamePort, uint16 usSpectatorPort, uint16 usQueryPort, EServerMode eServerMode, int nGameAppId, const char *pchGameDir, const char *pchVersionString );
+// Steam SDK v1.01
+S_API bool SteamGameServer_Init( uint32 unIP, uint16 usPort, uint16 usGamePort, uint16 usSpectatorPort, uint16 usQueryPort, EServerMode eServerMode, const char *pchGameDir, const char *pchVersionString )
 {
-    VLOG_INFO("SteamGameServer_Init called - IP: %u, Port: %u, GamePort: %u, SpectatorPort: %u, QueryPort: %u, ServerMode: %d, AppID: %d, GameDir: %s, Version: %s",
-              unIP, usPort, usGamePort, usSpectatorPort, usQueryPort, eServerMode, nGameAppId, 
+    VLOG_INFO("SteamGameServer_Init called - IP: %u, Port: %u, GamePort: %u, SpectatorPort: %u, QueryPort: %u, ServerMode: %d, GameDir: %s, Version: %s",
+              unIP, usPort, usGamePort, usSpectatorPort, usQueryPort, eServerMode, 
               pchGameDir ? pchGameDir : "null", pchVersionString ? pchVersionString : "null");
 
+/*
 #ifdef VAPORCORE_ENABLE_LOGGING
     // Initialize logger if not already done
     VaporCore::Logger::getInstance().initialize("vaporcore_gameserver_log.txt");
@@ -102,6 +107,7 @@ S_API bool SteamGameServer_Init( uint32 unIP, uint16 usPort, uint16 usGamePort, 
 
     g_bGameServerInitialized = true;
     VLOG_INFO("SteamGameServer_Init completed successfully");
+    */
     return true;
 }
 
@@ -169,6 +175,31 @@ S_API uint64 SteamGameServer_GetSteamID()
         return steamID.ConvertToUint64();
     }
     return 0;
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------//
+//	steamclient.dll private wrapper functions
+//
+//	The following functions are part of abstracting API access to the steamclient.dll, but should only be used in very specific cases
+//----------------------------------------------------------------------------------------------------------------------------------------------------------//
+S_API HSteamPipe SteamGameServer_GetHSteamPipe()
+{
+    VLOG_DEBUG("SteamGameServer_GetHSteamPipe called");
+    return g_hSteamGameServerPipe;
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------//
+// VERSION_SAFE_STEAM_API_INTERFACES uses CSteamAPIContext to provide interfaces to each module in a way that 
+// lets them each specify the interface versions they are compiled with.
+//
+// It's important that these stay inlined in the header so the calling module specifies the interface versions
+// for whatever Steam API version it has.
+//----------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+S_API HSteamUser SteamGameServer_GetHSteamUser()
+{
+    VLOG_DEBUG("SteamGameServer_GetHSteamUser called");
+    return g_hSteamGameServerUser;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//

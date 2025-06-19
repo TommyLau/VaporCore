@@ -13,12 +13,15 @@
 #pragma once
 #endif
 
-#include "../include/sdk/isteamapps.h"
+#include <sdk/isteamapps.h>
+#include <sdk/isteamapps001.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to app data
 //-----------------------------------------------------------------------------
-class Steam_Apps : public ISteamApps
+class Steam_Apps :
+    public ISteamApps,
+    public ISteamApps001
 {
 public:
     Steam_Apps();
@@ -27,7 +30,18 @@ public:
 	// returns 0 if the key does not exist
 	// this may be true on first call, since the app data may not be cached locally yet
 	// If you expect it to exists wait for the AppDataChanged_t after the first failure and ask again
+    // Removed from Steam SDK v1.01, backward compatibility
 	int GetAppData( AppId_t nAppID, const char *pchKey, char *pchValue, int cchValueMax ) override;
+
+    bool BIsSubscribed() override;
+    bool BIsLowViolence() override;
+    bool BIsCybercafe() override;
+    bool BIsVACBanned() override;
+    const char *GetCurrentGameLanguage() override;
+    const char *GetAvailableGameLanguages() override;
+
+    // only use this member if you need to check ownership of another game related to yours, a demo for example
+    bool BIsSubscribedApp( AppId_t appID ) override;
 
     // Helper methods
     static Steam_Apps* GetInstance();

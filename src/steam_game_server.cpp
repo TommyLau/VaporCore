@@ -64,9 +64,19 @@ CSteamID Steam_Game_Server::GetSteamID()
 // Return Value: true/false depending on whether the call succeeds.  If the call succeeds then you
 // should expect a GSClientApprove_t or GSClientDeny_t callback which will tell you whether authentication
 // for the user has succeeded or failed.
+// Removed from Steam SDK v1.01, backward compatibility
 void Steam_Game_Server::SendUserConnectAndAuthenticate( CSteamID steamIDUser, uint32 unIPClient, void *pvAuthBlob, uint32 cubAuthBlobSize )
 {
     VLOG_DEBUG("SendUserConnectAndAuthenticate called - User: %llu, IP: %u, BlobSize: %u", steamIDUser.ConvertToUint64(), unIPClient, cubAuthBlobSize);
+}
+
+// Return Value: returns true if the users ticket passes basic checks. pSteamIDUser will contain the Steam ID of this user. pSteamIDUser must NOT be NULL
+// If the call succeeds then you should expect a GSClientApprove_t or GSClientDeny_t callback which will tell you whether authentication
+// for the user has succeeded or failed (the steamid in the callback will match the one returned by this call)
+bool Steam_Game_Server::SendUserConnectAndAuthenticate( uint32 unIPClient, const void *pvAuthBlob, uint32 cubAuthBlobSize, CSteamID *pSteamIDUser )
+{
+    VLOG_DEBUG("SendUserConnectAndAuthenticate called - IP: %u, BlobSize: %u", unIPClient, cubAuthBlobSize);
+    return false;
 }
 
 // Creates a fake user (ie, a bot) which will be listed as playing on the server, but skips validation.  
@@ -114,10 +124,18 @@ bool Steam_Game_Server::BUpdateUserData( CSteamID steamIDUser, const char *pchPl
 //			
 // bugbug jmccaskey - figure out how to remove this from the API and only expose via SteamGameServer_Init... or make this actually used,
 // and stop calling it in SteamGameServer_Init()?
+// Removed from Steam SDK v1.01, backward compatibility
 bool Steam_Game_Server::BSetServerType( int32 nGameAppId, uint32 unServerFlags, uint32 unGameIP, uint16 unGamePort, 
 						uint16 unSpectatorPort, uint16 usQueryPort, const char *pchGameDir, const char *pchVersion, bool bLANMode )
 {
     VLOG_DEBUG("BSetServerType called - AppID: %d, Flags: %u, GamePort: %u", nGameAppId, unServerFlags, unGamePort);
+    return true;
+}
+
+bool Steam_Game_Server::BSetServerType( uint32 unServerFlags, uint32 unGameIP, uint16 unGamePort, 
+								uint16 unSpectatorPort, uint16 usQueryPort, const char *pchGameDir, const char *pchVersion, bool bLANMode )
+{
+    VLOG_DEBUG("BSetServerType called - Flags: %u, GamePort: %u", unServerFlags, unGamePort);
     return true;
 }
 

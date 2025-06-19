@@ -244,6 +244,18 @@ S_API const char *SteamAPI_GetSteamInstallPath() {
     return steamPath;
 }
 
+// returns the pipe we are communicating to Steam with
+S_API HSteamPipe SteamAPI_GetHSteamPipe() {
+    // TODO: Implement SteamAPI_GetHSteamPipe
+    return g_hSteamPipe;
+}
+
+// returns the user we are communicating to Steam with
+S_API HSteamUser SteamAPI_GetHSteamUser() {
+    // TODO: Implement SteamAPI_GetHSteamUser
+    return g_hSteamUser;
+}
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 // VERSION_SAFE_STEAM_API_INTERFACES uses CSteamAPIContext to provide interfaces to each module in a way that 
 // lets them each specify the interface versions they are compiled with.
@@ -252,10 +264,12 @@ S_API const char *SteamAPI_GetSteamInstallPath() {
 // for whatever Steam API version it has.
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 
+// Removed from Steam SDK v1.01, backward compatibility
 S_API HSteamPipe GetHSteamPipe() {
     return g_hSteamPipe;
 }
 
+// Removed from Steam SDK v1.01, backward compatibility
 S_API HSteamUser GetHSteamUser() {
     return g_hSteamUser;
 }
