@@ -195,6 +195,23 @@ uint32 Steam_Game_Server::GetPublicIP()
     return 0;
 }
 
+// Sets a string defining the "gamedata" for this server, this is optional, but if it is set
+// it allows users to filter in the matchmaking/server-browser interfaces based on the value
+// don't set this unless it actually changes, its only uploaded to the master once (when
+// acknowledged)
+void Steam_Game_Server::SetGameData( const char *pchGameData)
+{
+    VLOG_DEBUG("SetGameData called - GameData: %s", pchGameData ? pchGameData : "null");
+}
+
+// After receiving a user's authentication data, and passing it to SendUserConnectAndAuthenticate, use this function
+// to determine if the user owns downloadable content specified by the provided AppID.
+EUserHasLicenseForAppResult Steam_Game_Server::UserHasLicenseForApp( CSteamID steamID, AppId_t appID )
+{
+    VLOG_DEBUG("UserHasLicenseForApp called - User: %llu, AppID: %u", steamID.ConvertToUint64(), appID);
+    return EUserHasLicenseForAppResult::k_EUserHasLicenseResultHasLicense;
+}
+
 // Helper methods
 Steam_Game_Server* Steam_Game_Server::GetInstance()
 {

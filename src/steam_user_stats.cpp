@@ -241,12 +241,26 @@ bool Steam_User_Stats::GetDownloadedLeaderboardEntry( SteamLeaderboardEntries_t 
 
 // Uploads a user score to the Steam back-end.
 // This call is asynchronous, with the result returned in LeaderboardScoreUploaded_t
-// If the score passed in is no better than the existing score this user has in the leaderboard, then the leaderboard will not be updated.
 // Details are extra game-defined information regarding how the user got that score
 // pScoreDetails points to an array of int32's, cScoreDetailsCount is the number of int32's in the list
+// Changed from Steam SDK v1.05, backward compatibility
 SteamAPICall_t Steam_User_Stats::UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, int32 nScore, int32 *pScoreDetails, int cScoreDetailsCount )
 {
     VLOG_DEBUG("UploadLeaderboardScore called - Leaderboard: %u, Score: %d, Details: %d", hSteamLeaderboard, nScore, cScoreDetailsCount);
+    return 0;
+}
+
+SteamAPICall_t Steam_User_Stats::UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardUploadScoreMethod eLeaderboardUploadScoreMethod, int32 nScore, const int32 *pScoreDetails, int cScoreDetailsCount )
+{
+    VLOG_DEBUG("UploadLeaderboardScore called - Leaderboard: %u, Score: %d, Details: %d", hSteamLeaderboard, nScore, cScoreDetailsCount);
+    return 0;
+}
+
+// Retrieves the number of players currently playing your game (online + offline)
+// This call is asynchronous, with the result returned in NumberOfCurrentPlayers_t
+SteamAPICall_t Steam_User_Stats::GetNumberOfCurrentPlayers()
+{
+    VLOG_DEBUG("GetNumberOfCurrentPlayers called");
     return 0;
 }
 

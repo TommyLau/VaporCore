@@ -99,15 +99,27 @@ SteamAPICall_t Steam_Matchmaking::RequestLobbyList()
 // filters for lobbies
 // this needs to be called before RequestLobbyList() to take effect
 // these are cleared on each call to RequestLobbyList()
+// Removed from Steam SDK v1.05, backward compatibility
 void Steam_Matchmaking::AddRequestLobbyListFilter( const char *pchKeyToMatch, const char *pchValueToMatch )
 {
     VLOG_DEBUG("AddRequestLobbyListFilter called - Key: %s, Value: %s", pchKeyToMatch, pchValueToMatch);
 }
 
+void Steam_Matchmaking::AddRequestLobbyListStringFilter( const char *pchKeyToMatch, const char *pchValueToMatch, ELobbyComparison eComparisonType )
+{
+    VLOG_DEBUG("AddRequestLobbyListStringFilter called - Key: %s, Value: %s, Comparison Type: %d", pchKeyToMatch, pchValueToMatch, eComparisonType);
+}
+
 // numerical comparison - 0 is equal, -1 is the lobby value is less than nValueToMatch, 1 is the lobby value is greater than nValueToMatch
+// Removed from Steam SDK v1.05, backward compatibility
 void Steam_Matchmaking::AddRequestLobbyListNumericalFilter( const char *pchKeyToMatch, int nValueToMatch, int nComparisonType /* 0 is equal, -1 is less than, 1 is greater than */ )
 {
     VLOG_DEBUG("AddRequestLobbyListNumericalFilter called - Key: %s, Value: %d, Comparison Type: %d", pchKeyToMatch, nValueToMatch, nComparisonType);
+}
+
+void Steam_Matchmaking::AddRequestLobbyListNumericalFilter( const char *pchKeyToMatch, int nValueToMatch, ELobbyComparison eComparisonType )
+{
+    VLOG_DEBUG("AddRequestLobbyListNumericalFilter called - Key: %s, Value: %d, Comparison Type: %d", pchKeyToMatch, nValueToMatch, eComparisonType);
 }
 
 // sets RequestLobbyList() to only returns lobbies which aren't yet full - needs SetLobbyMemberLimit() called on the lobby to set an initial limit
@@ -121,6 +133,12 @@ void Steam_Matchmaking::AddRequestLobbyListSlotsAvailableFilter()
 void Steam_Matchmaking::AddRequestLobbyListNearValueFilter( const char *pchKeyToMatch, int nValueToBeCloseTo )
 {
     VLOG_DEBUG("AddRequestLobbyListNearValueFilter called - Key: %s, Value: %d", pchKeyToMatch, nValueToBeCloseTo);
+}
+
+// returns only lobbies with the specified number of slots available
+void Steam_Matchmaking::AddRequestLobbyListFilterSlotsAvailable( int nSlotsAvailable )
+{
+    VLOG_DEBUG("AddRequestLobbyListFilterSlotsAvailable called - Slots Available: %d", nSlotsAvailable);
 }
 
 // returns the CSteamID of a lobby, as retrieved by a RequestLobbyList call
@@ -148,6 +166,14 @@ void Steam_Matchmaking::CreateLobby( bool bPrivate )
 
 // results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this pointer
 // a LobbyEnter_t callback will also be received (since the local user is joining their own lobby)
+SteamAPICall_t Steam_Matchmaking::CreateLobby( ELobbyType eLobbyType, int cMaxMembers )
+{
+    VLOG_DEBUG("CreateLobby called - LobbyType: %d, MaxMembers: %d", eLobbyType, cMaxMembers);
+    return 0;
+}
+
+// results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this pointer
+// a LobbyEnter_t callback will also be received (since the local user is joining their own lobby)
 SteamAPICall_t Steam_Matchmaking::CreateLobby( ELobbyType eLobbyType )
 {
     VLOG_DEBUG("CreateLobby called - LobbyType: %d", eLobbyType);
@@ -160,14 +186,14 @@ SteamAPICall_t Steam_Matchmaking::CreateLobby( ELobbyType eLobbyType )
 // Removed from Steam SDK v1.03, backward compatibility
 void Steam_Matchmaking::DEPRECATED_JoinLobby( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("DEPRECATED_JoinLobby called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+    VLOG_DEBUG("DEPRECATED_JoinLobby called - Lobby: %llu", steamIDLobby.GetAccountID());
 }
 
 // results will be returned by LobbyEnter_t callback & call result, check m_EChatRoomEnterResponse to see if was successful
 // lobby metadata is available to use immediately on this call completing
 SteamAPICall_t Steam_Matchmaking::JoinLobby( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("JoinLobby called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+    VLOG_DEBUG("JoinLobby called - Lobby: %llu", steamIDLobby.GetAccountID());
     return 0;
 }
 
@@ -175,7 +201,7 @@ SteamAPICall_t Steam_Matchmaking::JoinLobby( CSteamID steamIDLobby )
 // other users in the lobby will be notified by a LobbyChatUpdate_t callback
 void Steam_Matchmaking::LeaveLobby( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("LeaveLobby called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+    VLOG_DEBUG("LeaveLobby called - Lobby: %llu", steamIDLobby.GetAccountID());
 }
 
 // Invite another user to the lobby
@@ -184,14 +210,14 @@ void Steam_Matchmaking::LeaveLobby( CSteamID steamIDLobby )
 // returns false if the local user is not connected to the Steam servers
 bool Steam_Matchmaking::InviteUserToLobby( CSteamID steamIDLobby, CSteamID steamIDInvitee )
 {
-    VLOG_DEBUG("InviteUserToLobby called - Lobby: %llu, Invitee: %llu", steamIDLobby.ConvertToUint64(), steamIDInvitee.ConvertToUint64());
+    VLOG_DEBUG("InviteUserToLobby called - Lobby: %llu, Invitee: %llu", steamIDLobby.GetAccountID(), steamIDInvitee.GetAccountID());
     return false;
 }
 
 // returns the number of users in the specified lobby
 int Steam_Matchmaking::GetNumLobbyMembers( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("GetNumLobbyMembers called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+    VLOG_DEBUG("GetNumLobbyMembers called - Lobby: %llu", steamIDLobby.GetAccountID());
     return 0;
 }
 
@@ -199,7 +225,7 @@ int Steam_Matchmaking::GetNumLobbyMembers( CSteamID steamIDLobby )
 // iMember is of range [0,GetNumLobbyMembers())
 CSteamID Steam_Matchmaking::GetLobbyMemberByIndex( CSteamID steamIDLobby, int iMember )
 {
-    VLOG_DEBUG("GetLobbyMemberByIndex called - Lobby: %llu, Member: %d", steamIDLobby.ConvertToUint64(), iMember);
+    VLOG_DEBUG("GetLobbyMemberByIndex called - Lobby: %llu, Member: %d", steamIDLobby.GetAccountID(), iMember);
     return CSteamID();
 }
 
@@ -208,7 +234,7 @@ CSteamID Steam_Matchmaking::GetLobbyMemberByIndex( CSteamID steamIDLobby, int iM
 // "" will be returned if no value is set, or if steamIDLobby is invalid
 const char *Steam_Matchmaking::GetLobbyData( CSteamID steamIDLobby, const char *pchKey )
 {
-    VLOG_DEBUG("GetLobbyData called - Lobby: %llu, Key: %s", steamIDLobby.ConvertToUint64(), pchKey ? pchKey : "null");
+    VLOG_DEBUG("GetLobbyData called - Lobby: %llu, Key: %s", steamIDLobby.GetAccountID(), pchKey ? pchKey : "null");
     return "";
 }
 
@@ -220,15 +246,37 @@ const char *Steam_Matchmaking::GetLobbyData( CSteamID steamIDLobby, const char *
 bool Steam_Matchmaking::SetLobbyData( CSteamID steamIDLobby, const char *pchKey, const char *pchValue )
 {
     VLOG_DEBUG("SetLobbyData called - Lobby: %llu, Key: %s, Value: %s", 
-               steamIDLobby.ConvertToUint64(), pchKey ? pchKey : "null", pchValue ? pchValue : "null");
+               steamIDLobby.GetAccountID(), pchKey ? pchKey : "null", pchValue ? pchValue : "null");
     return true;
 }
 
-// As above, but gets per-user data for someone in this lobby
+// returns the number of metadata keys set on the specified lobby
+int Steam_Matchmaking::GetLobbyDataCount( CSteamID steamIDLobby )
+{
+    VLOG_DEBUG("GetLobbyDataCount called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+    return 0;
+}
+
+// returns a lobby metadata key/values pair by index, of range [0, GetLobbyDataCount())
+bool Steam_Matchmaking::GetLobbyDataByIndex( CSteamID steamIDLobby, int iLobbyData, char *pchKey, int cchKeyBufferSize, char *pchValue, int cchValueBufferSize )
+{
+    VLOG_DEBUG("GetLobbyDataByIndex called - Lobby: %llu, Index: %d, KeySize: %d, ValueSize: %d", 
+               steamIDLobby.GetAccountID(), iLobbyData, cchKeyBufferSize, cchValueBufferSize);
+    return false;
+}
+
+// removes a metadata key from the lobby
+bool Steam_Matchmaking::DeleteLobbyData( CSteamID steamIDLobby, const char *pchKey )
+{
+    VLOG_DEBUG("DeleteLobbyData called - Lobby: %llu, Key: %s", steamIDLobby.GetAccountID(), pchKey ? pchKey : "null");
+    return false;
+}
+
+// Gets per-user metadata for someone in this lobby
 const char *Steam_Matchmaking::GetLobbyMemberData( CSteamID steamIDLobby, CSteamID steamIDUser, const char *pchKey )
 {
     VLOG_DEBUG("GetLobbyMemberData called - Lobby: %llu, User: %llu, Key: %s", 
-               steamIDLobby.ConvertToUint64(), steamIDUser.ConvertToUint64(), pchKey ? pchKey : "null");
+               steamIDLobby.GetAccountID(), steamIDUser.GetAccountID(), pchKey ? pchKey : "null");
     return "";
 }
 
@@ -236,7 +284,7 @@ const char *Steam_Matchmaking::GetLobbyMemberData( CSteamID steamIDLobby, CSteam
 void Steam_Matchmaking::SetLobbyMemberData( CSteamID steamIDLobby, const char *pchKey, const char *pchValue )
 {
     VLOG_DEBUG("SetLobbyMemberData called - Lobby: %llu, Key: %s, Value: %s", 
-               steamIDLobby.ConvertToUint64(), pchKey ? pchKey : "null", pchValue ? pchValue : "null");
+               steamIDLobby.GetAccountID(), pchKey ? pchKey : "null", pchValue ? pchValue : "null");
 }
 
 // Broadcasts a chat message to the all the users in the lobby
@@ -244,7 +292,7 @@ void Steam_Matchmaking::SetLobbyMemberData( CSteamID steamIDLobby, const char *p
 // returns true if the message is successfully sent
 bool Steam_Matchmaking::SendLobbyChatMsg( CSteamID steamIDLobby, const void *pvMsgBody, int cubMsgBody )
 {
-    VLOG_DEBUG("SendLobbyChatMsg called - Lobby: %llu, MsgSize: %d", steamIDLobby.ConvertToUint64(), cubMsgBody);
+    VLOG_DEBUG("SendLobbyChatMsg called - Lobby: %llu, MsgSize: %d", steamIDLobby.GetAccountID(), cubMsgBody);
     return false;
 }
 
@@ -255,7 +303,7 @@ bool Steam_Matchmaking::SendLobbyChatMsg( CSteamID steamIDLobby, const void *pvM
 // return value is the number of bytes written into the buffer
 int Steam_Matchmaking::GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, CSteamID *pSteamIDUser, void *pvData, int cubData, EChatEntryType *peChatEntryType )
 {
-    VLOG_DEBUG("GetLobbyChatEntry called - Lobby: %llu, ChatID: %d, DataSize: %d", steamIDLobby.ConvertToUint64(), iChatID, cubData);
+    VLOG_DEBUG("GetLobbyChatEntry called - Lobby: %llu, ChatID: %d, DataSize: %d", steamIDLobby.GetAccountID(), iChatID, cubData);
     return 0;
 }
 
@@ -265,7 +313,7 @@ int Steam_Matchmaking::GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, CS
 // returns false if the local user is not connected to the Steam servers
 bool Steam_Matchmaking::RequestLobbyData( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("RequestLobbyData called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+    VLOG_DEBUG("RequestLobbyData called - Lobby: %llu", steamIDLobby.GetAccountID());
     return false;
 }
 
@@ -275,28 +323,28 @@ bool Steam_Matchmaking::RequestLobbyData( CSteamID steamIDLobby )
 void Steam_Matchmaking::SetLobbyGameServer( CSteamID steamIDLobby, uint32 unGameServerIP, uint16 unGameServerPort, CSteamID steamIDGameServer )
 {
     VLOG_DEBUG("SetLobbyGameServer called - Lobby: %llu, ServerIP: %u, ServerPort: %u, GameServer: %llu", 
-               steamIDLobby.ConvertToUint64(), unGameServerIP, unGameServerPort, steamIDGameServer.ConvertToUint64());
+               steamIDLobby.GetAccountID(), unGameServerIP, unGameServerPort, steamIDGameServer.GetAccountID());
 }
 
 // returns the details of a game server set in a lobby - returns false if there is no game server set, or that lobby doesn't exist
 bool Steam_Matchmaking::GetLobbyGameServer( CSteamID steamIDLobby, uint32 *punGameServerIP, uint16 *punGameServerPort, CSteamID *psteamIDGameServer )
 {
     VLOG_DEBUG("GetLobbyGameServer called - Lobby: %llu, ServerIP: %u, ServerPort: %u, GameServer: %llu", 
-               steamIDLobby.ConvertToUint64(), punGameServerIP, punGameServerPort, psteamIDGameServer->ConvertToUint64());
+               steamIDLobby.GetAccountID(), punGameServerIP, punGameServerPort, psteamIDGameServer->GetAccountID());
     return false;
 }
 
 // set the limit on the # of users who can join the lobby
 bool Steam_Matchmaking::SetLobbyMemberLimit( CSteamID steamIDLobby, int cMaxMembers )
 {
-    VLOG_DEBUG("SetLobbyMemberLimit called - Lobby: %llu, MaxMembers: %d", steamIDLobby.ConvertToUint64(), cMaxMembers);
+    VLOG_DEBUG("SetLobbyMemberLimit called - Lobby: %llu, MaxMembers: %d", steamIDLobby.GetAccountID(), cMaxMembers);
     return false;
 }
 
 // returns the current limit on the # of users who can join the lobby; returns 0 if no limit is defined
 int Steam_Matchmaking::GetLobbyMemberLimit( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("GetLobbyMemberLimit called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+    VLOG_DEBUG("GetLobbyMemberLimit called - Lobby: %llu", steamIDLobby.GetAccountID());
     return 0;
 }
 
@@ -315,7 +363,15 @@ bool Steam_Matchmaking::RequestFriendsLobbies()
 // only lobbies that are k_ELobbyTypePublic will be returned by RequestLobbyList() calls
 bool Steam_Matchmaking::SetLobbyType( CSteamID steamIDLobby, ELobbyType eLobbyType )
 {
-    VLOG_DEBUG("SetLobbyType called - Lobby: %llu, Type: %d", steamIDLobby.ConvertToUint64(), eLobbyType);
+    VLOG_DEBUG("SetLobbyType called - Lobby: %llu, Type: %d", steamIDLobby.GetAccountID(), eLobbyType);
+    return false;
+}
+
+// sets whether or not a lobby is joinable - defaults to true for a new lobby
+// if set to false, no user can join, even if they are a friend or have been invited
+bool Steam_Matchmaking::SetLobbyJoinable( CSteamID steamIDLobby, bool bLobbyJoinable )
+{
+    VLOG_DEBUG("SetLobbyJoinable called - Lobby: %llu, Joinable: %s", steamIDLobby.GetAccountID(), bLobbyJoinable ? "true" : "false");
     return false;
 }
 
@@ -325,8 +381,17 @@ bool Steam_Matchmaking::SetLobbyType( CSteamID steamIDLobby, ELobbyType eLobbyTy
 // it is possible (bur rare) to join a lobby just as the owner is leaving, thus entering a lobby with self as the owner
 CSteamID Steam_Matchmaking::GetLobbyOwner( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("GetLobbyOwner called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+    VLOG_DEBUG("GetLobbyOwner called - Lobby: %llu", steamIDLobby.GetAccountID());
     return CSteamID();
+}
+
+// changes who the lobby owner is
+// you must be the lobby owner for this to succeed, and steamIDNewOwner must be in the lobby
+// after completion, the local user will no longer be the owner
+bool Steam_Matchmaking::SetLobbyOwner( CSteamID steamIDLobby, CSteamID steamIDNewOwner )
+{
+    VLOG_DEBUG("SetLobbyOwner called - Lobby: %llu, NewOwner: %llu", steamIDLobby.GetAccountID(), steamIDNewOwner.GetAccountID());
+    return false;
 }
 
 // Helper methods

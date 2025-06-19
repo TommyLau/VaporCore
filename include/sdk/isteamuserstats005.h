@@ -7,56 +7,49 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef VAPORCORE_STEAM_USER_STATS_H
-#define VAPORCORE_STEAM_USER_STATS_H
+#ifndef ISTEAMUSERSTATS005_H
+#define ISTEAMUSERSTATS005_H
 #ifdef _WIN32
 #pragma once
 #endif
 
-#include <sdk/isteamuserstats.h>
-#include <sdk/isteamuserstats003.h>
-#include <sdk/isteamuserstats004.h>
-#include <sdk/isteamuserstats005.h>
-
-class Steam_User_Stats :
-	public ISteamUserStats,
-	public ISteamUserStats003,
-	public ISteamUserStats004,
-	public ISteamUserStats005
+//-----------------------------------------------------------------------------
+// Purpose: Functions for accessing stats, achievements, and leaderboard information
+//-----------------------------------------------------------------------------
+class ISteamUserStats005
 {
 public:
-    Steam_User_Stats();
-    ~Steam_User_Stats();
-
-	// Ask the server to send down this user's data and achievements for nGameID
-	bool RequestCurrentStats( ) override;
+	// Ask the server to send down this user's data and achievements for this game
+	virtual bool RequestCurrentStats() = 0;
 
 	// Data accessors
-	bool GetStat( const char *pchName, int32 *pData ) override;
-	bool GetStat( const char *pchName, float *pData ) override;
+	virtual bool GetStat( const char *pchName, int32 *pData ) = 0;
+	virtual bool GetStat( const char *pchName, float *pData ) = 0;
 
 	// Set / update data
-	bool SetStat( const char *pchName, int32 nData ) override;
-	bool SetStat( const char *pchName, float fData ) override;
-	bool UpdateAvgRateStat( const char *pchName, float flCountThisSession, double dSessionLength ) override;
+	virtual bool SetStat( const char *pchName, int32 nData ) = 0;
+	virtual bool SetStat( const char *pchName, float fData ) = 0;
+	virtual bool UpdateAvgRateStat( const char *pchName, float flCountThisSession, double dSessionLength ) = 0;
 
 	// Achievement flag accessors
-	bool GetAchievement( const char *pchName, bool *pbAchieved ) override;
-	bool SetAchievement( const char *pchName ) override;
-	bool ClearAchievement( const char *pchName ) override;
+	virtual bool GetAchievement( const char *pchName, bool *pbAchieved ) = 0;
+	virtual bool SetAchievement( const char *pchName ) = 0;
+	virtual bool ClearAchievement( const char *pchName ) = 0;
 
 	// Store the current data on the server, will get a callback when set
 	// And one callback for every new achievement
-	bool StoreStats( ) override;
+	virtual bool StoreStats() = 0;
+
+	// Achievement / GroupAchievement metadata
 
 	// Gets the icon of the achievement, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
-	int GetAchievementIcon( const char *pchName ) override;
+	virtual int GetAchievementIcon( const char *pchName ) = 0;
 	// Get general attributes (display name / text, etc) for an Achievement
-	const char *GetAchievementDisplayAttribute( const char *pchName, const char *pchKey ) override;
+	virtual const char *GetAchievementDisplayAttribute( const char *pchName, const char *pchKey ) = 0;
 
 	// Achievement progress - triggers an AchievementProgress callback, that is all.
 	// Calling this w/ N out of N progress will NOT set the achievement, the game must still do that.
-	bool IndicateAchievementProgress( const char *pchName, uint32 nCurProgress, uint32 nMaxProgress ) override;
+	virtual bool IndicateAchievementProgress( const char *pchName, uint32 nCurProgress, uint32 nMaxProgress ) = 0;
 
 	// Friends stats & achievements
 
@@ -64,37 +57,37 @@ public:
 	// returns a UserStatsReceived_t received when completed
 	// if the other user has no stats, UserStatsReceived_t.m_eResult will be set to k_EResultFail
 	// these stats won't be auto-updated; you'll need to call RequestUserStats() again to refresh any data
-	SteamAPICall_t RequestUserStats( CSteamID steamIDUser ) override;
+	virtual SteamAPICall_t RequestUserStats( CSteamID steamIDUser ) = 0;
 
 	// requests stat information for a user, usable after a successful call to RequestUserStats()
-	bool GetUserStat( CSteamID steamIDUser, const char *pchName, int32 *pData ) override;
-	bool GetUserStat( CSteamID steamIDUser, const char *pchName, float *pData ) override;
-	bool GetUserAchievement( CSteamID steamIDUser, const char *pchName, bool *pbAchieved ) override;
+	virtual bool GetUserStat( CSteamID steamIDUser, const char *pchName, int32 *pData ) = 0;
+	virtual bool GetUserStat( CSteamID steamIDUser, const char *pchName, float *pData ) = 0;
+	virtual bool GetUserAchievement( CSteamID steamIDUser, const char *pchName, bool *pbAchieved ) = 0;
 
 	// Reset stats 
-	bool ResetAllStats( bool bAchievementsToo ) override;
+	virtual bool ResetAllStats( bool bAchievementsToo ) = 0;
 
 	// Leaderboard functions
 
 	// asks the Steam back-end for a leaderboard by name, and will create it if it's not yet
 	// This call is asynchronous, with the result returned in LeaderboardFindResult_t
-	SteamAPICall_t FindOrCreateLeaderboard( const char *pchLeaderboardName, ELeaderboardSortMethod eLeaderboardSortMethod, ELeaderboardDisplayType eLeaderboardDisplayType ) override;
+	virtual SteamAPICall_t FindOrCreateLeaderboard( const char *pchLeaderboardName, ELeaderboardSortMethod eLeaderboardSortMethod, ELeaderboardDisplayType eLeaderboardDisplayType ) = 0;
 
 	// as above, but won't create the leaderboard if it's not found
 	// This call is asynchronous, with the result returned in LeaderboardFindResult_t
-	SteamAPICall_t FindLeaderboard( const char *pchLeaderboardName ) override;
+	virtual SteamAPICall_t FindLeaderboard( const char *pchLeaderboardName ) = 0;
 
 	// returns the name of a leaderboard
-	const char *GetLeaderboardName( SteamLeaderboard_t hSteamLeaderboard ) override;
+	virtual const char *GetLeaderboardName( SteamLeaderboard_t hSteamLeaderboard ) = 0;
 
 	// returns the total number of entries in a leaderboard, as of the last request
-	int GetLeaderboardEntryCount( SteamLeaderboard_t hSteamLeaderboard ) override;
+	virtual int GetLeaderboardEntryCount( SteamLeaderboard_t hSteamLeaderboard ) = 0;
 
 	// returns the sort method of the leaderboard
-	ELeaderboardSortMethod GetLeaderboardSortMethod( SteamLeaderboard_t hSteamLeaderboard ) override;
+	virtual ELeaderboardSortMethod GetLeaderboardSortMethod( SteamLeaderboard_t hSteamLeaderboard ) = 0;
 
 	// returns the display type of the leaderboard
-	ELeaderboardDisplayType GetLeaderboardDisplayType( SteamLeaderboard_t hSteamLeaderboard ) override;
+	virtual ELeaderboardDisplayType GetLeaderboardDisplayType( SteamLeaderboard_t hSteamLeaderboard ) = 0;
 
 	// Asks the Steam back-end for a set of rows in the leaderboard.
 	// This call is asynchronous, with the result returned in LeaderboardScoresDownloaded_t
@@ -104,7 +97,7 @@ public:
 	// k_ELeaderboardDataRequestGlobalAroundUser requests rows around the current user, nRangeStart being negate
 	//   e.g. DownloadLeaderboardEntries( hLeaderboard, k_ELeaderboardDataRequestGlobalAroundUser, -3, 3 ) will return 7 rows, 3 before the user, 3 after
 	// k_ELeaderboardDataRequestFriends requests all the rows for friends of the current user 
-	SteamAPICall_t DownloadLeaderboardEntries( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardDataRequest eLeaderboardDataRequest, int nRangeStart, int nRangeEnd ) override;
+	virtual SteamAPICall_t DownloadLeaderboardEntries( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardDataRequest eLeaderboardDataRequest, int nRangeStart, int nRangeEnd ) = 0;
 
 	// Returns data about a single leaderboard entry
 	// use a for loop from 0 to LeaderboardScoresDownloaded_t::m_cEntryCount to get all the downloaded entries
@@ -120,28 +113,16 @@ public:
 	//				...
 	//			}
 	// once you've accessed all the entries, the data will be free'd, and the SteamLeaderboardEntries_t handle will become invalid
-	bool GetDownloadedLeaderboardEntry( SteamLeaderboardEntries_t hSteamLeaderboardEntries, int index, LeaderboardEntry_t *pLeaderboardEntry, int32 *pDetails, int cDetailsMax ) override;
+	virtual bool GetDownloadedLeaderboardEntry( SteamLeaderboardEntries_t hSteamLeaderboardEntries, int index, LeaderboardEntry_t *pLeaderboardEntry, int32 *pDetails, int cDetailsMax ) = 0;
 
 	// Uploads a user score to the Steam back-end.
 	// This call is asynchronous, with the result returned in LeaderboardScoreUploaded_t
+	// If the score passed in is no better than the existing score this user has in the leaderboard, then the leaderboard will not be updated.
 	// Details are extra game-defined information regarding how the user got that score
 	// pScoreDetails points to an array of int32's, cScoreDetailsCount is the number of int32's in the list
-	// Changed from Steam SDK v1.05, backward compatibility
-	SteamAPICall_t UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, int32 nScore, int32 *pScoreDetails, int cScoreDetailsCount ) override;
-	SteamAPICall_t UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardUploadScoreMethod eLeaderboardUploadScoreMethod, int32 nScore, const int32 *pScoreDetails, int cScoreDetailsCount ) override;
-
-	// Retrieves the number of players currently playing your game (online + offline)
-	// This call is asynchronous, with the result returned in NumberOfCurrentPlayers_t
-	SteamAPICall_t GetNumberOfCurrentPlayers() override;
-
-    // Helper methods
-    static Steam_User_Stats* GetInstance();
-    static void ReleaseInstance();
-
-private:
-    // Singleton instance
-    static Steam_User_Stats* s_pInstance;
+	virtual SteamAPICall_t UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, int32 nScore, int32 *pScoreDetails, int cScoreDetailsCount ) = 0;
 };
 
-#endif // VAPORCORE_STEAM_USER_STATS_H
+#define STEAMUSERSTATS_INTERFACE_VERSION005 "STEAMUSERSTATS_INTERFACE_VERSION005"
 
+#endif // ISTEAMUSERSTATS005_H

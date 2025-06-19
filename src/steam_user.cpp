@@ -159,20 +159,28 @@ HAuthTicket Steam_User::GetAuthSessionTicket( void *pTicket, int cbMaxTicket, ui
 // Registers for callbacks if the entity goes offline or cancels the ticket ( see ValidateAuthTicketResponse_t callback and EAuthSessionResponse )
 EBeginAuthSessionResult Steam_User::BeginAuthSession( const void *pAuthTicket, int cbAuthTicket, CSteamID steamID )
 {
-    VLOG_DEBUG("BeginAuthSession called - Ticket: %s, cbAuthTicket: %d, steamID: %llu", pAuthTicket, cbAuthTicket, steamID.ConvertToUint64());
+    VLOG_DEBUG("BeginAuthSession called - Ticket: %s, cbAuthTicket: %d, steamID: %llu", pAuthTicket, cbAuthTicket, steamID.GetAccountID());
     return EBeginAuthSessionResult::k_EBeginAuthSessionResultOK;
 }
 
 // Stop tracking started by BeginAuthSession - called when no longer playing game with this entity
 void Steam_User::EndAuthSession( CSteamID steamID )
 {
-    VLOG_DEBUG("EndAuthSession called - steamID: %llu", steamID.ConvertToUint64());
+    VLOG_DEBUG("EndAuthSession called - steamID: %llu", steamID.GetAccountID());
 }
 
 // Cancel auth ticket from GetAuthSessionTicket, called when no longer playing game with the entity you gave the ticket to
 void Steam_User::CancelAuthTicket( HAuthTicket hAuthTicket )
 {
     VLOG_DEBUG("CancelAuthTicket called - hAuthTicket: %d", hAuthTicket);
+}
+
+// After receiving a user's authentication data, and passing it to BeginAuthSession, use this function
+// to determine if the user owns downloadable content specified by the provided AppID.
+EUserHasLicenseForAppResult Steam_User::UserHasLicenseForApp( CSteamID steamID, AppId_t appID )
+{
+    VLOG_DEBUG("UserHasLicenseForApp called - steamID: %llu, appID: %d", steamID.GetAccountID(), appID);
+    return EUserHasLicenseForAppResult::k_EUserHasLicenseResultHasLicense;
 }
 
 // Helper methods

@@ -7,18 +7,16 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef ISTEAMGAMESERVER_H
-#define ISTEAMGAMESERVER_H
+#ifndef ISTEAMGAMESERVER008_H
+#define ISTEAMGAMESERVER008_H
 #ifdef _WIN32
 #pragma once
 #endif
 
-#include "isteamclient.h"
-
 //-----------------------------------------------------------------------------
 // Purpose: Functions for authenticating users via Steam to play on a game server
 //-----------------------------------------------------------------------------
-class ISteamGameServer
+class ISteamGameServer008
 {
 public:
 	// connection functions
@@ -104,102 +102,8 @@ public:
 	// behind NAT and you want to advertise its IP in a lobby for other clients to directly
 	// connect to
 	virtual uint32 GetPublicIP() = 0;
-
-	// Sets a string defining the "gamedata" for this server, this is optional, but if it is set
-	// it allows users to filter in the matchmaking/server-browser interfaces based on the value
-	// don't set this unless it actually changes, its only uploaded to the master once (when
-	// acknowledged)
-	virtual void SetGameData( const char *pchGameData) = 0; 
-
-	// After receiving a user's authentication data, and passing it to SendUserConnectAndAuthenticate, use this function
-	// to determine if the user owns downloadable content specified by the provided AppID.
-	virtual EUserHasLicenseForAppResult UserHasLicenseForApp( CSteamID steamID, AppId_t appID ) = 0;
 };
 
-#define STEAMGAMESERVER_INTERFACE_VERSION "SteamGameServer009"
+#define STEAMGAMESERVER_INTERFACE_VERSION008 "SteamGameServer008"
 
-// game server flags
-const uint32 k_unServerFlagNone			= 0x00;
-const uint32 k_unServerFlagActive		= 0x01;		// server has users playing
-const uint32 k_unServerFlagSecure		= 0x02;		// server wants to be secure
-const uint32 k_unServerFlagDedicated	= 0x04;		// server is dedicated
-const uint32 k_unServerFlagLinux		= 0x08;		// linux build
-const uint32 k_unServerFlagPassworded	= 0x10;		// password protected
-const uint32 k_unServerFlagPrivate		= 0x20;		// server shouldn't list on master server and
-													// won't enforce authentication of users that connect to the server.
-													// Useful when you run a server where the clients may not
-													// be connected to the internet but you want them to play (i.e LANs)
-
-
-// callbacks
-
-
-// client has been approved to connect to this game server
-struct GSClientApprove_t
-{
-	enum { k_iCallback = k_iSteamGameServerCallbacks + 1 };
-	CSteamID m_SteamID;
-};
-
-
-// client has been denied to connection to this game server
-struct GSClientDeny_t
-{
-	enum { k_iCallback = k_iSteamGameServerCallbacks + 2 };
-	CSteamID m_SteamID;
-	EDenyReason m_eDenyReason;
-	char m_rgchOptionalText[128];
-};
-
-
-// request the game server should kick the user
-struct GSClientKick_t
-{
-	enum { k_iCallback = k_iSteamGameServerCallbacks + 3 };
-	CSteamID m_SteamID;
-	EDenyReason m_eDenyReason;
-};
-
-// NOTE: callback values 4 and 5 are skipped because they are used for old deprecated callbacks, 
-// do not reuse them here.
-
-
-// client achievement info
-struct GSClientAchievementStatus_t
-{
-	enum { k_iCallback = k_iSteamGameServerCallbacks + 6 };
-	uint64 m_SteamID;
-	char m_pchAchievement[128];
-	bool m_bUnlocked;
-};
-
-// received when the game server requests to be displayed as secure (VAC protected)
-// m_bSecure is true if the game server should display itself as secure to users, false otherwise
-struct GSPolicyResponse_t
-{
-	enum { k_iCallback = k_iSteamUserCallbacks + 15 };
-	uint8 m_bSecure;
-};
-
-// GS gameplay stats info
-struct GSGameplayStats_t
-{
-	enum { k_iCallback = k_iSteamGameServerCallbacks + 7 };
-	EResult m_eResult;					// Result of the call
-	int32	m_nRank;					// Overall rank of the server (0-based)
-	uint32	m_unTotalConnects;			// Total number of clients who have ever connected to the server
-	uint32	m_unTotalMinutesPlayed;		// Total number of minutes ever played on the server
-};
-
-// send as a reply to RequestUserGroupStatus()
-struct GSClientGroupStatus_t
-{
-	enum { k_iCallback = k_iSteamGameServerCallbacks + 8 };
-	CSteamID m_SteamIDUser;
-	CSteamID m_SteamIDGroup;
-	bool m_bMember;
-	bool m_bOfficer;
-};
-
-
-#endif // ISTEAMGAMESERVER_H
+#endif // ISTEAMGAMESERVER008_H

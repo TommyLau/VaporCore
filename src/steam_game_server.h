@@ -16,6 +16,7 @@
 #include <sdk/isteamgameserver.h>
 #include <sdk/isteamgameserver004.h>
 #include <sdk/isteamgameserver005.h>
+#include <sdk/isteamgameserver008.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for authenticating users via Steam to play on a game server
@@ -23,7 +24,8 @@
 class Steam_Game_Server :
     public ISteamGameServer,
 	public ISteamGameServer004,
-	public ISteamGameServer005
+	public ISteamGameServer005,
+	public ISteamGameServer008
 {
 public:
     Steam_Game_Server();
@@ -121,6 +123,16 @@ public:
 	// behind NAT and you want to advertise its IP in a lobby for other clients to directly
 	// connect to
 	uint32 GetPublicIP() override;
+
+	// Sets a string defining the "gamedata" for this server, this is optional, but if it is set
+	// it allows users to filter in the matchmaking/server-browser interfaces based on the value
+	// don't set this unless it actually changes, its only uploaded to the master once (when
+	// acknowledged)
+	void SetGameData( const char *pchGameData) override; 
+
+	// After receiving a user's authentication data, and passing it to SendUserConnectAndAuthenticate, use this function
+	// to determine if the user owns downloadable content specified by the provided AppID.
+	EUserHasLicenseForAppResult UserHasLicenseForApp( CSteamID steamID, AppId_t appID ) override;
 
     // Helper methods
     static Steam_Game_Server* GetInstance();

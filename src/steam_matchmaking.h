@@ -16,6 +16,7 @@
 #include <sdk/isteammatchmaking.h>
 #include <sdk/isteammatchmaking002.h>
 #include <sdk/isteammatchmaking004.h>
+#include <sdk/isteammatchmaking006.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for match making services for clients to get to favorites
@@ -24,7 +25,8 @@
 class Steam_Matchmaking :
 	public ISteamMatchmaking,
     public ISteamMatchmaking002,
-    public ISteamMatchmaking004
+    public ISteamMatchmaking004,
+    public ISteamMatchmaking006
 {
 public:
     Steam_Matchmaking();
@@ -80,13 +82,20 @@ public:
 	// filters for lobbies
 	// this needs to be called before RequestLobbyList() to take effect
 	// these are cleared on each call to RequestLobbyList()
+	// Removed from Steam SDK v1.05, backward compatibility
 	void AddRequestLobbyListFilter( const char *pchKeyToMatch, const char *pchValueToMatch ) override;
+	void AddRequestLobbyListStringFilter( const char *pchKeyToMatch, const char *pchValueToMatch, ELobbyComparison eComparisonType ) override;
 	// numerical comparison - 0 is equal, -1 is the lobby value is less than nValueToMatch, 1 is the lobby value is greater than nValueToMatch
+	// Removed from Steam SDK v1.05, backward compatibility
 	void AddRequestLobbyListNumericalFilter( const char *pchKeyToMatch, int nValueToMatch, int nComparisonType /* 0 is equal, -1 is less than, 1 is greater than */ ) override;
+	void AddRequestLobbyListNumericalFilter( const char *pchKeyToMatch, int nValueToMatch, ELobbyComparison eComparisonType ) override;
 	// sets RequestLobbyList() to only returns lobbies which aren't yet full - needs SetLobbyMemberLimit() called on the lobby to set an initial limit
+	// Removed from Steam SDK v1.03, backward compatibility
 	void AddRequestLobbyListSlotsAvailableFilter() override;
 	// returns results closest to the specified value. Multiple near filters can be added, with early filters taking precedence
 	void AddRequestLobbyListNearValueFilter( const char *pchKeyToMatch, int nValueToBeCloseTo ) override;
+	// returns only lobbies with the specified number of slots available
+	void AddRequestLobbyListFilterSlotsAvailable( int nSlotsAvailable ) override;
 
 	// returns the CSteamID of a lobby, as retrieved by a RequestLobbyList call
 	// should only be called after a LobbyMatchList_t callback is received
@@ -101,7 +110,9 @@ public:
 	// results will be returned by LobbyCreated_t callback when the lobby has been created;
 	// local user will the join the lobby, resulting in an additional LobbyEnter_t callback being sent
 	// operations on the chat room can only proceed once the LobbyEnter_t has been received
+	// Changed from Steam SDK v1.05, backward compatibility
 	void CreateLobby( bool bPrivate ) override;
+	SteamAPICall_t CreateLobby( ELobbyType eLobbyType, int cMaxMembers ) override;
 	// results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this pointer
 	// a LobbyEnter_t callback will also be received (since the local user is joining their own lobby)
 	SteamAPICall_t CreateLobby( ELobbyType eLobbyType ) override;
@@ -142,7 +153,16 @@ public:
 	// other users in the lobby will receive notification of the lobby data change via a LobbyDataUpdate_t callback
 	bool SetLobbyData( CSteamID steamIDLobby, const char *pchKey, const char *pchValue ) override;
 
-	// As above, but gets per-user data for someone in this lobby
+	// returns the number of metadata keys set on the specified lobby
+	int GetLobbyDataCount( CSteamID steamIDLobby ) override;
+
+	// returns a lobby metadata key/values pair by index, of range [0, GetLobbyDataCount())
+	bool GetLobbyDataByIndex( CSteamID steamIDLobby, int iLobbyData, char *pchKey, int cchKeyBufferSize, char *pchValue, int cchValueBufferSize ) override;
+
+	// removes a metadata key from the lobby
+	bool DeleteLobbyData( CSteamID steamIDLobby, const char *pchKey ) override;
+
+	// Gets per-user metadata for someone in this lobby
 	const char *GetLobbyMemberData( CSteamID steamIDLobby, CSteamID steamIDUser, const char *pchKey ) override;
 	// Sets per-user metadata (for the local user implicitly)
 	void SetLobbyMemberData( CSteamID steamIDLobby, const char *pchKey, const char *pchValue ) override;
@@ -187,11 +207,20 @@ public:
 	// only lobbies that are k_ELobbyTypePublic will be returned by RequestLobbyList() calls
 	bool SetLobbyType( CSteamID steamIDLobby, ELobbyType eLobbyType ) override;
 
+	// sets whether or not a lobby is joinable - defaults to true for a new lobby
+	// if set to false, no user can join, even if they are a friend or have been invited
+	bool SetLobbyJoinable( CSteamID steamIDLobby, bool bLobbyJoinable ) override;
+
 	// returns the current lobby owner
 	// you must be a member of the lobby to access this
 	// there always one lobby owner - if the current owner leaves, another user will become the owner
 	// it is possible (bur rare) to join a lobby just as the owner is leaving, thus entering a lobby with self as the owner
 	CSteamID GetLobbyOwner( CSteamID steamIDLobby ) override;
+
+	// changes who the lobby owner is
+	// you must be the lobby owner for this to succeed, and steamIDNewOwner must be in the lobby
+	// after completion, the local user will no longer be the owner
+	bool SetLobbyOwner( CSteamID steamIDLobby, CSteamID steamIDNewOwner ) override;
 
     // Helper methods
     static Steam_Matchmaking* GetInstance();

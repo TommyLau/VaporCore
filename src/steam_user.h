@@ -109,6 +109,10 @@ public:
 	// Cancel auth ticket from GetAuthSessionTicket, called when no longer playing game with the entity you gave the ticket to
 	void CancelAuthTicket( HAuthTicket hAuthTicket ) override;
 
+	// After receiving a user's authentication data, and passing it to BeginAuthSession, use this function
+	// to determine if the user owns downloadable content specified by the provided AppID.
+	EUserHasLicenseForAppResult UserHasLicenseForApp( CSteamID steamID, AppId_t appID ) override;
+
     // Helper methods
     static Steam_User* GetInstance();
     static void ReleaseInstance();
