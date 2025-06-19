@@ -5,8 +5,6 @@
  * This file is part of VaporCore.
  * 
  * Author: Tommy Lau <tommy.lhg@gmail.com>
- * 
- * Purpose: Steam API implementation
  */
 
 #include <cstring>

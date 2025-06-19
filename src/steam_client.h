@@ -5,8 +5,6 @@
  * This file is part of VaporCore.
  * 
  * Author: Tommy Lau <tommy.lhg@gmail.com>
- * 
- * Purpose: Steam Client implementation
  */
 
 #ifndef VAPORCORE_STEAM_CLIENT_H
@@ -17,7 +15,7 @@
 
 #include <map>
 
-#include "../include/sdk/steam_api.h"
+#include "../include/sdk/isteamclient.h"
 
 // Steam pipe state enumeration
 enum Steam_Pipe {
@@ -26,6 +24,15 @@ enum Steam_Pipe {
     STEAM_PIPE_SERVER = 2
 };
 
+//-----------------------------------------------------------------------------
+// Purpose: Interface to creating a new steam instance, or to
+//			connect to an existing steam instance, whether it's in a
+//			different process or is local.
+//
+//			For most scenarios this is all handled automatically via SteamAPI_Init().
+//			You'll only need to use these interfaces if you have a more complex versioning scheme,
+//			where you want to get different versions of the same interface in different dll's in your project.
+//-----------------------------------------------------------------------------
 class Steam_Client : public ISteamClient
 {
 public:
@@ -33,76 +40,76 @@ public:
     ~Steam_Client();
 
 	// Creates a communication pipe to the Steam client
-	HSteamPipe CreateSteamPipe();
+	HSteamPipe CreateSteamPipe() override;
 
 	// Releases a previously created communications pipe
-	bool BReleaseSteamPipe( HSteamPipe hSteamPipe );
+	bool BReleaseSteamPipe( HSteamPipe hSteamPipe ) override;
 
 	// connects to an existing global user, failing if none exists
 	// used by the game to coordinate with the steamUI
-	HSteamUser ConnectToGlobalUser( HSteamPipe hSteamPipe );
+	HSteamUser ConnectToGlobalUser( HSteamPipe hSteamPipe ) override;
 
 	// used by game servers, create a steam user that won't be shared with anyone else
-	HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe );
+	HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe ) override;
 
 	// removes an allocated user
-	void ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser );
+	void ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser ) override;
 
 	// retrieves the ISteamUser interface associated with the handle
-	ISteamUser *GetISteamUser( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion );
+	ISteamUser *GetISteamUser( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// retrieves the ISteamGameServer interface associated with the handle
-	ISteamGameServer *GetISteamGameServer( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion );
+	ISteamGameServer *GetISteamGameServer( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// set the local IP and Port to bind to
 	// this must be set before CreateLocalUser()
-	void SetLocalIPBinding( uint32 unIP, uint16 usPort ); 
+	void SetLocalIPBinding( uint32 unIP, uint16 usPort ) override; 
 
 	// returns the ISteamFriends interface
-	ISteamFriends *GetISteamFriends( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion );
+	ISteamFriends *GetISteamFriends( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// returns the ISteamUtils interface
-	ISteamUtils *GetISteamUtils( HSteamPipe hSteamPipe, const char *pchVersion );
+	ISteamUtils *GetISteamUtils( HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// returns the ISteamMatchmaking interface
-	ISteamMatchmaking *GetISteamMatchmaking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion );
+	ISteamMatchmaking *GetISteamMatchmaking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// returns the ISteamContentServer interface
-	ISteamContentServer *GetISteamContentServer( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion );
+	ISteamContentServer *GetISteamContentServer( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// returns the ISteamMasterServerUpdater interface
-	ISteamMasterServerUpdater *GetISteamMasterServerUpdater( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion );
+	ISteamMasterServerUpdater *GetISteamMasterServerUpdater( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// returns the ISteamMatchmakingServers interface
-	ISteamMatchmakingServers *GetISteamMatchmakingServers( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion );
+	ISteamMatchmakingServers *GetISteamMatchmakingServers( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// returns the a generic interface
-	void *GetISteamGenericInterface( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion );
+	void *GetISteamGenericInterface( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// this needs to be called every frame to process matchmaking results
 	// redundant if you're already calling SteamAPI_RunCallbacks()
-	void RunFrame();
+	void RunFrame() override;
 
 	// returns the number of IPC calls made since the last time this function was called
 	// Used for perf debugging so you can understand how many IPC calls your game makes per frame
 	// Every IPC call is at minimum a thread context switch if not a process one so you want to rate
 	// control how often you do them.
-	uint32 GetIPCCallCount();
+	uint32 GetIPCCallCount() override;
 
 	// returns the ISteamUserStats interface
-	ISteamUserStats *GetISteamUserStats( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion );
+	ISteamUserStats *GetISteamUserStats( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// returns apps interface
-	ISteamApps *GetISteamApps( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion );
+	ISteamApps *GetISteamApps( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// networking
-	ISteamNetworking *GetISteamNetworking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion );
+	ISteamNetworking *GetISteamNetworking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// API warning handling
 	// 'int' is the severity; 0 for msg, 1 for warning
 	// 'const char *' is the text of the message
 	// callbacks will occur directly after the API function is called that generated the warning or message
-	void SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction );
+	void SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction ) override;
 
     // Helper methods
     static Steam_Client* GetInstance();
