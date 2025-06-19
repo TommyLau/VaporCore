@@ -15,7 +15,8 @@
 
 #include <map>
 
-#include "../include/sdk/isteamclient.h"
+#include <sdk/isteamclient.h>
+#include <sdk/isteamclient007.h>
 
 // Steam pipe state enumeration
 enum Steam_Pipe {
@@ -33,7 +34,9 @@ enum Steam_Pipe {
 //			You'll only need to use these interfaces if you have a more complex versioning scheme,
 //			where you want to get different versions of the same interface in different dll's in your project.
 //-----------------------------------------------------------------------------
-class Steam_Client : public ISteamClient
+class Steam_Client :
+	public ISteamClient,
+    public ISteamClient007
 {
 public:
     Steam_Client();
@@ -50,7 +53,9 @@ public:
 	HSteamUser ConnectToGlobalUser( HSteamPipe hSteamPipe ) override;
 
 	// used by game servers, create a steam user that won't be shared with anyone else
+	// Removed from Steam SDK v1.04, backward compatibility
 	HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe ) override;
+	HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType eAccountType ) override;
 
 	// removes an allocated user
 	void ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser ) override;
@@ -75,6 +80,7 @@ public:
 	ISteamMatchmaking *GetISteamMatchmaking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// returns the ISteamContentServer interface
+	// Removed from Steam SDK v1.04, backward compatibility
 	ISteamContentServer *GetISteamContentServer( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// returns the ISteamMasterServerUpdater interface
@@ -86,6 +92,18 @@ public:
 	// returns the a generic interface
 	void *GetISteamGenericInterface( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
+	// returns the ISteamUserStats interface
+	ISteamUserStats *GetISteamUserStats( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	// returns apps interface
+	ISteamApps *GetISteamApps( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	// networking
+	ISteamNetworking *GetISteamNetworking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	// remote storage
+	ISteamRemoteStorage *GetISteamRemoteStorage( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
 	// this needs to be called every frame to process matchmaking results
 	// redundant if you're already calling SteamAPI_RunCallbacks()
 	void RunFrame() override;
@@ -96,23 +114,11 @@ public:
 	// control how often you do them.
 	uint32 GetIPCCallCount() override;
 
-	// returns the ISteamUserStats interface
-	ISteamUserStats *GetISteamUserStats( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
-
-	// returns apps interface
-	ISteamApps *GetISteamApps( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
-
-	// networking
-	ISteamNetworking *GetISteamNetworking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
-
 	// API warning handling
 	// 'int' is the severity; 0 for msg, 1 for warning
 	// 'const char *' is the text of the message
 	// callbacks will occur directly after the API function is called that generated the warning or message
 	void SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction ) override;
-
-	// remote storage
-	ISteamRemoteStorage *GetISteamRemoteStorage( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
     // Helper methods
     static Steam_Client* GetInstance();

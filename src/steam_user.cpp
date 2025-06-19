@@ -147,6 +147,34 @@ EVoiceResult Steam_User::DecompressVoice( void *pCompressed, uint32 cbCompressed
     return EVoiceResult::k_EVoiceResultNotRecording;
 }
 
+// Retrieve ticket to be sent to the entity who wishes to authenticate you. 
+// pcbTicket retrieves the length of the actual ticket.
+HAuthTicket Steam_User::GetAuthSessionTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket )
+{
+    VLOG_DEBUG("GetAuthSessionTicket called - Ticket: %s, MaxTicket: %d, pcbTicket: %d", pTicket, cbMaxTicket, pcbTicket);
+    return 0;
+}
+
+// Authenticate ticket from entity steamID to be sure it is valid and isnt reused
+// Registers for callbacks if the entity goes offline or cancels the ticket ( see ValidateAuthTicketResponse_t callback and EAuthSessionResponse )
+EBeginAuthSessionResult Steam_User::BeginAuthSession( const void *pAuthTicket, int cbAuthTicket, CSteamID steamID )
+{
+    VLOG_DEBUG("BeginAuthSession called - Ticket: %s, cbAuthTicket: %d, steamID: %llu", pAuthTicket, cbAuthTicket, steamID.ConvertToUint64());
+    return EBeginAuthSessionResult::k_EBeginAuthSessionResultOK;
+}
+
+// Stop tracking started by BeginAuthSession - called when no longer playing game with this entity
+void Steam_User::EndAuthSession( CSteamID steamID )
+{
+    VLOG_DEBUG("EndAuthSession called - steamID: %llu", steamID.ConvertToUint64());
+}
+
+// Cancel auth ticket from GetAuthSessionTicket, called when no longer playing game with the entity you gave the ticket to
+void Steam_User::CancelAuthTicket( HAuthTicket hAuthTicket )
+{
+    VLOG_DEBUG("CancelAuthTicket called - hAuthTicket: %d", hAuthTicket);
+}
+
 // Helper methods
 Steam_User* Steam_User::GetInstance()
 {

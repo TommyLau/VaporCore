@@ -7,38 +7,11 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef ISTEAMCLIENT_H
-#define ISTEAMCLIENT_H
+#ifndef ISTEAMCLIENT007_H
+#define ISTEAMCLIENT007_H
 #ifdef _WIN32
 #pragma once
 #endif
-
-#include "steamtypes.h"
-#include "steamclientpublic.h"
-
-// handle to a communication pipe to the Steam client
-typedef int32 HSteamPipe;
-// handle to single instance of a steam user
-typedef int32 HSteamUser;
-// function prototype
-#if defined( POSIX ) && !defined( _CYGWIN )
-#define __cdecl
-#endif
-extern "C" typedef void (__cdecl *SteamAPIWarningMessageHook_t)(int, const char *);
-
-// interface predec
-class ISteamUser;
-class ISteamGameServer;
-class ISteamFriends;
-class ISteamUtils;
-class ISteamMatchmaking;
-class ISteamContentServer;
-class ISteamMasterServerUpdater;
-class ISteamMatchmakingServers;
-class ISteamUserStats;
-class ISteamApps;
-class ISteamNetworking;
-class ISteamRemoteStorage;
 
 //-----------------------------------------------------------------------------
 // Purpose: Interface to creating a new steam instance, or to
@@ -49,7 +22,7 @@ class ISteamRemoteStorage;
 //			You'll only need to use these interfaces if you have a more complex versioning scheme,
 //			where you want to get different versions of the same interface in different dll's in your project.
 //-----------------------------------------------------------------------------
-class ISteamClient
+class ISteamClient007
 {
 public:
 	// Creates a communication pipe to the Steam client
@@ -63,7 +36,7 @@ public:
 	virtual HSteamUser ConnectToGlobalUser( HSteamPipe hSteamPipe ) = 0;
 
 	// used by game servers, create a steam user that won't be shared with anyone else
-	virtual HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType eAccountType ) = 0;
+	virtual HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe ) = 0;
 
 	// removes an allocated user
 	virtual void ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser ) = 0;
@@ -87,6 +60,9 @@ public:
 	// returns the ISteamMatchmaking interface
 	virtual ISteamMatchmaking *GetISteamMatchmaking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
 
+	// returns the ISteamContentServer interface
+	virtual ISteamContentServer *GetISteamContentServer( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
+
 	// returns the ISteamMasterServerUpdater interface
 	virtual ISteamMasterServerUpdater *GetISteamMasterServerUpdater( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
 
@@ -95,18 +71,6 @@ public:
 
 	// returns the a generic interface
 	virtual void *GetISteamGenericInterface( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
-
-	// returns the ISteamUserStats interface
-	virtual ISteamUserStats *GetISteamUserStats( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
-
-	// returns apps interface
-	virtual ISteamApps *GetISteamApps( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
-
-	// networking
-	virtual ISteamNetworking *GetISteamNetworking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
-
-	// remote storage
-	virtual ISteamRemoteStorage *GetISteamRemoteStorage( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
 
 	// this needs to be called every frame to process matchmaking results
 	// redundant if you're already calling SteamAPI_RunCallbacks()
@@ -118,36 +82,26 @@ public:
 	// control how often you do them.
 	virtual uint32 GetIPCCallCount() = 0;
 
+	// returns the ISteamUserStats interface
+	virtual ISteamUserStats *GetISteamUserStats( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
+
+	// returns apps interface
+	virtual ISteamApps *GetISteamApps( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
+
+	// networking
+	virtual ISteamNetworking *GetISteamNetworking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
+
 	// API warning handling
 	// 'int' is the severity; 0 for msg, 1 for warning
 	// 'const char *' is the text of the message
 	// callbacks will occur directly after the API function is called that generated the warning or message
 	virtual void SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction ) = 0;
 
+	// remote storage
+	virtual ISteamRemoteStorage *GetISteamRemoteStorage( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
+
 };
 
-#define STEAMCLIENT_INTERFACE_VERSION		"SteamClient008"
+#define STEAMCLIENT_INTERFACE_VERSION007 "SteamClient007"
 
-//-----------------------------------------------------------------------------
-// Purpose: Base values for callback identifiers, each callback must
-//			have a unique ID.
-//-----------------------------------------------------------------------------
-enum { k_iSteamUserCallbacks = 100 };
-enum { k_iSteamGameServerCallbacks = 200 };
-enum { k_iSteamFriendsCallbacks = 300 };
-enum { k_iSteamBillingCallbacks = 400 };
-enum { k_iSteamMatchmakingCallbacks = 500 };
-enum { k_iSteamContentServerCallbacks = 600 };
-enum { k_iSteamUtilsCallbacks = 700 };
-enum { k_iClientFriendsCallbacks = 800 };
-enum { k_iClientUserCallbacks = 900 };
-enum { k_iSteamAppsCallbacks = 1000 };
-enum { k_iSteamUserStatsCallbacks = 1100 };
-enum { k_iSteamNetworkingCallbacks = 1200 };
-enum { k_iClientRemoteStorageCallbacks = 1300 };
-enum { k_iSteamUserItemsCallbacks = 1400 };
-enum { k_iSteamGameServerItemsCallbacks = 1500 };
-enum { k_iClientUtilsCallbacks = 1600 };
-
-
-#endif // ISTEAMCLIENT_H
+#endif // ISTEAMCLIENT007_H

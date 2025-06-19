@@ -259,9 +259,17 @@ S_API HSteamPipe SteamAPI_GetHSteamPipe() {
     return g_hSteamPipe;
 }
 
-// returns the user we are communicating to Steam with
-S_API HSteamUser SteamAPI_GetHSteamUser() {
-    // TODO: Implement SteamAPI_GetHSteamUser
+// sets whether or not Steam_RunCallbacks() should do a try {} catch (...) {} around calls to issuing callbacks
+S_API void SteamAPI_SetTryCatchCallbacks( bool bTryCatchCallbacks ) {
+    // TODO: Implement SteamAPI_SetTryCatchCallbacks
+}
+
+// backwards compat export, passes through to SteamAPI_ variants
+S_API HSteamPipe GetHSteamPipe() {
+    return g_hSteamPipe;
+}
+
+S_API HSteamUser GetHSteamUser() {
     return g_hSteamUser;
 }
 
@@ -273,12 +281,7 @@ S_API HSteamUser SteamAPI_GetHSteamUser() {
 // for whatever Steam API version it has.
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-// Removed from Steam SDK v1.01, backward compatibility
-S_API HSteamPipe GetHSteamPipe() {
-    return g_hSteamPipe;
-}
-
-// Removed from Steam SDK v1.01, backward compatibility
-S_API HSteamUser GetHSteamUser() {
+S_API HSteamUser SteamAPI_GetHSteamUser() {
+    // TODO: Implement SteamAPI_GetHSteamUser
     return g_hSteamUser;
 }

@@ -15,10 +15,12 @@
 
 #include <sdk/isteamuserstats.h>
 #include <sdk/isteamuserstats003.h>
+#include <sdk/isteamuserstats004.h>
 
 class Steam_User_Stats :
 	public ISteamUserStats,
-	public ISteamUserStats003
+	public ISteamUserStats003,
+	public ISteamUserStats004
 {
 public:
     Steam_User_Stats();
@@ -66,6 +68,64 @@ public:
 	bool GetUserStat( CSteamID steamIDUser, const char *pchName, int32 *pData ) override;
 	bool GetUserStat( CSteamID steamIDUser, const char *pchName, float *pData ) override;
 	bool GetUserAchievement( CSteamID steamIDUser, const char *pchName, bool *pbAchieved ) override;
+
+	// Reset stats 
+	bool ResetAllStats( bool bAchievementsToo ) override;
+
+	// Leaderboard functions
+
+	// asks the Steam back-end for a leaderboard by name, and will create it if it's not yet
+	// This call is asynchronous, with the result returned in LeaderboardFindResult_t
+	SteamAPICall_t FindOrCreateLeaderboard( const char *pchLeaderboardName, ELeaderboardSortMethod eLeaderboardSortMethod, ELeaderboardDisplayType eLeaderboardDisplayType ) override;
+
+	// as above, but won't create the leaderboard if it's not found
+	// This call is asynchronous, with the result returned in LeaderboardFindResult_t
+	SteamAPICall_t FindLeaderboard( const char *pchLeaderboardName ) override;
+
+	// returns the name of a leaderboard
+	const char *GetLeaderboardName( SteamLeaderboard_t hSteamLeaderboard ) override;
+
+	// returns the total number of entries in a leaderboard, as of the last request
+	int GetLeaderboardEntryCount( SteamLeaderboard_t hSteamLeaderboard ) override;
+
+	// returns the sort method of the leaderboard
+	ELeaderboardSortMethod GetLeaderboardSortMethod( SteamLeaderboard_t hSteamLeaderboard ) override;
+
+	// returns the display type of the leaderboard
+	ELeaderboardDisplayType GetLeaderboardDisplayType( SteamLeaderboard_t hSteamLeaderboard ) override;
+
+	// Asks the Steam back-end for a set of rows in the leaderboard.
+	// This call is asynchronous, with the result returned in LeaderboardScoresDownloaded_t
+	// LeaderboardScoresDownloaded_t will contain a handle to pull the results from GetDownloadedLeaderboardEntries() (below)
+	// You can ask for more entries than exist, and it will return as many as do exist.
+	// k_ELeaderboardDataRequestGlobal requests rows in the leaderboard from the full table, with nRangeStart & nRangeEnd in the range [1, TotalEntries]
+	// k_ELeaderboardDataRequestGlobalAroundUser requests rows around the current user, nRangeStart being negate
+	//   e.g. DownloadLeaderboardEntries( hLeaderboard, k_ELeaderboardDataRequestGlobalAroundUser, -3, 3 ) will return 7 rows, 3 before the user, 3 after
+	// k_ELeaderboardDataRequestFriends requests all the rows for friends of the current user 
+	SteamAPICall_t DownloadLeaderboardEntries( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardDataRequest eLeaderboardDataRequest, int nRangeStart, int nRangeEnd ) override;
+
+	// Returns data about a single leaderboard entry
+	// use a for loop from 0 to LeaderboardScoresDownloaded_t::m_cEntryCount to get all the downloaded entries
+	// e.g.
+	//		void OnLeaderboardScoresDownloaded( LeaderboardScoresDownloaded_t *pLeaderboardScoresDownloaded )
+	//		{
+	//			for ( int index = 0; index < pLeaderboardScoresDownloaded->m_cEntryCount; index++ )
+	//			{
+	//				LeaderboardEntry_t leaderboardEntry;
+	//				int32 details[3];		// we know this is how many we've stored previously
+	//				GetDownloadedLeaderboardEntry( pLeaderboardScoresDownloaded->m_hSteamLeaderboardEntries, index, &leaderboardEntry, details, 3 );
+	//				assert( leaderboardEntry.m_cDetails == 3 );
+	//				...
+	//			}
+	// once you've accessed all the entries, the data will be free'd, and the SteamLeaderboardEntries_t handle will become invalid
+	bool GetDownloadedLeaderboardEntry( SteamLeaderboardEntries_t hSteamLeaderboardEntries, int index, LeaderboardEntry_t *pLeaderboardEntry, int32 *pDetails, int cDetailsMax ) override;
+
+	// Uploads a user score to the Steam back-end.
+	// This call is asynchronous, with the result returned in LeaderboardScoreUploaded_t
+	// If the score passed in is no better than the existing score this user has in the leaderboard, then the leaderboard will not be updated.
+	// Details are extra game-defined information regarding how the user got that score
+	// pScoreDetails points to an array of int32's, cScoreDetailsCount is the number of int32's in the list
+	SteamAPICall_t UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, int32 nScore, int32 *pScoreDetails, int cScoreDetailsCount ) override;
 
     // Helper methods
     static Steam_User_Stats* GetInstance();

@@ -15,13 +15,15 @@
 
 #include <sdk/isteamapps.h>
 #include <sdk/isteamapps001.h>
+#include <sdk/isteamapps002.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to app data
 //-----------------------------------------------------------------------------
 class Steam_Apps :
     public ISteamApps,
-    public ISteamApps001
+    public ISteamApps001,
+    public ISteamApps002
 {
 public:
     Steam_Apps();
@@ -42,6 +44,9 @@ public:
 
     // only use this member if you need to check ownership of another game related to yours, a demo for example
     bool BIsSubscribedApp( AppId_t appID ) override;
+
+	// Takes AppID of DLC and checks if the user owns the DLC & if the DLC is installed
+	bool BIsDlcInstalled( AppId_t appID ) override;
 
     // Helper methods
     static Steam_Apps* GetInstance();

@@ -123,7 +123,15 @@ HSteamUser Steam_Client::ConnectToGlobalUser( HSteamPipe hSteamPipe )
 HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe )
 {
     // TODO: Implement local user creation
-    VLOG_DEBUG("CreateLocalUser called");
+    VLOG_DEBUG("CreateLocalUser called with phSteamPipe=%u", phSteamPipe);
+    return VaporCore::DEFAULT_SERVER_USER;
+}
+
+// used by game servers, create a steam user that won't be shared with anyone else
+HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType eAccountType )
+{
+    // TODO: Implement local user creation
+    VLOG_DEBUG("CreateLocalUser called with phSteamPipe=%u and eAccountType=%d", phSteamPipe, eAccountType);
     return VaporCore::DEFAULT_SERVER_USER;
 }
 
@@ -183,6 +191,7 @@ ISteamMatchmaking *Steam_Client::GetISteamMatchmaking( HSteamUser hSteamUser, HS
 }
 
 // returns the ISteamContentServer interface
+// Removed from Steam SDK v1.04, backward compatibility
 ISteamContentServer *Steam_Client::GetISteamContentServer( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     // TODO: Implement content server interface
@@ -214,6 +223,38 @@ void *Steam_Client::GetISteamGenericInterface( HSteamUser hSteamUser, HSteamPipe
     return nullptr;
 }
 
+// returns the ISteamUserStats interface
+ISteamUserStats *Steam_Client::GetISteamUserStats( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+{
+    // TODO: Implement user stats interface
+    VLOG_DEBUG("GetISteamUserStats called");
+    return nullptr;
+}
+
+// returns apps interface
+ISteamApps *Steam_Client::GetISteamApps( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+{
+    // TODO: Implement apps interface
+    VLOG_DEBUG("GetISteamApps called");
+    return nullptr;
+}
+
+// networking
+ISteamNetworking *Steam_Client::GetISteamNetworking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion)
+{
+    // TODO: Implement networking interface
+    VLOG_DEBUG("GetISteamNetworking called");
+    return nullptr;
+}
+
+// remote storage
+ISteamRemoteStorage *Steam_Client::GetISteamRemoteStorage( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
+{
+    // TODO: Implement remote storage interface
+    VLOG_DEBUG("GetISteamRemoteStorage called");
+    return nullptr;
+}
+
 // this needs to be called every frame to process matchmaking results
 // redundant if you're already calling SteamAPI_RunCallbacks()
 void Steam_Client::RunFrame()
@@ -231,29 +272,6 @@ uint32 Steam_Client::GetIPCCallCount()
     return 1;
 }
 
-// returns the ISteamUserStats interface
-ISteamUserStats *Steam_Client::GetISteamUserStats( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
-{
-    // TODO: Implement user stats interface
-    VLOG_DEBUG("GetISteamUserStats called");
-    return nullptr;
-}
-
-// returns apps interface
-ISteamApps *Steam_Client::GetISteamApps( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
-{
-    // TODO: Implement apps interface
-    VLOG_DEBUG("GetISteamApps called");
-    return nullptr;
-}
-
-	// networking
-ISteamNetworking *Steam_Client::GetISteamNetworking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion)
-{
-    // TODO: Implement networking interface
-    VLOG_DEBUG("GetISteamNetworking called");
-    return nullptr;
-}
 
 // API warning handling
 // 'int' is the severity; 0 for msg, 1 for warning
@@ -265,10 +283,3 @@ void Steam_Client::SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction
     VLOG_DEBUG("SetWarningMessageHook called");
 } 
 
-// remote storage
-ISteamRemoteStorage *Steam_Client::GetISteamRemoteStorage( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
-{
-    // TODO: Implement remote storage interface
-    VLOG_DEBUG("GetISteamRemoteStorage called");
-    return nullptr;
-}

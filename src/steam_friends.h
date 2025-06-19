@@ -71,9 +71,11 @@ public:
 	// Removed from Steam SDK v1.02, backward compatibility
 	int GetFriendAvatar( CSteamID steamIDFriend ) override;
 	int GetFriendAvatar( CSteamID steamIDFriend, int eAvatarSize ) override;
-
 	// returns true if the friend is actually in a game
+	// Changed from Steam SDK v1.04, backward compatibility
 	bool GetFriendGamePlayed( CSteamID steamIDFriend, uint64 *pulGameID, uint32 *punGameIP, uint16 *pusGamePort, uint16 *pusQueryPort ) override;
+	// returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
+	bool GetFriendGamePlayed( CSteamID steamIDFriend, FriendGameInfo_t *pFriendGameInfo ) override;
 	// accesses old friends names - returns an empty string when their are no more items in the history
 	const char *GetFriendPersonaNameHistory( CSteamID steamIDFriend, int iPersonaName ) override;
 
@@ -110,6 +112,9 @@ public:
 	// activates game overlay web browser directly to the specified URL
 	// full address with protocol type is required, e.g. http://www.steamgames.com/
 	void ActivateGameOverlayToWebPage( const char *pchURL ) override;
+
+	// activates game overlay to store page for app
+	void ActivateGameOverlayToStore( AppId_t nAppID ) override;
 
     // Helper methods
     static Steam_Friends* GetInstance();

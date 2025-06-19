@@ -79,6 +79,12 @@ bool Steam_Apps::BIsSubscribedApp( AppId_t appID )
     return false;
 }
 
+// Takes AppID of DLC and checks if the user owns the DLC & if the DLC is installed
+bool Steam_Apps::BIsDlcInstalled( AppId_t appID )
+{
+    return false;
+}
+
 // Helper methods
 Steam_Apps* Steam_Apps::GetInstance()
 {

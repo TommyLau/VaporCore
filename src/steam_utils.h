@@ -14,11 +14,14 @@
 #endif
 
 #include <sdk/isteamutils.h>
+#include <sdk/isteamutils002.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to user independent utility functions
 //-----------------------------------------------------------------------------
-class Steam_Utils : public ISteamUtils
+class Steam_Utils :
+	public ISteamUtils,
+	public ISteamUtils002
 {
 public:
     Steam_Utils();
@@ -64,6 +67,26 @@ public:
 	bool IsAPICallCompleted( SteamAPICall_t hSteamAPICall, bool *pbFailed ) override;
 	ESteamAPICallFailure GetAPICallFailureReason( SteamAPICall_t hSteamAPICall ) override;
 	bool GetAPICallResult( SteamAPICall_t hSteamAPICall, void *pCallback, int cubCallback, int iCallbackExpected, bool *pbFailed ) override;
+
+	// this needs to be called every frame to process matchmaking results
+	// redundant if you're already calling SteamAPI_RunCallbacks()
+	void RunFrame() override;
+
+	// returns the number of IPC calls made since the last time this function was called
+	// Used for perf debugging so you can understand how many IPC calls your game makes per frame
+	// Every IPC call is at minimum a thread context switch if not a process one so you want to rate
+	// control how often you do them.
+	uint32 GetIPCCallCount() override;
+
+	// API warning handling
+	// 'int' is the severity; 0 for msg, 1 for warning
+	// 'const char *' is the text of the message
+	// callbacks will occur directly after the API function is called that generated the warning or message
+	void SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction ) override;
+
+	// Returns true if the overlay is running & the user can access it. The overlay process could take a few seconds to
+	// start & hook the game process, so this function will initially return false while the overlay is loading.
+	bool IsOverlayEnabled() override;
 
     // Helper methods
     static Steam_Utils* GetInstance();

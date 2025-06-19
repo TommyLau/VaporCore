@@ -150,6 +150,106 @@ bool Steam_User_Stats::GetUserAchievement( CSteamID steamIDUser, const char *pch
     return false;
 }
 
+// Reset stats 
+bool Steam_User_Stats::ResetAllStats( bool bAchievementsToo )
+{
+    VLOG_DEBUG("ResetAllStats called - Achievements: %d", bAchievementsToo);
+    return true;
+}
+
+// Leaderboard functions
+
+// asks the Steam back-end for a leaderboard by name, and will create it if it's not yet
+// This call is asynchronous, with the result returned in LeaderboardFindResult_t
+SteamAPICall_t Steam_User_Stats::FindOrCreateLeaderboard( const char *pchLeaderboardName, ELeaderboardSortMethod eLeaderboardSortMethod, ELeaderboardDisplayType eLeaderboardDisplayType )
+{
+    VLOG_DEBUG("FindOrCreateLeaderboard called - Name: %s, Sort: %d, Display: %d", 
+               pchLeaderboardName ? pchLeaderboardName : "null", eLeaderboardSortMethod, eLeaderboardDisplayType);
+    return 0;
+}
+
+// as above, but won't create the leaderboard if it's not found
+// This call is asynchronous, with the result returned in LeaderboardFindResult_t
+SteamAPICall_t Steam_User_Stats::FindLeaderboard( const char *pchLeaderboardName )
+{
+    VLOG_DEBUG("FindLeaderboard called - Name: %s", pchLeaderboardName ? pchLeaderboardName : "null");
+    return 0;
+}
+
+// returns the name of a leaderboard
+const char *Steam_User_Stats::GetLeaderboardName( SteamLeaderboard_t hSteamLeaderboard )
+{
+    VLOG_DEBUG("GetLeaderboardName called - Leaderboard: %u", hSteamLeaderboard);
+    return "";
+}
+
+// returns the total number of entries in a leaderboard, as of the last request
+int Steam_User_Stats::GetLeaderboardEntryCount( SteamLeaderboard_t hSteamLeaderboard )
+{
+    VLOG_DEBUG("GetLeaderboardEntryCount called - Leaderboard: %u", hSteamLeaderboard);
+    return 0;
+}
+
+// returns the sort method of the leaderboard
+ELeaderboardSortMethod Steam_User_Stats::GetLeaderboardSortMethod( SteamLeaderboard_t hSteamLeaderboard )
+{
+    VLOG_DEBUG("GetLeaderboardSortMethod called - Leaderboard: %u", hSteamLeaderboard);
+    return ELeaderboardSortMethod::k_ELeaderboardSortMethodNone;
+}
+
+// returns the display type of the leaderboard
+ELeaderboardDisplayType Steam_User_Stats::GetLeaderboardDisplayType( SteamLeaderboard_t hSteamLeaderboard )
+{
+    VLOG_DEBUG("GetLeaderboardDisplayType called - Leaderboard: %u", hSteamLeaderboard);
+    return ELeaderboardDisplayType::k_ELeaderboardDisplayTypeNone;
+}
+
+
+// Asks the Steam back-end for a set of rows in the leaderboard.
+// This call is asynchronous, with the result returned in LeaderboardScoresDownloaded_t
+// LeaderboardScoresDownloaded_t will contain a handle to pull the results from GetDownloadedLeaderboardEntries() (below)
+// You can ask for more entries than exist, and it will return as many as do exist.
+// k_ELeaderboardDataRequestGlobal requests rows in the leaderboard from the full table, with nRangeStart & nRangeEnd in the range [1, TotalEntries]
+// k_ELeaderboardDataRequestGlobalAroundUser requests rows around the current user, nRangeStart being negate
+//   e.g. DownloadLeaderboardEntries( hLeaderboard, k_ELeaderboardDataRequestGlobalAroundUser, -3, 3 ) will return 7 rows, 3 before the user, 3 after
+// k_ELeaderboardDataRequestFriends requests all the rows for friends of the current user 
+SteamAPICall_t Steam_User_Stats::DownloadLeaderboardEntries( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardDataRequest eLeaderboardDataRequest, int nRangeStart, int nRangeEnd )
+{
+    VLOG_DEBUG("DownloadLeaderboardEntries called - Leaderboard: %u, Request: %d, Range: %d-%d", hSteamLeaderboard, eLeaderboardDataRequest, nRangeStart, nRangeEnd);
+    return 0;
+}
+
+// Returns data about a single leaderboard entry
+// use a for loop from 0 to LeaderboardScoresDownloaded_t::m_cEntryCount to get all the downloaded entries
+// e.g.
+//		void OnLeaderboardScoresDownloaded( LeaderboardScoresDownloaded_t *pLeaderboardScoresDownloaded )
+//		{
+//			for ( int index = 0; index < pLeaderboardScoresDownloaded->m_cEntryCount; index++ )
+//			{
+//				LeaderboardEntry_t leaderboardEntry;
+//				int32 details[3];		// we know this is how many we've stored previously
+//				GetDownloadedLeaderboardEntry( pLeaderboardScoresDownloaded->m_hSteamLeaderboardEntries, index, &leaderboardEntry, details, 3 );
+//				assert( leaderboardEntry.m_cDetails == 3 );
+//				...
+//			}
+// once you've accessed all the entries, the data will be free'd, and the SteamLeaderboardEntries_t handle will become invalid
+bool Steam_User_Stats::GetDownloadedLeaderboardEntry( SteamLeaderboardEntries_t hSteamLeaderboardEntries, int index, LeaderboardEntry_t *pLeaderboardEntry, int32 *pDetails, int cDetailsMax )
+{
+    VLOG_DEBUG("GetDownloadedLeaderboardEntry called - Leaderboard: %u, Index: %d, Details: %d", hSteamLeaderboardEntries, index, cDetailsMax);
+    return false;
+}
+
+// Uploads a user score to the Steam back-end.
+// This call is asynchronous, with the result returned in LeaderboardScoreUploaded_t
+// If the score passed in is no better than the existing score this user has in the leaderboard, then the leaderboard will not be updated.
+// Details are extra game-defined information regarding how the user got that score
+// pScoreDetails points to an array of int32's, cScoreDetailsCount is the number of int32's in the list
+SteamAPICall_t Steam_User_Stats::UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, int32 nScore, int32 *pScoreDetails, int cScoreDetailsCount )
+{
+    VLOG_DEBUG("UploadLeaderboardScore called - Leaderboard: %u, Score: %d, Details: %d", hSteamLeaderboard, nScore, cScoreDetailsCount);
+    return 0;
+}
+
 // Helper methods
 Steam_User_Stats* Steam_User_Stats::GetInstance()
 {

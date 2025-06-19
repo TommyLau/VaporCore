@@ -108,9 +108,16 @@ int Steam_Friends::GetFriendAvatar( CSteamID steamIDFriend, int eAvatarSize )
 }
 
 // returns true if the friend is actually in a game
+// Changed from Steam SDK v1.04, backward compatibility
 bool Steam_Friends::GetFriendGamePlayed( CSteamID steamIDFriend, uint64 *pulGameID, uint32 *punGameIP, uint16 *pusGamePort, uint16 *pusQueryPort )
 {
-    VLOG_DEBUG("GetFriendGamePlayed called");
+    VLOG_DEBUG("GetFriendGamePlayed called - SteamID: %s, GameID: %llu, GameIP: %u, GamePort: %u, QueryPort: %u", steamIDFriend.GetAccountID(), *pulGameID, *punGameIP, *pusGamePort, *pusQueryPort);
+    return false;
+}
+
+bool Steam_Friends::GetFriendGamePlayed( CSteamID steamIDFriend, FriendGameInfo_t *pFriendGameInfo )
+{
+    VLOG_DEBUG("GetFriendGamePlayed called - SteamID: %s, GameID: %llu", steamIDFriend.GetAccountID(), pFriendGameInfo->m_gameID);
     return false;
 }
 
@@ -196,6 +203,12 @@ void Steam_Friends::ActivateGameOverlayToUser( const char *pchDialog, CSteamID s
 void Steam_Friends::ActivateGameOverlayToWebPage( const char *pchURL )
 {
     VLOG_DEBUG("ActivateGameOverlayToWebPage called - URL: %s", pchURL ? pchURL : "null");
+}
+
+// activates game overlay to store page for app
+void Steam_Friends::ActivateGameOverlayToStore( AppId_t nAppID )
+{
+    VLOG_DEBUG("ActivateGameOverlayToStore called - AppID: %d", nAppID);
 }
 
 // Helper methods

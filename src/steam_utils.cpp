@@ -129,6 +129,40 @@ bool Steam_Utils::GetAPICallResult( SteamAPICall_t hSteamAPICall, void *pCallbac
     return false;
 }
 
+// this needs to be called every frame to process matchmaking results
+// redundant if you're already calling SteamAPI_RunCallbacks()
+void Steam_Utils::RunFrame()
+{
+    VLOG_DEBUG("RunFrame called");
+}
+
+// returns the number of IPC calls made since the last time this function was called
+// Used for perf debugging so you can understand how many IPC calls your game makes per frame
+// Every IPC call is at minimum a thread context switch if not a process one so you want to rate
+// control how often you do them.
+uint32 Steam_Utils::GetIPCCallCount()
+{
+    VLOG_DEBUG("GetIPCCallCount called");
+    return 0;
+}
+
+// API warning handling
+// 'int' is the severity; 0 for msg, 1 for warning
+// 'const char *' is the text of the message
+// callbacks will occur directly after the API function is called that generated the warning or message
+void Steam_Utils::SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction )
+{
+    VLOG_DEBUG("SetWarningMessageHook called - Function: %p", pFunction);
+}
+
+// Returns true if the overlay is running & the user can access it. The overlay process could take a few seconds to
+// start & hook the game process, so this function will initially return false while the overlay is loading.
+bool Steam_Utils::IsOverlayEnabled()
+{
+    VLOG_DEBUG("IsOverlayEnabled called");
+    return false;
+}
+
 // Helper methods
 Steam_Utils* Steam_Utils::GetInstance()
 {
