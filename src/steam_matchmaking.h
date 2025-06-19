@@ -15,6 +15,7 @@
 
 #include <sdk/isteammatchmaking.h>
 #include <sdk/isteammatchmaking002.h>
+#include <sdk/isteammatchmaking004.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for match making services for clients to get to favorites
@@ -22,7 +23,8 @@
 //-----------------------------------------------------------------------------
 class Steam_Matchmaking :
 	public ISteamMatchmaking,
-    public ISteamMatchmaking002
+    public ISteamMatchmaking002,
+    public ISteamMatchmaking004
 {
 public:
     Steam_Matchmaking();
@@ -49,7 +51,31 @@ public:
 	// results will be returned by LobbyMatchList_t callback, with the number of servers requested
 	// if the user is not currently connected to Steam (i.e. SteamUser()->BLoggedOn() returns false) then
 	// a LobbyMatchList_t callback will be posted immediately with no servers
-	void RequestLobbyList() override;
+	// Changed from Steam SDK v1.03, backward compatibility
+	void DEPRECATED_RequestLobbyList() override;
+	// results will be returned by LobbyMatchList_t callback & call result, with the number of lobbies found
+	// this will never return lobbies that are full
+	// to add more filter, the filter calls below need to be call before each and every RequestLobbyList() call
+	// use the CCallResult<> object in steam_api.h to match the SteamAPICall_t call result to a function in an object, e.g.
+	/*
+		class CMyLobbyListManager
+		{
+			CCallResult<CMyLobbyListManager, LobbyMatchList_t> m_CallResultLobbyMatchList;
+			void FindLobbies()
+			{
+				// SteamMatchmaking()->AddRequestLobbyListFilter*() functions would be called here, before RequestLobbyList()
+				SteamAPICall_t hSteamAPICall = SteamMatchmaking()->RequestLobbyList();
+				m_CallResultLobbyMatchList.Set( hSteamAPICall, this, &CMyLobbyListManager::OnLobbyMatchList );
+			}
+
+			void OnLobbyMatchList( LobbyMatchList_t *pLobbyMatchList, bool bIOFailure )
+			{
+				// lobby list has be retrieved from Steam back-end, use results
+			}
+		}
+	*/
+	// 
+	SteamAPICall_t RequestLobbyList() override;
 
 	// filters for lobbies
 	// this needs to be called before RequestLobbyList() to take effect
@@ -59,6 +85,8 @@ public:
 	void AddRequestLobbyListNumericalFilter( const char *pchKeyToMatch, int nValueToMatch, int nComparisonType /* 0 is equal, -1 is less than, 1 is greater than */ ) override;
 	// sets RequestLobbyList() to only returns lobbies which aren't yet full - needs SetLobbyMemberLimit() called on the lobby to set an initial limit
 	void AddRequestLobbyListSlotsAvailableFilter() override;
+	// returns results closest to the specified value. Multiple near filters can be added, with early filters taking precedence
+	void AddRequestLobbyListNearValueFilter( const char *pchKeyToMatch, int nValueToBeCloseTo ) override;
 
 	// returns the CSteamID of a lobby, as retrieved by a RequestLobbyList call
 	// should only be called after a LobbyMatchList_t callback is received
@@ -74,11 +102,18 @@ public:
 	// local user will the join the lobby, resulting in an additional LobbyEnter_t callback being sent
 	// operations on the chat room can only proceed once the LobbyEnter_t has been received
 	void CreateLobby( bool bPrivate ) override;
+	// results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this pointer
+	// a LobbyEnter_t callback will also be received (since the local user is joining their own lobby)
+	SteamAPICall_t CreateLobby( ELobbyType eLobbyType ) override;
 
 	// Joins an existing lobby
 	// this is an asynchronous request
 	// results will be returned by LobbyEnter_t callback when the lobby has been joined
-	void JoinLobby( CSteamID steamIDLobby ) override;
+	// Removed from Steam SDK v1.03, backward compatibility
+	void DEPRECATED_JoinLobby( CSteamID steamIDLobby ) override;
+	// results will be returned by LobbyEnter_t callback & call result, check m_EChatRoomEnterResponse to see if was successful
+	// lobby metadata is available to use immediately on this call completing
+	SteamAPICall_t JoinLobby( CSteamID steamIDLobby ) override;
 
 	// Leave a lobby; this will take effect immediately on the client side
 	// other users in the lobby will be notified by a LobbyChatUpdate_t callback
@@ -145,7 +180,18 @@ public:
 	// returns results by posting one RequestFriendsLobbiesResponse_t callback per friend/lobby pair
 	// if no friends are in lobbies, RequestFriendsLobbiesResponse_t will be posted but with 0 results
 	// filters don't apply to lobbies (currently)
+	// Removed from Steam SDK v1.03, backward compatibility
 	bool RequestFriendsLobbies() override;
+
+	// updates which type of lobby it is
+	// only lobbies that are k_ELobbyTypePublic will be returned by RequestLobbyList() calls
+	bool SetLobbyType( CSteamID steamIDLobby, ELobbyType eLobbyType ) override;
+
+	// returns the current lobby owner
+	// you must be a member of the lobby to access this
+	// there always one lobby owner - if the current owner leaves, another user will become the owner
+	// it is possible (bur rare) to join a lobby just as the owner is leaving, thus entering a lobby with self as the owner
+	CSteamID GetLobbyOwner( CSteamID steamIDLobby ) override;
 
     // Helper methods
     static Steam_Matchmaking* GetInstance();
@@ -156,5 +202,182 @@ private:
     static Steam_Matchmaking* s_pInstance;
 };
 
-#endif // VAPORCORE_STEAM_MATCHMAKING_H
+//-----------------------------------------------------------------------------
+// Callback interfaces for server list functions (see ISteamMatchmakingServers below)
+//
+// The idea here is that your game code implements objects that implement these
+// interfaces to receive callback notifications after calling asynchronous functions
+// inside the ISteamMatchmakingServers() interface below.
+//
+// This is different than normal Steam callback handling due to the potentially
+// large size of server lists.
+//-----------------------------------------------------------------------------
 
+//-----------------------------------------------------------------------------
+// Purpose: Callback interface for receiving responses after a server list refresh
+// or an individual server update.
+//
+// Since you get these callbacks after requesting full list refreshes you will
+// usually implement this interface inside an object like CServerBrowser.  If that
+// object is getting destructed you should use ISteamMatchMakingServers()->CancelQuery()
+// to cancel any in-progress queries so you don't get a callback into the destructed
+// object and crash.
+//-----------------------------------------------------------------------------
+class Steam_Matchmaking_Server_List_Response : public ISteamMatchmakingServerListResponse
+{
+public:
+	// Server has responded ok with updated data
+	void ServerResponded( int iServer ) override;
+
+	// Server has failed to respond
+	void ServerFailedToRespond( int iServer ) override; 
+
+	// A list refresh you had initiated is now 100% completed
+	void RefreshComplete( EMatchMakingServerResponse response ) override; 
+};
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Callback interface for receiving responses after pinging an individual server 
+//
+// These callbacks all occur in response to querying an individual server
+// via the ISteamMatchmakingServers()->PingServer() call below.  If you are 
+// destructing an object that implements this interface then you should call 
+// ISteamMatchmakingServers()->CancelServerQuery() passing in the handle to the query
+// which is in progress.  Failure to cancel in progress queries when destructing
+// a callback handler may result in a crash when a callback later occurs.
+//-----------------------------------------------------------------------------
+class Steam_MatchmakingPingResponse : public ISteamMatchmakingPingResponse
+{
+public:
+	// Server has responded successfully and has updated data
+	void ServerResponded( gameserveritem_t &server ) override;
+
+	// Server failed to respond to the ping request
+	void ServerFailedToRespond() override;
+};
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Callback interface for receiving responses after requesting details on
+// who is playing on a particular server.
+//
+// These callbacks all occur in response to querying an individual server
+// via the ISteamMatchmakingServers()->PlayerDetails() call below.  If you are 
+// destructing an object that implements this interface then you should call 
+// ISteamMatchmakingServers()->CancelServerQuery() passing in the handle to the query
+// which is in progress.  Failure to cancel in progress queries when destructing
+// a callback handler may result in a crash when a callback later occurs.
+//-----------------------------------------------------------------------------
+class Steam_Matchmaking_Players_Response : public ISteamMatchmakingPlayersResponse
+{
+public:
+	// Got data on a new player on the server -- you'll get this callback once per player
+	// on the server which you have requested player data on.
+	void AddPlayerToList( const char *pchName, int nScore, float flTimePlayed ) override;
+
+	// The server failed to respond to the request for player details
+	void PlayersFailedToRespond() override;
+
+	// The server has finished responding to the player details request 
+	// (ie, you won't get anymore AddPlayerToList callbacks)
+	void PlayersRefreshComplete() override;
+};
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Callback interface for receiving responses after requesting rules
+// details on a particular server.
+//
+// These callbacks all occur in response to querying an individual server
+// via the ISteamMatchmakingServers()->ServerRules() call below.  If you are 
+// destructing an object that implements this interface then you should call 
+// ISteamMatchmakingServers()->CancelServerQuery() passing in the handle to the query
+// which is in progress.  Failure to cancel in progress queries when destructing
+// a callback handler may result in a crash when a callback later occurs.
+//-----------------------------------------------------------------------------
+class Steam_Matchmaking_Rules_Response : public ISteamMatchmakingRulesResponse
+{
+public:
+	// Got data on a rule on the server -- you'll get one of these per rule defined on
+	// the server you are querying
+	void RulesResponded( const char *pchRule, const char *pchValue ) override;
+
+	// The server failed to respond to the request for rule details
+	void RulesFailedToRespond() override;
+
+	// The server has finished responding to the rule details request 
+	// (ie, you won't get anymore RulesResponded callbacks)
+	void RulesRefreshComplete() override;
+};
+
+//-----------------------------------------------------------------------------
+// Purpose: Functions for match making services for clients to get to game lists and details
+//-----------------------------------------------------------------------------
+class Steam_Matchmaking_Servers : public ISteamMatchmakingServers
+{
+public:
+	// Request a new list of servers of a particular type.  These calls each correspond to one of the EMatchMakingType values.
+	void RequestInternetServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	void RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	void RequestFriendsServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	void RequestFavoritesServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	void RequestHistoryServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	void RequestSpectatorServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+
+	/* the filters that are available in the ppchFilters params are:
+
+		"map"		- map the server is running, as set in the dedicated server api
+		"dedicated" - reports bDedicated from the API
+		"secure"	- VAC-enabled
+		"full"		- not full
+		"empty"		- not empty
+		"noplayers" - is empty
+		"proxy"		- a relay server
+
+	*/
+
+	// Get details on a given server in the list, you can get the valid range of index
+	// values by calling GetServerCount().  You will also receive index values in 
+	// ISteamMatchmakingServerListResponse::ServerResponded() callbacks
+	gameserveritem_t *GetServerDetails( EMatchMakingType eType, int iServer ) override; 
+
+	// Cancel an request which is operation on the given list type.  You should call this to cancel
+	// any in-progress requests before destructing a callback object that may have been passed 
+	// to one of the above list request calls.  Not doing so may result in a crash when a callback
+	// occurs on the destructed object.
+	void CancelQuery( EMatchMakingType eType ) override; 
+
+	// Ping every server in your list again but don't update the list of servers
+	void RefreshQuery( EMatchMakingType eType ) override; 
+
+	// Returns true if the list is currently refreshing its server list
+	bool IsRefreshing( EMatchMakingType eType ) override; 
+
+	// How many servers in the given list, GetServerDetails above takes 0... GetServerCount() - 1
+	int GetServerCount( EMatchMakingType eType ) override; 
+
+	// Refresh a single server inside of a query (rather than all the servers )
+	void RefreshServer( EMatchMakingType eType, int iServer ) override; 
+
+
+	//-----------------------------------------------------------------------------
+	// Queries to individual servers directly via IP/Port
+	//-----------------------------------------------------------------------------
+
+	// Request updated ping time and other details from a single server
+	HServerQuery PingServer( uint32 unIP, uint16 usPort, ISteamMatchmakingPingResponse *pRequestServersResponse ) override; 
+
+	// Request the list of players currently playing on a server
+	HServerQuery PlayerDetails( uint32 unIP, uint16 usPort, ISteamMatchmakingPlayersResponse *pRequestServersResponse ) override;
+
+	// Request the list of rules that the server is running (See ISteamMasterServerUpdater->SetKeyValue() to set the rules server side)
+	HServerQuery ServerRules( uint32 unIP, uint16 usPort, ISteamMatchmakingRulesResponse *pRequestServersResponse ) override; 
+
+	// Cancel an outstanding Ping/Players/Rules query from above.  You should call this to cancel
+	// any in-progress requests before destructing a callback object that may have been passed 
+	// to one of the above calls to avoid crashing when callbacks occur.
+	void CancelServerQuery( HServerQuery hServerQuery ) override; 
+};
+
+#endif // VAPORCORE_STEAM_MATCHMAKING_H

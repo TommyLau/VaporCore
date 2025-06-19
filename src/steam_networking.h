@@ -13,13 +13,16 @@
 #pragma once
 #endif
 
-#include "../include/sdk/isteamnetworking.h"
+#include <sdk/isteamnetworking.h>
+#include <sdk/isteamnetworking001.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for making connections and sending data between clients,
 //			traversing NAT's where possible
 //-----------------------------------------------------------------------------
-class Steam_Networking : public ISteamNetworking
+class Steam_Networking :
+	public ISteamNetworking,
+	public ISteamNetworking001
 {
 public:
     Steam_Networking();
@@ -33,13 +36,17 @@ public:
 	//		pass in 0 if you just want the default local IP
 	// unPort is the port to use
 	//		pass in 0 if you don't want users to be able to connect via IP/Port, but expect to be always peer-to-peer connections only
+	// Removed from Steam SDK v1.03, backward compatibility
 	SNetListenSocket_t CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort ) override;
+	SNetListenSocket_t CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort, bool bAllowUseOfPacketRelay ) override;
 
 	// creates a socket and begin connection to a remote destination
 	// can connect via a known steamID (client or game server), or directly to an IP
 	// on success will trigger a SocketConnectCallback_t callback
 	// on failure or timeout will trigger a SocketConnectionFailureCallback_t callback
+	// Removed from Steam SDK v1.03, backward compatibility
 	SNetSocket_t CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec ) override;
+	SNetSocket_t CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec, bool bAllowUseOfPacketRelay ) override;
 	SNetSocket_t CreateConnectionSocket( uint32 nIP, uint16 nPort, int nTimeoutSec ) override;
 
 	// disconnects the connection to the socket, if any, and invalidates the handle
@@ -88,6 +95,12 @@ public:
 	// returns which local port the listen socket is bound to
 	// *pnIP and *pnPort will be 0 if the socket is set to listen for P2P connections only
 	bool GetListenSocketInfo( SNetListenSocket_t hListenSocket, uint32 *pnIP, uint16 *pnPort ) override;
+
+	// returns true to describe how the socket ended up connecting
+	ESNetSocketConnectionType GetSocketConnectionType( SNetSocket_t hSocket ) override;
+
+	// max packet size, in bytes
+	int GetMaxPacketSize( SNetSocket_t hSocket ) override;
 
     // Helper methods
     static Steam_Networking* GetInstance();

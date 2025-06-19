@@ -13,7 +13,7 @@
 #pragma once
 #endif
 
-#include "../include/sdk/isteamutils.h"
+#include <sdk/isteamutils.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to user independent utility functions
@@ -58,6 +58,12 @@ public:
 	// Sets the position where the overlay instance for the currently calling game should show notifications.
 	// This position is per-game and if this function is called from outside of a game context it will do nothing.
 	void SetOverlayNotificationPosition( ENotificationPosition eNotificationPosition ) override;
+	
+	// API asynchronous call results
+	// can be used directly, but more commonly used via the callback dispatch API (see steam_api.h)
+	bool IsAPICallCompleted( SteamAPICall_t hSteamAPICall, bool *pbFailed ) override;
+	ESteamAPICallFailure GetAPICallFailureReason( SteamAPICall_t hSteamAPICall ) override;
+	bool GetAPICallResult( SteamAPICall_t hSteamAPICall, void *pCallback, int cubCallback, int iCallbackExpected, bool *pbFailed ) override;
 
     // Helper methods
     static Steam_Utils* GetInstance();

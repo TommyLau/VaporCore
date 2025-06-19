@@ -1,11 +1,8 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright © 1996-2008, Valve Corporation, All rights reserved. =======
+//
+// Purpose: interface to both friends list data and general information about users
+//
+//=============================================================================
 
 #ifndef ISTEAMFRIENDS_H
 #define ISTEAMFRIENDS_H
@@ -14,6 +11,7 @@
 #endif
 
 #include "isteamclient.h"
+#include "steamclientpublic.h"
 
 //-----------------------------------------------------------------------------
 // Purpose: set of relationships to other users
@@ -138,8 +136,8 @@ public:
 
 	// gets the avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
 	virtual int GetFriendAvatar( CSteamID steamIDFriend, int eAvatarSize ) = 0;
-	// returns true if the friend is actually in a game
-	virtual bool GetFriendGamePlayed( CSteamID steamIDFriend, uint64 *pulGameID, uint32 *punGameIP, uint16 *pusGamePort, uint16 *pusQueryPort ) = 0;
+	// returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
+	virtual bool GetFriendGamePlayed( CSteamID steamIDFriend, FriendGameInfo_t *pFriendGameInfo ) = 0;
 	// accesses old friends names - returns an empty string when their are no more items in the history
 	virtual const char *GetFriendPersonaNameHistory( CSteamID steamIDFriend, int iPersonaName ) = 0;
 

@@ -33,9 +33,16 @@ Steam_Networking::~Steam_Networking()
 //		pass in 0 if you just want the default local IP
 // unPort is the port to use
 //		pass in 0 if you don't want users to be able to connect via IP/Port, but expect to be always peer-to-peer connections only
+// Removed from Steam SDK v1.03, backward compatibility
 SNetListenSocket_t Steam_Networking::CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort )
 {
     VLOG_DEBUG("CreateListenSocket called - VirtualPort: %d, IP: %u, Port: %u", nVirtualP2PPort, nIP, nPort);
+    return 0;
+}
+
+SNetListenSocket_t Steam_Networking::CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort, bool bAllowUseOfPacketRelay )
+{
+    VLOG_DEBUG("CreateListenSocket called - VirtualPort: %d, IP: %u, Port: %u, AllowPacketRelay: %s", nVirtualP2PPort, nIP, nPort, bAllowUseOfPacketRelay ? "true" : "false");
     return 0;
 }
 
@@ -43,10 +50,18 @@ SNetListenSocket_t Steam_Networking::CreateListenSocket( int nVirtualP2PPort, ui
 // can connect via a known steamID (client or game server), or directly to an IP
 // on success will trigger a SocketConnectCallback_t callback
 // on failure or timeout will trigger a SocketConnectionFailureCallback_t callback
+// Removed from Steam SDK v1.03, backward compatibility
 SNetSocket_t Steam_Networking::CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec )
 {
     VLOG_DEBUG("CreateP2PConnectionSocket called - Target: %llu, VirtualPort: %d, Timeout: %d", 
                steamIDTarget.ConvertToUint64(), nVirtualPort, nTimeoutSec);
+    return 0;
+}
+
+SNetSocket_t Steam_Networking::CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec, bool bAllowUseOfPacketRelay )
+{
+    VLOG_DEBUG("CreateP2PConnectionSocket called - Target: %llu, VirtualPort: %d, Timeout: %d, AllowPacketRelay: %s", 
+               steamIDTarget.ConvertToUint64(), nVirtualPort, nTimeoutSec, bAllowUseOfPacketRelay ? "true" : "false");
     return 0;
 }
 
@@ -151,6 +166,20 @@ bool Steam_Networking::GetListenSocketInfo( SNetListenSocket_t hListenSocket, ui
     if (pnIP) *pnIP = 0;
     if (pnPort) *pnPort = 0;
     return false;
+}
+
+// returns true to describe how the socket ended up connecting
+ESNetSocketConnectionType Steam_Networking::GetSocketConnectionType( SNetSocket_t hSocket )
+{
+    VLOG_DEBUG("GetSocketConnectionType called - Socket: %u", hSocket);
+    return k_ESNetSocketConnectionTypeNotConnected;
+}
+
+// max packet size, in bytes
+int Steam_Networking::GetMaxPacketSize( SNetSocket_t hSocket )
+{
+    VLOG_DEBUG("GetMaxPacketSize called - Socket: %u", hSocket);
+    return 0;
 }
 
 // Helper methods

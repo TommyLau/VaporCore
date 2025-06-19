@@ -7,8 +7,8 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef ISTEAMMATCHMAKING002_H
-#define ISTEAMMATCHMAKING002_H
+#ifndef ISTEAMMATCHMAKING004_H
+#define ISTEAMMATCHMAKING004_H
 #ifdef _WIN32
 #pragma once
 #endif
@@ -17,7 +17,7 @@
 // Purpose: Functions for match making services for clients to get to favorites
 //			and to operate on game lobbies.
 //-----------------------------------------------------------------------------
-class ISteamMatchmaking002
+class ISteamMatchmaking004
 {
 public:
 	// game server favorites storage
@@ -49,6 +49,15 @@ public:
 	// a LobbyMatchList_t callback will be posted immediately with no servers
 	virtual void DEPRECATED_RequestLobbyList() = 0;
 
+	// filters for lobbies
+	// this needs to be called before RequestLobbyList() to take effect
+	// these are cleared on each call to RequestLobbyList()
+	virtual void AddRequestLobbyListFilter( const char *pchKeyToMatch, const char *pchValueToMatch ) = 0;
+	// numerical comparison - 0 is equal, -1 is the lobby value is less than nValueToMatch, 1 is the lobby value is greater than nValueToMatch
+	virtual void AddRequestLobbyListNumericalFilter( const char *pchKeyToMatch, int nValueToMatch, int nComparisonType /* 0 is equal, -1 is less than, 1 is greater than */ ) = 0;
+	// sets RequestLobbyList() to only returns lobbies which aren't yet full - needs SetLobbyMemberLimit() called on the lobby to set an initial limit
+	virtual void AddRequestLobbyListSlotsAvailableFilter() = 0;
+
 	// returns the CSteamID of a lobby, as retrieved by a RequestLobbyList call
 	// should only be called after a LobbyMatchList_t callback is received
 	// iLobby is of the range [0, LobbyMatchList_t::m_nLobbiesMatching)
@@ -67,6 +76,7 @@ public:
 	// Joins an existing lobby
 	// this is an asynchronous request
 	// results will be returned by LobbyEnter_t callback when the lobby has been joined
+	// users already in the lobby will receive LobbyChatUpdate_t callback after this user has successfully joined
 	virtual void DEPRECATED_JoinLobby( CSteamID steamIDLobby ) = 0;
 
 	// Leave a lobby; this will take effect immediately on the client side
@@ -129,9 +139,21 @@ public:
 	// usually at this point, the users will leave the lobby and join the specified game server
 	// either the IP/Port or the steamID of the game server has to be valid, depending on how you want the clients to be able to connect
 	virtual void SetLobbyGameServer( CSteamID steamIDLobby, uint32 unGameServerIP, uint16 unGameServerPort, CSteamID steamIDGameServer ) = 0;
+	// returns the details of a game server set in a lobby - returns false if there is no game server set, or that lobby doesn't exist
+	virtual bool GetLobbyGameServer( CSteamID steamIDLobby, uint32 *punGameServerIP, uint16 *punGameServerPort, CSteamID *psteamIDGameServer ) = 0;
 
+	// set the limit on the # of users who can join the lobby
+	virtual bool SetLobbyMemberLimit( CSteamID steamIDLobby, int cMaxMembers ) = 0;
+	// returns the current limit on the # of users who can join the lobby; returns 0 if no limit is defined
+	virtual int GetLobbyMemberLimit( CSteamID steamIDLobby ) = 0;
+
+	// asks the Steam servers for a list of lobbies that friends are in
+	// returns results by posting one RequestFriendsLobbiesResponse_t callback per friend/lobby pair
+	// if no friends are in lobbies, RequestFriendsLobbiesResponse_t will be posted but with 0 results
+	// filters don't apply to lobbies (currently)
+	virtual bool RequestFriendsLobbies() = 0;
 };
 
-#define STEAMMATCHMAKING_INTERFACE_VERSION002 "SteamMatchMaking002"
+#define STEAMMATCHMAKING_INTERFACE_VERSION004 "SteamMatchMaking004"
 
-#endif // ISTEAMMATCHMAKING002_H
+#endif // ISTEAMMATCHMAKING004_H

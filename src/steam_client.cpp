@@ -264,3 +264,11 @@ void Steam_Client::SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction
     // TODO: Implement warning message hook
     VLOG_DEBUG("SetWarningMessageHook called");
 } 
+
+// remote storage
+ISteamRemoteStorage *Steam_Client::GetISteamRemoteStorage( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
+{
+    // TODO: Implement remote storage interface
+    VLOG_DEBUG("GetISteamRemoteStorage called");
+    return nullptr;
+}

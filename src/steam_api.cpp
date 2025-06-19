@@ -100,8 +100,8 @@ S_API ISteamClient *SteamClient() {
 // functions below to get at the Steam interfaces.
 //
 S_API bool SteamAPI_InitSafe() {
-    // TODO: Implement SteamAPI_InitSafe
-    return true;
+    VLOG_INFO("SteamAPI_InitSafe called");
+    return SteamAPI_Init();
 }
 
 S_API bool SteamAPI_Init() {
@@ -213,6 +213,15 @@ S_API void SteamAPI_RegisterCallback( class CCallbackBase *pCallback, int iCallb
 
 S_API void SteamAPI_UnregisterCallback( class CCallbackBase *pCallback ) {
     // TODO: Implement SteamAPI_UnregisterCallback
+}
+
+// functions used by the utility CCallResult objects to receive async call results
+S_API void SteamAPI_RegisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall ) {
+    // TODO: Implement SteamAPI_RegisterCallResult
+}
+
+S_API void SteamAPI_UnregisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall ) {
+    // TODO: Implement SteamAPI_UnregisterCallResult
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//

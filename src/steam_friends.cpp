@@ -182,6 +182,22 @@ void Steam_Friends::ActivateGameOverlay( const char *pchDialog )
     VLOG_DEBUG("ActivateGameOverlay called - Dialog: %s", pchDialog ? pchDialog : "null");
 }
 
+// activates game overlay to a specific place
+// valid options are
+//		"steamid" - opens the overlay web browser to the specified user or groups profile
+//		"chat" - opens a chat window to the specified user, or joins the group chat 
+void Steam_Friends::ActivateGameOverlayToUser( const char *pchDialog, CSteamID steamID )
+{
+    VLOG_DEBUG("ActivateGameOverlayToUser called - Dialog: %s, SteamID: %s", pchDialog ? pchDialog : "null", steamID.GetAccountID());
+}
+
+// activates game overlay web browser directly to the specified URL
+// full address with protocol type is required, e.g. http://www.steamgames.com/
+void Steam_Friends::ActivateGameOverlayToWebPage( const char *pchURL )
+{
+    VLOG_DEBUG("ActivateGameOverlayToWebPage called - URL: %s", pchURL ? pchURL : "null");
+}
+
 // Helper methods
 Steam_Friends* Steam_Friends::GetInstance()
 {

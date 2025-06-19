@@ -7,36 +7,26 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef VAPORCORE_STEAM_GAME_SERVER_H
-#define VAPORCORE_STEAM_GAME_SERVER_H
+#ifndef ISTEAMGAMESERVER005_H
+#define ISTEAMGAMESERVER005_H
 #ifdef _WIN32
 #pragma once
 #endif
 
-#include <sdk/isteamgameserver.h>
-#include <sdk/isteamgameserver004.h>
-#include <sdk/isteamgameserver005.h>
-
 //-----------------------------------------------------------------------------
 // Purpose: Functions for authenticating users via Steam to play on a game server
 //-----------------------------------------------------------------------------
-class Steam_Game_Server :
-    public ISteamGameServer,
-	public ISteamGameServer004,
-	public ISteamGameServer005
+class ISteamGameServer005
 {
 public:
-    Steam_Game_Server();
-    ~Steam_Game_Server();
-
 	// connection functions
-	void LogOn() override;
-	void LogOff() override;
+	virtual void LogOn() = 0;
+	virtual void LogOff() = 0;
 	
 	// status functions
-	bool BLoggedOn() override;
-	bool BSecure() override; 
-	CSteamID GetSteamID() override;
+	virtual bool BLoggedOn() = 0;
+	virtual bool BSecure() = 0; 
+	virtual CSteamID GetSteamID() = 0;
 
 	// Handles receiving a new connection from a Steam user.  This call will ask the Steam
 	// servers to validate the users identity, app ownership, and VAC status.  If the Steam servers 
@@ -44,34 +34,28 @@ public:
 	// and identity.  The AuthBlob here should be acquired on the game client using SteamUser()->InitiateGameConnection()
 	// and must then be sent up to the game server for authentication.
 	//
-	// Return Value: true/false depending on whether the call succeeds.  If the call succeeds then you
-	// should expect a GSClientApprove_t or GSClientDeny_t callback which will tell you whether authentication
-	// for the user has succeeded or failed.
-	// Removed from Steam SDK v1.01, backward compatibility
-	void SendUserConnectAndAuthenticate( CSteamID steamIDUser, uint32 unIPClient, void *pvAuthBlob, uint32 cubAuthBlobSize ) override;
-
 	// Return Value: returns true if the users ticket passes basic checks. pSteamIDUser will contain the Steam ID of this user. pSteamIDUser must NOT be NULL
 	// If the call succeeds then you should expect a GSClientApprove_t or GSClientDeny_t callback which will tell you whether authentication
 	// for the user has succeeded or failed (the steamid in the callback will match the one returned by this call)
-	bool SendUserConnectAndAuthenticate( uint32 unIPClient, const void *pvAuthBlob, uint32 cubAuthBlobSize, CSteamID *pSteamIDUser ) override;
+	virtual bool SendUserConnectAndAuthenticate( uint32 unIPClient, const void *pvAuthBlob, uint32 cubAuthBlobSize, CSteamID *pSteamIDUser ) = 0;
 
 	// Creates a fake user (ie, a bot) which will be listed as playing on the server, but skips validation.  
 	// 
 	// Return Value: Returns a SteamID for the user to be tracked with, you should call HandleUserDisconnect()
 	// when this user leaves the server just like you would for a real user.
-	CSteamID CreateUnauthenticatedUserConnection() override;
+	virtual CSteamID CreateUnauthenticatedUserConnection() = 0;
 
 	// Should be called whenever a user leaves our game server, this lets Steam internally
 	// track which users are currently on which servers for the purposes of preventing a single
 	// account being logged into multiple servers, showing who is currently on a server, etc.
-	void SendUserDisconnect( CSteamID steamIDUser ) override;
+	virtual void SendUserDisconnect( CSteamID steamIDUser ) = 0;
 
 	// Update the data to be displayed in the server browser and matchmaking interfaces for a user
 	// currently connected to the server.  For regular users you must call this after you receive a
 	// GSUserValidationSuccess callback.
 	// 
 	// Return Value: true if successful, false if failure (ie, steamIDUser wasn't for an active player)
-	bool BUpdateUserData( CSteamID steamIDUser, const char *pchPlayerName, uint32 uScore ) override;
+	virtual bool BUpdateUserData( CSteamID steamIDUser, const char *pchPlayerName, uint32 uScore ) = 0;
 
 	// You shouldn't need to call this as it is called internally by SteamGameServer_Init() and can only be called once.
 	//
@@ -89,47 +73,25 @@ public:
 	//			
 	// bugbug jmccaskey - figure out how to remove this from the API and only expose via SteamGameServer_Init... or make this actually used,
 	// and stop calling it in SteamGameServer_Init()?
-	// Removed from Steam SDK v1.01, backward compatibility
-	bool BSetServerType( int32 nGameAppId, uint32 unServerFlags, uint32 unGameIP, uint16 unGamePort, 
-							uint16 unSpectatorPort, uint16 usQueryPort, const char *pchGameDir, const char *pchVersion, bool bLANMode ) override;
-	bool BSetServerType( uint32 unServerFlags, uint32 unGameIP, uint16 unGamePort, 
-								uint16 unSpectatorPort, uint16 usQueryPort, const char *pchGameDir, const char *pchVersion, bool bLANMode ) override;
+	virtual bool BSetServerType( uint32 unServerFlags, uint32 unGameIP, uint16 unGamePort, 
+								uint16 unSpectatorPort, uint16 usQueryPort, const char *pchGameDir, const char *pchVersion, bool bLANMode ) = 0;
 
 	// Updates server status values which shows up in the server browser and matchmaking APIs
-	void UpdateServerStatus( int cPlayers, int cPlayersMax, int cBotPlayers, 
-							 const char *pchServerName, const char *pSpectatorServerName, 
-							 const char *pchMapName ) override;
+	virtual void UpdateServerStatus( int cPlayers, int cPlayersMax, int cBotPlayers, 
+									 const char *pchServerName, const char *pSpectatorServerName, 
+									 const char *pchMapName ) = 0;
 
 	// This can be called if spectator goes away or comes back (passing 0 means there is no spectator server now).
-	void UpdateSpectatorPort( uint16 unSpectatorPort ) override;
+	virtual void UpdateSpectatorPort( uint16 unSpectatorPort ) = 0;
 
 	// Sets a string defining the "gametype" for this server, this is optional, but if it is set
 	// it allows users to filter in the matchmaking/server-browser interfaces based on the value
-	void SetGameType( const char *pchGameType ) override; 
+	virtual void SetGameType( const char *pchGameType ) = 0; 
 
 	// Ask if a user has a specific achievement for this game, will get a callback on reply
-	bool BGetUserAchievementStatus( CSteamID steamID, const char *pchAchievementName ) override;
-
-	// Ask for the gameplay stats for the server. Results returned in a callback
-	void GetGameplayStats( ) override;
-
-	// Ask if a user in in the specified group, results returns async by GSUserGroupStatus_t
-	// returns false if we're not connected to the steam servers and thus cannot ask
-	bool RequestUserGroupStatus( CSteamID steamIDUser, CSteamID steamIDGroup ) override;
-
-	// Returns the public IP of the server according to Steam, useful when the server is 
-	// behind NAT and you want to advertise its IP in a lobby for other clients to directly
-	// connect to
-	uint32 GetPublicIP() override;
-
-    // Helper methods
-    static Steam_Game_Server* GetInstance();
-    static void ReleaseInstance();
-
-private:
-    // Singleton instance
-    static Steam_Game_Server* s_pInstance;
+	virtual bool BGetUserAchievementStatus( CSteamID steamID, const char *pchAchievementName ) = 0;
 };
 
-#endif // VAPORCORE_STEAM_GAME_SERVER_H
+#define STEAMGAMESERVER_INTERFACE_VERSION005 "SteamGameServer005"
 
+#endif // ISTEAMGAMESERVER005_H

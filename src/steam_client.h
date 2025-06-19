@@ -111,6 +111,9 @@ public:
 	// callbacks will occur directly after the API function is called that generated the warning or message
 	void SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction ) override;
 
+	// remote storage
+	ISteamRemoteStorage *GetISteamRemoteStorage( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
     // Helper methods
     static Steam_Client* GetInstance();
     static void ReleaseInstance();

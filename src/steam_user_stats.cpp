@@ -119,6 +119,37 @@ bool Steam_User_Stats::IndicateAchievementProgress( const char *pchName, uint32 
     return true;
 }
 
+// Friends stats & achievements
+
+// downloads stats for the user
+// returns a UserStatsReceived_t received when completed
+// if the other user has no stats, UserStatsReceived_t.m_eResult will be set to k_EResultFail
+// these stats won't be auto-updated; you'll need to call RequestUserStats() again to refresh any data
+SteamAPICall_t Steam_User_Stats::RequestUserStats( CSteamID steamIDUser )
+{
+    VLOG_DEBUG("RequestUserStats called - SteamID: %u", steamIDUser.GetAccountID());
+    return 0;
+}
+
+// requests stat information for a user, usable after a successful call to RequestUserStats()
+bool Steam_User_Stats::GetUserStat( CSteamID steamIDUser, const char *pchName, int32 *pData )
+{
+    VLOG_DEBUG("GetUserStat called - SteamID: %u, Name: %s", steamIDUser.GetAccountID(), pchName ? pchName : "null");
+    return false;
+}
+
+bool Steam_User_Stats::GetUserStat( CSteamID steamIDUser, const char *pchName, float *pData )
+{
+    VLOG_DEBUG("GetUserStat called - SteamID: %u, Name: %s", steamIDUser.GetAccountID(), pchName ? pchName : "null");
+    return false;
+}
+
+bool Steam_User_Stats::GetUserAchievement( CSteamID steamIDUser, const char *pchName, bool *pbAchieved )
+{
+    VLOG_DEBUG("GetUserAchievement called - SteamID: %u, Name: %s", steamIDUser.GetAccountID(), pchName ? pchName : "null");
+    return false;
+}
+
 // Helper methods
 Steam_User_Stats* Steam_User_Stats::GetInstance()
 {

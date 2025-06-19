@@ -62,9 +62,38 @@ bool Steam_Matchmaking::RemoveFavoriteGame( AppId_t nAppID, uint32 nIP, uint16 n
 // results will be returned by LobbyMatchList_t callback, with the number of servers requested
 // if the user is not currently connected to Steam (i.e. SteamUser()->BLoggedOn() returns false) then
 // a LobbyMatchList_t callback will be posted immediately with no servers
-void Steam_Matchmaking::RequestLobbyList()
+// Changed from Steam SDK v1.03, backward compatibility
+void Steam_Matchmaking::DEPRECATED_RequestLobbyList()
+{
+    VLOG_DEBUG("DEPRECATED_RequestLobbyList called");
+}
+
+// results will be returned by LobbyMatchList_t callback & call result, with the number of lobbies found
+// this will never return lobbies that are full
+// to add more filter, the filter calls below need to be call before each and every RequestLobbyList() call
+// use the CCallResult<> object in steam_api.h to match the SteamAPICall_t call result to a function in an object, e.g.
+/*
+    class CMyLobbyListManager
+    {
+        CCallResult<CMyLobbyListManager, LobbyMatchList_t> m_CallResultLobbyMatchList;
+        void FindLobbies()
+        {
+            // SteamMatchmaking()->AddRequestLobbyListFilter*() functions would be called here, before RequestLobbyList()
+            SteamAPICall_t hSteamAPICall = SteamMatchmaking()->RequestLobbyList();
+            m_CallResultLobbyMatchList.Set( hSteamAPICall, this, &CMyLobbyListManager::OnLobbyMatchList );
+        }
+
+        void OnLobbyMatchList( LobbyMatchList_t *pLobbyMatchList, bool bIOFailure )
+        {
+            // lobby list has be retrieved from Steam back-end, use results
+        }
+    }
+*/
+// 
+SteamAPICall_t Steam_Matchmaking::RequestLobbyList()
 {
     VLOG_DEBUG("RequestLobbyList called");
+    return 0;
 }
 
 // filters for lobbies
@@ -82,9 +111,16 @@ void Steam_Matchmaking::AddRequestLobbyListNumericalFilter( const char *pchKeyTo
 }
 
 // sets RequestLobbyList() to only returns lobbies which aren't yet full - needs SetLobbyMemberLimit() called on the lobby to set an initial limit
+// Removed from Steam SDK v1.03, backward compatibility
 void Steam_Matchmaking::AddRequestLobbyListSlotsAvailableFilter()
 {
     VLOG_DEBUG("AddRequestLobbyListSlotsAvailableFilter called");
+}
+
+// returns results closest to the specified value. Multiple near filters can be added, with early filters taking precedence
+void Steam_Matchmaking::AddRequestLobbyListNearValueFilter( const char *pchKeyToMatch, int nValueToBeCloseTo )
+{
+    VLOG_DEBUG("AddRequestLobbyListNearValueFilter called - Key: %s, Value: %d", pchKeyToMatch, nValueToBeCloseTo);
 }
 
 // returns the CSteamID of a lobby, as retrieved by a RequestLobbyList call
@@ -104,17 +140,35 @@ CSteamID Steam_Matchmaking::GetLobbyByIndex( int iLobby )
 // results will be returned by LobbyCreated_t callback when the lobby has been created;
 // local user will the join the lobby, resulting in an additional LobbyEnter_t callback being sent
 // operations on the chat room can only proceed once the LobbyEnter_t has been received
+// Removed from Steam SDK v1.03, backward compatibility
 void Steam_Matchmaking::CreateLobby( bool bPrivate )
 {
     VLOG_DEBUG("CreateLobby called - Private: %s", bPrivate ? "true" : "false");
 }
 
+// results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this pointer
+// a LobbyEnter_t callback will also be received (since the local user is joining their own lobby)
+SteamAPICall_t Steam_Matchmaking::CreateLobby( ELobbyType eLobbyType )
+{
+    VLOG_DEBUG("CreateLobby called - LobbyType: %d", eLobbyType);
+    return 0;
+}
+
 // Joins an existing lobby
 // this is an asynchronous request
 // results will be returned by LobbyEnter_t callback when the lobby has been joined
-void Steam_Matchmaking::JoinLobby( CSteamID steamIDLobby )
+// Removed from Steam SDK v1.03, backward compatibility
+void Steam_Matchmaking::DEPRECATED_JoinLobby( CSteamID steamIDLobby )
+{
+    VLOG_DEBUG("DEPRECATED_JoinLobby called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+}
+
+// results will be returned by LobbyEnter_t callback & call result, check m_EChatRoomEnterResponse to see if was successful
+// lobby metadata is available to use immediately on this call completing
+SteamAPICall_t Steam_Matchmaking::JoinLobby( CSteamID steamIDLobby )
 {
     VLOG_DEBUG("JoinLobby called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+    return 0;
 }
 
 // Leave a lobby; this will take effect immediately on the client side
@@ -250,10 +304,29 @@ int Steam_Matchmaking::GetLobbyMemberLimit( CSteamID steamIDLobby )
 // returns results by posting one RequestFriendsLobbiesResponse_t callback per friend/lobby pair
 // if no friends are in lobbies, RequestFriendsLobbiesResponse_t will be posted but with 0 results
 // filters don't apply to lobbies (currently)
+// Removed from Steam SDK v1.03, backward compatibility
 bool Steam_Matchmaking::RequestFriendsLobbies()
 {
     VLOG_DEBUG("RequestFriendsLobbies called");
     return false;
+}
+
+// updates which type of lobby it is
+// only lobbies that are k_ELobbyTypePublic will be returned by RequestLobbyList() calls
+bool Steam_Matchmaking::SetLobbyType( CSteamID steamIDLobby, ELobbyType eLobbyType )
+{
+    VLOG_DEBUG("SetLobbyType called - Lobby: %llu, Type: %d", steamIDLobby.ConvertToUint64(), eLobbyType);
+    return false;
+}
+
+// returns the current lobby owner
+// you must be a member of the lobby to access this
+// there always one lobby owner - if the current owner leaves, another user will become the owner
+// it is possible (bur rare) to join a lobby just as the owner is leaving, thus entering a lobby with self as the owner
+CSteamID Steam_Matchmaking::GetLobbyOwner( CSteamID steamIDLobby )
+{
+    VLOG_DEBUG("GetLobbyOwner called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+    return CSteamID();
 }
 
 // Helper methods
@@ -275,3 +348,250 @@ void Steam_Matchmaking::ReleaseInstance()
     }
 }
 
+//-----------------------------------------------------------------------------
+// Callback interfaces for server list functions (see ISteamMatchmakingServers below)
+//
+// The idea here is that your game code implements objects that implement these
+// interfaces to receive callback notifications after calling asynchronous functions
+// inside the ISteamMatchmakingServers() interface below.
+//
+// This is different than normal Steam callback handling due to the potentially
+// large size of server lists.
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// Purpose: Callback interface for receiving responses after a server list refresh
+// or an individual server update.
+//
+// Since you get these callbacks after requesting full list refreshes you will
+// usually implement this interface inside an object like CServerBrowser.  If that
+// object is getting destructed you should use ISteamMatchMakingServers()->CancelQuery()
+// to cancel any in-progress queries so you don't get a callback into the destructed
+// object and crash.
+//-----------------------------------------------------------------------------
+// Server has responded ok with updated data
+void Steam_Matchmaking_Server_List_Response::ServerResponded( int iServer )
+{
+    VLOG_DEBUG("ServerResponded called - Server: %d", iServer);
+} 
+
+// Server has failed to respond
+void Steam_Matchmaking_Server_List_Response::ServerFailedToRespond( int iServer )
+{
+    VLOG_DEBUG("ServerFailedToRespond called - Server: %d", iServer);
+} 
+
+// A list refresh you had initiated is now 100% completed
+void Steam_Matchmaking_Server_List_Response::RefreshComplete( EMatchMakingServerResponse response )
+{
+    VLOG_DEBUG("RefreshComplete called - Response: %d", response);
+} 
+
+//-----------------------------------------------------------------------------
+// Purpose: Callback interface for receiving responses after pinging an individual server 
+//
+// These callbacks all occur in response to querying an individual server
+// via the ISteamMatchmakingServers()->PingServer() call below.  If you are 
+// destructing an object that implements this interface then you should call 
+// ISteamMatchmakingServers()->CancelServerQuery() passing in the handle to the query
+// which is in progress.  Failure to cancel in progress queries when destructing
+// a callback handler may result in a crash when a callback later occurs.
+//-----------------------------------------------------------------------------
+// Server has responded successfully and has updated data
+void Steam_MatchmakingPingResponse::ServerResponded( gameserveritem_t &server )
+{
+    VLOG_DEBUG("ServerResponded called - Server: %d", server.m_nPing);
+}
+
+// Server failed to respond to the ping request
+void Steam_MatchmakingPingResponse::ServerFailedToRespond()
+{
+    VLOG_DEBUG("ServerFailedToRespond called");
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Callback interface for receiving responses after requesting details on
+// who is playing on a particular server.
+//
+// These callbacks all occur in response to querying an individual server
+// via the ISteamMatchmakingServers()->PlayerDetails() call below.  If you are 
+// destructing an object that implements this interface then you should call 
+// ISteamMatchmakingServers()->CancelServerQuery() passing in the handle to the query
+// which is in progress.  Failure to cancel in progress queries when destructing
+// a callback handler may result in a crash when a callback later occurs.
+//-----------------------------------------------------------------------------
+// Got data on a new player on the server -- you'll get this callback once per player
+// on the server which you have requested player data on.
+void Steam_Matchmaking_Players_Response::AddPlayerToList( const char *pchName, int nScore, float flTimePlayed )
+{
+    VLOG_DEBUG("AddPlayerToList called - Name: %s, Score: %d, TimePlayed: %f", pchName, nScore, flTimePlayed);
+}
+
+// The server failed to respond to the request for player details
+void Steam_Matchmaking_Players_Response::PlayersFailedToRespond()
+{
+    VLOG_DEBUG("PlayersFailedToRespond called");
+}
+
+// The server has finished responding to the player details request 
+// (ie, you won't get anymore AddPlayerToList callbacks)
+void Steam_Matchmaking_Players_Response::PlayersRefreshComplete()
+{
+    VLOG_DEBUG("PlayersRefreshComplete called");
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Callback interface for receiving responses after requesting rules
+// details on a particular server.
+//
+// These callbacks all occur in response to querying an individual server
+// via the ISteamMatchmakingServers()->ServerRules() call below.  If you are 
+// destructing an object that implements this interface then you should call 
+// ISteamMatchmakingServers()->CancelServerQuery() passing in the handle to the query
+// which is in progress.  Failure to cancel in progress queries when destructing
+// a callback handler may result in a crash when a callback later occurs.
+//-----------------------------------------------------------------------------
+// Got data on a rule on the server -- you'll get one of these per rule defined on
+// the server you are querying
+void Steam_Matchmaking_Rules_Response::RulesResponded( const char *pchRule, const char *pchValue )
+{
+    VLOG_DEBUG("RulesResponded called - Rule: %s, Value: %s", pchRule, pchValue);
+}
+
+// The server failed to respond to the request for rule details
+void Steam_Matchmaking_Rules_Response::RulesFailedToRespond()
+{
+    VLOG_DEBUG("RulesFailedToRespond called");
+}
+
+// The server has finished responding to the rule details request 
+// (ie, you won't get anymore RulesResponded callbacks)
+void Steam_Matchmaking_Rules_Response::RulesRefreshComplete()
+{
+    VLOG_DEBUG("RulesRefreshComplete called");
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Functions for match making services for clients to get to game lists and details
+//-----------------------------------------------------------------------------
+// Request a new list of servers of a particular type.  These calls each correspond to one of the EMatchMakingType values.
+void Steam_Matchmaking_Servers::RequestInternetServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("RequestInternetServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+}
+
+void Steam_Matchmaking_Servers::RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("RequestLANServerList called - AppID: %u, Response: %p", iApp, pRequestServersResponse);
+}
+
+void Steam_Matchmaking_Servers::RequestFriendsServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("RequestFriendsServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+}
+
+void Steam_Matchmaking_Servers::RequestFavoritesServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("RequestFavoritesServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+}
+
+void Steam_Matchmaking_Servers::RequestHistoryServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("RequestHistoryServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+}
+
+void Steam_Matchmaking_Servers::RequestSpectatorServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("RequestSpectatorServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+}
+
+/* the filters that are available in the ppchFilters params are:
+
+    "map"		- map the server is running, as set in the dedicated server api
+    "dedicated" - reports bDedicated from the API
+    "secure"	- VAC-enabled
+    "full"		- not full
+    "empty"		- not empty
+    "noplayers" - is empty
+    "proxy"		- a relay server
+
+*/
+
+// Get details on a given server in the list, you can get the valid range of index
+// values by calling GetServerCount().  You will also receive index values in 
+// ISteamMatchmakingServerListResponse::ServerResponded() callbacks
+gameserveritem_t *Steam_Matchmaking_Servers::GetServerDetails( EMatchMakingType eType, int iServer )
+{
+    VLOG_DEBUG("GetServerDetails called - Type: %d, Server: %d", eType, iServer);
+    return nullptr;
+} 
+
+// Cancel an request which is operation on the given list type.  You should call this to cancel
+// any in-progress requests before destructing a callback object that may have been passed 
+// to one of the above list request calls.  Not doing so may result in a crash when a callback
+// occurs on the destructed object.
+void Steam_Matchmaking_Servers::CancelQuery( EMatchMakingType eType )
+{
+    VLOG_DEBUG("CancelQuery called - Type: %d", eType);
+} 
+
+// Ping every server in your list again but don't update the list of servers
+void Steam_Matchmaking_Servers::RefreshQuery( EMatchMakingType eType )
+{
+    VLOG_DEBUG("RefreshQuery called - Type: %d", eType);
+} 
+
+// Returns true if the list is currently refreshing its server list
+bool Steam_Matchmaking_Servers::IsRefreshing( EMatchMakingType eType )
+{
+    VLOG_DEBUG("IsRefreshing called - Type: %d", eType);
+    return false;
+} 
+
+// How many servers in the given list, GetServerDetails above takes 0... GetServerCount() - 1
+int Steam_Matchmaking_Servers::GetServerCount( EMatchMakingType eType )
+{
+    VLOG_DEBUG("GetServerCount called - Type: %d", eType);
+    return 0;
+} 
+
+// Refresh a single server inside of a query (rather than all the servers )
+void Steam_Matchmaking_Servers::RefreshServer( EMatchMakingType eType, int iServer )
+{
+    VLOG_DEBUG("RefreshServer called - Type: %d, Server: %d", eType, iServer);
+} 
+
+
+//-----------------------------------------------------------------------------
+// Queries to individual servers directly via IP/Port
+//-----------------------------------------------------------------------------
+
+// Request updated ping time and other details from a single server
+HServerQuery Steam_Matchmaking_Servers::PingServer( uint32 unIP, uint16 usPort, ISteamMatchmakingPingResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("PingServer called - IP: %u, Port: %u, Response: %p", unIP, usPort, pRequestServersResponse);
+    return 0;
+} 
+
+// Request the list of players currently playing on a server
+HServerQuery Steam_Matchmaking_Servers::PlayerDetails( uint32 unIP, uint16 usPort, ISteamMatchmakingPlayersResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("PlayerDetails called - IP: %u, Port: %u, Response: %p", unIP, usPort, pRequestServersResponse);
+    return 0;
+}
+
+// Request the list of rules that the server is running (See ISteamMasterServerUpdater->SetKeyValue() to set the rules server side)
+HServerQuery Steam_Matchmaking_Servers::ServerRules( uint32 unIP, uint16 usPort, ISteamMatchmakingRulesResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("ServerRules called - IP: %u, Port: %u, Response: %p", unIP, usPort, pRequestServersResponse);
+    return 0;
+}
+
+// Cancel an outstanding Ping/Players/Rules query from above.  You should call this to cancel
+// any in-progress requests before destructing a callback object that may have been passed 
+// to one of the above calls to avoid crashing when callbacks occur.
+void Steam_Matchmaking_Servers::CancelServerQuery( HServerQuery hServerQuery )
+{
+    VLOG_DEBUG("CancelServerQuery called - Query: %d", hServerQuery);
+}

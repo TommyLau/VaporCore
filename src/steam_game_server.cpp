@@ -171,6 +171,30 @@ bool Steam_Game_Server::BGetUserAchievementStatus( CSteamID steamID, const char 
     return false;
 }
 
+// Ask for the gameplay stats for the server. Results returned in a callback
+void Steam_Game_Server::GetGameplayStats( )
+{
+    VLOG_DEBUG("GetGameplayStats called");
+}
+
+// Ask if a user in in the specified group, results returns async by GSUserGroupStatus_t
+// returns false if we're not connected to the steam servers and thus cannot ask
+bool Steam_Game_Server::RequestUserGroupStatus( CSteamID steamIDUser, CSteamID steamIDGroup )
+{
+    VLOG_DEBUG("RequestUserGroupStatus called - User: %llu, Group: %llu", 
+               steamIDUser.ConvertToUint64(), steamIDGroup.ConvertToUint64());
+    return false;
+}
+
+// Returns the public IP of the server according to Steam, useful when the server is 
+// behind NAT and you want to advertise its IP in a lobby for other clients to directly
+// connect to
+uint32 Steam_Game_Server::GetPublicIP()
+{
+    VLOG_DEBUG("GetPublicIP called");
+    return 0;
+}
+
 // Helper methods
 Steam_Game_Server* Steam_Game_Server::GetInstance()
 {

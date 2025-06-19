@@ -109,6 +109,26 @@ void Steam_Utils::SetOverlayNotificationPosition( ENotificationPosition eNotific
     VLOG_DEBUG("SetOverlayNotificationPosition called - Position: %d", eNotificationPosition);
 }
 
+// API asynchronous call results
+// can be used directly, but more commonly used via the callback dispatch API (see steam_api.h)
+bool Steam_Utils::IsAPICallCompleted( SteamAPICall_t hSteamAPICall, bool *pbFailed )
+{
+    VLOG_DEBUG("IsAPICallCompleted called - Call: %u", hSteamAPICall);
+    return false;
+}
+
+ESteamAPICallFailure Steam_Utils::GetAPICallFailureReason( SteamAPICall_t hSteamAPICall )
+{
+    VLOG_DEBUG("GetAPICallFailureReason called - Call: %u", hSteamAPICall);
+    return k_ESteamAPICallFailureNone;
+}
+
+bool Steam_Utils::GetAPICallResult( SteamAPICall_t hSteamAPICall, void *pCallback, int cubCallback, int iCallbackExpected, bool *pbFailed )
+{
+    VLOG_DEBUG("GetAPICallResult called - Call: %u", hSteamAPICall);
+    return false;
+}
+
 // Helper methods
 Steam_Utils* Steam_Utils::GetInstance()
 {

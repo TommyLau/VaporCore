@@ -7,60 +7,17 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef ISTEAMNETWORKING
-#define ISTEAMNETWORKING
+#ifndef ISTEAMNETWORKING001_H
+#define ISTEAMNETWORKING001_H
 #ifdef _WIN32
 #pragma once
 #endif
-
-#include "isteamclient.h"
-
-// handle to a socket
-typedef uint32 SNetSocket_t;
-typedef uint32 SNetListenSocket_t;
-
-
-// connection progress indicators
-enum ESNetSocketState
-{
-	k_ESNetSocketStateInvalid = 0,						
-
-	// communication is valid
-	k_ESNetSocketStateConnected = 1,				
-	
-	// states while establishing a connection
-	k_ESNetSocketStateInitiated = 10,				// the connection state machine has started
-
-	// p2p connections
-	k_ESNetSocketStateLocalCandidatesFound = 11,	// we've found our local IP info
-	k_ESNetSocketStateReceivedRemoteCandidates = 12,// we've received information from the remote machine, via the Steam back-end, about their IP info
-
-	// direct connections
-	k_ESNetSocketStateChallengeHandshake = 15,		// we've received a challenge packet from the server
-
-	// failure states
-	k_ESNetSocketStateDisconnecting = 21,			// the API shut it down, and we're in the process of telling the other end	
-	k_ESNetSocketStateLocalDisconnect = 22,			// the API shut it down, and we've completed shutdown
-	k_ESNetSocketStateTimeoutDuringConnect = 23,	// we timed out while trying to creating the connection
-	k_ESNetSocketStateRemoteEndDisconnected = 24,	// the remote end has disconnected from us
-	k_ESNetSocketStateConnectionBroken = 25,		// connection has been broken; either the other end has disappeared or our local network connection has broke
-
-};
-
-// describes how the socket is currently connected
-enum ESNetSocketConnectionType
-{
-	k_ESNetSocketConnectionTypeNotConnected = 0,
-	k_ESNetSocketConnectionTypeUDP = 1,
-	k_ESNetSocketConnectionTypeUDPRelay = 2,
-};
-
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for making connections and sending data between clients,
 //			traversing NAT's where possible
 //-----------------------------------------------------------------------------
-class ISteamNetworking
+class ISteamNetworking001
 {
 public:
 	// creates a socket and listens others to connect
@@ -71,13 +28,13 @@ public:
 	//		pass in 0 if you just want the default local IP
 	// unPort is the port to use
 	//		pass in 0 if you don't want users to be able to connect via IP/Port, but expect to be always peer-to-peer connections only
-	virtual SNetListenSocket_t CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort, bool bAllowUseOfPacketRelay ) = 0;
+	virtual SNetListenSocket_t CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort ) = 0;
 
 	// creates a socket and begin connection to a remote destination
 	// can connect via a known steamID (client or game server), or directly to an IP
 	// on success will trigger a SocketStatusCallback_t callback
 	// on failure or timeout will trigger a SocketStatusCallback_t callback with a failure code in m_eSNetSocketState
-	virtual SNetSocket_t CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec, bool bAllowUseOfPacketRelay ) = 0;
+	virtual SNetSocket_t CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec ) = 0;
 	virtual SNetSocket_t CreateConnectionSocket( uint32 nIP, uint16 nPort, int nTimeoutSec ) = 0;
 
 	// disconnects the connection to the socket, if any, and invalidates the handle
@@ -125,25 +82,9 @@ public:
 	// returns which local port the listen socket is bound to
 	// *pnIP and *pnPort will be 0 if the socket is set to listen for P2P connections only
 	virtual bool GetListenSocketInfo( SNetListenSocket_t hListenSocket, uint32 *pnIP, uint16 *pnPort ) = 0;
-
-	// returns true to describe how the socket ended up connecting
-	virtual ESNetSocketConnectionType GetSocketConnectionType( SNetSocket_t hSocket ) = 0;
-
-	// max packet size, in bytes
-	virtual int GetMaxPacketSize( SNetSocket_t hSocket ) = 0;
-};
-#define STEAMNETWORKING_INTERFACE_VERSION "SteamNetworking002"
-
-
-// callback notification - status of a socket has changed
-struct SocketStatusCallback_t
-{ 
-	enum { k_iCallback = k_iSteamNetworkingCallbacks + 1 };
-	SNetSocket_t m_hSocket;				// the socket used to send/receive data to the remote host
-	SNetListenSocket_t m_hListenSocket;	// this is the server socket that we were listening on; NULL if this was an outgoing connection
-	CSteamID m_steamIDRemote;			// remote steamID we have connected to, if it has one
-	int m_eSNetSocketState;				// socket state, ESNetSocketState
+	
 };
 
+#define STEAMNETWORKING_INTERFACE_VERSION001 "SteamNetworking001"
 
-#endif // ISTEAMNETWORKING
+#endif // ISTEAMNETWORKING001_H

@@ -7,118 +7,88 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef VAPORCORE_STEAM_FRIENDS_H
-#define VAPORCORE_STEAM_FRIENDS_H
+#ifndef ISTEAMFRIENDS004_H
+#define ISTEAMFRIENDS004_H
 #ifdef _WIN32
 #pragma once
 #endif
-
-#include <sdk/isteamfriends.h>
-#include <sdk/isteamfriends003.h>
-#include <sdk/isteamfriends004.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to accessing information about individual users,
 //			that can be a friend, in a group, on a game server or in a lobby with the local user
 //-----------------------------------------------------------------------------
-class Steam_Friends :
-	public ISteamFriends,
-	public ISteamFriends003,
-	public ISteamFriends004
+class ISteamFriends004
 {
 public:
-    Steam_Friends();
-    ~Steam_Friends();
-
 	// returns the local players name - guaranteed to not be NULL.
 	// this is the same name as on the users community profile page
 	// this is stored in UTF-8 format
 	// like all the other interface functions that return a char *, it's important that this pointer is not saved
 	// off; it will eventually be free'd or re-allocated
-	const char *GetPersonaName() override;
+	virtual const char *GetPersonaName() = 0;
 	
 	// sets the player name, stores it on the server and publishes the changes to all friends who are online
-	void SetPersonaName( const char *pchPersonaName ) override;
+	virtual void SetPersonaName( const char *pchPersonaName ) = 0;
 
 	// gets the status of the current user
-	EPersonaState GetPersonaState() override;
+	virtual EPersonaState GetPersonaState() = 0;
 
 	// friend iteration
 	// takes a set of k_EFriendFlags, and returns the number of users the client knows about who meet that criteria
 	// then GetFriendByIndex() can then be used to return the id's of each of those users
-	int GetFriendCount( int iFriendFlags ) override;
+	virtual int GetFriendCount( int iFriendFlags ) = 0;
 
 	// returns the steamID of a user
 	// iFriend is a index of range [0, GetFriendCount())
 	// iFriendsFlags must be the same value as used in GetFriendCount()
 	// the returned CSteamID can then be used by all the functions below to access details about the user
-	CSteamID GetFriendByIndex( int iFriend, int iFriendFlags ) override;
+	virtual CSteamID GetFriendByIndex( int iFriend, int iFriendFlags ) = 0;
 
 	// returns a relationship to a user
-	EFriendRelationship GetFriendRelationship( CSteamID steamIDFriend ) override;
+	virtual EFriendRelationship GetFriendRelationship( CSteamID steamIDFriend ) = 0;
 
 	// returns the current status of the specified user
 	// this will only be known by the local user if steamIDFriend is in their friends list; on the same game server; in a chat room or lobby; or in a small group with the local user
-	EPersonaState GetFriendPersonaState( CSteamID steamIDFriend ) override;
+	virtual EPersonaState GetFriendPersonaState( CSteamID steamIDFriend ) = 0;
 
 	// returns the name another user - guaranteed to not be NULL.
 	// same rules as GetFriendPersonaState() apply as to whether or not the user knowns the name of the other user
 	// note that on first joining a lobby, chat room or game server the local user will not known the name of the other users automatically; that information will arrive asyncronously
 	// 
-	const char *GetFriendPersonaName( CSteamID steamIDFriend ) override;
+	virtual const char *GetFriendPersonaName( CSteamID steamIDFriend ) = 0;
 
 	// gets the avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
-	// Removed from Steam SDK v1.02, backward compatibility
-	int GetFriendAvatar( CSteamID steamIDFriend ) override;
-	int GetFriendAvatar( CSteamID steamIDFriend, int eAvatarSize ) override;
-
+	virtual int GetFriendAvatar( CSteamID steamIDFriend, int eAvatarSize ) = 0;
 	// returns true if the friend is actually in a game
-	bool GetFriendGamePlayed( CSteamID steamIDFriend, uint64 *pulGameID, uint32 *punGameIP, uint16 *pusGamePort, uint16 *pusQueryPort ) override;
+	virtual bool GetFriendGamePlayed( CSteamID steamIDFriend, uint64 *pulGameID, uint32 *punGameIP, uint16 *pusGamePort, uint16 *pusQueryPort ) = 0;
 	// accesses old friends names - returns an empty string when their are no more items in the history
-	const char *GetFriendPersonaNameHistory( CSteamID steamIDFriend, int iPersonaName ) override;
+	virtual const char *GetFriendPersonaNameHistory( CSteamID steamIDFriend, int iPersonaName ) = 0;
 
 	// returns true if the specified user meets any of the criteria specified in iFriendFlags
 	// iFriendFlags can be the union (binary or, |) of one or more k_EFriendFlags values
-	bool HasFriend( CSteamID steamIDFriend, int iFriendFlags ) override;
+	virtual bool HasFriend( CSteamID steamIDFriend, int iFriendFlags ) = 0;
 
 	// clan (group) iteration and access functions
-	int GetClanCount() override;
-	CSteamID GetClanByIndex( int iClan ) override;
-	const char *GetClanName( CSteamID steamIDClan ) override;
+	virtual int GetClanCount() = 0;
+	virtual CSteamID GetClanByIndex( int iClan ) = 0;
+	virtual const char *GetClanName( CSteamID steamIDClan ) = 0;
 
 	// iterators for getting users in a chat room, lobby, game server or clan
 	// note that large clans that cannot be iterated by the local user
 	// steamIDSource can be the steamID of a group, game server, lobby or chat room
-	int GetFriendCountFromSource( CSteamID steamIDSource ) override;
-	CSteamID GetFriendFromSourceByIndex( CSteamID steamIDSource, int iFriend ) override;
+	virtual int GetFriendCountFromSource( CSteamID steamIDSource ) = 0;
+	virtual CSteamID GetFriendFromSourceByIndex( CSteamID steamIDSource, int iFriend ) = 0;
 
 	// returns true if the local user can see that steamIDUser is a member or in steamIDSource
-	bool IsUserInSource( CSteamID steamIDUser, CSteamID steamIDSource ) override;
+	virtual bool IsUserInSource( CSteamID steamIDUser, CSteamID steamIDSource ) = 0;
 
 	// User is in a game pressing the talk button (will suppress the microphone for all voice comms from the Steam friends UI)
-	void SetInGameVoiceSpeaking( CSteamID steamIDUser, bool bSpeaking ) override;
+	virtual void SetInGameVoiceSpeaking( CSteamID steamIDUser, bool bSpeaking ) = 0;
 
 	// activates the game overlay, with an optional dialog to open ("Friends", "Community", "Players", "Settings")
-	void ActivateGameOverlay( const char *pchDialog ) override;
-	
-	// activates game overlay to a specific place
-	// valid options are
-	//		"steamid" - opens the overlay web browser to the specified user or groups profile
-	//		"chat" - opens a chat window to the specified user, or joins the group chat 
-	void ActivateGameOverlayToUser( const char *pchDialog, CSteamID steamID ) override;
-
-	// activates game overlay web browser directly to the specified URL
-	// full address with protocol type is required, e.g. http://www.steamgames.com/
-	void ActivateGameOverlayToWebPage( const char *pchURL ) override;
-
-    // Helper methods
-    static Steam_Friends* GetInstance();
-    static void ReleaseInstance();
-
-private:
-    // Singleton instance
-    static Steam_Friends* s_pInstance;
+	virtual void ActivateGameOverlay( const char *pchDialog ) = 0;
 };
 
-#endif // VAPORCORE_STEAM_FRIENDS_H
+#define STEAMFRIENDS_INTERFACE_VERSION004 "SteamFriends004"
 
+#endif // ISTEAMFRIENDS004_H
