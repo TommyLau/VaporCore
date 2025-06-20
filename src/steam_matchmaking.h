@@ -230,6 +230,13 @@ public:
 	// after completion, the local user will no longer be the owner
 	bool SetLobbyOwner( CSteamID steamIDLobby, CSteamID steamIDNewOwner ) override;
 
+#ifdef _PS3
+	// changes who the lobby owner is
+	// you must be the lobby owner for this to succeed, and steamIDNewOwner must be in the lobby
+	// after completion, the local user will no longer be the owner
+	void CheckForPSNGameBootInvite( unsigned int iGameBootAttributes  ) override;
+#endif
+
     // Helper methods
     static Steam_Matchmaking* GetInstance();
     static void ReleaseInstance();

@@ -99,6 +99,27 @@ bool Steam_Apps::BIsSubscribedFromFreeWeekend()
     return false;
 }
 
+// Returns the number of DLC pieces for the running app
+int Steam_Apps::GetDLCCount()
+{
+    return 0;
+}
+
+// Returns metadata for DLC by index, of range [0, GetDLCCount()]
+bool Steam_Apps::BGetDLCDataByIndex( int iDLC, AppId_t *pAppID, bool *pbAvailable, char *pchName, int cchNameBufferSize )
+{
+    return false;
+}
+
+// Install/Uninstall control for optional DLC
+void Steam_Apps::InstallDLC( AppId_t nAppID )
+{
+}
+
+void Steam_Apps::UninstallDLC( AppId_t nAppID )
+{
+}
+
 // Helper methods
 Steam_Apps* Steam_Apps::GetInstance()
 {

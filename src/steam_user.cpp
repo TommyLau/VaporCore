@@ -122,22 +122,30 @@ void Steam_User::StartVoiceRecording( )
     VLOG_DEBUG("StartVoiceRecording called");
 }
 
-// Determine the amount of captured audio data that is available in bytes.
-// This provides both the compressed and uncompressed data. Please note that the uncompressed
-// data is not the raw feed from the microphone: data may only be available if audible 
-// levels of speech are detected.
-EVoiceResult Steam_User::GetAvailableVoice(uint32 *pcbCompressed, uint32 *pcbUncompressed)
-{
-    VLOG_DEBUG("GetAvailableVoice called - Compressed: %d, Uncompressed: %d", pcbCompressed, pcbUncompressed);
-    return EVoiceResult::k_EVoiceResultOK;
-}
-
 // Stops voice recording. Because people often release push-to-talk keys early, the system will keep recording for
 // a little bit after this function is called. GetCompressedVoice() should continue to be called until it returns
 // k_eVoiceResultNotRecording
 void Steam_User::StopVoiceRecording( )
 {
     VLOG_DEBUG("StopVoiceRecording called");
+}
+
+// Determine the amount of captured audio data that is available in bytes.
+// This provides both the compressed and uncompressed data. Please note that the uncompressed
+// data is not the raw feed from the microphone: data may only be available if audible 
+// levels of speech are detected.
+// nUncompressedVoiceDesiredSampleRate is necessary to know the number of bytes to return in pcbUncompressed - can be set to 0 if you don't need uncompressed (the usual case)
+EVoiceResult Steam_User::GetAvailableVoice(uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate)
+{
+    VLOG_DEBUG("GetAvailableVoice called - Compressed: %d, Uncompressed: %d, DesiredSampleRate: %d", pcbCompressed, pcbUncompressed, nUncompressedVoiceDesiredSampleRate);
+    return EVoiceResult::k_EVoiceResultOK;
+}
+
+// Changed from Steam SDK v1.13, backward compatibility
+EVoiceResult Steam_User::GetAvailableVoice(uint32 *pcbCompressed, uint32 *pcbUncompressed)
+{
+    VLOG_DEBUG("GetAvailableVoice called - Compressed: %d, Uncompressed: %d", pcbCompressed, pcbUncompressed);
+    return EVoiceResult::k_EVoiceResultOK;
 }
 
 // Gets the latest voice data. It should be called as often as possible once recording has started.
@@ -158,6 +166,13 @@ EVoiceResult Steam_User::GetCompressedVoice( void *pDestBuffer, uint32 cbDestBuf
 // You must grab both compressed and uncompressed here at the same time, if you want both.
 // Matching data that is not read during this call will be thrown away.
 // GetAvailableVoice() can be used to determine how much data is actually available.
+EVoiceResult Steam_User::GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten, uint32 nUncompressedVoiceDesiredSampleRate )
+{
+    VLOG_DEBUG("GetVoice called - WantCompressed: %s, DestBuffer: %s, DestBufferSize: %d, WantUncompressed: %s, UncompressedDestBuffer: %s, UncompressedDestBufferSize: %d, UncompressedVoiceDesiredSampleRate: %d", bWantCompressed ? "true" : "false", pDestBuffer, cbDestBufferSize, bWantUncompressed ? "true" : "false", pUncompressedDestBuffer, cbUncompressedDestBufferSize, nUncompressedVoiceDesiredSampleRate);
+    return EVoiceResult::k_EVoiceResultOK;
+}
+
+// Changed from Steam SDK v1.13, backward compatibility
 EVoiceResult Steam_User::GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten )
 {
     VLOG_DEBUG("GetVoice called - WantCompressed: %s, DestBuffer: %s, DestBufferSize: %d, WantUncompressed: %s, UncompressedDestBuffer: %s, UncompressedDestBufferSize: %d", bWantCompressed ? "true" : "false", pDestBuffer, cbDestBufferSize, bWantUncompressed ? "true" : "false", pUncompressedDestBuffer, cbUncompressedDestBufferSize);
@@ -168,17 +183,32 @@ EVoiceResult Steam_User::GetVoice( bool bWantCompressed, void *pDestBuffer, uint
 // nBytesWritten is set to the number of bytes written to pDestBuffer unless the return value is k_EVoiceResultBufferTooSmall.
 // In that case, nBytesWritten is set to the size of the buffer required to decompress the given
 // data. The suggested buffer size for the destination buffer is 22 kilobytes.
+// The output format of the data is 16-bit signed at the requested samples per second.
+EVoiceResult Steam_User::DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, uint32 nDesiredSampleRate )
+{
+    VLOG_DEBUG("DecompressVoice called - Compressed: %s, Size: %d, DestBuffer: %s, DestBufferSize: %d, DesiredSampleRate: %d", pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize, nDesiredSampleRate);
+    return EVoiceResult::k_EVoiceResultOK;
+}
+
 // The output format of the data is 16-bit signed at 11025 samples per second.
+// Changed from Steam SDK v1.13, backward compatibility
+EVoiceResult Steam_User::DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
+{
+    VLOG_DEBUG("DecompressVoice called - Compressed: %s, Size: %d, DestBuffer: %s, DestBufferSize: %d", pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize);
+    return EVoiceResult::k_EVoiceResultOK;
+}
+    
 // Changed from Steam SDK v1.08, backward compatibility
 EVoiceResult Steam_User::DecompressVoice( void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
 {
     return DecompressVoice((const void *)pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize, nBytesWritten);
 }
 
-EVoiceResult Steam_User::DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
+// This returns the frequency of the voice data as it's stored internally; calling DecompressVoice() with this size will yield the best results
+uint32 Steam_User::GetVoiceOptimalSampleRate()
 {
-    VLOG_DEBUG("DecompressVoice called - Compressed: %s, Size: %d, DestBuffer: %s, DestBufferSize: %d", pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize);
-    return EVoiceResult::k_EVoiceResultOK;
+    VLOG_DEBUG("GetVoiceOptimalSampleRate called");
+    return 11025;
 }
 
 // Retrieve ticket to be sent to the entity who wishes to authenticate you. 
@@ -267,4 +297,3 @@ void Steam_User::ReleaseInstance()
         s_pInstance = nullptr;
     }
 }
-

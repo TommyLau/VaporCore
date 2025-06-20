@@ -41,13 +41,14 @@ bool Steam_Networking::SendP2PPacket( CSteamID steamIDRemote, const void *pubDat
 {
     return SendP2PPacket(steamIDRemote, pubData, cubData, eP2PSendType, DEFAULT_VIRTUAL_PORT);
 }
-// nVirtualPort is a routing number you can use to help route message to different systems 	- you'll have to call ReadP2PPacket() 
-// with the same nVirtualPort number in order to retrieve the data on the other end
-// using different virtual ports to talk to the same user will still use the same underlying p2p connection, saving on resources
-bool Steam_Networking::SendP2PPacket( CSteamID steamIDRemote, const void *pubData, uint32 cubData, EP2PSend eP2PSendType, int nVirtualPort )
+
+// nChannel is a routing number you can use to help route message to different systems 	- you'll have to call ReadP2PPacket() 
+// with the same channel number in order to retrieve the data on the other end
+// using different channels to talk to the same user will still use the same underlying p2p connection, saving on resources
+bool Steam_Networking::SendP2PPacket( CSteamID steamIDRemote, const void *pubData, uint32 cubData, EP2PSend eP2PSendType, int nChannel )
 {
-    VLOG_DEBUG("SendP2PPacket called - Remote: %llu, DataSize: %u, SendType: %d, VirtualPort: %d", 
-               steamIDRemote.GetAccountID(), cubData, eP2PSendType, nVirtualPort);
+    VLOG_DEBUG("SendP2PPacket called - Remote: %llu, DataSize: %u, SendType: %d, Channel: %d", 
+               steamIDRemote.GetAccountID(), cubData, eP2PSendType, nChannel);
     return false;
 }
 
@@ -58,9 +59,9 @@ bool Steam_Networking::IsP2PPacketAvailable( uint32 *pcubMsgSize )
     return IsP2PPacketAvailable(pcubMsgSize, DEFAULT_VIRTUAL_PORT);
 }
 
-bool Steam_Networking::IsP2PPacketAvailable( uint32 *pcubMsgSize, int nVirtualPort )
+bool Steam_Networking::IsP2PPacketAvailable( uint32 *pcubMsgSize, int nChannel )
 {
-    VLOG_DEBUG("IsP2PPacketAvailable called - DataSize: %u, VirtualPort: %d", *pcubMsgSize, nVirtualPort);
+    VLOG_DEBUG("IsP2PPacketAvailable called - DataSize: %u, Channel: %d", *pcubMsgSize, nChannel);
     return false;
 }
 
@@ -74,9 +75,9 @@ bool Steam_Networking::ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcu
     return ReadP2PPacket(pubDest, cubDest, pcubMsgSize, psteamIDRemote, DEFAULT_VIRTUAL_PORT);
 }
 
-bool Steam_Networking::ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, CSteamID *psteamIDRemote, int nVirtualPort )
+bool Steam_Networking::ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, CSteamID *psteamIDRemote, int nChannel )
 {
-    VLOG_DEBUG("ReadP2PPacket called - DestSize: %u, DataSize: %u, VirtualPort: %d", cubDest, *pcubMsgSize, nVirtualPort);
+    VLOG_DEBUG("ReadP2PPacket called - DestSize: %u, DataSize: %u, Channel: %d", cubDest, *pcubMsgSize, nChannel);
     return false;
 }
 
@@ -100,6 +101,15 @@ bool Steam_Networking::CloseP2PSessionWithUser( CSteamID steamIDRemote )
     return false;
 }
 
+// call CloseP2PChannelWithUser() when you're done talking to a user on a specific channel. Once all channels
+// open channels to a user have been closed, the open session to the user will be closed and new data from this
+// user will trigger a P2PSessionRequest_t callback
+bool Steam_Networking::CloseP2PChannelWithUser( CSteamID steamIDRemote, int nChannel )
+{
+    VLOG_DEBUG("CloseP2PChannelWithUser called - Remote: %llu, Channel: %d", steamIDRemote.GetAccountID(), nChannel);
+    return false;
+}
+
 // fills out P2PSessionState_t structure with details about the underlying connection to the user
 // should only needed for debugging purposes
 // returns false if no connection exists to the specified user
@@ -109,6 +119,16 @@ bool Steam_Networking::GetP2PSessionState( CSteamID steamIDRemote, P2PSessionSta
     return false;
 }
 
+// Allow P2P connections to fall back to being relayed through the Steam servers if a direct connection
+// or NAT-traversal cannot be established. Only applies to connections created after setting this value,
+// or to existing connections that need to automatically reconnect after this value is set.
+//
+// P2P packet relay is allowed by default
+bool Steam_Networking::AllowP2PPacketRelay( bool bAllow )
+{
+    VLOG_DEBUG("AllowP2PPacketRelay called - Allow: %s", bAllow ? "true" : "false");
+    return false;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // LISTEN / CONNECT style interface functions

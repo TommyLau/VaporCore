@@ -320,6 +320,81 @@ uint32 Steam_Friends::GetUserRestrictions()
     return 0;
 }
 
+// Rich Presence data is automatically shared between friends who are in the same game
+// Each user has a set of Key/Value pairs
+// Up to 20 different keys can be set
+// There are two magic keys:
+//		"status"  - a UTF-8 string that will show up in the 'view game info' dialog in the Steam friends list
+//		"connect" - a UTF-8 string that contains the command-line for how a friend can connect to a game
+// GetFriendRichPresence() returns an empty string "" if no value is set
+// SetRichPresence() to a NULL or an empty string deletes the key
+// You can iterate the current set of keys for a friend with GetFriendRichPresenceKeyCount()
+// and GetFriendRichPresenceKeyByIndex() (typically only used for debugging)
+bool Steam_Friends::SetRichPresence( const char *pchKey, const char *pchValue )
+{
+    VLOG_DEBUG("SetRichPresence called - Key: %s, Value: %s", pchKey ? pchKey : "null", pchValue ? pchValue : "null");
+    return false;
+}
+
+void Steam_Friends::ClearRichPresence()
+{
+    VLOG_DEBUG("ClearRichPresence called");
+}
+
+const char *Steam_Friends::GetFriendRichPresence( CSteamID steamIDFriend, const char *pchKey )
+{
+    VLOG_DEBUG("GetFriendRichPresence called - SteamID: %s, Key: %s", steamIDFriend.GetAccountID(), pchKey ? pchKey : "null");
+    return "";
+}
+
+int Steam_Friends::GetFriendRichPresenceKeyCount( CSteamID steamIDFriend )
+{
+    VLOG_DEBUG("GetFriendRichPresenceKeyCount called");
+    return 0;
+}
+
+const char *Steam_Friends::GetFriendRichPresenceKeyByIndex( CSteamID steamIDFriend, int iKey )
+{
+    VLOG_DEBUG("GetFriendRichPresenceKeyByIndex called");
+    return "";
+}
+// rich invite support
+// if the target accepts the invite, the pchConnectString gets added to the command-line for launching the game
+// if the game is already running, a GameRichPresenceJoinRequested_t callback is posted containing the connect string
+// invites can only be sent to friends
+bool Steam_Friends::InviteUserToGame( CSteamID steamIDFriend, const char *pchConnectString )
+{
+    VLOG_DEBUG("InviteUserToGame called - SteamID: %s, ConnectString: %s", steamIDFriend.GetAccountID(), pchConnectString ? pchConnectString : "null");
+    return false;
+}
+
+// recently-played-with friends iteration
+// this iterates the entire list of users recently played with, across games
+// GetFriendCoplayTime() returns as a unix time
+int Steam_Friends::GetCoplayFriendCount()
+{
+    VLOG_DEBUG("GetCoplayFriendCount called");
+    return 0;
+}
+
+CSteamID Steam_Friends::GetCoplayFriend( int iCoplayFriend )
+{
+    VLOG_DEBUG("GetCoplayFriend called - CoplayFriend: %d", iCoplayFriend);
+    return CSteamID();
+}
+
+int Steam_Friends::GetFriendCoplayTime( CSteamID steamIDFriend )
+{
+    VLOG_DEBUG("GetFriendCoplayTime called - SteamID: %s", steamIDFriend.GetAccountID());
+    return 0;
+}
+
+AppId_t Steam_Friends::GetFriendCoplayGame( CSteamID steamIDFriend )
+{
+    VLOG_DEBUG("GetFriendCoplayGame called - SteamID: %s", steamIDFriend.GetAccountID());
+    return 0;
+}
+
 // Helper methods
 Steam_Friends* Steam_Friends::GetInstance()
 {

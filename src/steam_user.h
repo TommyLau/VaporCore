@@ -19,6 +19,7 @@
 #include <isteamuser011.h>
 #include <isteamuser012.h>
 #include <isteamuser013.h>
+#include <isteamuser014.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing and manipulating a steam account
@@ -30,7 +31,8 @@ class Steam_User :
     public ISteamUser010,
     public ISteamUser011,
     public ISteamUser012,
-    public ISteamUser013
+    public ISteamUser013,
+    public ISteamUser014
 {
 public:
     Steam_User();
@@ -85,16 +87,19 @@ public:
 	// Starts voice recording. Once started, use GetCompressedVoice() to get the data
 	void StartVoiceRecording( ) override;
 
+	// Stops voice recording. Because people often release push-to-talk keys early, the system will keep recording for
+	// a little bit after this function is called. GetVoice() should continue to be called until it returns
+	// k_eVoiceResultNotRecording
+	void StopVoiceRecording( ) override;
+
 	// Determine the amount of captured audio data that is available in bytes.
 	// This provides both the compressed and uncompressed data. Please note that the uncompressed
 	// data is not the raw feed from the microphone: data may only be available if audible 
 	// levels of speech are detected.
+	// nUncompressedVoiceDesiredSampleRate is necessary to know the number of bytes to return in pcbUncompressed - can be set to 0 if you don't need uncompressed (the usual case)
+	EVoiceResult GetAvailableVoice(uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate) override;
+	// Changed from Steam SDK v1.13, backward compatibility
 	EVoiceResult GetAvailableVoice(uint32 *pcbCompressed, uint32 *pcbUncompressed) override;
-
-	// Stops voice recording. Because people often release push-to-talk keys early, the system will keep recording for
-	// a little bit after this function is called. GetCompressedVoice() should continue to be called until it returns
-	// k_eVoiceResultNotRecording
-	void StopVoiceRecording( ) override;
 
 	// Gets the latest voice data. It should be called as often as possible once recording has started.
 	// nBytesWritten is set to the number of bytes written to pDestBuffer. 
@@ -111,16 +116,24 @@ public:
 	// You must grab both compressed and uncompressed here at the same time, if you want both.
 	// Matching data that is not read during this call will be thrown away.
 	// GetAvailableVoice() can be used to determine how much data is actually available.
+	EVoiceResult GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten, uint32 nUncompressedVoiceDesiredSampleRate ) override;
+	// Changed from Steam SDK v1.13, backward compatibility
 	EVoiceResult GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten ) override;
 
 	// Decompresses a chunk of compressed data produced by GetVoice().
 	// nBytesWritten is set to the number of bytes written to pDestBuffer unless the return value is k_EVoiceResultBufferTooSmall.
 	// In that case, nBytesWritten is set to the size of the buffer required to decompress the given
 	// data. The suggested buffer size for the destination buffer is 22 kilobytes.
+	// The output format of the data is 16-bit signed at the requested samples per second.
+	EVoiceResult DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, uint32 nDesiredSampleRate ) override;
 	// The output format of the data is 16-bit signed at 11025 samples per second.
+	// Changed from Steam SDK v1.13, backward compatibility
+	EVoiceResult DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten ) override;
 	// Changed from Steam SDK v1.08, backward compatibility
 	EVoiceResult DecompressVoice( void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten ) override;
-	EVoiceResult DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten ) override;
+
+	// This returns the frequency of the voice data as it's stored internally; calling DecompressVoice() with this size will yield the best results
+	uint32 GetVoiceOptimalSampleRate() override;
 
 	// Retrieve ticket to be sent to the entity who wishes to authenticate you. 
 	// pcbTicket retrieves the length of the actual ticket.
@@ -188,6 +201,10 @@ public:
 	// PARAMS: bInteractive - If set tells Steam to go ahead and show the PS3 NetStart dialog if needed to
 	// prompt the user for network setup/PSN logon before initiating the Steam side of the logon.
 	void LogOnAndCreateNewSteamAccountIfNeeded( bool bInteractive ) override;
+
+	// Returns a special SteamID that represents the user's PSN information. Can be used to query the user's PSN avatar,
+	// online name, etc. through the standard Steamworks interfaces.
+	CSteamID GetConsoleSteamID() override;
 #endif
 
     // Helper methods
@@ -200,4 +217,3 @@ private:
 };
 
 #endif // VAPORCORE_STEAM_USER_H
-

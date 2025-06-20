@@ -58,6 +58,20 @@ public:
 	// This function will return false for users who have a retail or other type of license
 	// Before using, please ask your Valve technical contact how to package and secure your free weekened
 	bool BIsSubscribedFromFreeWeekend() override;
+	// Returns the number of DLC pieces for the running app
+	int GetDLCCount() override;
+
+	// Returns metadata for DLC by index, of range [0, GetDLCCount()]
+	bool BGetDLCDataByIndex( int iDLC, AppId_t *pAppID, bool *pbAvailable, char *pchName, int cchNameBufferSize ) override;
+
+	// Install/Uninstall control for optional DLC
+	void InstallDLC( AppId_t nAppID ) override;
+	void UninstallDLC( AppId_t nAppID ) override;
+
+#ifdef _PS3
+	// Result returned in a RegisterActivationCodeResponse_t callresult
+	SteamAPICall_t RegisterActivationCode( const char *pchActivationCode ) override;
+#endif
 
     // Helper methods
     static Steam_Apps* GetInstance();

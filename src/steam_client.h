@@ -130,6 +130,10 @@ public:
 	// Trigger global shutdown for the DLL
 	bool BShutdownIfAllPipesClosed() override;
 
+#ifdef _PS3
+	ISteamPS3OverlayRender *GetISteamPS3OverlayRender() override;
+#endif
+
     // Helper methods
     static Steam_Client* GetInstance();
     static void ReleaseInstance();

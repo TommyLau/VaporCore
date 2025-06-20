@@ -69,11 +69,11 @@ public:
 	// Achievement / GroupAchievement metadata
 
 	// Gets the icon of the achievement, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set. 
-	// A return value of 0 may indicate we are still fetching data, and you can wait for the UserAchievementIconReady_t callback
-	// which will notify you when the bits are actually read.  If the callback still returns zero, then there is no image set
-	// and there never will be.
+	// A return value of 0 may indicate we are still fetching data, and you can wait for the UserAchievementIconFetched_t callback
+	// which will notify you when the bits are ready. If the callback still returns zero, then there is no image set for the
+	// specified achievement.
 	int GetAchievementIcon( const char *pchName ) override;
-	// Get general attributes (display name / text, etc) for an Achievement
+	// Get general attributes (display name, desc, etc) for an Achievement
 	const char *GetAchievementDisplayAttribute( const char *pchName, const char *pchKey ) override;
 
 	// Achievement progress - triggers an AchievementProgress callback, that is all.
@@ -166,6 +166,27 @@ public:
 	// Retrieves the number of players currently playing your game (online + offline)
 	// This call is asynchronous, with the result returned in NumberOfCurrentPlayers_t
 	SteamAPICall_t GetNumberOfCurrentPlayers() override;
+
+
+#ifdef _PS3
+	// Call to kick off installation of the PS3 trophies. This call is asynchronous, and the results will be returned in a PS3TrophiesInstalled_t
+	// callback.
+	bool InstallPS3Trophies() override;
+
+	// Returns the amount of space required at boot to install trophies. This value can be used when comparing the amount of space needed
+	// by the game to the available space value passed to the game at boot. The value is set during InstallPS3Trophies().
+	uint64 GetTrophySpaceRequiredBeforeInstall() override;
+
+	// On PS3, user stats & achievement progress through Steam must be stored with the user's saved game data.
+	// At startup, before calling RequestCurrentStats(), you must pass the user's stats data to Steam via this method.
+	// If you do not have any user data, call this function with pvData = NULL and cubData = 0
+	bool SetUserStatsData( const void *pvData, uint32 cubData ) override;
+
+	// Call to get the user's current stats data. You should retrieve this data after receiving successful UserStatsReceived_t & UserStatsStored_t
+	// callbacks, and store the data with the user's save game data. You can call this method with pvData = NULL and cubData = 0 to get the required
+	// buffer size.
+	bool GetUserStatsData( void *pvData, uint32 cubData, uint32 *pcubWritten ) override;
+#endif
 
     // Helper methods
     static Steam_User_Stats* GetInstance();
