@@ -13,7 +13,7 @@
 #pragma once
 #endif
 
-#include "../include/sdk/isteammasterserverupdater.h"
+#include <isteammasterserverupdater.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Game engines use this to tell the Steam master servers

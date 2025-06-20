@@ -13,9 +13,9 @@
 #pragma once
 #endif
 
-#include <sdk/isteamutils.h>
-#include <sdk/isteamutils002.h>
-#include <sdk/isteamutils004.h>
+#include <isteamutils.h>
+#include <isteamutils002.h>
+#include <isteamutils004.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to user independent utility functions

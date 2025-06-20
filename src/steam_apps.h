@@ -13,10 +13,10 @@
 #pragma once
 #endif
 
-#include <sdk/isteamclient.h>
-#include <sdk/isteamapps.h>
-#include <sdk/isteamapps001.h>
-#include <sdk/isteamapps002.h>
+#include <isteamclient.h>
+#include <isteamapps.h>
+#include <isteamapps001.h>
+#include <isteamapps002.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to app data

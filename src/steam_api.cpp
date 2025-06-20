@@ -9,7 +9,9 @@
 
 #include <cstring>
 #include <cstdlib>
-#include "../include/sdk/steam_api.h"
+
+#include <steam_api.h>
+
 #include "logger.h"
 #include "steam_client.h"
 

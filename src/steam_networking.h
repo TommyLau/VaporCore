@@ -13,10 +13,10 @@
 #pragma once
 #endif
 
-#include <sdk/isteamclient.h>
-#include <sdk/isteamnetworking.h>
-#include <sdk/isteamnetworking001.h>
-#include <sdk/isteamnetworking002.h>
+#include <isteamclient.h>
+#include <isteamnetworking.h>
+#include <isteamnetworking001.h>
+#include <isteamnetworking002.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for making connections and sending data between clients,

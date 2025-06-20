@@ -13,11 +13,11 @@
 #pragma once
 #endif
 
-#include <sdk/isteammatchmaking.h>
-#include <sdk/isteammatchmaking002.h>
-#include <sdk/isteammatchmaking004.h>
-#include <sdk/isteammatchmaking006.h>
-#include <sdk/isteammatchmaking007.h>
+#include <isteammatchmaking.h>
+#include <isteammatchmaking002.h>
+#include <isteammatchmaking004.h>
+#include <isteammatchmaking006.h>
+#include <isteammatchmaking007.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for match making services for clients to get to favorites

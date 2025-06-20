@@ -13,11 +13,11 @@
 #pragma once
 #endif
 
-#include <sdk/isteamuserstats.h>
-#include <sdk/isteamuserstats003.h>
-#include <sdk/isteamuserstats004.h>
-#include <sdk/isteamuserstats005.h>
-#include <sdk/isteamuserstats006.h>
+#include <isteamuserstats.h>
+#include <isteamuserstats003.h>
+#include <isteamuserstats004.h>
+#include <isteamuserstats005.h>
+#include <isteamuserstats006.h>
 
 class Steam_User_Stats :
 	public ISteamUserStats,

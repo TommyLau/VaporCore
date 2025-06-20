@@ -13,10 +13,10 @@
 #pragma once
 #endif
 
-#include <sdk/isteamfriends.h>
-#include <sdk/isteamfriends003.h>
-#include <sdk/isteamfriends004.h>
-#include <sdk/isteamfriends005.h>
+#include <isteamfriends.h>
+#include <isteamfriends003.h>
+#include <isteamfriends004.h>
+#include <isteamfriends005.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to accessing information about individual users,

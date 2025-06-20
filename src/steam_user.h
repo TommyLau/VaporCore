@@ -13,11 +13,11 @@
 #pragma once
 #endif
 
-#include <sdk/isteamuser.h>
-#include <sdk/isteamuser009.h>
-#include <sdk/isteamuser010.h>
-#include <sdk/isteamuser011.h>
-#include <sdk/isteamuser012.h>
+#include <isteamuser.h>
+#include <isteamuser009.h>
+#include <isteamuser010.h>
+#include <isteamuser011.h>
+#include <isteamuser012.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing and manipulating a steam account

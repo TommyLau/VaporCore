@@ -13,11 +13,11 @@
 #pragma once
 #endif
 
-#include <sdk/isteamgameserver.h>
-#include <sdk/isteamgameserver004.h>
-#include <sdk/isteamgameserver005.h>
-#include <sdk/isteamgameserver008.h>
-#include <sdk/isteamgameserver009.h>
+#include <isteamgameserver.h>
+#include <isteamgameserver004.h>
+#include <isteamgameserver005.h>
+#include <isteamgameserver008.h>
+#include <isteamgameserver009.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for authenticating users via Steam to play on a game server

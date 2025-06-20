@@ -15,9 +15,9 @@
 
 #include <map>
 
-#include <sdk/isteamclient.h>
-#include <sdk/isteamclient007.h>
-#include <sdk/isteamclient008.h>
+#include <isteamclient.h>
+#include <isteamclient007.h>
+#include <isteamclient008.h>
 
 // Steam pipe state enumeration
 enum Steam_Pipe {
