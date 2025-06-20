@@ -139,6 +139,15 @@ bool Steam_HTTP::ReleaseHTTPRequest( HTTPRequestHandle hRequest )
     return true;
 }
 
+// Gets progress on downloading the body for the request.  This will be zero unless a response header has already been
+// received which included a content-length field.  For responses that contain no content-length it will report
+// zero for the duration of the request as the size is unknown until the connection closes.
+bool Steam_HTTP::GetHTTPDownloadProgressPct( HTTPRequestHandle hRequest, float *pflPercentOut )
+{
+    VLOG_INFO("GetHTTPDownloadProgressPct called - Request: %u, Percent: %f", hRequest, pflPercentOut);
+    return true;
+}
+
 // Helper methods
 Steam_HTTP* Steam_HTTP::GetInstance()
 {

@@ -306,6 +306,79 @@ SteamAPICall_t Steam_User_Stats::GetNumberOfCurrentPlayers()
     return 0;
 }
 
+// Requests that Steam fetch data on the percentage of players who have received each achievement
+// for the game globally.
+// This call is asynchronous, with the result returned in GlobalAchievementPercentagesReady_t.
+SteamAPICall_t Steam_User_Stats::RequestGlobalAchievementPercentages()
+{
+    VLOG_DEBUG("RequestGlobalAchievementPercentages called");
+    return 0;
+}
+
+// Get the info on the most achieved achievement for the game, returns an iterator index you can use to fetch
+// the next most achieved afterwards.  Will return -1 if there is no data on achievement 
+// percentages (ie, you haven't called RequestGlobalAchievementPercentages and waited on the callback).
+int Steam_User_Stats::GetMostAchievedAchievementInfo( char *pchName, uint32 unNameBufLen, float *pflPercent, bool *pbAchieved )
+{
+    VLOG_DEBUG("GetMostAchievedAchievementInfo called");
+    return 0;
+}
+
+// Get the info on the next most achieved achievement for the game. Call this after GetMostAchievedAchievementInfo or another
+// GetNextMostAchievedAchievementInfo call passing the iterator from the previous call. Returns -1 after the last
+// achievement has been iterated.
+int Steam_User_Stats::GetNextMostAchievedAchievementInfo( int iIteratorPrevious, char *pchName, uint32 unNameBufLen, float *pflPercent, bool *pbAchieved )
+{
+    VLOG_DEBUG("GetNextMostAchievedAchievementInfo called");
+    return 0;
+}
+
+// Returns the percentage of users who have achieved the specified achievement.
+bool Steam_User_Stats::GetAchievementAchievedPercent( const char *pchName, float *pflPercent )
+{
+    VLOG_DEBUG("GetAchievementAchievedPercent called");
+    return false;
+}
+
+// Requests global stats data, which is available for stats marked as "aggregated".
+// This call is asynchronous, with the results returned in GlobalStatsReceived_t.
+// nHistoryDays specifies how many days of day-by-day history to retrieve in addition
+// to the overall totals. The limit is 60.
+SteamAPICall_t Steam_User_Stats::RequestGlobalStats( int nHistoryDays )
+{
+    VLOG_DEBUG("RequestGlobalStats called");
+    return 0;
+}
+
+// Gets the lifetime totals for an aggregated stat
+bool Steam_User_Stats::GetGlobalStat( const char *pchStatName, int64 *pData )
+{
+    VLOG_DEBUG("GetGlobalStat called");
+    return false;
+}
+
+bool Steam_User_Stats::GetGlobalStat( const char *pchStatName, double *pData )
+{
+    VLOG_DEBUG("GetGlobalStat called");
+    return false;
+}
+
+// Gets history for an aggregated stat. pData will be filled with daily values, starting with today.
+// So when called, pData[0] will be today, pData[1] will be yesterday, and pData[2] will be two days ago, 
+// etc. cubData is the size in bytes of the pubData buffer. Returns the number of 
+// elements actually set.
+int32 Steam_User_Stats::GetGlobalStatHistory( const char *pchStatName, int64 *pData, uint32 cubData )
+{
+    VLOG_DEBUG("GetGlobalStatHistory called");
+    return 0;
+}
+
+int32 Steam_User_Stats::GetGlobalStatHistory( const char *pchStatName, double *pData, uint32 cubData )
+{
+    VLOG_DEBUG("GetGlobalStatHistory called");
+    return 0;
+}
+
 // Helper methods
 Steam_User_Stats* Steam_User_Stats::GetInstance()
 {
