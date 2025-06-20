@@ -134,6 +134,9 @@ public:
 	ISteamPS3OverlayRender *GetISteamPS3OverlayRender() override;
 #endif
 
+	// Expose HTTP interface
+	ISteamHTTP *GetISteamHTTP( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
     // Helper methods
     static Steam_Client* GetInstance();
     static void ReleaseInstance();

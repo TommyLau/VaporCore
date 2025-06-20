@@ -298,3 +298,11 @@ bool Steam_Client::BShutdownIfAllPipesClosed()
     VLOG_DEBUG("BShutdownIfAllPipesClosed called");
     return true;
 }
+
+// Expose HTTP interface
+ISteamHTTP *Steam_Client::GetISteamHTTP( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
+{
+    // TODO: Implement HTTP interface
+    VLOG_DEBUG("GetISteamHTTP called");
+    return nullptr;
+}
