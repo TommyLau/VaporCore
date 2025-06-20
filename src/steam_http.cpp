@@ -148,6 +148,15 @@ bool Steam_HTTP::GetHTTPDownloadProgressPct( HTTPRequestHandle hRequest, float *
     return true;
 }
 
+// Sets the body for an HTTP Post request.  Will fail and return false on a GET request, and will fail if POST params
+// have already been set for the request.  Setting this raw body makes it the only contents for the post, the pchContentType
+// parameter will set the content-type header for the request so the server may know how to interpret the body.
+bool Steam_HTTP::SetHTTPRequestRawPostBody( HTTPRequestHandle hRequest, const char *pchContentType, uint8 *pubBody, uint32 unBodyLen )
+{
+    VLOG_INFO("SetHTTPRequestRawPostBody called - Request: %u, Content Type: %s, Body: %p, Length: %u", hRequest, pchContentType, pubBody, unBodyLen);
+    return true;
+}
+
 // Helper methods
 Steam_HTTP* Steam_HTTP::GetInstance()
 {

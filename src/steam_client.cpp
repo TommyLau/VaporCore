@@ -263,6 +263,14 @@ ISteamRemoteStorage *Steam_Client::GetISteamRemoteStorage( HSteamUser hSteamuser
     return nullptr;
 }
 
+// user screenshots
+ISteamScreenshots *Steam_Client::GetISteamScreenshots( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
+{
+    // TODO: Implement screenshots interface
+    VLOG_DEBUG("GetISteamScreenshots called");
+    return nullptr;
+}
+
 // this needs to be called every frame to process matchmaking results
 // redundant if you're already calling SteamAPI_RunCallbacks()
 void Steam_Client::RunFrame()

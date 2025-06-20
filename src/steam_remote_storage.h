@@ -69,12 +69,22 @@ public:
     int32 GetCachedUGCCount() override;
     UGCHandle_t GetCachedUGCHandle( int32 iCachedContent ) override;
 
-	// The following functions are only necessary on the Playstation 3. On PC & Mac, the Steam client will handle these operations for you
-#if _PS3
-	// synchronization
+    // The following functions are only necessary on the Playstation 3. On PC & Mac, the Steam client will handle these operations for you
+    // On Playstation 3, the game controls which files are stored in the cloud, via FilePersist, FileFetch, and FileForget.
+			
+#if defined(_PS3) || defined(_SERVER)
+    // Connect to Steam and get a list of files in the Cloud - results in a RemoteStorageAppSyncStatusCheck_t callback
+    void GetFileListFromServer() override;
+    // Indicate this file should be downloaded in the next sync
+    bool FileFetch( const char *pchFile ) override;
+    // Indicate this file should be persisted in the next sync
+    bool FilePersist( const char *pchFile ) override;
+    // Pull any requested files down from the Cloud - results in a RemoteStorageAppSyncedClient_t callback
     bool SynchronizeToClient() override;
+    // Upload any requested files to the Cloud - results in a RemoteStorageAppSyncedServer_t callback
     bool SynchronizeToServer() override;
-    bool ResolveSyncConflict( EResolveConflict eResolveConflict ) override;
+    // Reset any fetch/persist/etc requests
+    bool ResetFileRequestState() override;
 #endif
 
     // Helper methods

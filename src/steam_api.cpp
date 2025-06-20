@@ -28,6 +28,7 @@ static ISteamApps* g_pSteamApps = nullptr;
 static ISteamNetworking* g_pSteamNetworking = nullptr;
 static ISteamMatchmakingServers* g_pSteamMatchmakingServers = nullptr;
 static ISteamRemoteStorage* g_pSteamRemoteStorage = nullptr;
+static ISteamScreenshots* g_pSteamScreenshots = nullptr;
 static ISteamHTTP* g_pSteamHTTP = nullptr;
 
 // Global pipe and user handles
@@ -253,6 +254,11 @@ S_API ISteamMatchmakingServers *SteamMatchmakingServers() {
 S_API ISteamRemoteStorage *SteamRemoteStorage() {
     // TODO: Implement SteamRemoteStorage
     return g_pSteamRemoteStorage;
+}
+
+S_API ISteamScreenshots *SteamScreenshots() {
+    // TODO: Implement SteamScreenshots
+    return g_pSteamScreenshots;
 }
 
 S_API ISteamHTTP *SteamHTTP() {

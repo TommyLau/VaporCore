@@ -19,6 +19,7 @@
 #include <isteamclient007.h>
 #include <isteamclient008.h>
 #include <isteamclient009.h>
+#include <isteamclient010.h>
 
 // Steam pipe state enumeration
 enum Steam_Pipe {
@@ -40,7 +41,8 @@ class Steam_Client :
 	public ISteamClient,
     public ISteamClient007,
     public ISteamClient008,
-    public ISteamClient009
+    public ISteamClient009,
+    public ISteamClient010
 {
 public:
     Steam_Client();
@@ -110,6 +112,9 @@ public:
 
 	// remote storage
 	ISteamRemoteStorage *GetISteamRemoteStorage( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	// user screenshots
+	ISteamScreenshots *GetISteamScreenshots( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// this needs to be called every frame to process matchmaking results
 	// redundant if you're already calling SteamAPI_RunCallbacks()

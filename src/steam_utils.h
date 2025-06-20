@@ -116,6 +116,11 @@ public:
 #ifdef _PS3
 	void PostPS3SysutilCallback( uint64_t status, uint64_t param, void* userdata ) override;
 	bool BIsReadyToShutdown() override;
+	bool BIsPSNOnline() override;
+
+	// Call this with localized strings for the language the game is running in, otherwise default english
+	// strings will be used by Steam.
+	void SetPSNGameBootInviteStrings( const char *pchSubject, const char *pchBody ) override;
 #endif
 
     // Helper methods

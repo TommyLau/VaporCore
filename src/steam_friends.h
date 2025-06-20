@@ -98,6 +98,7 @@ public:
 
 	// iterators for getting users in a chat room, lobby, game server or clan
 	// note that large clans that cannot be iterated by the local user
+	// note that the current user must be in a lobby to retrieve CSteamIDs of other users in that lobby
 	// steamIDSource can be the steamID of a group, game server, lobby or chat room
 	int GetFriendCountFromSource( CSteamID steamIDSource ) override;
 	CSteamID GetFriendFromSourceByIndex( CSteamID steamIDSource, int iFriend ) override;

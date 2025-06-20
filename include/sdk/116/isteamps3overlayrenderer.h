@@ -1,11 +1,9 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright © 1996-2010, Valve Corporation, All rights reserved. =======
+//
+// Purpose: interface the game must provide Steam with on PS3 in order for the
+// Steam overlay to render.
+//
+//=============================================================================
 
 #ifndef ISTEAMPS3OVERLAYRENDERER_H
 #define ISTEAMPS3OVERLAYRENDERER_H
