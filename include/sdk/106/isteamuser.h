@@ -1,11 +1,8 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright © 1996-2008, Valve Corporation, All rights reserved. =======
+//
+// Purpose: interface to user account information in Steam
+//
+//=============================================================================
 
 #ifndef ISTEAMUSER_H
 #define ISTEAMUSER_H
@@ -14,7 +11,6 @@
 #endif
 
 #include "isteamclient.h"
-#include "steamclientpublic.h"
 
 // structure that contains client callback data
 // see callbacks documentation for more details

@@ -17,6 +17,7 @@
 #include <sdk/isteammatchmaking002.h>
 #include <sdk/isteammatchmaking004.h>
 #include <sdk/isteammatchmaking006.h>
+#include <sdk/isteammatchmaking007.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for match making services for clients to get to favorites
@@ -252,17 +253,31 @@ private:
 // to cancel any in-progress queries so you don't get a callback into the destructed
 // object and crash.
 //-----------------------------------------------------------------------------
-class Steam_Matchmaking_Server_List_Response : public ISteamMatchmakingServerListResponse
+class Steam_Matchmaking_Server_List_Response :
+	public ISteamMatchmakingServerListResponse,
+	public ISteamMatchmakingServerListResponse001
 {
 public:
 	// Server has responded ok with updated data
+	// Removed from Steam SDK v1.06, backward compatibility
 	void ServerResponded( int iServer ) override;
 
 	// Server has failed to respond
+	// Removed from Steam SDK v1.06, backward compatibility
 	void ServerFailedToRespond( int iServer ) override; 
 
 	// A list refresh you had initiated is now 100% completed
+	// Removed from Steam SDK v1.06, backward compatibility
 	void RefreshComplete( EMatchMakingServerResponse response ) override; 
+	
+	// Server has responded ok with updated data
+	void ServerResponded( HServerListRequest hRequest, int iServer ) override; 
+
+	// Server has failed to respond
+	void ServerFailedToRespond( HServerListRequest hRequest, int iServer ) override; 
+
+	// A list refresh you had initiated is now 100% completed
+	void RefreshComplete( HServerListRequest hRequest, EMatchMakingServerResponse response ) override; 
 };
 
 
@@ -343,16 +358,32 @@ public:
 //-----------------------------------------------------------------------------
 // Purpose: Functions for match making services for clients to get to game lists and details
 //-----------------------------------------------------------------------------
-class Steam_Matchmaking_Servers : public ISteamMatchmakingServers
+class Steam_Matchmaking_Servers :
+	public ISteamMatchmakingServers,
+	public ISteamMatchmakingServers001
 {
 public:
 	// Request a new list of servers of a particular type.  These calls each correspond to one of the EMatchMakingType values.
-	void RequestInternetServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
-	void RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
-	void RequestFriendsServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
-	void RequestFavoritesServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
-	void RequestHistoryServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
-	void RequestSpectatorServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	void RequestInternetServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse ) override;
+	void RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse001 *pRequestServersResponse ) override;
+	void RequestFriendsServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse ) override;
+	void RequestFavoritesServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse ) override;
+	void RequestHistoryServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse ) override;
+	void RequestSpectatorServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse ) override;
+
+	// Request a new list of servers of a particular type.  These calls each correspond to one of the EMatchMakingType values.
+	// Each call allocates a new asynchronous request object.
+	// Request object must be released by calling ReleaseRequest( hServerListRequest )
+	HServerListRequest RequestInternetServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	HServerListRequest RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	HServerListRequest RequestFriendsServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	HServerListRequest RequestFavoritesServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	HServerListRequest RequestHistoryServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	HServerListRequest RequestSpectatorServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+
+	// Releases the asynchronous request object and cancels any pending query on it if there's a pending query in progress.
+	// RefreshComplete callback is not posted when request is released.
+	void ReleaseRequest( HServerListRequest hServerListRequest ) override;
 
 	/* the filters that are available in the ppchFilters params are:
 
@@ -369,25 +400,43 @@ public:
 	// Get details on a given server in the list, you can get the valid range of index
 	// values by calling GetServerCount().  You will also receive index values in 
 	// ISteamMatchmakingServerListResponse::ServerResponded() callbacks
+	// Changed from Steam SDK v1.06, backward compatibility
 	gameserveritem_t *GetServerDetails( EMatchMakingType eType, int iServer ) override; 
+	gameserveritem_t *GetServerDetails( HServerListRequest hRequest, int iServer ) override; 
 
 	// Cancel an request which is operation on the given list type.  You should call this to cancel
 	// any in-progress requests before destructing a callback object that may have been passed 
 	// to one of the above list request calls.  Not doing so may result in a crash when a callback
 	// occurs on the destructed object.
+	// Changed from Steam SDK v1.06, backward compatibility
 	void CancelQuery( EMatchMakingType eType ) override; 
+	// Canceling a query does not release the allocated request handle.
+	// The request handle must be released using ReleaseRequest( hRequest )
+	void CancelQuery( HServerListRequest hRequest ) override; 
 
 	// Ping every server in your list again but don't update the list of servers
+	// Changed from Steam SDK v1.06, backward compatibility
 	void RefreshQuery( EMatchMakingType eType ) override; 
+	// Query callback installed when the server list was requested will be used
+	// again to post notifications and RefreshComplete, so the callback must remain
+	// valid until another RefreshComplete is called on it or the request
+	// is released with ReleaseRequest( hRequest )
+	void RefreshQuery( HServerListRequest hRequest ) override; 
 
 	// Returns true if the list is currently refreshing its server list
+	// Changed from Steam SDK v1.06, backward compatibility
 	bool IsRefreshing( EMatchMakingType eType ) override; 
+	bool IsRefreshing( HServerListRequest hRequest ) override; 
 
 	// How many servers in the given list, GetServerDetails above takes 0... GetServerCount() - 1
+	// Changed from Steam SDK v1.06, backward compatibility
 	int GetServerCount( EMatchMakingType eType ) override; 
+	int GetServerCount( HServerListRequest hRequest ) override; 
 
 	// Refresh a single server inside of a query (rather than all the servers )
+	// Changed from Steam SDK v1.06, backward compatibility
 	void RefreshServer( EMatchMakingType eType, int iServer ) override; 
+	void RefreshServer( HServerListRequest hRequest, int iServer ) override; 
 
 
 	//-----------------------------------------------------------------------------

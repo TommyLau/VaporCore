@@ -74,13 +74,29 @@ S_API void SteamAPI_Shutdown() {
     VLOG_INFO("SteamAPI_Shutdown completed");
 }
 
-// crash dump recording functions
-S_API void SteamAPI_WriteMiniDump( uint32 uStructuredExceptionCode, void* pvExceptionInfo, uint32 uBuildID ) {
-    // TODO: Implement SteamAPI_WriteMiniDump
+// checks if a local Steam client is running 
+S_API bool SteamAPI_IsSteamRunning()
+{
+    VLOG_DEBUG("SteamAPI_IsSteamRunning called");
+    return true;
 }
 
-S_API void SteamAPI_SetMiniDumpComment( const char *pchMsg ) {
-    // TODO: Implement SteamAPI_SetMiniDumpComment
+// restart your app through Steam to enable required Steamworks features
+S_API bool SteamAPI_RestartApp( uint32 unOwnAppID )
+{
+    VLOG_DEBUG("SteamAPI_RestartApp called - AppID: %d", unOwnAppID);
+    return true;
+}
+
+// crash dump recording functions
+S_API void SteamAPI_WriteMiniDump( uint32 uStructuredExceptionCode, void* pvExceptionInfo, uint32 uBuildID )
+{
+    VLOG_DEBUG("SteamAPI_WriteMiniDump called - Structured Exception Code: %d, Exception Info: %p, Build ID: %d", uStructuredExceptionCode, pvExceptionInfo, uBuildID);
+}
+
+S_API void SteamAPI_SetMiniDumpComment( const char *pchMsg )
+{
+    VLOG_DEBUG("SteamAPI_SetMiniDumpComment called - Comment: %s", pchMsg);
 }
 
 // interface pointers, configured by SteamAPI_Init()

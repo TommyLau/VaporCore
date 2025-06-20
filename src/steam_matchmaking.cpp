@@ -435,21 +435,42 @@ void Steam_Matchmaking::ReleaseInstance()
 // object and crash.
 //-----------------------------------------------------------------------------
 // Server has responded ok with updated data
+// Removed from Steam SDK v1.06, backward compatibility
 void Steam_Matchmaking_Server_List_Response::ServerResponded( int iServer )
 {
     VLOG_DEBUG("ServerResponded called - Server: %d", iServer);
 } 
 
 // Server has failed to respond
+// Removed from Steam SDK v1.06, backward compatibility
 void Steam_Matchmaking_Server_List_Response::ServerFailedToRespond( int iServer )
 {
     VLOG_DEBUG("ServerFailedToRespond called - Server: %d", iServer);
 } 
 
 // A list refresh you had initiated is now 100% completed
+// Removed from Steam SDK v1.06, backward compatibility
 void Steam_Matchmaking_Server_List_Response::RefreshComplete( EMatchMakingServerResponse response )
 {
     VLOG_DEBUG("RefreshComplete called - Response: %d", response);
+} 
+
+// Server has responded ok with updated data
+void Steam_Matchmaking_Server_List_Response::ServerResponded( HServerListRequest hRequest, int iServer )
+{
+    VLOG_DEBUG("ServerResponded called - Request: %d, Server: %d", hRequest, iServer);
+} 
+
+// Server has failed to respond
+void Steam_Matchmaking_Server_List_Response::ServerFailedToRespond( HServerListRequest hRequest, int iServer )
+{
+    VLOG_DEBUG("ServerFailedToRespond called - Request: %d, Server: %d", hRequest, iServer);
+} 
+
+// A list refresh you had initiated is now 100% completed
+void Steam_Matchmaking_Server_List_Response::RefreshComplete( HServerListRequest hRequest, EMatchMakingServerResponse response )
+{
+    VLOG_DEBUG("RefreshComplete called - Request: %d, Response: %d", hRequest, response);
 } 
 
 //-----------------------------------------------------------------------------
@@ -541,34 +562,77 @@ void Steam_Matchmaking_Rules_Response::RulesRefreshComplete()
 // Purpose: Functions for match making services for clients to get to game lists and details
 //-----------------------------------------------------------------------------
 // Request a new list of servers of a particular type.  These calls each correspond to one of the EMatchMakingType values.
-void Steam_Matchmaking_Servers::RequestInternetServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+void Steam_Matchmaking_Servers::RequestInternetServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse )
 {
     VLOG_DEBUG("RequestInternetServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
 }
 
-void Steam_Matchmaking_Servers::RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+void Steam_Matchmaking_Servers::RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse001 *pRequestServersResponse )
 {
     VLOG_DEBUG("RequestLANServerList called - AppID: %u, Response: %p", iApp, pRequestServersResponse);
 }
 
-void Steam_Matchmaking_Servers::RequestFriendsServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+void Steam_Matchmaking_Servers::RequestFriendsServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse )
 {
     VLOG_DEBUG("RequestFriendsServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
 }
 
-void Steam_Matchmaking_Servers::RequestFavoritesServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+void Steam_Matchmaking_Servers::RequestFavoritesServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse )
 {
     VLOG_DEBUG("RequestFavoritesServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
 }
 
-void Steam_Matchmaking_Servers::RequestHistoryServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+void Steam_Matchmaking_Servers::RequestHistoryServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse )
 {
     VLOG_DEBUG("RequestHistoryServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
 }
 
-void Steam_Matchmaking_Servers::RequestSpectatorServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+void Steam_Matchmaking_Servers::RequestSpectatorServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse )
 {
     VLOG_DEBUG("RequestSpectatorServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+}
+
+HServerListRequest Steam_Matchmaking_Servers::RequestInternetServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("RequestInternetServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    return 0;
+}
+
+HServerListRequest Steam_Matchmaking_Servers::RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("RequestLANServerList called - AppID: %u, Response: %p", iApp, pRequestServersResponse);
+    return 0;
+}
+
+HServerListRequest Steam_Matchmaking_Servers::RequestFriendsServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("RequestFriendsServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    return 0;
+}
+
+HServerListRequest Steam_Matchmaking_Servers::RequestFavoritesServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("RequestFavoritesServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    return 0;
+}
+
+HServerListRequest Steam_Matchmaking_Servers::RequestHistoryServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("RequestHistoryServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    return 0;
+}
+
+HServerListRequest Steam_Matchmaking_Servers::RequestSpectatorServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+{
+    VLOG_DEBUG("RequestSpectatorServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    return 0;
+}
+
+// Releases the asynchronous request object and cancels any pending query on it if there's a pending query in progress.
+// RefreshComplete callback is not posted when request is released.
+void Steam_Matchmaking_Servers::ReleaseRequest( HServerListRequest hServerListRequest )
+{
+    VLOG_DEBUG("ReleaseRequest called - Request: %d", hServerListRequest);
 }
 
 /* the filters that are available in the ppchFilters params are:
@@ -586,9 +650,16 @@ void Steam_Matchmaking_Servers::RequestSpectatorServerList( AppId_t iApp, MatchM
 // Get details on a given server in the list, you can get the valid range of index
 // values by calling GetServerCount().  You will also receive index values in 
 // ISteamMatchmakingServerListResponse::ServerResponded() callbacks
+// Changed from Steam SDK v1.06, backward compatibility
 gameserveritem_t *Steam_Matchmaking_Servers::GetServerDetails( EMatchMakingType eType, int iServer )
 {
     VLOG_DEBUG("GetServerDetails called - Type: %d, Server: %d", eType, iServer);
+    return nullptr;
+} 
+
+gameserveritem_t *Steam_Matchmaking_Servers::GetServerDetails( HServerListRequest hRequest, int iServer )
+{
+    VLOG_DEBUG("GetServerDetails called - Request: %d, Server: %d", hRequest, iServer);
     return nullptr;
 } 
 
@@ -596,35 +667,71 @@ gameserveritem_t *Steam_Matchmaking_Servers::GetServerDetails( EMatchMakingType 
 // any in-progress requests before destructing a callback object that may have been passed 
 // to one of the above list request calls.  Not doing so may result in a crash when a callback
 // occurs on the destructed object.
+// Changed from Steam SDK v1.06, backward compatibility
 void Steam_Matchmaking_Servers::CancelQuery( EMatchMakingType eType )
 {
     VLOG_DEBUG("CancelQuery called - Type: %d", eType);
 } 
 
+void Steam_Matchmaking_Servers::CancelQuery( HServerListRequest hRequest )
+{
+    VLOG_DEBUG("CancelQuery called - Request: %d", hRequest);
+} 
+
 // Ping every server in your list again but don't update the list of servers
+// Changed from Steam SDK v1.06, backward compatibility
 void Steam_Matchmaking_Servers::RefreshQuery( EMatchMakingType eType )
 {
     VLOG_DEBUG("RefreshQuery called - Type: %d", eType);
 } 
 
+// Query callback installed when the server list was requested will be used
+// again to post notifications and RefreshComplete, so the callback must remain
+// valid until another RefreshComplete is called on it or the request
+// is released with ReleaseRequest( hRequest )
+void Steam_Matchmaking_Servers::RefreshQuery( HServerListRequest hRequest )
+{
+    VLOG_DEBUG("RefreshQuery called - Request: %d", hRequest);
+} 
+
 // Returns true if the list is currently refreshing its server list
+// Changed from Steam SDK v1.06, backward compatibility
 bool Steam_Matchmaking_Servers::IsRefreshing( EMatchMakingType eType )
 {
     VLOG_DEBUG("IsRefreshing called - Type: %d", eType);
     return false;
 } 
 
+bool Steam_Matchmaking_Servers::IsRefreshing( HServerListRequest hRequest )
+{
+    VLOG_DEBUG("IsRefreshing called - Request: %d", hRequest);
+    return false;
+} 
+
 // How many servers in the given list, GetServerDetails above takes 0... GetServerCount() - 1
+// Changed from Steam SDK v1.06, backward compatibility
 int Steam_Matchmaking_Servers::GetServerCount( EMatchMakingType eType )
 {
     VLOG_DEBUG("GetServerCount called - Type: %d", eType);
     return 0;
 } 
 
+int Steam_Matchmaking_Servers::GetServerCount( HServerListRequest hRequest )
+{
+    VLOG_DEBUG("GetServerCount called - Request: %d", hRequest);
+    return 0;
+} 
+
 // Refresh a single server inside of a query (rather than all the servers )
+// Changed from Steam SDK v1.06, backward compatibility
 void Steam_Matchmaking_Servers::RefreshServer( EMatchMakingType eType, int iServer )
 {
     VLOG_DEBUG("RefreshServer called - Type: %d, Server: %d", eType, iServer);
+} 
+
+void Steam_Matchmaking_Servers::RefreshServer( HServerListRequest hRequest, int iServer )
+{
+    VLOG_DEBUG("RefreshServer called - Request: %d, Server: %d", hRequest, iServer);
 } 
 
 
