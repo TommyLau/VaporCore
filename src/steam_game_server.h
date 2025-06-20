@@ -109,7 +109,11 @@ public:
 
 	// Sets a string defining the "gametype" for this server, this is optional, but if it is set
 	// it allows users to filter in the matchmaking/server-browser interfaces based on the value
+	// Changed from Steam SDK v1.09, backward compatibility
 	void SetGameType( const char *pchGameType ) override; 
+	// Sets a string defining the "gametags" for this server, this is optional, but if it is set
+	// it allows users to filter in the matchmaking/server-browser interfaces based on the value
+	void SetGameTags( const char *pchGameTags ) override; 
 
 	// Ask if a user has a specific achievement for this game, will get a callback on reply
 	// Removed from Steam SDK v1.08, backward compatibility

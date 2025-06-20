@@ -13,6 +13,7 @@
 #pragma once
 #endif
 
+#include <sdk/isteamclient.h>
 #include <sdk/isteamnetworking.h>
 #include <sdk/isteamnetworking001.h>
 #include <sdk/isteamnetworking002.h>

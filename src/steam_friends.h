@@ -116,6 +116,10 @@ public:
 	// activates game overlay to store page for app
 	void ActivateGameOverlayToStore( AppId_t nAppID ) override;
 
+	// Mark a target user as 'played with'. This is a client-side only feature that requires that the calling user is 
+	// in game 
+	void SetPlayedWith( CSteamID steamIDUserPlayedWith ) override;
+
     // Helper methods
     static Steam_Friends* GetInstance();
     static void ReleaseInstance();

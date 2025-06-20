@@ -158,9 +158,18 @@ void Steam_Game_Server::UpdateSpectatorPort( uint16 unSpectatorPort )
 
 // Sets a string defining the "gametype" for this server, this is optional, but if it is set
 // it allows users to filter in the matchmaking/server-browser interfaces based on the value
+// Changed from Steam SDK v1.09, backward compatibility
 void Steam_Game_Server::SetGameType( const char *pchGameType )
 {
     VLOG_DEBUG("SetGameType called - GameType: %s", pchGameType ? pchGameType : "null");
+    // TODO: Call SetGameTags?
+}
+
+// Sets a string defining the "gametags" for this server, this is optional, but if it is set
+// it allows users to filter in the matchmaking/server-browser interfaces based on the value
+void Steam_Game_Server::SetGameTags( const char *pchGameTags )
+{
+    VLOG_DEBUG("SetGameTags called - GameTags: %s", pchGameTags ? pchGameTags : "null");
 }
 
 // Ask if a user has a specific achievement for this game, will get a callback on reply

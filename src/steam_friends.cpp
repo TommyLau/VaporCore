@@ -211,6 +211,13 @@ void Steam_Friends::ActivateGameOverlayToStore( AppId_t nAppID )
     VLOG_DEBUG("ActivateGameOverlayToStore called - AppID: %d", nAppID);
 }
 
+// Mark a target user as 'played with'. This is a client-side only feature that requires that the calling user is 
+// in game 
+void Steam_Friends::SetPlayedWith( CSteamID steamIDUserPlayedWith )
+{
+    VLOG_DEBUG("SetPlayedWith called - SteamID: %s", steamIDUserPlayedWith.GetAccountID());
+}
+
 // Helper methods
 Steam_Friends* Steam_Friends::GetInstance()
 {

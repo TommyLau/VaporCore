@@ -89,6 +89,17 @@ S_API bool SteamAPI_RestartApp( uint32 unOwnAppID )
     return true;
 }
 
+// Detects if your executable was launched through the Steam client, and restarts your game through 
+// the client if necessary. The Steam client will be started if it is not running.
+//
+// Returns: true if your executable was NOT launched through the Steam client. This function will
+//          then start your application through the client. Your current process should exit.
+//
+//          false if your executable was started through the Steam client or a steam_appid.txt file
+//          is present in your game's directory (for development). Your current process should continue.
+//
+// NOTE: This function should be used only if you are using CEG or not using Steam's DRM. Once applied
+//       to your executable, Steam's DRM will handle restarting through Steam if necessary.
 S_API bool SteamAPI_RestartAppIfNecessary( uint32 unOwnAppID )
 {
     VLOG_DEBUG("SteamAPI_RestartAppIfNecessary called - AppID: %d", unOwnAppID);
@@ -104,6 +115,14 @@ S_API void SteamAPI_WriteMiniDump( uint32 uStructuredExceptionCode, void* pvExce
 S_API void SteamAPI_SetMiniDumpComment( const char *pchMsg )
 {
     VLOG_DEBUG("SteamAPI_SetMiniDumpComment called - Comment: %s", pchMsg);
+}
+
+// this should be called before the game initialized the steam APIs
+// pchDate should be of the format "Mmm dd yyyy" (such as from the __DATE__ macro )
+// pchTime should be of the format "hh:mm:ss" (such as from the __TIME__ macro )
+S_API void SteamAPI_UseBreakpadCrashHandler( char const *pchVersion, char const *pchDate, char const *pchTime )
+{
+    VLOG_DEBUG("SteamAPI_UseBreakpadCrashHandler called - Version: %s, Date: %s, Time: %s", pchVersion, pchDate, pchTime);
 }
 
 // interface pointers, configured by SteamAPI_Init()
