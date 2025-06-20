@@ -82,9 +82,16 @@ S_API bool SteamAPI_IsSteamRunning()
 }
 
 // restart your app through Steam to enable required Steamworks features
+// Removed from Steam SDK v1.07, backward compatibility
 S_API bool SteamAPI_RestartApp( uint32 unOwnAppID )
 {
     VLOG_DEBUG("SteamAPI_RestartApp called - AppID: %d", unOwnAppID);
+    return true;
+}
+
+S_API bool SteamAPI_RestartAppIfNecessary( uint32 unOwnAppID )
+{
+    VLOG_DEBUG("SteamAPI_RestartAppIfNecessary called - AppID: %d", unOwnAppID);
     return true;
 }
 

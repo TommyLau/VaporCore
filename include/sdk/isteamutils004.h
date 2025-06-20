@@ -7,37 +7,16 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef ISTEAMUTILS_H
-#define ISTEAMUTILS_H
+#ifndef ISTEAMUTILS004_H
+#define ISTEAMUTILS004_H
 #ifdef _WIN32
 #pragma once
 #endif
 
-#include "isteamclient.h"
-
-
-// Steam API call failure results
-enum ESteamAPICallFailure
-{
-	k_ESteamAPICallFailureNone = -1,			// no failure
-	k_ESteamAPICallFailureSteamGone = 0,		// the local Steam process has gone away
-	k_ESteamAPICallFailureNetworkFailure = 1,	// the network connection to Steam has been broken, or was already broken
-	// SteamServersDisconnected_t callback will be sent around the same time
-	// SteamServersConnected_t will be sent when the client is able to talk to the Steam servers again
-	k_ESteamAPICallFailureInvalidHandle = 2,	// the SteamAPICall_t handle passed in no longer exists
-	k_ESteamAPICallFailureMismatchedCallback = 3,// GetAPICallResult() was called with the wrong callback type for this API call
-};
-
-// function prototype for warning message hook
-#if defined( POSIX ) && !defined( _CYGWIN )
-#define __cdecl
-#endif
-extern "C" typedef void (__cdecl *SteamAPIWarningMessageHook_t)(int, const char *);
-
 //-----------------------------------------------------------------------------
 // Purpose: interface to user independent utility functions
 //-----------------------------------------------------------------------------
-class ISteamUtils
+class ISteamUtils004
 {
 public:
 	// return the number of seconds since the user 
@@ -100,61 +79,8 @@ public:
 	// Returns true if the overlay is running & the user can access it. The overlay process could take a few seconds to
 	// start & hook the game process, so this function will initially return false while the overlay is loading.
 	virtual bool IsOverlayEnabled() = 0;
-
-	// Normally this call is unneeded if your game has a constantly running frame loop that calls the 
-	// D3D Present API, or OGL SwapBuffers API every frame.
-	//
-	// However, if you have a game that only refreshes the screen on an event driven basis then that can break 
-	// the overlay, as it uses your Present/SwapBuffers calls to drive it's internal frame loop and it may also
-	// need to Present() to the screen any time an even needing a notification happens or when the overlay is
-	// brought up over the game by a user.  You can use this API to ask the overlay if it currently need a present
-	// in that case, and then you can check for this periodically (roughly 33hz is desirable) and make sure you
-	// refresh the screen with Present or SwapBuffers to allow the overlay to do it's work.
-	virtual bool BOverlayNeedsPresent() = 0;
 };
 
-#define STEAMUTILS_INTERFACE_VERSION "SteamUtils005"
+#define STEAMUTILS_INTERFACE_VERSION004 "SteamUtils004"
 
-
-// callbacks
-
-
-//-----------------------------------------------------------------------------
-// Purpose: The country of the user changed
-//-----------------------------------------------------------------------------
-struct IPCountry_t
-{
-	enum { k_iCallback = k_iSteamUtilsCallbacks + 1 };
-};
-
-
-//-----------------------------------------------------------------------------
-// Purpose: Fired when running on a laptop and less than 10 minutes of battery is left, fires then every minute
-//-----------------------------------------------------------------------------
-struct LowBatteryPower_t
-{
-	enum { k_iCallback = k_iSteamUtilsCallbacks + 2 };
-	uint8 m_nMinutesBatteryLeft;
-};
-
-
-//-----------------------------------------------------------------------------
-// Purpose: called when a SteamAsyncCall_t has completed (or failed)
-//-----------------------------------------------------------------------------
-struct SteamAPICallCompleted_t
-{
-	enum { k_iCallback = k_iSteamUtilsCallbacks + 3 };
-	SteamAPICall_t m_hAsyncCall;
-};
-
-
-//-----------------------------------------------------------------------------
-// called when Steam wants to shutdown
-//-----------------------------------------------------------------------------
-struct SteamShutdown_t
-{
-	enum { k_iCallback = k_iSteamUtilsCallbacks + 4 };
-};
-
-
-#endif // ISTEAMUTILS_H
+#endif // ISTEAMUTILS004_H
