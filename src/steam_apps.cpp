@@ -85,6 +85,20 @@ bool Steam_Apps::BIsDlcInstalled( AppId_t appID )
     return false;
 }
 
+// returns the Unix time of the purchase of the app
+uint32 Steam_Apps::GetEarliestPurchaseUnixTime( AppId_t nAppID )
+{
+    return 0;
+}
+
+// Checks if the user is subscribed to the current app through a free weekend
+// This function will return false for users who have a retail or other type of license
+// Before using, please ask your Valve technical contact how to package and secure your free weekened
+bool Steam_Apps::BIsSubscribedFromFreeWeekend()
+{
+    return false;
+}
+
 // Helper methods
 Steam_Apps* Steam_Apps::GetInstance()
 {
@@ -103,4 +117,3 @@ void Steam_Apps::ReleaseInstance()
         s_pInstance = nullptr;
     }
 }
-

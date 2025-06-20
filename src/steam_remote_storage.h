@@ -1,0 +1,89 @@
+/*
+ * VaporCore Steam API Implementation
+ * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
+ * 
+ * This file is part of VaporCore.
+ * 
+ * Author: Tommy Lau <tommy.lhg@gmail.com>
+ */
+
+#ifndef VAPORCORE_STEAM_REMOTE_STORAGE_H
+#define VAPORCORE_STEAM_REMOTE_STORAGE_H
+#ifdef _WIN32
+#pragma once
+#endif
+
+#include <isteamremotestorage.h>
+#include <isteamremotestorage002.h>
+
+//-----------------------------------------------------------------------------
+// Purpose: Functions for accessing, reading and writing files stored remotely 
+//			and cached locally
+//-----------------------------------------------------------------------------
+class Steam_Remote_Storage :
+    public ISteamRemoteStorage,
+    public ISteamRemoteStorage002
+{
+public:
+    Steam_Remote_Storage();
+    ~Steam_Remote_Storage();
+
+    // NOTE
+    //
+    // Filenames are case-insensitive, and will be converted to lowercase automatically.
+    // So "foo.bar" and "Foo.bar" are the same file, and if you write "Foo.bar" then
+    // iterate the files, the filename returned will be "foo.bar".
+    //
+
+    // file operations
+    bool FileWrite( const char *pchFile, const void *pvData, int32 cubData ) override;
+    int32 FileRead( const char *pchFile, void *pvData, int32 cubDataToRead ) override;
+    bool FileForget( const char *pchFile ) override;
+    bool FileDelete( const char *pchFile ) override;
+    SteamAPICall_t FileShare( const char *pchFile ) override;
+    bool SetSyncPlatforms( const char *pchFile, ERemoteStoragePlatform eRemoteStoragePlatform ) override;
+
+	// file information
+    bool FileExists( const char *pchFile ) override;
+    bool FilePersisted( const char *pchFile ) override;
+    int32 GetFileSize( const char *pchFile ) override;
+    int64 GetFileTimestamp( const char *pchFile ) override;
+    ERemoteStoragePlatform GetSyncPlatforms( const char *pchFile ) override;
+
+    // iteration
+    int32 GetFileCount() override;
+    const char *GetFileNameAndSize( int iFile, int32 *pnFileSizeInBytes ) override;
+
+    // configuration management
+    bool GetQuota( int32 *pnTotalBytes, int32 *puAvailableBytes ) override;
+    bool IsCloudEnabledForAccount() override;
+    bool IsCloudEnabledForApp() override;
+    void SetCloudEnabledForApp( bool bEnabled ) override;
+
+	// user generated content
+    SteamAPICall_t UGCDownload( UGCHandle_t hContent ) override;
+    bool GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, char **ppchName, int32 *pnFileSizeInBytes, CSteamID *pSteamIDOwner ) override;
+    int32 UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead ) override;
+
+	// user generated content iteration
+    int32 GetCachedUGCCount() override;
+    UGCHandle_t GetCachedUGCHandle( int32 iCachedContent ) override;
+
+	// The following functions are only necessary on the Playstation 3. On PC & Mac, the Steam client will handle these operations for you
+#if _PS3
+	// synchronization
+    bool SynchronizeToClient() override;
+    bool SynchronizeToServer() override;
+    bool ResolveSyncConflict( EResolveConflict eResolveConflict ) override;
+#endif
+
+    // Helper methods
+    static Steam_Remote_Storage* GetInstance();
+    static void ReleaseInstance();
+
+private:
+    // Singleton instance
+    static Steam_Remote_Storage* s_pInstance;
+};
+
+#endif // VAPORCORE_STEAM_REMOTE_STORAGE_H

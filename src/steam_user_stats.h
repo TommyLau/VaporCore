@@ -18,13 +18,18 @@
 #include <isteamuserstats004.h>
 #include <isteamuserstats005.h>
 #include <isteamuserstats006.h>
+#include <isteamuserstats007.h>
 
+//-----------------------------------------------------------------------------
+// Purpose: Functions for accessing stats, achievements, and leaderboard information
+//-----------------------------------------------------------------------------
 class Steam_User_Stats :
 	public ISteamUserStats,
 	public ISteamUserStats003,
 	public ISteamUserStats004,
 	public ISteamUserStats005,
-	public ISteamUserStats006
+	public ISteamUserStats006,
+	public ISteamUserStats007
 {
 public:
     Steam_User_Stats();
@@ -124,6 +129,10 @@ public:
 	//   e.g. DownloadLeaderboardEntries( hLeaderboard, k_ELeaderboardDataRequestGlobalAroundUser, -3, 3 ) will return 7 rows, 3 before the user, 3 after
 	// k_ELeaderboardDataRequestFriends requests all the rows for friends of the current user 
 	SteamAPICall_t DownloadLeaderboardEntries( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardDataRequest eLeaderboardDataRequest, int nRangeStart, int nRangeEnd ) override;
+	// as above, but downloads leaderboard entries for an arbitrary set of users - ELeaderboardDataRequest is k_ELeaderboardDataRequestUsers
+	// if a user doesn't have a leaderboard entry, they won't be included in the result
+	// a max of 100 users can be downloaded at a time, with only one outstanding call at a time
+	SteamAPICall_t DownloadLeaderboardEntriesForUsers( SteamLeaderboard_t hSteamLeaderboard, CSteamID *prgUsers, int cUsers ) override;
 
 	// Returns data about a single leaderboard entry
 	// use a for loop from 0 to LeaderboardScoresDownloaded_t::m_cEntryCount to get all the downloaded entries
@@ -148,6 +157,11 @@ public:
 	// Changed from Steam SDK v1.05, backward compatibility
 	SteamAPICall_t UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, int32 nScore, int32 *pScoreDetails, int cScoreDetailsCount ) override;
 	SteamAPICall_t UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardUploadScoreMethod eLeaderboardUploadScoreMethod, int32 nScore, const int32 *pScoreDetails, int cScoreDetailsCount ) override;
+
+	// Attaches a piece of user generated content the user's entry on a leaderboard.
+	// hContent is a handle to a piece of user generated content that was shared using ISteamUserRemoteStorage::FileShare().
+	// This call is asynchronous, with the result returned in LeaderboardUGCSet_t.
+	SteamAPICall_t AttachLeaderboardUGC( SteamLeaderboard_t hSteamLeaderboard, UGCHandle_t hUGC ) override;
 
 	// Retrieves the number of players currently playing your game (online + offline)
 	// This call is asynchronous, with the result returned in NumberOfCurrentPlayers_t

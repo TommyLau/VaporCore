@@ -291,3 +291,10 @@ void Steam_Client::SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction
     VLOG_DEBUG("SetWarningMessageHook called");
 } 
 
+// Trigger global shutdown for the DLL
+bool Steam_Client::BShutdownIfAllPipesClosed()
+{
+    // TODO: Implement shutdown logic
+    VLOG_DEBUG("BShutdownIfAllPipesClosed called");
+    return true;
+}

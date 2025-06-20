@@ -225,14 +225,6 @@ bool Steam_User::BIsBehindNAT()
     return false;
 }
 
-#ifdef _PS3
-// Logs a user into Steam by using his login name and password
-void Steam_User::LogOn( const char *pchUserName, const char *pchPassword )
-{
-    VLOG_DEBUG("LogOn called - UserName: %s, Password: %s", pchUserName, pchPassword);
-}
-#endif
-
 // set data to be replicated to friends so that they can join your game
 // CSteamID steamIDGameServer - the steamID of the game server, received from the game server by the client
 // uint32 unIPServer, uint16 usPortServer - the IP address of the game server

@@ -112,8 +112,22 @@ public:
 	// refresh the screen with Present or SwapBuffers to allow the overlay to do it's work.
 	virtual bool BOverlayNeedsPresent() = 0;
 
-	// Asynchronous call to check if file is signed, result is returned in CheckFileSignature_t
+#ifndef _PS3
+	// Asynchronous call to check if an executable file has been signed using the public key set on the signing tab
+	// of the partner site, for example to refuse to load modified executable files.  
+	// The result is returned in CheckFileSignature_t.
+	//   k_ECheckFileSignatureNoSignaturesFoundForThisApp - This app has not been configured on the signing tab of the partner site to enable this function.
+	//   k_ECheckFileSignatureNoSignaturesFoundForThisFile - This file is not listed on the signing tab for the partner site.
+	//   k_ECheckFileSignatureFileNotFound - The file does not exist on disk.
+	//   k_ECheckFileSignatureInvalidSignature - The file exists, and the signing tab has been set for this file, but the file is either not signed or the signature does not match.
+	//   k_ECheckFileSignatureValidSignature - The file is signed and the signature is valid.
 	virtual SteamAPICall_t CheckFileSignature( const char *szFileName ) = 0;
+#endif
+
+#ifdef _PS3
+	virtual void PostPS3SysutilCallback( uint64_t status, uint64_t param, void* userdata ) = 0;
+	virtual bool BIsReadyToShutdown() = 0;
+#endif
 };
 
 #define STEAMUTILS_INTERFACE_VERSION "SteamUtils005"
@@ -179,6 +193,25 @@ struct CheckFileSignature_t
 	enum { k_iCallback = k_iSteamUtilsCallbacks + 5 };
 	ECheckFileSignature m_eCheckFileSignature;
 };
+
+#ifdef _PS3
+//-----------------------------------------------------------------------------
+// callback for NetCtlNetStartDialog finishing on PS3
+//-----------------------------------------------------------------------------
+struct NetStartDialogFinished_t
+{
+	enum { k_iCallback = k_iSteamUtilsCallbacks + 6 };
+};
+
+//-----------------------------------------------------------------------------
+// callback for NetCtlNetStartDialog unloaded on PS3
+//-----------------------------------------------------------------------------
+struct NetStartDialogUnloaded_t
+{
+	enum { k_iCallback = k_iSteamUtilsCallbacks + 7 };
+};
+
+#endif
 
 #pragma pack( pop )
 

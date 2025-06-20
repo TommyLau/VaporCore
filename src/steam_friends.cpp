@@ -265,6 +265,61 @@ int Steam_Friends::GetLargeFriendAvatar( CSteamID steamIDFriend )
     return 0;
 }
 
+// requests information about a user - persona name & avatar
+// if bRequireNameOnly is set, then the avatar of a user isn't downloaded 
+// - it's a lot slower to download avatars and churns the local cache, so if you don't need avatars, don't request them
+// if returns true, it means that data is being requested, and a PersonaStateChanged_t callback will be posted when it's retrieved
+// if returns false, it means that we already have all the details about that user, and functions can be called immediately
+bool Steam_Friends::RequestUserInformation( CSteamID steamIDUser, bool bRequireNameOnly )
+{
+    VLOG_DEBUG("RequestUserInformation called - SteamID: %s, RequireNameOnly: %s", steamIDUser.GetAccountID(), bRequireNameOnly ? "true" : "false");
+    return false;
+}
+
+// requests information about a clan officer list
+// when complete, data is returned in ClanOfficerListResponse_t call result
+// this makes available the calls below
+// you can only ask about clans that a user is a member of
+// note that this won't download avatars automatically; if you get an officer,
+// and no avatar image is available, call RequestUserInformation( steamID, false ) to download the avatar
+SteamAPICall_t Steam_Friends::RequestClanOfficerList( CSteamID steamIDClan )
+{
+    VLOG_DEBUG("RequestClanOfficerList called - SteamID: %s", steamIDClan.GetAccountID());
+    return 0;
+}
+
+// iteration of clan officers - can only be done when a RequestClanOfficerList() call has completed
+	
+// returns the steamID of the clan owner
+CSteamID Steam_Friends::GetClanOwner( CSteamID steamIDClan )
+{
+    VLOG_DEBUG("GetClanOwner called - SteamID: %s", steamIDClan.GetAccountID());
+    return CSteamID();
+}
+
+// returns the number of officers in a clan (including the owner)
+int Steam_Friends::GetClanOfficerCount( CSteamID steamIDClan )
+{
+    VLOG_DEBUG("GetClanOfficerCount called - SteamID: %s", steamIDClan.GetAccountID());
+    return 0;
+}
+
+// returns the steamID of a clan officer, by index, of range [0,GetClanOfficerCount)
+CSteamID Steam_Friends::GetClanOfficerByIndex( CSteamID steamIDClan, int iOfficer )
+{
+    VLOG_DEBUG("GetClanOfficerByIndex called - SteamID: %s, Officer: %d", steamIDClan.GetAccountID(), iOfficer);
+    return CSteamID();
+}
+
+// if current user is chat restricted, he can't send or receive any text/voice chat messages.
+// the user can't see custom avatars. But the user can be online and send/recv game invites.
+// a chat restricted user can't add friends or join any groups.
+uint32 Steam_Friends::GetUserRestrictions()
+{
+    VLOG_DEBUG("GetUserRestrictions called");
+    return 0;
+}
+
 // Helper methods
 Steam_Friends* Steam_Friends::GetInstance()
 {

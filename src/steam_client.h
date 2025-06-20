@@ -18,6 +18,7 @@
 #include <isteamclient.h>
 #include <isteamclient007.h>
 #include <isteamclient008.h>
+#include <isteamclient009.h>
 
 // Steam pipe state enumeration
 enum Steam_Pipe {
@@ -38,7 +39,8 @@ enum Steam_Pipe {
 class Steam_Client :
 	public ISteamClient,
     public ISteamClient007,
-    public ISteamClient008
+    public ISteamClient008,
+    public ISteamClient009
 {
 public:
     Steam_Client();
@@ -124,6 +126,9 @@ public:
 	// 'const char *' is the text of the message
 	// callbacks will occur directly after the API function is called that generated the warning or message
 	void SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction ) override;
+
+	// Trigger global shutdown for the DLL
+	bool BShutdownIfAllPipesClosed() override;
 
     // Helper methods
     static Steam_Client* GetInstance();

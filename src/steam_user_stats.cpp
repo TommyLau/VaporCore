@@ -243,6 +243,15 @@ SteamAPICall_t Steam_User_Stats::DownloadLeaderboardEntries( SteamLeaderboard_t 
     return 0;
 }
 
+// as above, but downloads leaderboard entries for an arbitrary set of users - ELeaderboardDataRequest is k_ELeaderboardDataRequestUsers
+// if a user doesn't have a leaderboard entry, they won't be included in the result
+// a max of 100 users can be downloaded at a time, with only one outstanding call at a time
+SteamAPICall_t Steam_User_Stats::DownloadLeaderboardEntriesForUsers( SteamLeaderboard_t hSteamLeaderboard, CSteamID *prgUsers, int cUsers )
+{
+    VLOG_DEBUG("DownloadLeaderboardEntriesForUsers called - Leaderboard: %u, Users: %d", hSteamLeaderboard, cUsers);
+    return 0;
+}
+
 // Returns data about a single leaderboard entry
 // use a for loop from 0 to LeaderboardScoresDownloaded_t::m_cEntryCount to get all the downloaded entries
 // e.g.
@@ -277,6 +286,15 @@ SteamAPICall_t Steam_User_Stats::UploadLeaderboardScore( SteamLeaderboard_t hSte
 SteamAPICall_t Steam_User_Stats::UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardUploadScoreMethod eLeaderboardUploadScoreMethod, int32 nScore, const int32 *pScoreDetails, int cScoreDetailsCount )
 {
     VLOG_DEBUG("UploadLeaderboardScore called - Leaderboard: %u, Score: %d, Details: %d", hSteamLeaderboard, nScore, cScoreDetailsCount);
+    return 0;
+}
+
+// Attaches a piece of user generated content the user's entry on a leaderboard.
+// hContent is a handle to a piece of user generated content that was shared using ISteamUserRemoteStorage::FileShare().
+// This call is asynchronous, with the result returned in LeaderboardUGCSet_t.
+SteamAPICall_t Steam_User_Stats::AttachLeaderboardUGC( SteamLeaderboard_t hSteamLeaderboard, UGCHandle_t hUGC )
+{
+    VLOG_DEBUG("AttachLeaderboardUGC called - Leaderboard: %u, UGC: %u", hSteamLeaderboard, hUGC);
     return 0;
 }
 

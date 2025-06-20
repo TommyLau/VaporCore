@@ -17,6 +17,7 @@
 #include <isteamapps.h>
 #include <isteamapps001.h>
 #include <isteamapps002.h>
+#include <isteamapps003.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to app data
@@ -24,7 +25,8 @@
 class Steam_Apps :
     public ISteamApps,
     public ISteamApps001,
-    public ISteamApps002
+    public ISteamApps002,
+    public ISteamApps003
 {
 public:
     Steam_Apps();
@@ -49,6 +51,14 @@ public:
 	// Takes AppID of DLC and checks if the user owns the DLC & if the DLC is installed
 	bool BIsDlcInstalled( AppId_t appID ) override;
 
+	// returns the Unix time of the purchase of the app
+	uint32 GetEarliestPurchaseUnixTime( AppId_t nAppID ) override;
+
+	// Checks if the user is subscribed to the current app through a free weekend
+	// This function will return false for users who have a retail or other type of license
+	// Before using, please ask your Valve technical contact how to package and secure your free weekened
+	bool BIsSubscribedFromFreeWeekend() override;
+
     // Helper methods
     static Steam_Apps* GetInstance();
     static void ReleaseInstance();
@@ -59,4 +69,3 @@ private:
 };
 
 #endif // VAPORCORE_STEAM_APPS_H
-

@@ -145,6 +145,23 @@ public:
 	// to determine if the user owns downloadable content specified by the provided AppID.
 	EUserHasLicenseForAppResult UserHasLicenseForApp( CSteamID steamID, AppId_t appID ) override;
 
+	// New auth system APIs - do not mix with the old auth system APIs.
+	// ----------------------------------------------------------------
+
+	// Retrieve ticket to be sent to the entity who wishes to authenticate you ( using BeginAuthSession API ). 
+	// pcbTicket retrieves the length of the actual ticket.
+	HAuthTicket GetAuthSessionTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket ) override;
+
+	// Authenticate ticket ( from GetAuthSessionTicket ) from entity steamID to be sure it is valid and isnt reused
+	// Registers for callbacks if the entity goes offline or cancels the ticket ( see ValidateAuthTicketResponse_t callback and EAuthSessionResponse )
+	EBeginAuthSessionResult BeginAuthSession( const void *pAuthTicket, int cbAuthTicket, CSteamID steamID ) override;
+
+	// Stop tracking started by BeginAuthSession - called when no longer playing game with this entity
+	void EndAuthSession( CSteamID steamID ) override;
+
+	// Cancel auth ticket from GetAuthSessionTicket, called when no longer playing game with the entity you gave the ticket to
+	void CancelAuthTicket( HAuthTicket hAuthTicket ) override;
+
     // Helper methods
     static Steam_Game_Server* GetInstance();
     static void ReleaseInstance();

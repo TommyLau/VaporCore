@@ -230,6 +230,38 @@ EUserHasLicenseForAppResult Steam_Game_Server::UserHasLicenseForApp( CSteamID st
     return EUserHasLicenseForAppResult::k_EUserHasLicenseResultHasLicense;
 }
 
+// New auth system APIs - do not mix with the old auth system APIs.
+// ----------------------------------------------------------------
+
+// Retrieve ticket to be sent to the entity who wishes to authenticate you ( using BeginAuthSession API ). 
+// pcbTicket retrieves the length of the actual ticket.
+HAuthTicket Steam_Game_Server::GetAuthSessionTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket )
+{
+    VLOG_DEBUG("GetAuthSessionTicket called");
+    return 0;
+}
+
+// Authenticate ticket ( from GetAuthSessionTicket ) from entity steamID to be sure it is valid and isnt reused
+// Registers for callbacks if the entity goes offline or cancels the ticket ( see ValidateAuthTicketResponse_t callback and EAuthSessionResponse )
+EBeginAuthSessionResult Steam_Game_Server::BeginAuthSession( const void *pAuthTicket, int cbAuthTicket, CSteamID steamID )
+{
+    VLOG_DEBUG("BeginAuthSession called");
+    return EBeginAuthSessionResult::k_EBeginAuthSessionResultOK;
+}
+
+// Stop tracking started by BeginAuthSession - called when no longer playing game with this entity
+void Steam_Game_Server::EndAuthSession( CSteamID steamID )
+{
+    VLOG_DEBUG("EndAuthSession called");
+}
+
+// Cancel auth ticket from GetAuthSessionTicket, called when no longer playing game with the entity you gave the ticket to
+void Steam_Game_Server::CancelAuthTicket( HAuthTicket hAuthTicket )
+{
+    VLOG_DEBUG("CancelAuthTicket called");
+}
+
+
 // Helper methods
 Steam_Game_Server* Steam_Game_Server::GetInstance()
 {

@@ -323,6 +323,8 @@ int Steam_Matchmaking::GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, CS
 // this will send down all the metadata associated with a lobby
 // this is an asynchronous call
 // returns false if the local user is not connected to the Steam servers
+// results will be returned by a LobbyDataUpdate_t callback
+// if the specified lobby doesn't exist, LobbyDataUpdate_t::m_bSuccess will be set to false
 bool Steam_Matchmaking::RequestLobbyData( CSteamID steamIDLobby )
 {
     VLOG_DEBUG("RequestLobbyData called - Lobby: %llu", steamIDLobby.GetAccountID());

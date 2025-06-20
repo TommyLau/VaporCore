@@ -18,6 +18,7 @@
 #include <isteamfriends004.h>
 #include <isteamfriends005.h>
 #include <isteamfriends006.h>
+#include <isteamfriends007.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to accessing information about individual users,
@@ -28,7 +29,8 @@ class Steam_Friends :
 	public ISteamFriends003,
 	public ISteamFriends004,
 	public ISteamFriends005,
-	public ISteamFriends006
+	public ISteamFriends006,
+	public ISteamFriends007
 {
 public:
     Steam_Friends();
@@ -141,6 +143,34 @@ public:
 	// gets the large (184x184) avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
 	// returns -1 if this image has yet to be loaded, in this case wait for a AvatarImageLoaded_t callback and then call this again
 	int GetLargeFriendAvatar( CSteamID steamIDFriend ) override;
+
+	// requests information about a user - persona name & avatar
+	// if bRequireNameOnly is set, then the avatar of a user isn't downloaded 
+	// - it's a lot slower to download avatars and churns the local cache, so if you don't need avatars, don't request them
+	// if returns true, it means that data is being requested, and a PersonaStateChanged_t callback will be posted when it's retrieved
+	// if returns false, it means that we already have all the details about that user, and functions can be called immediately
+	bool RequestUserInformation( CSteamID steamIDUser, bool bRequireNameOnly ) override;
+
+	// requests information about a clan officer list
+	// when complete, data is returned in ClanOfficerListResponse_t call result
+	// this makes available the calls below
+	// you can only ask about clans that a user is a member of
+	// note that this won't download avatars automatically; if you get an officer,
+	// and no avatar image is available, call RequestUserInformation( steamID, false ) to download the avatar
+	SteamAPICall_t RequestClanOfficerList( CSteamID steamIDClan ) override;
+
+	// iteration of clan officers - can only be done when a RequestClanOfficerList() call has completed
+	
+	// returns the steamID of the clan owner
+	CSteamID GetClanOwner( CSteamID steamIDClan ) override;
+	// returns the number of officers in a clan (including the owner)
+	int GetClanOfficerCount( CSteamID steamIDClan ) override;
+	// returns the steamID of a clan officer, by index, of range [0,GetClanOfficerCount)
+	CSteamID GetClanOfficerByIndex( CSteamID steamIDClan, int iOfficer ) override;
+	// if current user is chat restricted, he can't send or receive any text/voice chat messages.
+	// the user can't see custom avatars. But the user can be online and send/recv game invites.
+	// a chat restricted user can't add friends or join any groups.
+	uint32 GetUserRestrictions() override;
 
     // Helper methods
     static Steam_Friends* GetInstance();

@@ -133,7 +133,6 @@ S_API void SteamAPI_UseBreakpadCrashHandler( char const *pchVersion, char const 
     VLOG_DEBUG("SteamAPI_UseBreakpadCrashHandler called - Version: %s, Date: %s, Time: %s", pchVersion, pchDate, pchTime);
 }
 
-// Removed from Steam SDK v1.11, backward compatibility
 S_API void SteamAPI_SetBreakpadAppID( uint32 unAppID )
 {
     VLOG_DEBUG("SteamAPI_SetBreakpadAppID called - AppID: %u", unAppID);
