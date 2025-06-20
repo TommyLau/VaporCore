@@ -178,6 +178,13 @@ bool Steam_Utils::BOverlayNeedsPresent()
     return false;
 }
 
+// Asynchronous call to check if file is signed, result is returned in CheckFileSignature_t
+SteamAPICall_t Steam_Utils::CheckFileSignature( const char *szFileName )
+{
+    VLOG_DEBUG("CheckFileSignature called - File: %s", szFileName);
+    return k_uAPICallInvalid;
+}
+
 // Helper methods
 Steam_Utils* Steam_Utils::GetInstance()
 {

@@ -155,6 +155,12 @@ const char *Steam_Friends::GetClanName( CSteamID steamIDClan )
     return "";
 }
 
+const char *Steam_Friends::GetClanTag( CSteamID steamIDClan )
+{
+    VLOG_DEBUG("GetClanTag called");
+    return "";
+}
+
 // iterators for getting users in a chat room, lobby, game server or clan
 // note that large clans that cannot be iterated by the local user
 // steamIDSource can be the steamID of a group, game server, lobby or chat room
@@ -193,6 +199,8 @@ void Steam_Friends::ActivateGameOverlay( const char *pchDialog )
 // valid options are
 //		"steamid" - opens the overlay web browser to the specified user or groups profile
 //		"chat" - opens a chat window to the specified user, or joins the group chat 
+//		"stats" - opens the overlay web browser to the specified user's stats
+//		"achievements" - opens the overlay web browser to the specified user's achievements
 void Steam_Friends::ActivateGameOverlayToUser( const char *pchDialog, CSteamID steamID )
 {
     VLOG_DEBUG("ActivateGameOverlayToUser called - Dialog: %s, SteamID: %s", pchDialog ? pchDialog : "null", steamID.GetAccountID());
@@ -216,6 +224,13 @@ void Steam_Friends::ActivateGameOverlayToStore( AppId_t nAppID )
 void Steam_Friends::SetPlayedWith( CSteamID steamIDUserPlayedWith )
 {
     VLOG_DEBUG("SetPlayedWith called - SteamID: %s", steamIDUserPlayedWith.GetAccountID());
+}
+
+// activates game overlay to open the invite dialog. Invitations will be sent for the provided lobby.
+// You can also use ActivateGameOverlay( "LobbyInvite" ) to allow the user to create invitations for their current public lobby.
+void Steam_Friends::ActivateGameOverlayInviteDialog( CSteamID steamIDLobby )
+{
+    VLOG_DEBUG("ActivateGameOverlayInviteDialog called - SteamID: %s", steamIDLobby.GetAccountID());
 }
 
 // Helper methods

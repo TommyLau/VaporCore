@@ -47,9 +47,9 @@ static CSteamID g_steamGameServerID;
 //
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-// Steam SDK v1.00
+// Steam SDK v1.00 - SteamGameServer004 and before
 // S_API bool SteamGameServer_Init( uint32 unIP, uint16 usPort, uint16 usGamePort, uint16 usSpectatorPort, uint16 usQueryPort, EServerMode eServerMode, int nGameAppId, const char *pchGameDir, const char *pchVersionString );
-// Steam SDK v1.01
+// Steam SDK v1.01 - SteamGameServer005 ~
 S_API bool SteamGameServer_Init( uint32 unIP, uint16 usPort, uint16 usGamePort, uint16 usSpectatorPort, uint16 usQueryPort, EServerMode eServerMode, const char *pchGameDir, const char *pchVersionString )
 {
     VLOG_INFO("SteamGameServer_Init called - IP: %u, Port: %u, GamePort: %u, SpectatorPort: %u, QueryPort: %u, ServerMode: %d, GameDir: %s, Version: %s",

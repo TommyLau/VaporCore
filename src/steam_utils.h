@@ -101,6 +101,9 @@ public:
 	// refresh the screen with Present or SwapBuffers to allow the overlay to do it's work.
 	bool BOverlayNeedsPresent() override;
 
+	// Asynchronous call to check if file is signed, result is returned in CheckFileSignature_t
+	SteamAPICall_t CheckFileSignature( const char *szFileName ) override;
+
     // Helper methods
     static Steam_Utils* GetInstance();
     static void ReleaseInstance();

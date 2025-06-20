@@ -15,12 +15,12 @@
 // Version numbers
 #define VAPORCORE_VERSION_MAJOR     0
 #define VAPORCORE_VERSION_MINOR     1
-#define VAPORCORE_VERSION_PATCH     9
+#define VAPORCORE_VERSION_PATCH     10
 #define VAPORCORE_VERSION_BUILD     0
 
 // Version strings
-#define VAPORCORE_VERSION_STRING    "0.1.9.0"
-#define VAPORCORE_VERSION_STRING_SHORT "0.1.9"
+#define VAPORCORE_VERSION_STRING    "0.1.10.0"
+#define VAPORCORE_VERSION_STRING_SHORT "0.1.10"
 
 // Product information
 #define VAPORCORE_PRODUCT_NAME      "VaporCore Steam API Emulator"
