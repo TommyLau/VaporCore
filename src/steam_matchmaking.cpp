@@ -141,6 +141,18 @@ void Steam_Matchmaking::AddRequestLobbyListFilterSlotsAvailable( int nSlotsAvail
     VLOG_DEBUG("AddRequestLobbyListFilterSlotsAvailable called - Slots Available: %d", nSlotsAvailable);
 }
 
+// sets the distance for which we should search for lobbies (based on users IP address to location map on the Steam backed)
+void Steam_Matchmaking::AddRequestLobbyListDistanceFilter( ELobbyDistanceFilter eLobbyDistanceFilter )
+{
+    VLOG_DEBUG("AddRequestLobbyListDistanceFilter called - Distance Filter: %d", eLobbyDistanceFilter);
+}
+
+// sets how many results to return, the lower the count the faster it is to download the lobby results & details to the client
+void Steam_Matchmaking::AddRequestLobbyListResultCountFilter( int cMaxResults )
+{
+    VLOG_DEBUG("AddRequestLobbyListResultCountFilter called - Max Results: %d", cMaxResults);
+}
+
 // returns the CSteamID of a lobby, as retrieved by a RequestLobbyList call
 // should only be called after a LobbyMatchList_t callback is received
 // iLobby is of the range [0, LobbyMatchList_t::m_nLobbiesMatching)

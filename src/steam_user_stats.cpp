@@ -87,15 +87,32 @@ bool Steam_User_Stats::ClearAchievement( const char *pchName )
     return true;
 }
 
+// Get the achievement status, and the time it was unlocked if unlocked.
+// If the return value is true, but the unlock time is zero, that means it was unlocked before Steam 
+// began tracking achievement unlock times (December 2009). Time is seconds since January 1, 1970.
+bool Steam_User_Stats::GetAchievementAndUnlockTime( const char *pchName, bool *pbAchieved, uint32 *punUnlockTime )
+{
+    VLOG_DEBUG("GetAchievementAndUnlockTime called - Name: %s", pchName ? pchName : "null");
+    return false;
+}
+
 // Store the current data on the server, will get a callback when set
 // And one callback for every new achievement
+//
+// If the callback has a result of k_EResultInvalidParam, one or more stats 
+// uploaded has been rejected, either because they broke constraints
+// or were out of date. In this case the server sends back updated values.
+// The stats should be re-iterated to keep in sync.
 bool Steam_User_Stats::StoreStats( )
 {
     VLOG_DEBUG("StoreStats called");
     return true;
 }
 
-// Gets the icon of the achievement, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
+// Gets the icon of the achievement, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set. 
+// A return value of 0 may indicate we are still fetching data, and you can wait for the UserAchievementIconReady_t callback
+// which will notify you when the bits are actually read.  If the callback still returns zero, then there is no image set
+// and there never will be.
 int Steam_User_Stats::GetAchievementIcon( const char *pchName )
 {
     VLOG_DEBUG("GetAchievementIcon called - Name: %s", pchName ? pchName : "null");
@@ -147,6 +164,13 @@ bool Steam_User_Stats::GetUserStat( CSteamID steamIDUser, const char *pchName, f
 bool Steam_User_Stats::GetUserAchievement( CSteamID steamIDUser, const char *pchName, bool *pbAchieved )
 {
     VLOG_DEBUG("GetUserAchievement called - SteamID: %u, Name: %s", steamIDUser.GetAccountID(), pchName ? pchName : "null");
+    return false;
+}
+
+// See notes for GetAchievementAndUnlockTime above
+bool Steam_User_Stats::GetUserAchievementAndUnlockTime( CSteamID steamIDUser, const char *pchName, bool *pbAchieved, uint32 *punUnlockTime )
+{
+    VLOG_DEBUG("GetUserAchievementAndUnlockTime called - SteamID: %u, Name: %s", steamIDUser.GetAccountID(), pchName ? pchName : "null");
     return false;
 }
 

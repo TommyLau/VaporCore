@@ -164,6 +164,7 @@ void Steam_Game_Server::SetGameType( const char *pchGameType )
 }
 
 // Ask if a user has a specific achievement for this game, will get a callback on reply
+// Removed from Steam SDK v1.08, backward compatibility
 bool Steam_Game_Server::BGetUserAchievementStatus( CSteamID steamID, const char *pchAchievementName )
 {
     VLOG_DEBUG("BGetUserAchievementStatus called - User: %llu, Achievement: %s", 
@@ -175,6 +176,14 @@ bool Steam_Game_Server::BGetUserAchievementStatus( CSteamID steamID, const char 
 void Steam_Game_Server::GetGameplayStats( )
 {
     VLOG_DEBUG("GetGameplayStats called");
+}
+
+// Gets the reputation score for the game server. This API also checks if the server or some
+// other server on the same IP is banned from the Steam master servers.
+SteamAPICall_t Steam_Game_Server::GetServerReputation( )
+{
+    VLOG_DEBUG("GetServerReputation called");
+    return 0;
 }
 
 // Ask if a user in in the specified group, results returns async by GSUserGroupStatus_t

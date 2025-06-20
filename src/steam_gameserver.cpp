@@ -25,6 +25,7 @@ static ISteamGameServer* g_pSteamGameServer = nullptr;
 static ISteamUtils* g_pSteamGameServerUtils = nullptr;
 static ISteamMasterServerUpdater* g_pSteamMasterServerUpdater = nullptr;
 static ISteamNetworking* g_pSteamGameServerNetworking = nullptr;
+static ISteamGameServerStats* g_pSteamGameServerStats = nullptr;
 S_API ISteamClient *g_pSteamClientGameServer;
 
 // Global pipe and user handles for game server
@@ -233,3 +234,8 @@ S_API ISteamNetworking *SteamGameServerNetworking()
     return g_pSteamGameServerNetworking;
 }
 
+S_API ISteamGameServerStats *SteamGameServerStats()
+{
+    VLOG_DEBUG("SteamGameServerStats() called");
+    return g_pSteamGameServerStats;
+}

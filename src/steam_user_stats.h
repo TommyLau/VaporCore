@@ -17,12 +17,14 @@
 #include <sdk/isteamuserstats003.h>
 #include <sdk/isteamuserstats004.h>
 #include <sdk/isteamuserstats005.h>
+#include <sdk/isteamuserstats006.h>
 
 class Steam_User_Stats :
 	public ISteamUserStats,
 	public ISteamUserStats003,
 	public ISteamUserStats004,
-	public ISteamUserStats005
+	public ISteamUserStats005,
+	public ISteamUserStats006
 {
 public:
     Steam_User_Stats();
@@ -45,11 +47,26 @@ public:
 	bool SetAchievement( const char *pchName ) override;
 	bool ClearAchievement( const char *pchName ) override;
 
+	// Get the achievement status, and the time it was unlocked if unlocked.
+	// If the return value is true, but the unlock time is zero, that means it was unlocked before Steam 
+	// began tracking achievement unlock times (December 2009). Time is seconds since January 1, 1970.
+	bool GetAchievementAndUnlockTime( const char *pchName, bool *pbAchieved, uint32 *punUnlockTime ) override;
+
 	// Store the current data on the server, will get a callback when set
 	// And one callback for every new achievement
-	bool StoreStats( ) override;
+	//
+	// If the callback has a result of k_EResultInvalidParam, one or more stats 
+	// uploaded has been rejected, either because they broke constraints
+	// or were out of date. In this case the server sends back updated values.
+	// The stats should be re-iterated to keep in sync.
+	bool StoreStats() override;
 
-	// Gets the icon of the achievement, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
+	// Achievement / GroupAchievement metadata
+
+	// Gets the icon of the achievement, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set. 
+	// A return value of 0 may indicate we are still fetching data, and you can wait for the UserAchievementIconReady_t callback
+	// which will notify you when the bits are actually read.  If the callback still returns zero, then there is no image set
+	// and there never will be.
 	int GetAchievementIcon( const char *pchName ) override;
 	// Get general attributes (display name / text, etc) for an Achievement
 	const char *GetAchievementDisplayAttribute( const char *pchName, const char *pchKey ) override;
@@ -70,6 +87,8 @@ public:
 	bool GetUserStat( CSteamID steamIDUser, const char *pchName, int32 *pData ) override;
 	bool GetUserStat( CSteamID steamIDUser, const char *pchName, float *pData ) override;
 	bool GetUserAchievement( CSteamID steamIDUser, const char *pchName, bool *pbAchieved ) override;
+	// See notes for GetAchievementAndUnlockTime above
+	bool GetUserAchievementAndUnlockTime( CSteamID steamIDUser, const char *pchName, bool *pbAchieved, uint32 *punUnlockTime ) override;
 
 	// Reset stats 
 	bool ResetAllStats( bool bAchievementsToo ) override;

@@ -231,6 +231,14 @@ ISteamUserStats *Steam_Client::GetISteamUserStats( HSteamUser hSteamUser, HSteam
     return nullptr;
 }
 
+// returns the ISteamGameServerStats interface
+ISteamGameServerStats *Steam_Client::GetISteamGameServerStats( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
+{
+    // TODO: Implement game server stats interface
+    VLOG_DEBUG("GetISteamGameServerStats called");
+    return nullptr;
+}
+
 // returns apps interface
 ISteamApps *Steam_Client::GetISteamApps( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {

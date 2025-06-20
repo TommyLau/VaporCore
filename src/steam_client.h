@@ -17,6 +17,7 @@
 
 #include <sdk/isteamclient.h>
 #include <sdk/isteamclient007.h>
+#include <sdk/isteamclient008.h>
 
 // Steam pipe state enumeration
 enum Steam_Pipe {
@@ -36,7 +37,8 @@ enum Steam_Pipe {
 //-----------------------------------------------------------------------------
 class Steam_Client :
 	public ISteamClient,
-    public ISteamClient007
+    public ISteamClient007,
+    public ISteamClient008
 {
 public:
     Steam_Client();
@@ -94,6 +96,9 @@ public:
 
 	// returns the ISteamUserStats interface
 	ISteamUserStats *GetISteamUserStats( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	// returns the ISteamGameServerStats interface
+	ISteamGameServerStats *GetISteamGameServerStats( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// returns apps interface
 	ISteamApps *GetISteamApps( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;

@@ -169,7 +169,13 @@ EVoiceResult Steam_User::GetVoice( bool bWantCompressed, void *pDestBuffer, uint
 // In that case, nBytesWritten is set to the size of the buffer required to decompress the given
 // data. The suggested buffer size for the destination buffer is 22 kilobytes.
 // The output format of the data is 16-bit signed at 11025 samples per second.
+// Changed from Steam SDK v1.08, backward compatibility
 EVoiceResult Steam_User::DecompressVoice( void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
+{
+    return DecompressVoice((const void *)pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize, nBytesWritten);
+}
+
+EVoiceResult Steam_User::DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
 {
     VLOG_DEBUG("DecompressVoice called - Compressed: %s, Size: %d, DestBuffer: %s, DestBufferSize: %d", pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize);
     return EVoiceResult::k_EVoiceResultOK;

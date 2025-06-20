@@ -27,7 +27,8 @@ class Steam_Matchmaking :
 	public ISteamMatchmaking,
     public ISteamMatchmaking002,
     public ISteamMatchmaking004,
-    public ISteamMatchmaking006
+    public ISteamMatchmaking006,
+    public ISteamMatchmaking007
 {
 public:
     Steam_Matchmaking();
@@ -97,6 +98,10 @@ public:
 	void AddRequestLobbyListNearValueFilter( const char *pchKeyToMatch, int nValueToBeCloseTo ) override;
 	// returns only lobbies with the specified number of slots available
 	void AddRequestLobbyListFilterSlotsAvailable( int nSlotsAvailable ) override;
+	// sets the distance for which we should search for lobbies (based on users IP address to location map on the Steam backed)
+	void AddRequestLobbyListDistanceFilter( ELobbyDistanceFilter eLobbyDistanceFilter ) override;
+	// sets how many results to return, the lower the count the faster it is to download the lobby results & details to the client
+	void AddRequestLobbyListResultCountFilter( int cMaxResults ) override;
 
 	// returns the CSteamID of a lobby, as retrieved by a RequestLobbyList call
 	// should only be called after a LobbyMatchList_t callback is received
