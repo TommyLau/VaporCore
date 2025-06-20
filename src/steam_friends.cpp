@@ -12,6 +12,16 @@
 #include "steam_friends.h"
 #include "logger.h"
 
+//-----------------------------------------------------------------------------
+// Purpose: avatar sizes, used in ISteamFriends::GetFriendAvatar()
+//-----------------------------------------------------------------------------
+// Removed from Steam SDK v1.11, backward compatibility
+enum EAvatarSize
+{
+	k_EAvatarSize32x32 = 0,
+	k_EAvatarSize64x64 = 1,
+};
+
 // Static instance
 Steam_Friends* Steam_Friends::s_pInstance = nullptr;
 
@@ -231,6 +241,28 @@ void Steam_Friends::SetPlayedWith( CSteamID steamIDUserPlayedWith )
 void Steam_Friends::ActivateGameOverlayInviteDialog( CSteamID steamIDLobby )
 {
     VLOG_DEBUG("ActivateGameOverlayInviteDialog called - SteamID: %s", steamIDLobby.GetAccountID());
+}
+
+// gets the small (32x32) avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
+int Steam_Friends::GetSmallFriendAvatar( CSteamID steamIDFriend )
+{
+    VLOG_DEBUG("GetSmallFriendAvatar called - SteamID: %s", steamIDFriend.GetAccountID());
+    return 0;
+}
+
+// gets the medium (64x64) avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
+int Steam_Friends::GetMediumFriendAvatar( CSteamID steamIDFriend )
+{
+    VLOG_DEBUG("GetMediumFriendAvatar called - SteamID: %s", steamIDFriend.GetAccountID());
+    return 0;
+}
+
+// gets the large (184x184) avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
+// returns -1 if this image has yet to be loaded, in this case wait for a AvatarImageLoaded_t callback and then call this again
+int Steam_Friends::GetLargeFriendAvatar( CSteamID steamIDFriend )
+{
+    VLOG_DEBUG("GetLargeFriendAvatar called - SteamID: %s", steamIDFriend.GetAccountID());
+    return 0;
 }
 
 // Helper methods

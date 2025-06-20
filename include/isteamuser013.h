@@ -7,48 +7,34 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef VAPORCORE_STEAM_USER_H
-#define VAPORCORE_STEAM_USER_H
+#ifndef ISTEAMUSER013_H
+#define ISTEAMUSER013_H
 #ifdef _WIN32
 #pragma once
 #endif
-
-#include <isteamuser.h>
-#include <isteamuser009.h>
-#include <isteamuser010.h>
-#include <isteamuser011.h>
-#include <isteamuser012.h>
-#include <isteamuser013.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing and manipulating a steam account
 //			associated with one client instance
 //-----------------------------------------------------------------------------
-class Steam_User :
-    public ISteamUser,
-    public ISteamUser009,
-    public ISteamUser010,
-    public ISteamUser011,
-    public ISteamUser012,
-    public ISteamUser013
+class ISteamUser013
 {
 public:
-    Steam_User();
-    ~Steam_User();
-
 	// returns the HSteamUser this interface represents
 	// this is only used internally by the API, and by a few select interfaces that support multi-user
-	HSteamUser GetHSteamUser() override;
+	virtual HSteamUser GetHSteamUser() = 0;
 
 	// returns true if the Steam client current has a live connection to the Steam servers. 
 	// If false, it means there is no active connection due to either a networking issue on the local machine, or the Steam server is down/busy.
 	// The Steam client will automatically be trying to recreate the connection as often as possible.
-	bool BLoggedOn() override;
+	virtual bool BLoggedOn() = 0;
 
 	// returns the CSteamID of the account currently logged into the Steam client
 	// a CSteamID is a unique identifier for an account, and used to differentiate users in all parts of the Steamworks API
-	CSteamID GetSteamID() override;
+	virtual CSteamID GetSteamID() = 0;
 
+	// Multiplayer Authentication functions
+	
 	// InitiateGameConnection() starts the state machine for authenticating the game client with the game server
 	// It is the client portion of a three-way handshake between the client, the game server, and the steam servers
 	//
@@ -62,44 +48,34 @@ public:
 	//
 	// return value - returns the number of bytes written to pBlob. If the return is 0, then the buffer passed in was too small, and the call has failed
 	// The contents of pBlob should then be sent to the game server, for it to use to complete the authentication process.
-	// Removed from Steam SDK v1.01, backward compatibility
-	int InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, CGameID gameID, uint32 unIPServer, uint16 usPortServer, bool bSecure ) override;
-	int InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer, bool bSecure ) override;
+	virtual int InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer, bool bSecure ) = 0;
 
 	// notify of disconnect
 	// needs to occur when the game client leaves the specified game server, needs to match with the InitiateGameConnection() call
-	void TerminateGameConnection( uint32 unIPServer, uint16 usPortServer ) override;
+	virtual void TerminateGameConnection( uint32 unIPServer, uint16 usPortServer ) = 0;
+
+	// Legacy functions
 
 	// used by only a few games to track usage events
-	void TrackAppUsageEvent( CGameID gameID, int eAppUsageEvent, const char *pchExtraInfo = "" ) override;
-
-	// legacy authentication support - need to be called if the game server rejects the user with a 'bad ticket' error
-	// this is only needed under very specific circumstances
-	// Removed from Steam SDK v1.01, backward compatibility
-	void RefreshSteam2Login() override;
+	virtual void TrackAppUsageEvent( CGameID gameID, int eAppUsageEvent, const char *pchExtraInfo = "" ) = 0;
 
 	// get the local storage folder for current Steam account to write application data, e.g. save games, configs etc.
 	// this will usually be something like "C:\Progam Files\Steam\userdata\<SteamID>\<AppID>\local"
-	bool GetUserDataFolder( char *pchBuffer, int cubBuffer ) override;
+	virtual bool GetUserDataFolder( char *pchBuffer, int cubBuffer ) = 0;
 
-	// Starts voice recording. Once started, use GetCompressedVoice() to get the data
-	void StartVoiceRecording( ) override;
+	// Starts voice recording. Once started, use GetVoice() to get the data
+	virtual void StartVoiceRecording( ) = 0;
+
+	// Stops voice recording. Because people often release push-to-talk keys early, the system will keep recording for
+	// a little bit after this function is called. GetVoice() should continue to be called until it returns
+	// k_eVoiceResultNotRecording
+	virtual void StopVoiceRecording( ) = 0;
 
 	// Determine the amount of captured audio data that is available in bytes.
 	// This provides both the compressed and uncompressed data. Please note that the uncompressed
 	// data is not the raw feed from the microphone: data may only be available if audible 
 	// levels of speech are detected.
-	EVoiceResult GetAvailableVoice(uint32 *pcbCompressed, uint32 *pcbUncompressed) override;
-
-	// Stops voice recording. Because people often release push-to-talk keys early, the system will keep recording for
-	// a little bit after this function is called. GetCompressedVoice() should continue to be called until it returns
-	// k_eVoiceResultNotRecording
-	void StopVoiceRecording( ) override;
-
-	// Gets the latest voice data. It should be called as often as possible once recording has started.
-	// nBytesWritten is set to the number of bytes written to pDestBuffer. 
-	// Removed from Steam SDK v1.06, backward compatibility
-	EVoiceResult GetCompressedVoice( void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten ) override;
+	virtual EVoiceResult GetAvailableVoice(uint32 *pcbCompressed, uint32 *pcbUncompressed) = 0;
 
 	// Gets the latest voice data from the microphone. Compressed data is an arbitrary format, and is meant to be handed back to 
 	// DecompressVoice() for playback later as a binary blob. Uncompressed data is 16-bit, signed integer, 11025Hz PCM format.
@@ -111,65 +87,34 @@ public:
 	// You must grab both compressed and uncompressed here at the same time, if you want both.
 	// Matching data that is not read during this call will be thrown away.
 	// GetAvailableVoice() can be used to determine how much data is actually available.
-	EVoiceResult GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten ) override;
+	virtual EVoiceResult GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten ) = 0;
 
 	// Decompresses a chunk of compressed data produced by GetVoice().
 	// nBytesWritten is set to the number of bytes written to pDestBuffer unless the return value is k_EVoiceResultBufferTooSmall.
 	// In that case, nBytesWritten is set to the size of the buffer required to decompress the given
 	// data. The suggested buffer size for the destination buffer is 22 kilobytes.
 	// The output format of the data is 16-bit signed at 11025 samples per second.
-	// Changed from Steam SDK v1.08, backward compatibility
-	EVoiceResult DecompressVoice( void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten ) override;
-	EVoiceResult DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten ) override;
+	virtual EVoiceResult DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten ) = 0;
 
 	// Retrieve ticket to be sent to the entity who wishes to authenticate you. 
 	// pcbTicket retrieves the length of the actual ticket.
-	HAuthTicket GetAuthSessionTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket ) override;
+	virtual HAuthTicket GetAuthSessionTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket ) = 0;
 
 	// Authenticate ticket from entity steamID to be sure it is valid and isnt reused
 	// Registers for callbacks if the entity goes offline or cancels the ticket ( see ValidateAuthTicketResponse_t callback and EAuthSessionResponse )
-	EBeginAuthSessionResult BeginAuthSession( const void *pAuthTicket, int cbAuthTicket, CSteamID steamID ) override;
+	virtual EBeginAuthSessionResult BeginAuthSession( const void *pAuthTicket, int cbAuthTicket, CSteamID steamID ) = 0;
 
 	// Stop tracking started by BeginAuthSession - called when no longer playing game with this entity
-	void EndAuthSession( CSteamID steamID ) override;
+	virtual void EndAuthSession( CSteamID steamID ) = 0;
 
 	// Cancel auth ticket from GetAuthSessionTicket, called when no longer playing game with the entity you gave the ticket to
-	void CancelAuthTicket( HAuthTicket hAuthTicket ) override;
+	virtual void CancelAuthTicket( HAuthTicket hAuthTicket ) = 0;
 
 	// After receiving a user's authentication data, and passing it to BeginAuthSession, use this function
 	// to determine if the user owns downloadable content specified by the provided AppID.
-	EUserHasLicenseForAppResult UserHasLicenseForApp( CSteamID steamID, AppId_t appID ) override;
-	
-	// returns true if this users looks like they are behind a NAT device. Only valid once the user has connected to steam 
-	// (i.e a SteamServersConnected_t has been issued) and may not catch all forms of NAT.
-	bool BIsBehindNAT() override;
-
-#ifdef _PS3
-	// Logs a user into Steam by using his login name and password
-	void LogOn( const char *pchUserName, const char *pchPassword ) override;
-#endif
-
-	// set data to be replicated to friends so that they can join your game
-	// CSteamID steamIDGameServer - the steamID of the game server, received from the game server by the client
-	// uint32 unIPServer, uint16 usPortServer - the IP address of the game server
-	void AdvertiseGame( CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer ) override;
-
-	// Requests a ticket encrypted with an app specific shared key
-	// pDataToInclude, cbDataToInclude will be encrypted into the ticket
-	// ( This is asynchronous, you must wait for the ticket to be completed by the server )
-	SteamAPICall_t RequestEncryptedAppTicket( void *pDataToInclude, int cbDataToInclude ) override;
-
-	// retrieve a finished ticket
-	bool GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket ) override;
-
-    // Helper methods
-    static Steam_User* GetInstance();
-    static void ReleaseInstance();
-
-private:
-    // Singleton instance
-    static Steam_User* s_pInstance;
+	virtual EUserHasLicenseForAppResult UserHasLicenseForApp( CSteamID steamID, AppId_t appID ) = 0;
 };
 
-#endif // VAPORCORE_STEAM_USER_H
+#define STEAMUSER_INTERFACE_VERSION013 "SteamUser013"
 
+#endif // ISTEAMUSER013_H

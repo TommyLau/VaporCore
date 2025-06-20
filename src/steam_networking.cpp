@@ -12,6 +12,8 @@
 #include "steam_networking.h"
 #include "logger.h"
 
+#define DEFAULT_VIRTUAL_PORT 1
+
 // Static instance
 Steam_Networking* Steam_Networking::s_pInstance = nullptr;
 
@@ -34,17 +36,31 @@ Steam_Networking::~Steam_Networking()
 // the first packet send may be delayed as the NAT-traversal code runs
 // if we can't get through to the user, an error will be posted via the callback P2PSessionConnectFail_t
 // see EP2PSend enum above for the descriptions of the different ways of sending packets
+// Changed from Steam SDK v1.11, backward compatibility
 bool Steam_Networking::SendP2PPacket( CSteamID steamIDRemote, const void *pubData, uint32 cubData, EP2PSend eP2PSendType )
 {
-    VLOG_DEBUG("SendP2PPacket called - Remote: %llu, DataSize: %u, SendType: %d", 
-               steamIDRemote.GetAccountID(), cubData, eP2PSendType);
+    return SendP2PPacket(steamIDRemote, pubData, cubData, eP2PSendType, DEFAULT_VIRTUAL_PORT);
+}
+// nVirtualPort is a routing number you can use to help route message to different systems 	- you'll have to call ReadP2PPacket() 
+// with the same nVirtualPort number in order to retrieve the data on the other end
+// using different virtual ports to talk to the same user will still use the same underlying p2p connection, saving on resources
+bool Steam_Networking::SendP2PPacket( CSteamID steamIDRemote, const void *pubData, uint32 cubData, EP2PSend eP2PSendType, int nVirtualPort )
+{
+    VLOG_DEBUG("SendP2PPacket called - Remote: %llu, DataSize: %u, SendType: %d, VirtualPort: %d", 
+               steamIDRemote.GetAccountID(), cubData, eP2PSendType, nVirtualPort);
     return false;
 }
 
 // returns true if any data is available for read, and the amount of data that will need to be read
+// Changed from Steam SDK v1.11, backward compatibility
 bool Steam_Networking::IsP2PPacketAvailable( uint32 *pcubMsgSize )
 {
-    VLOG_DEBUG("IsP2PPacketAvailable called - DataSize: %u", *pcubMsgSize);
+    return IsP2PPacketAvailable(pcubMsgSize, DEFAULT_VIRTUAL_PORT);
+}
+
+bool Steam_Networking::IsP2PPacketAvailable( uint32 *pcubMsgSize, int nVirtualPort )
+{
+    VLOG_DEBUG("IsP2PPacketAvailable called - DataSize: %u, VirtualPort: %d", *pcubMsgSize, nVirtualPort);
     return false;
 }
 
@@ -52,9 +68,15 @@ bool Steam_Networking::IsP2PPacketAvailable( uint32 *pcubMsgSize )
 // returns the size of the message and the steamID of the user who sent it in the last two parameters
 // if the buffer passed in is too small, the message will be truncated
 // this call is not blocking, and will return false if no data is available
+// Changed from Steam SDK v1.11, backward compatibility
 bool Steam_Networking::ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, CSteamID *psteamIDRemote )
 {
-    VLOG_DEBUG("ReadP2PPacket called - DestSize: %u, DataSize: %u", cubDest, *pcubMsgSize);
+    return ReadP2PPacket(pubDest, cubDest, pcubMsgSize, psteamIDRemote, DEFAULT_VIRTUAL_PORT);
+}
+
+bool Steam_Networking::ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, CSteamID *psteamIDRemote, int nVirtualPort )
+{
+    VLOG_DEBUG("ReadP2PPacket called - DestSize: %u, DataSize: %u, VirtualPort: %d", cubDest, *pcubMsgSize, nVirtualPort);
     return false;
 }
 

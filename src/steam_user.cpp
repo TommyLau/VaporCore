@@ -217,6 +217,46 @@ EUserHasLicenseForAppResult Steam_User::UserHasLicenseForApp( CSteamID steamID, 
     return EUserHasLicenseForAppResult::k_EUserHasLicenseResultHasLicense;
 }
 
+// returns true if this users looks like they are behind a NAT device. Only valid once the user has connected to steam 
+// (i.e a SteamServersConnected_t has been issued) and may not catch all forms of NAT.
+bool Steam_User::BIsBehindNAT()
+{
+    VLOG_DEBUG("BIsBehindNAT called");
+    return false;
+}
+
+#ifdef _PS3
+// Logs a user into Steam by using his login name and password
+void Steam_User::LogOn( const char *pchUserName, const char *pchPassword )
+{
+    VLOG_DEBUG("LogOn called - UserName: %s, Password: %s", pchUserName, pchPassword);
+}
+#endif
+
+// set data to be replicated to friends so that they can join your game
+// CSteamID steamIDGameServer - the steamID of the game server, received from the game server by the client
+// uint32 unIPServer, uint16 usPortServer - the IP address of the game server
+void Steam_User::AdvertiseGame( CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer )
+{
+    VLOG_DEBUG("AdvertiseGame called - GameServer: %llu, Server: %u:%u", steamIDGameServer.GetAccountID(), unIPServer, usPortServer);
+}
+
+// Requests a ticket encrypted with an app specific shared key
+// pDataToInclude, cbDataToInclude will be encrypted into the ticket
+// ( This is asynchronous, you must wait for the ticket to be completed by the server )
+SteamAPICall_t Steam_User::RequestEncryptedAppTicket( void *pDataToInclude, int cbDataToInclude )
+{
+    VLOG_DEBUG("RequestEncryptedAppTicket called - Data: %s, Size: %d", pDataToInclude, cbDataToInclude);
+    return 0;
+}
+
+// retrieve a finished ticket
+bool Steam_User::GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket )
+{
+    VLOG_DEBUG("GetEncryptedAppTicket called - Ticket: %s, MaxTicket: %d, pcbTicket: %d", pTicket, cbMaxTicket, pcbTicket);
+    return false;
+}
+
 // Helper methods
 Steam_User* Steam_User::GetInstance()
 {
