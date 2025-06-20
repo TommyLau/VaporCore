@@ -105,7 +105,6 @@ if(MSVC)
     target_compile_options(steam_api PRIVATE
         $<$<CONFIG:Release>:/O2 /Ob2 /DNDEBUG>
         $<$<CONFIG:Debug>:/Od /Zi>
-        /wd4819  # Disable C4819: character encoding warning
     )
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     target_compile_options(steam_api PRIVATE
