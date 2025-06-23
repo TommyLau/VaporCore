@@ -25,6 +25,25 @@ Steam_Apps::~Steam_Apps()
     VLOG_INFO("Steam_Apps destructor called");
 }
 
+// Helper methods
+Steam_Apps* Steam_Apps::GetInstance()
+{
+    if (!s_pInstance)
+    {
+        s_pInstance = new Steam_Apps();
+    }
+    return s_pInstance;
+}
+
+void Steam_Apps::ReleaseInstance()
+{
+    if (s_pInstance)
+    {
+        delete s_pInstance;
+        s_pInstance = nullptr;
+    }
+}
+
 // returns 0 if the key does not exist
 // this may be true on first call, since the app data may not be cached locally yet
 // If you expect it to exists wait for the AppDataChanged_t after the first failure and ask again
@@ -76,18 +95,21 @@ const char *Steam_Apps::GetAvailableGameLanguages()
 // only use this member if you need to check ownership of another game related to yours, a demo for example
 bool Steam_Apps::BIsSubscribedApp( AppId_t appID )
 {
+    VLOG_DEBUG("BIsSubscribedApp called - AppID: %u", appID);
     return false;
 }
 
 // Takes AppID of DLC and checks if the user owns the DLC & if the DLC is installed
 bool Steam_Apps::BIsDlcInstalled( AppId_t appID )
 {
+    VLOG_DEBUG("BIsDlcInstalled called - AppID: %u", appID);
     return false;
 }
 
 // returns the Unix time of the purchase of the app
 uint32 Steam_Apps::GetEarliestPurchaseUnixTime( AppId_t nAppID )
 {
+    VLOG_DEBUG("GetEarliestPurchaseUnixTime called - AppID: %u", nAppID);
     return 0;
 }
 
@@ -108,33 +130,28 @@ int Steam_Apps::GetDLCCount()
 // Returns metadata for DLC by index, of range [0, GetDLCCount()]
 bool Steam_Apps::BGetDLCDataByIndex( int iDLC, AppId_t *pAppID, bool *pbAvailable, char *pchName, int cchNameBufferSize )
 {
+    VLOG_DEBUG("BGetDLCDataByIndex called - DLC Index: %d, AppID: %p, Available: %p, Name: %p, NameBufferSize: %d", 
+               iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize);
     return false;
 }
 
 // Install/Uninstall control for optional DLC
 void Steam_Apps::InstallDLC( AppId_t nAppID )
 {
+    VLOG_DEBUG("InstallDLC called - AppID: %u", nAppID);
 }
 
 void Steam_Apps::UninstallDLC( AppId_t nAppID )
 {
+    VLOG_DEBUG("UninstallDLC called - AppID: %u", nAppID);
 }
 
-// Helper methods
-Steam_Apps* Steam_Apps::GetInstance()
+// Request cd-key for yourself or owned DLC. If you are interested in this
+// data then make sure you provide us with a list of valid keys to be distributed
+// to users when they purchase the game, before the game ships.
+// You'll receive an AppProofOfPurchaseKeyResponse_t callback when
+// the key is available (which may be immediately).
+void Steam_Apps::RequestAppProofOfPurchaseKey( AppId_t nAppID )
 {
-    if (!s_pInstance)
-    {
-        s_pInstance = new Steam_Apps();
-    }
-    return s_pInstance;
-}
-
-void Steam_Apps::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_DEBUG("RequestAppProofOfPurchaseKey called - AppID: %u", nAppID);
 }

@@ -35,6 +35,25 @@ Steam_Friends::~Steam_Friends()
     VLOG_INFO("Steam_Friends destructor called");
 }
 
+// Helper methods
+Steam_Friends* Steam_Friends::GetInstance()
+{
+    if (!s_pInstance)
+    {
+        s_pInstance = new Steam_Friends();
+    }
+    return s_pInstance;
+}
+
+void Steam_Friends::ReleaseInstance()
+{
+    if (s_pInstance)
+    {
+        delete s_pInstance;
+        s_pInstance = nullptr;
+    }
+}
+
 // returns the local players name - guaranteed to not be NULL.
 // this is the same name as on the users community profile page
 // this is stored in UTF-8 format
@@ -104,30 +123,31 @@ const char *Steam_Friends::GetFriendPersonaName( CSteamID steamIDFriend )
 }
 
 // gets the avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
-// Removed from Steam SDK v1.02, backward compatibility
-int Steam_Friends::GetFriendAvatar( CSteamID steamIDFriend )
-{
-    VLOG_DEBUG("GetFriendAvatar called");
-    return 0;
-}
-
+// Removed from Steam SDK v1.11, backward compatibility
 int Steam_Friends::GetFriendAvatar( CSteamID steamIDFriend, int eAvatarSize )
 {
     VLOG_DEBUG("GetFriendAvatar called - Avatar Size: %d", eAvatarSize);
     return 0;
 }
 
-// returns true if the friend is actually in a game
+// Changed from Steam SDK v1.02, backward compatibility
+int Steam_Friends::GetFriendAvatar( CSteamID steamIDFriend )
+{
+    VLOG_DEBUG("GetFriendAvatar called");
+    return 0;
+}
+
+// returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
+bool Steam_Friends::GetFriendGamePlayed( CSteamID steamIDFriend, FriendGameInfo_t *pFriendGameInfo )
+{
+    VLOG_DEBUG("GetFriendGamePlayed called - SteamID: %s, GameID: %llu", steamIDFriend.GetAccountID(), pFriendGameInfo->m_gameID);
+    return false;
+}
+
 // Changed from Steam SDK v1.04, backward compatibility
 bool Steam_Friends::GetFriendGamePlayed( CSteamID steamIDFriend, uint64 *pulGameID, uint32 *punGameIP, uint16 *pusGamePort, uint16 *pusQueryPort )
 {
     VLOG_DEBUG("GetFriendGamePlayed called - SteamID: %s, GameID: %llu, GameIP: %u, GamePort: %u, QueryPort: %u", steamIDFriend.GetAccountID(), *pulGameID, *punGameIP, *pusGamePort, *pusQueryPort);
-    return false;
-}
-
-bool Steam_Friends::GetFriendGamePlayed( CSteamID steamIDFriend, FriendGameInfo_t *pFriendGameInfo )
-{
-    VLOG_DEBUG("GetFriendGamePlayed called - SteamID: %s, GameID: %llu", steamIDFriend.GetAccountID(), pFriendGameInfo->m_gameID);
     return false;
 }
 
@@ -213,7 +233,8 @@ void Steam_Friends::SetInGameVoiceSpeaking( CSteamID steamIDUser, bool bSpeaking
     VLOG_DEBUG("SetInGameVoiceSpeaking called - Speaking: %s", bSpeaking ? "true" : "false");
 }
 
-// activates the game overlay, with an optional dialog to open ("Friends", "Community", "Players", "Settings")
+// activates the game overlay, with an optional dialog to open 
+// valid options are "Friends", "Community", "Players", "Settings", "OfficialGameGroup", "Stats", "Achievements"
 void Steam_Friends::ActivateGameOverlay( const char *pchDialog )
 {
     VLOG_DEBUG("ActivateGameOverlay called - Dialog: %s", pchDialog ? pchDialog : "null");
@@ -223,7 +244,7 @@ void Steam_Friends::ActivateGameOverlay( const char *pchDialog )
 // valid options are
 //		"steamid" - opens the overlay web browser to the specified user or groups profile
 //		"chat" - opens a chat window to the specified user, or joins the group chat 
-//		"tradeinvite" - opens a chat window to the specified user and invites them to trade
+//		"jointrade" - opens a window to a Steam Trading session that was started with the ISteamEconomy/StartTrade Web API
 //		"stats" - opens the overlay web browser to the specified user's stats
 //		"achievements" - opens the overlay web browser to the specified user's achievements
 void Steam_Friends::ActivateGameOverlayToUser( const char *pchDialog, CSteamID steamID )
@@ -252,7 +273,6 @@ void Steam_Friends::SetPlayedWith( CSteamID steamIDUserPlayedWith )
 }
 
 // activates game overlay to open the invite dialog. Invitations will be sent for the provided lobby.
-// You can also use ActivateGameOverlay( "LobbyInvite" ) to allow the user to create invitations for their current public lobby.
 void Steam_Friends::ActivateGameOverlayInviteDialog( CSteamID steamIDLobby )
 {
     VLOG_DEBUG("ActivateGameOverlayInviteDialog called - SteamID: %s", steamIDLobby.GetAccountID());
@@ -502,23 +522,3 @@ int Steam_Friends::GetFriendMessage( CSteamID steamIDFriend, int iMessageID, voi
     VLOG_DEBUG("GetFriendMessage called - SteamID: %s, MessageID: %d", steamIDFriend.GetAccountID(), iMessageID);
     return 0;
 }
-
-// Helper methods
-Steam_Friends* Steam_Friends::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new Steam_Friends();
-    }
-    return s_pInstance;
-}
-
-void Steam_Friends::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
-}
-

@@ -34,9 +34,17 @@ class Steam_Friends :
 	public ISteamFriends007,
 	public ISteamFriends009
 {
+private:
+    // Singleton instance
+    static Steam_Friends* s_pInstance;
+
 public:
     Steam_Friends();
     ~Steam_Friends();
+
+    // Helper methods
+    static Steam_Friends* GetInstance();
+    static void ReleaseInstance();
 
 	// returns the local players name - guaranteed to not be NULL.
 	// this is the same name as on the users community profile page
@@ -76,15 +84,14 @@ public:
 	const char *GetFriendPersonaName( CSteamID steamIDFriend ) override;
 
 	// gets the avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
-	// Changed from Steam SDK v1.02, backward compatibility
-	int GetFriendAvatar( CSteamID steamIDFriend ) override;
 	// Removed from Steam SDK v1.11, backward compatibility
 	int GetFriendAvatar( CSteamID steamIDFriend, int eAvatarSize ) override;
-	// returns true if the friend is actually in a game
-	// Changed from Steam SDK v1.04, backward compatibility
-	bool GetFriendGamePlayed( CSteamID steamIDFriend, uint64 *pulGameID, uint32 *punGameIP, uint16 *pusGamePort, uint16 *pusQueryPort ) override;
+	// Changed from Steam SDK v1.02, backward compatibility
+	int GetFriendAvatar( CSteamID steamIDFriend ) override;
 	// returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
 	bool GetFriendGamePlayed( CSteamID steamIDFriend, FriendGameInfo_t *pFriendGameInfo ) override;
+	// Changed from Steam SDK v1.04, backward compatibility
+	bool GetFriendGamePlayed( CSteamID steamIDFriend, uint64 *pulGameID, uint32 *punGameIP, uint16 *pusGamePort, uint16 *pusQueryPort ) override;
 	// accesses old friends names - returns an empty string when their are no more items in the history
 	const char *GetFriendPersonaNameHistory( CSteamID steamIDFriend, int iPersonaName ) override;
 
@@ -115,14 +122,15 @@ public:
 	// User is in a game pressing the talk button (will suppress the microphone for all voice comms from the Steam friends UI)
 	void SetInGameVoiceSpeaking( CSteamID steamIDUser, bool bSpeaking ) override;
 
-	// activates the game overlay, with an optional dialog to open ("Friends", "Community", "Players", "Settings")
+	// activates the game overlay, with an optional dialog to open 
+	// valid options are "Friends", "Community", "Players", "Settings", "OfficialGameGroup", "Stats", "Achievements"
 	void ActivateGameOverlay( const char *pchDialog ) override;
 	
 	// activates game overlay to a specific place
 	// valid options are
 	//		"steamid" - opens the overlay web browser to the specified user or groups profile
 	//		"chat" - opens a chat window to the specified user, or joins the group chat 
-	//		"tradeinvite" - opens a chat window to the specified user and invites them to trade
+	//		"jointrade" - opens a window to a Steam Trading session that was started with the ISteamEconomy/StartTrade Web API
 	//		"stats" - opens the overlay web browser to the specified user's stats
 	//		"achievements" - opens the overlay web browser to the specified user's achievements
 	void ActivateGameOverlayToUser( const char *pchDialog, CSteamID steamID ) override;
@@ -139,7 +147,6 @@ public:
 	void SetPlayedWith( CSteamID steamIDUserPlayedWith ) override;
 
 	// activates game overlay to open the invite dialog. Invitations will be sent for the provided lobby.
-	// You can also use ActivateGameOverlay( "LobbyInvite" ) to allow the user to create invitations for their current public lobby.
 	void ActivateGameOverlayInviteDialog( CSteamID steamIDLobby ) override;
 
 	// gets the small (32x32) avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
@@ -234,15 +241,6 @@ public:
 	bool SetListenForFriendsMessages( bool bInterceptEnabled ) override;
 	bool ReplyToFriendMessage( CSteamID steamIDFriend, const char *pchMsgToSend ) override;
 	int GetFriendMessage( CSteamID steamIDFriend, int iMessageID, void *pvData, int cubData, EChatEntryType *peChatEntryType ) override;
-
-    // Helper methods
-    static Steam_Friends* GetInstance();
-    static void ReleaseInstance();
-
-private:
-    // Singleton instance
-    static Steam_Friends* s_pInstance;
 };
 
 #endif // VAPORCORE_STEAM_FRIENDS_H
-

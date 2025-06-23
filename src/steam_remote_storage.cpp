@@ -157,24 +157,36 @@ void Steam_Remote_Storage::SetCloudEnabledForApp( bool bEnabled )
 }
 
 // user generated content
+// Downloads a UGC file
 SteamAPICall_t Steam_Remote_Storage::UGCDownload( UGCHandle_t hContent )
 {
     VLOG_DEBUG("UGCDownload called - Content: %d", hContent);
     return 0;
 }
 
+// Gets the amount of data downloaded so far for a piece of content. pnBytesExpected can be 0 if function returns false
+// or if the transfer hasn't started yet, so be careful to check for that before dividing to get a percentage
+bool Steam_Remote_Storage::GetUGCDownloadProgress( UGCHandle_t hContent, int32 *pnBytesDownloaded, int32 *pnBytesExpected )
+{
+    VLOG_DEBUG("GetUGCDownloadProgress called - Content: %d", hContent);
+    return false;
+}
+
+// Gets metadata for a file after it has been downloaded. This is the same metadata given in the RemoteStorageDownloadUGCResult_t call result
 bool Steam_Remote_Storage::GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, char **ppchName, int32 *pnFileSizeInBytes, CSteamID *pSteamIDOwner )
 {
     VLOG_DEBUG("GetUGCDetails called - Content: %d", hContent);
     return false;
 }
 
+// After download, gets the content of the file
 int32 Steam_Remote_Storage::UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead )
 {
     VLOG_DEBUG("UGCRead called - Content: %d, DataSize: %d", hContent, cubDataToRead);
     return 0;
 }
 
+// Functions to iterate through UGC that has finished downloading but has not yet been read via UGCRead()
 int32 Steam_Remote_Storage::GetCachedUGCCount()
 {
     VLOG_DEBUG("GetCachedUGCCount called");
@@ -188,21 +200,78 @@ UGCHandle_t Steam_Remote_Storage::GetCachedUGCHandle( int32 iCachedContent )
 }
 
 // publishing UGC
+// Removed from Steam SDK v1.18, backward compatibility
 SteamAPICall_t Steam_Remote_Storage::PublishFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags )
 {
     VLOG_DEBUG("PublishFile called - File: %s, PreviewFile: %s, ConsumerAppId: %d, Title: %s, Description: %s, Visibility: %d", pchFile, pchPreviewFile, nConsumerAppId, pchTitle, pchDescription, eVisibility);
     return 0;
 }
 
+// Removed from Steam SDK v1.18, backward compatibility
 SteamAPICall_t Steam_Remote_Storage::PublishWorkshopFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, SteamParamStringArray_t *pTags )
 {
     VLOG_DEBUG("PublishWorkshopFile called - File: %s, PreviewFile: %s, ConsumerAppId: %d, Title: %s, Description: %s", pchFile, pchPreviewFile, nConsumerAppId, pchTitle, pchDescription);
     return 0;
 }
 
+// Removed from Steam SDK v1.18, backward compatibility
 SteamAPICall_t Steam_Remote_Storage::UpdatePublishedFile( RemoteStorageUpdatePublishedFileRequest_t updatePublishedFileRequest )
 {
     VLOG_DEBUG("UpdatePublishedFile called - Request: %d", updatePublishedFileRequest);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::PublishWorkshopFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags, EWorkshopFileType eWorkshopFileType )
+{
+    VLOG_DEBUG("PublishWorkshopFile called - File: %s, PreviewFile: %s, ConsumerAppId: %d, Title: %s, Description: %s, Visibility: %d, FileType: %d", pchFile, pchPreviewFile, nConsumerAppId, pchTitle, pchDescription, eVisibility, eWorkshopFileType);
+    return 0;
+}
+
+PublishedFileUpdateHandle_t Steam_Remote_Storage::CreatePublishedFileUpdateRequest( PublishedFileId_t unPublishedFileId )
+{
+    VLOG_DEBUG("CreatePublishedFileUpdateRequest called - FileId: %d", unPublishedFileId);
+    return 0;
+}
+
+bool Steam_Remote_Storage::UpdatePublishedFileFile( PublishedFileUpdateHandle_t updateHandle, const char *pchFile )
+{
+    VLOG_DEBUG("UpdatePublishedFileFile called - Handle: %d, File: %s", updateHandle, pchFile);
+    return false;
+}
+
+bool Steam_Remote_Storage::UpdatePublishedFilePreviewFile( PublishedFileUpdateHandle_t updateHandle, const char *pchPreviewFile )
+{
+    VLOG_DEBUG("UpdatePublishedFilePreviewFile called - Handle: %d, PreviewFile: %s", updateHandle, pchPreviewFile);
+    return false;
+}
+
+bool Steam_Remote_Storage::UpdatePublishedFileTitle( PublishedFileUpdateHandle_t updateHandle, const char *pchTitle )
+{
+    VLOG_DEBUG("UpdatePublishedFileTitle called - Handle: %d, Title: %s", updateHandle, pchTitle);
+    return false;
+}
+
+bool Steam_Remote_Storage::UpdatePublishedFileDescription( PublishedFileUpdateHandle_t updateHandle, const char *pchDescription )
+{
+    VLOG_DEBUG("UpdatePublishedFileDescription called - Handle: %d, Description: %s", updateHandle, pchDescription);
+    return false;
+}
+
+bool Steam_Remote_Storage::UpdatePublishedFileVisibility( PublishedFileUpdateHandle_t updateHandle, ERemoteStoragePublishedFileVisibility eVisibility )
+{
+    VLOG_DEBUG("UpdatePublishedFileVisibility called - Handle: %d, Visibility: %d", updateHandle, eVisibility);
+    return false;
+}
+
+bool Steam_Remote_Storage::UpdatePublishedFileTags( PublishedFileUpdateHandle_t updateHandle, SteamParamStringArray_t *pTags )
+{
+    VLOG_DEBUG("UpdatePublishedFileTags called - Handle: %d", updateHandle);
+    return false;
+}
+
+SteamAPICall_t Steam_Remote_Storage::CommitPublishedFileUpdate( PublishedFileUpdateHandle_t updateHandle )
+{
+    VLOG_DEBUG("CommitPublishedFileUpdate called - Handle: %d", updateHandle);
     return 0;
 }
 

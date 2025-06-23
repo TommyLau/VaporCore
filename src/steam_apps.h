@@ -18,6 +18,7 @@
 #include <isteamapps001.h>
 #include <isteamapps002.h>
 #include <isteamapps003.h>
+#include <isteamapps004.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to app data
@@ -26,11 +27,20 @@ class Steam_Apps :
     public ISteamApps,
     public ISteamApps001,
     public ISteamApps002,
-    public ISteamApps003
+    public ISteamApps003,
+    public ISteamApps004
 {
+private:
+    // Singleton instance
+    static Steam_Apps* s_pInstance;
+
 public:
     Steam_Apps();
     ~Steam_Apps();
+
+    // Helper methods
+    static Steam_Apps* GetInstance();
+    static void ReleaseInstance();
 
 	// returns 0 if the key does not exist
 	// this may be true on first call, since the app data may not be cached locally yet
@@ -45,7 +55,7 @@ public:
     const char *GetCurrentGameLanguage() override;
     const char *GetAvailableGameLanguages() override;
 
-    // only use this member if you need to check ownership of another game related to yours, a demo for example
+	// only use this member if you need to check ownership of another game related to yours, a demo for example
     bool BIsSubscribedApp( AppId_t appID ) override;
 
 	// Takes AppID of DLC and checks if the user owns the DLC & if the DLC is installed
@@ -58,6 +68,7 @@ public:
 	// This function will return false for users who have a retail or other type of license
 	// Before using, please ask your Valve technical contact how to package and secure your free weekened
 	bool BIsSubscribedFromFreeWeekend() override;
+
 	// Returns the number of DLC pieces for the running app
 	int GetDLCCount() override;
 
@@ -68,18 +79,18 @@ public:
 	void InstallDLC( AppId_t nAppID ) override;
 	void UninstallDLC( AppId_t nAppID ) override;
 
+	// Request cd-key for yourself or owned DLC. If you are interested in this
+	// data then make sure you provide us with a list of valid keys to be distributed
+	// to users when they purchase the game, before the game ships.
+	// You'll receive an AppProofOfPurchaseKeyResponse_t callback when
+	// the key is available (which may be immediately).
+	void RequestAppProofOfPurchaseKey( AppId_t nAppID ) override;
+
 #ifdef _PS3
 	// Result returned in a RegisterActivationCodeResponse_t callresult
 	SteamAPICall_t RegisterActivationCode( const char *pchActivationCode ) override;
 #endif
 
-    // Helper methods
-    static Steam_Apps* GetInstance();
-    static void ReleaseInstance();
-
-private:
-    // Singleton instance
-    static Steam_Apps* s_pInstance;
 };
 
 #endif // VAPORCORE_STEAM_APPS_H

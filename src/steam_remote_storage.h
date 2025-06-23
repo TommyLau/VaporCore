@@ -16,6 +16,7 @@
 #include <isteamremotestorage.h>
 #include <isteamremotestorage002.h>
 #include <isteamremotestorage004.h>
+#include <isteamremotestorage005.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing, reading and writing files stored remotely 
@@ -24,7 +25,8 @@
 class Steam_Remote_Storage :
     public ISteamRemoteStorage,
     public ISteamRemoteStorage002,
-    public ISteamRemoteStorage004
+    public ISteamRemoteStorage004,
+    public ISteamRemoteStorage005
 {
 private:
     // Singleton instance
@@ -71,11 +73,19 @@ public:
     void SetCloudEnabledForApp( bool bEnabled ) override;
 
 	// user generated content
+	// Downloads a UGC file
     SteamAPICall_t UGCDownload( UGCHandle_t hContent ) override;
+
+	// Gets the amount of data downloaded so far for a piece of content. pnBytesExpected can be 0 if function returns false
+	// or if the transfer hasn't started yet, so be careful to check for that before dividing to get a percentage
+	bool GetUGCDownloadProgress( UGCHandle_t hContent, int32 *pnBytesDownloaded, int32 *pnBytesExpected ) override;
+
+	// Gets metadata for a file after it has been downloaded. This is the same metadata given in the RemoteStorageDownloadUGCResult_t call result
     bool GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, char **ppchName, int32 *pnFileSizeInBytes, CSteamID *pSteamIDOwner ) override;
+	// After download, gets the content of the file
     int32 UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead ) override;
 
-	// user generated content iteration
+	// Functions to iterate through UGC that has finished downloading but has not yet been read via UGCRead()
     int32 GetCachedUGCCount() override;
     UGCHandle_t GetCachedUGCHandle( int32 iCachedContent ) override;
 
@@ -98,9 +108,21 @@ public:
 #endif
 
     // publishing UGC
+    // Removed from Steam SDK v1.18, backward compatibility
     SteamAPICall_t PublishFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags ) override;
+    // Removed from Steam SDK v1.18, backward compatibility
     SteamAPICall_t PublishWorkshopFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, SteamParamStringArray_t *pTags ) override;
+    // Removed from Steam SDK v1.18, backward compatibility
     SteamAPICall_t UpdatePublishedFile( RemoteStorageUpdatePublishedFileRequest_t updatePublishedFileRequest ) override;
+	SteamAPICall_t PublishWorkshopFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags, EWorkshopFileType eWorkshopFileType ) override;
+	PublishedFileUpdateHandle_t CreatePublishedFileUpdateRequest( PublishedFileId_t unPublishedFileId ) override;
+	bool UpdatePublishedFileFile( PublishedFileUpdateHandle_t updateHandle, const char *pchFile ) override;
+	bool UpdatePublishedFilePreviewFile( PublishedFileUpdateHandle_t updateHandle, const char *pchPreviewFile ) override;
+	bool UpdatePublishedFileTitle( PublishedFileUpdateHandle_t updateHandle, const char *pchTitle ) override;
+	bool UpdatePublishedFileDescription( PublishedFileUpdateHandle_t updateHandle, const char *pchDescription ) override;
+	bool UpdatePublishedFileVisibility( PublishedFileUpdateHandle_t updateHandle, ERemoteStoragePublishedFileVisibility eVisibility ) override;
+	bool UpdatePublishedFileTags( PublishedFileUpdateHandle_t updateHandle, SteamParamStringArray_t *pTags ) override;
+	SteamAPICall_t CommitPublishedFileUpdate( PublishedFileUpdateHandle_t updateHandle ) override;
     SteamAPICall_t GetPublishedFileDetails( PublishedFileId_t unPublishedFileId ) override;
     SteamAPICall_t DeletePublishedFile( PublishedFileId_t unPublishedFileId ) override;
     SteamAPICall_t EnumerateUserPublishedFiles( uint32 unStartIndex ) override;
