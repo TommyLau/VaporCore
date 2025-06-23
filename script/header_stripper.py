@@ -117,20 +117,48 @@ def strip_header_content(content, original_filename, version_num, class_name):
     class_end = -1
     in_class = False
     paren_count = 0
+    in_string = False
+    in_comment = False
+    in_line_comment = False
+    prev_char = ''
     
-    for i, char in enumerate(content[class_start:], class_start):
-        if char == '(':
-            paren_count += 1
-        elif char == ')':
-            paren_count -= 1
-        elif char == '{' and paren_count == 0:
-            brace_count += 1
-            in_class = True
-        elif char == '}' and in_class and paren_count == 0:
-            brace_count -= 1
-            if brace_count == 0:
-                class_end = i + 1
-                break
+    content_from_class = content[class_start:]
+    
+    for i, char in enumerate(content_from_class):
+        actual_pos = class_start + i
+        
+        # Handle string literals
+        if char == '"' and prev_char != '\\' and not in_comment and not in_line_comment:
+            in_string = not in_string
+        # Handle line comments
+        elif char == '/' and prev_char == '/' and not in_string and not in_comment:
+            in_line_comment = True
+        # Handle block comments start
+        elif char == '*' and prev_char == '/' and not in_string and not in_line_comment:
+            in_comment = True
+        # Handle block comments end
+        elif char == '/' and prev_char == '*' and in_comment:
+            in_comment = False
+        # Handle end of line comments
+        elif char == '\n' and in_line_comment:
+            in_line_comment = False
+        
+        # Only count braces and parentheses if we're not in strings or comments
+        if not in_string and not in_comment and not in_line_comment:
+            if char == '(':
+                paren_count += 1
+            elif char == ')':
+                paren_count -= 1
+            elif char == '{' and paren_count == 0:
+                brace_count += 1
+                in_class = True
+            elif char == '}' and in_class and paren_count == 0:
+                brace_count -= 1
+                if brace_count == 0:
+                    class_end = actual_pos + 1
+                    break
+        
+        prev_char = char
     
     if class_end == -1:
         raise ValueError("Could not find the end of the class definition")
