@@ -25,6 +25,25 @@ Steam_HTTP::~Steam_HTTP()
     VLOG_INFO("Steam_HTTP destructor called");
 }
 
+// Helper methods
+Steam_HTTP* Steam_HTTP::GetInstance()
+{
+    if (!s_pInstance)
+    {
+        s_pInstance = new Steam_HTTP();
+    }
+    return s_pInstance;
+}
+
+void Steam_HTTP::ReleaseInstance()
+{
+    if (s_pInstance)
+    {
+        delete s_pInstance;
+        s_pInstance = nullptr;
+    }
+}
+
 // Initializes a new HTTP request, returning a handle to use in further operations on it.  Requires
 // the method (GET or POST) and the absolute URL for the request.  Only http requests (ie, not https) are
 // currently supported, so this string must start with http:// or https:// and should look like http://store.steampowered.com/app/250/ 
@@ -80,6 +99,15 @@ bool Steam_HTTP::SendHTTPRequest( HTTPRequestHandle hRequest, SteamAPICall_t *pC
     return true;
 }
 
+// Sends the HTTP request, will return false on a bad handle, otherwise use SteamCallHandle to wait on
+// asyncronous response via callback for completion, and listen for HTTPRequestHeadersReceived_t and 
+// HTTPRequestDataReceived_t callbacks while streaming.
+bool Steam_HTTP::SendHTTPRequestAndStreamResponse( HTTPRequestHandle hRequest, SteamAPICall_t *pCallHandle )
+{
+    VLOG_INFO("SendHTTPRequestAndStreamResponse called - Request: %u, Call Handle: %u", hRequest, pCallHandle);
+    return true;
+}
+
 // Defers a request you have sent, the actual HTTP client code may have many requests queued, and this will move
 // the specified request to the tail of the queue.  Returns false on invalid handle, or if the request is not yet sent.
 bool Steam_HTTP::DeferHTTPRequest( HTTPRequestHandle hRequest )
@@ -131,6 +159,16 @@ bool Steam_HTTP::GetHTTPResponseBodyData( HTTPRequestHandle hRequest, uint8 *pBo
     return true;
 }
 
+// Gets the body data from a streaming HTTP response given a handle from HTTPRequestCompleted_t. Will return false if the 
+// handle is invalid or is to a non-streaming response (meaning it wasn't sent with SendHTTPRequestAndStreamResponse), or if the buffer size and offset 
+// do not match the size and offset sent in HTTPRequestDataReceived_t.
+bool Steam_HTTP::GetHTTPStreamingResponseBodyData( HTTPRequestHandle hRequest, uint32 cOffset, uint8 *pBodyDataBuffer, uint32 unBufferSize )
+{
+    VLOG_INFO("GetHTTPStreamingResponseBodyData called - Request: %u, Offset: %u, Buffer: %p, Size: %u", 
+              hRequest, cOffset, pBodyDataBuffer, unBufferSize);
+    return true;
+}
+
 // Releases an HTTP response handle, should always be called to free resources after receiving a HTTPRequestCompleted_t
 // callback and finishing using the response.
 bool Steam_HTTP::ReleaseHTTPRequest( HTTPRequestHandle hRequest )
@@ -155,23 +193,4 @@ bool Steam_HTTP::SetHTTPRequestRawPostBody( HTTPRequestHandle hRequest, const ch
 {
     VLOG_INFO("SetHTTPRequestRawPostBody called - Request: %u, Content Type: %s, Body: %p, Length: %u", hRequest, pchContentType, pubBody, unBodyLen);
     return true;
-}
-
-// Helper methods
-Steam_HTTP* Steam_HTTP::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new Steam_HTTP();
-    }
-    return s_pInstance;
-}
-
-void Steam_HTTP::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
 }

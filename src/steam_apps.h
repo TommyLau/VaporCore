@@ -86,6 +86,9 @@ public:
 	// the key is available (which may be immediately).
 	void RequestAppProofOfPurchaseKey( AppId_t nAppID ) override;
 
+	bool GetCurrentBetaName( char *pchName, int cchNameBufferSize ) override; // returns current beta branch name, 'public' is the default branch
+	bool MarkContentCorrupt( bool bMissingFilesOnly ) override; // signal Steam that game files seems corrupt or missing
+
 #ifdef _PS3
 	// Result returned in a RegisterActivationCodeResponse_t callresult
 	SteamAPICall_t RegisterActivationCode( const char *pchActivationCode ) override;

@@ -18,6 +18,7 @@
 #include <isteamremotestorage004.h>
 #include <isteamremotestorage005.h>
 #include <isteamremotestorage006.h>
+#include <isteamremotestorage008.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing, reading and writing files stored remotely 
@@ -28,7 +29,8 @@ class Steam_Remote_Storage :
     public ISteamRemoteStorage002,
     public ISteamRemoteStorage004,
     public ISteamRemoteStorage005,
-    public ISteamRemoteStorage006
+    public ISteamRemoteStorage006,
+    public ISteamRemoteStorage008
 {
 private:
     // Singleton instance
@@ -80,8 +82,13 @@ public:
     bool IsCloudEnabledForApp() override;
     void SetCloudEnabledForApp( bool bEnabled ) override;
 
-	// user generated content
-	// Downloads a UGC file
+    // user generated content
+
+    // Downloads a UGC file.  A priority value of 0 will download the file immediately,
+    // otherwise it will wait to download the file until all downloads with a lower priority
+    // value are completed.  Downloads with equal priority will occur simultaneously.
+    SteamAPICall_t UGCDownload( UGCHandle_t hContent, uint32 unPriority ) override;
+    // Changed from Steam SDK v1.22, backward compatibility
     SteamAPICall_t UGCDownload( UGCHandle_t hContent ) override;
 
 	// Gets the amount of data downloaded so far for a piece of content. pnBytesExpected can be 0 if function returns false
@@ -91,6 +98,8 @@ public:
 	// Gets metadata for a file after it has been downloaded. This is the same metadata given in the RemoteStorageDownloadUGCResult_t call result
     bool GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, char **ppchName, int32 *pnFileSizeInBytes, CSteamID *pSteamIDOwner ) override;
 	// After download, gets the content of the file
+	int32 UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead, uint32 cOffset ) override;
+    // Changed from Steam SDK v1.22, backward compatibility
     int32 UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead ) override;
 
 	// Functions to iterate through UGC that has finished downloading but has not yet been read via UGCRead()

@@ -182,7 +182,17 @@ void Steam_Remote_Storage::SetCloudEnabledForApp( bool bEnabled )
 }
 
 // user generated content
-// Downloads a UGC file
+
+// Downloads a UGC file.  A priority value of 0 will download the file immediately,
+// otherwise it will wait to download the file until all downloads with a lower priority
+// value are completed.  Downloads with equal priority will occur simultaneously.
+SteamAPICall_t Steam_Remote_Storage::UGCDownload( UGCHandle_t hContent, uint32 unPriority )
+{
+    VLOG_DEBUG("UGCDownload called - Content: %d, Priority: %d", hContent, unPriority);
+    return 0;
+}
+
+// Changed from Steam SDK v1.22, backward compatibility
 SteamAPICall_t Steam_Remote_Storage::UGCDownload( UGCHandle_t hContent )
 {
     VLOG_DEBUG("UGCDownload called - Content: %d", hContent);
@@ -205,6 +215,13 @@ bool Steam_Remote_Storage::GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID
 }
 
 // After download, gets the content of the file
+int32 Steam_Remote_Storage::UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead, uint32 cOffset )
+{
+    VLOG_DEBUG("UGCRead called - Content: %d, DataSize: %d, Offset: %d", hContent, cubDataToRead, cOffset);
+    return 0;
+}
+
+// Changed from Steam SDK v1.22, backward compatibility
 int32 Steam_Remote_Storage::UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead )
 {
     VLOG_DEBUG("UGCRead called - Content: %d, DataSize: %d", hContent, cubDataToRead);

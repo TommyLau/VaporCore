@@ -155,3 +155,20 @@ void Steam_Apps::RequestAppProofOfPurchaseKey( AppId_t nAppID )
 {
     VLOG_DEBUG("RequestAppProofOfPurchaseKey called - AppID: %u", nAppID);
 }
+
+bool Steam_Apps::GetCurrentBetaName( char *pchName, int cchNameBufferSize ) // returns current beta branch name, 'public' is the default branch
+{
+    VLOG_DEBUG("GetCurrentBetaName called - Name: %p, NameBufferSize: %d", pchName, cchNameBufferSize);
+    if (pchName && cchNameBufferSize > 0)
+    {
+        strncpy(pchName, "public", cchNameBufferSize);
+        return true;
+    }
+    return false;
+}
+
+bool Steam_Apps::MarkContentCorrupt( bool bMissingFilesOnly ) // signal Steam that game files seems corrupt or missing
+{
+    VLOG_DEBUG("MarkContentCorrupt called - MissingFilesOnly: %d", bMissingFilesOnly);
+    return false;
+}
