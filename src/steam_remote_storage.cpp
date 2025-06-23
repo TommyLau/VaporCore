@@ -24,6 +24,26 @@ Steam_Remote_Storage::~Steam_Remote_Storage()
 {
     VLOG_INFO("Steam_RemoteStorage destructor called");
 }
+
+// Helper methods
+Steam_Remote_Storage* Steam_Remote_Storage::GetInstance()
+{
+    if (!s_pInstance)
+    {
+        s_pInstance = new Steam_Remote_Storage();
+    }
+    return s_pInstance;
+}
+
+void Steam_Remote_Storage::ReleaseInstance()
+{
+    if (s_pInstance)
+    {
+        delete s_pInstance;
+        s_pInstance = nullptr;
+    }
+}
+
 // NOTE
 //
 // Filenames are case-insensitive, and will be converted to lowercase automatically.
@@ -167,21 +187,57 @@ UGCHandle_t Steam_Remote_Storage::GetCachedUGCHandle( int32 iCachedContent )
     return 0;
 }
 
-// Helper methods
-Steam_Remote_Storage* Steam_Remote_Storage::GetInstance()
+// publishing UGC
+SteamAPICall_t Steam_Remote_Storage::PublishFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags )
 {
-    if (!s_pInstance)
-    {
-        s_pInstance = new Steam_Remote_Storage();
-    }
-    return s_pInstance;
+    VLOG_DEBUG("PublishFile called - File: %s, PreviewFile: %s, ConsumerAppId: %d, Title: %s, Description: %s, Visibility: %d", pchFile, pchPreviewFile, nConsumerAppId, pchTitle, pchDescription, eVisibility);
+    return 0;
 }
 
-void Steam_Remote_Storage::ReleaseInstance()
+SteamAPICall_t Steam_Remote_Storage::PublishWorkshopFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, SteamParamStringArray_t *pTags )
 {
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_DEBUG("PublishWorkshopFile called - File: %s, PreviewFile: %s, ConsumerAppId: %d, Title: %s, Description: %s", pchFile, pchPreviewFile, nConsumerAppId, pchTitle, pchDescription);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::UpdatePublishedFile( RemoteStorageUpdatePublishedFileRequest_t updatePublishedFileRequest )
+{
+    VLOG_DEBUG("UpdatePublishedFile called - Request: %d", updatePublishedFileRequest);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::GetPublishedFileDetails( PublishedFileId_t unPublishedFileId )
+{
+    VLOG_DEBUG("GetPublishedFileDetails called - FileId: %d", unPublishedFileId);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::DeletePublishedFile( PublishedFileId_t unPublishedFileId )
+{
+    VLOG_DEBUG("DeletePublishedFile called - FileId: %d", unPublishedFileId);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::EnumerateUserPublishedFiles( uint32 unStartIndex )
+{
+    VLOG_DEBUG("EnumerateUserPublishedFiles called - StartIndex: %d", unStartIndex);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::SubscribePublishedFile( PublishedFileId_t unPublishedFileId )
+{
+    VLOG_DEBUG("SubscribePublishedFile called - FileId: %d", unPublishedFileId);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::EnumerateUserSubscribedFiles( uint32 unStartIndex )
+{
+    VLOG_DEBUG("EnumerateUserSubscribedFiles called - StartIndex: %d", unStartIndex);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::UnsubscribePublishedFile( PublishedFileId_t unPublishedFileId )
+{
+    VLOG_DEBUG("UnsubscribePublishedFile called - FileId: %d", unPublishedFileId);
+    return 0;
 }

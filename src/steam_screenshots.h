@@ -21,9 +21,17 @@
 class Steam_Screenshots :
     public ISteamScreenshots
 {
+private:
+    // Singleton instance
+    static Steam_Screenshots* s_pInstance;
+
 public:
     Steam_Screenshots();
     ~Steam_Screenshots();
+
+    // Helper methods
+    static Steam_Screenshots* GetInstance();
+    static void ReleaseInstance();
 
 	// Writes a screenshot to the user's screenshot library given the raw image data, which must be in RGB format.
 	// The return value is a handle that is valid for the duration of the game process and can be used to apply tags.
@@ -32,7 +40,8 @@ public:
 	// Adds a screenshot to the user's screenshot library from disk.  If a thumbnail is provided, it must be 200 pixels wide and the same aspect ratio
 	// as the screenshot, otherwise a thumbnail will be generated if the user uploads the screenshot.  The screenshots must be in either JPEG or TGA format.
 	// The return value is a handle that is valid for the duration of the game process and can be used to apply tags.
-	ScreenshotHandle AddScreenshotToLibrary( const char *pchJpegOrTGAFilename, const char *pchJpegOrTGAThumbFilename, int nWidth, int nHeight ) override;
+	// JPEG, TGA, and PNG formats are supported.
+	ScreenshotHandle AddScreenshotToLibrary( const char *pchFilename, const char *pchThumbnailFilename, int nWidth, int nHeight ) override;
 
 	// Causes the Steam overlay to take a screenshot.  If screenshots are being hooked by the game then a ScreenshotRequested_t callback is sent back to the game instead. 
 	void TriggerScreenshot() override;
@@ -47,14 +56,6 @@ public:
 	
 	// Tags a user as being visible in the screenshot
 	bool TagUser( ScreenshotHandle hScreenshot, CSteamID steamID ) override;
-
-    // Helper methods
-    static Steam_Screenshots* GetInstance();
-    static void ReleaseInstance();
-
-private:
-    // Singleton instance
-    static Steam_Screenshots* s_pInstance;
 };
 
 #endif // VAPORCORE_STEAM_SCREENSHOTS_H

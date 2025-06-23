@@ -171,6 +171,19 @@ const char *Steam_Friends::GetClanTag( CSteamID steamIDClan )
     return "";
 }
 
+// returns the most recent information we have about what's happening in a clan
+bool Steam_Friends::GetClanActivityCounts( CSteamID steamIDClan, int *pnOnline, int *pnInGame, int *pnChatting )
+{
+    VLOG_DEBUG("GetClanActivityCounts called");
+    return false;
+}
+// for clans a user is a member of, they will have reasonably up-to-date information, but for others you'll have to download the info to have the latest
+SteamAPICall_t Steam_Friends::DownloadClanActivityCounts( CSteamID *psteamIDClans, int cClansToRequest )
+{
+    VLOG_DEBUG("DownloadClanActivityCounts called");
+    return 0;
+}
+
 // iterators for getting users in a chat room, lobby, game server or clan
 // note that large clans that cannot be iterated by the local user
 // note that the current user must be in a lobby to retrieve CSteamIDs of other users in that lobby
@@ -210,6 +223,7 @@ void Steam_Friends::ActivateGameOverlay( const char *pchDialog )
 // valid options are
 //		"steamid" - opens the overlay web browser to the specified user or groups profile
 //		"chat" - opens a chat window to the specified user, or joins the group chat 
+//		"tradeinvite" - opens a chat window to the specified user and invites them to trade
 //		"stats" - opens the overlay web browser to the specified user's stats
 //		"achievements" - opens the overlay web browser to the specified user's achievements
 void Steam_Friends::ActivateGameOverlayToUser( const char *pchDialog, CSteamID steamID )
@@ -359,6 +373,13 @@ const char *Steam_Friends::GetFriendRichPresenceKeyByIndex( CSteamID steamIDFrie
     VLOG_DEBUG("GetFriendRichPresenceKeyByIndex called");
     return "";
 }
+
+// Requests rich presence for a specific user.
+void Steam_Friends::RequestFriendRichPresence( CSteamID steamIDFriend )
+{
+    VLOG_DEBUG("RequestFriendRichPresence called - SteamID: %s", steamIDFriend.GetAccountID());
+}
+
 // rich invite support
 // if the target accepts the invite, the pchConnectString gets added to the command-line for launching the game
 // if the game is already running, a GameRichPresenceJoinRequested_t callback is posted containing the connect string
@@ -393,6 +414,92 @@ int Steam_Friends::GetFriendCoplayTime( CSteamID steamIDFriend )
 AppId_t Steam_Friends::GetFriendCoplayGame( CSteamID steamIDFriend )
 {
     VLOG_DEBUG("GetFriendCoplayGame called - SteamID: %s", steamIDFriend.GetAccountID());
+    return 0;
+}
+
+
+// chat interface for games
+// this allows in-game access to group (clan) chats from in the game
+// the behavior is somewhat sophisticated, because the user may or may not be already in the group chat from outside the game or in the overlay
+// use ActivateGameOverlayToUser( "chat", steamIDClan ) to open the in-game overlay version of the chat
+SteamAPICall_t Steam_Friends::JoinClanChatRoom( CSteamID steamIDClan )
+{
+    VLOG_DEBUG("JoinClanChatRoom called - SteamID: %s", steamIDClan.GetAccountID());
+    return 0;
+}
+
+bool Steam_Friends::LeaveClanChatRoom( CSteamID steamIDClan )
+{
+    VLOG_DEBUG("LeaveClanChatRoom called - SteamID: %s", steamIDClan.GetAccountID());
+    return false;
+}
+
+int Steam_Friends::GetClanChatMemberCount( CSteamID steamIDClan )
+{
+    VLOG_DEBUG("GetClanChatMemberCount called - SteamID: %s", steamIDClan.GetAccountID());
+    return 0;
+}
+
+CSteamID Steam_Friends::GetChatMemberByIndex( CSteamID steamIDClan, int iUser )
+{
+    VLOG_DEBUG("GetChatMemberByIndex called - SteamID: %s, User: %d", steamIDClan.GetAccountID(), iUser);
+    return CSteamID();
+}
+
+bool Steam_Friends::SendClanChatMessage( CSteamID steamIDClanChat, const char *pchText )
+{
+    VLOG_DEBUG("SendClanChatMessage called - SteamID: %s, Text: %s", steamIDClanChat.GetAccountID(), pchText);
+    return false;
+}
+
+int Steam_Friends::GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *, CSteamID * )
+{
+    VLOG_DEBUG("GetClanChatMessage called - SteamID: %s, Message: %d", steamIDClanChat.GetAccountID(), iMessage);
+    return 0;
+}
+
+bool Steam_Friends::IsClanChatAdmin( CSteamID steamIDClanChat, CSteamID steamIDUser )
+{
+    VLOG_DEBUG("IsClanChatAdmin called - SteamID: %s, User: %s", steamIDClanChat.GetAccountID(), steamIDUser.GetAccountID());
+    return false;
+}
+
+// interact with the Steam (game overlay / desktop)
+bool Steam_Friends::IsClanChatWindowOpenInSteam( CSteamID steamIDClanChat )
+{
+    VLOG_DEBUG("IsClanChatWindowOpenInSteam called - SteamID: %s", steamIDClanChat.GetAccountID());
+    return false;
+}
+
+bool Steam_Friends::OpenClanChatWindowInSteam( CSteamID steamIDClanChat )
+{
+    VLOG_DEBUG("OpenClanChatWindowInSteam called - SteamID: %s", steamIDClanChat.GetAccountID());
+    return false;
+}
+
+bool Steam_Friends::CloseClanChatWindowInSteam( CSteamID steamIDClanChat )
+{
+    VLOG_DEBUG("CloseClanChatWindowInSteam called - SteamID: %s", steamIDClanChat.GetAccountID());
+    return false;
+}
+
+// peer-to-peer chat interception
+// this is so you can show P2P chats inline in the game
+bool Steam_Friends::SetListenForFriendsMessages( bool bInterceptEnabled )
+{
+    VLOG_DEBUG("SetListenForFriendsMessages called - InterceptEnabled: %s", bInterceptEnabled ? "true" : "false");
+    return false;
+}
+
+bool Steam_Friends::ReplyToFriendMessage( CSteamID steamIDFriend, const char *pchMsgToSend )
+{
+    VLOG_DEBUG("ReplyToFriendMessage called - SteamID: %s, Message: %s", steamIDFriend.GetAccountID(), pchMsgToSend);
+    return false;
+}
+
+int Steam_Friends::GetFriendMessage( CSteamID steamIDFriend, int iMessageID, void *pvData, int cubData, EChatEntryType *peChatEntryType )
+{
+    VLOG_DEBUG("GetFriendMessage called - SteamID: %s, MessageID: %d", steamIDFriend.GetAccountID(), iMessageID);
     return 0;
 }
 

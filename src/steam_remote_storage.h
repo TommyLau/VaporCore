@@ -15,6 +15,7 @@
 
 #include <isteamremotestorage.h>
 #include <isteamremotestorage002.h>
+#include <isteamremotestorage004.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing, reading and writing files stored remotely 
@@ -22,11 +23,20 @@
 //-----------------------------------------------------------------------------
 class Steam_Remote_Storage :
     public ISteamRemoteStorage,
-    public ISteamRemoteStorage002
+    public ISteamRemoteStorage002,
+    public ISteamRemoteStorage004
 {
+private:
+    // Singleton instance
+    static Steam_Remote_Storage* s_pInstance;
+
 public:
     Steam_Remote_Storage();
     ~Steam_Remote_Storage();
+
+    // Helper methods
+    static Steam_Remote_Storage* GetInstance();
+    static void ReleaseInstance();
 
     // NOTE
     //
@@ -87,13 +97,16 @@ public:
     bool ResetFileRequestState() override;
 #endif
 
-    // Helper methods
-    static Steam_Remote_Storage* GetInstance();
-    static void ReleaseInstance();
-
-private:
-    // Singleton instance
-    static Steam_Remote_Storage* s_pInstance;
+    // publishing UGC
+    SteamAPICall_t PublishFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags ) override;
+    SteamAPICall_t PublishWorkshopFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, SteamParamStringArray_t *pTags ) override;
+    SteamAPICall_t UpdatePublishedFile( RemoteStorageUpdatePublishedFileRequest_t updatePublishedFileRequest ) override;
+    SteamAPICall_t GetPublishedFileDetails( PublishedFileId_t unPublishedFileId ) override;
+    SteamAPICall_t DeletePublishedFile( PublishedFileId_t unPublishedFileId ) override;
+    SteamAPICall_t EnumerateUserPublishedFiles( uint32 unStartIndex ) override;
+    SteamAPICall_t SubscribePublishedFile( PublishedFileId_t unPublishedFileId ) override;
+    SteamAPICall_t EnumerateUserSubscribedFiles( uint32 unStartIndex ) override;
+    SteamAPICall_t UnsubscribePublishedFile( PublishedFileId_t unPublishedFileId ) override;
 };
 
 #endif // VAPORCORE_STEAM_REMOTE_STORAGE_H

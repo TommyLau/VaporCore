@@ -7,45 +7,11 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef ISTEAMCLIENT_H
-#define ISTEAMCLIENT_H
+#ifndef ISTEAMCLIENT011_H
+#define ISTEAMCLIENT011_H
 #ifdef _WIN32
 #pragma once
 #endif
-
-#include "steamtypes.h"
-#include "steamclientpublic.h"
-
-// handle to a communication pipe to the Steam client
-typedef int32 HSteamPipe;
-// handle to single instance of a steam user
-typedef int32 HSteamUser;
-// function prototype
-#if defined( POSIX )
-#define __cdecl
-#endif
-extern "C" typedef void (__cdecl *SteamAPIWarningMessageHook_t)(int, const char *);
-
-#if defined( __SNC__ )
-	#pragma diag_suppress=1700	   // warning 1700: class "%s" has virtual functions but non-virtual destructor
-#endif
-
-// interface predec
-class ISteamUser;
-class ISteamGameServer;
-class ISteamFriends;
-class ISteamUtils;
-class ISteamMatchmaking;
-class ISteamContentServer;
-class ISteamMatchmakingServers;
-class ISteamUserStats;
-class ISteamApps;
-class ISteamNetworking;
-class ISteamRemoteStorage;
-class ISteamScreenshots;
-class ISteamGameServerStats;
-class ISteamPS3OverlayRender;
-class ISteamHTTP;
 
 //-----------------------------------------------------------------------------
 // Purpose: Interface to creating a new steam instance, or to
@@ -56,7 +22,7 @@ class ISteamHTTP;
 //			You'll only need to use these interfaces if you have a more complex versioning scheme,
 //			where you want to get different versions of the same interface in different dll's in your project.
 //-----------------------------------------------------------------------------
-class ISteamClient
+class ISteamClient011
 {
 public:
 	// Creates a communication pipe to the Steam client
@@ -93,6 +59,9 @@ public:
 
 	// returns the ISteamMatchmaking interface
 	virtual ISteamMatchmaking *GetISteamMatchmaking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
+
+	// returns the ISteamMasterServerUpdater interface
+	virtual ISteamMasterServerUpdater *GetISteamMasterServerUpdater( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
 
 	// returns the ISteamMatchmakingServers interface
 	virtual ISteamMatchmakingServers *GetISteamMatchmakingServers( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
@@ -148,35 +117,6 @@ public:
 
 };
 
-#define STEAMCLIENT_INTERFACE_VERSION		"SteamClient012"
+#define STEAMCLIENT_INTERFACE_VERSION011 "SteamClient011"
 
-//-----------------------------------------------------------------------------
-// Purpose: Base values for callback identifiers, each callback must
-//			have a unique ID.
-//-----------------------------------------------------------------------------
-enum { k_iSteamUserCallbacks = 100 };
-enum { k_iSteamGameServerCallbacks = 200 };
-enum { k_iSteamFriendsCallbacks = 300 };
-enum { k_iSteamBillingCallbacks = 400 };
-enum { k_iSteamMatchmakingCallbacks = 500 };
-enum { k_iSteamContentServerCallbacks = 600 };
-enum { k_iSteamUtilsCallbacks = 700 };
-enum { k_iClientFriendsCallbacks = 800 };
-enum { k_iClientUserCallbacks = 900 };
-enum { k_iSteamAppsCallbacks = 1000 };
-enum { k_iSteamUserStatsCallbacks = 1100 };
-enum { k_iSteamNetworkingCallbacks = 1200 };
-enum { k_iClientRemoteStorageCallbacks = 1300 };
-enum { k_iSteamUserItemsCallbacks = 1400 };
-enum { k_iSteamGameServerItemsCallbacks = 1500 };
-enum { k_iClientUtilsCallbacks = 1600 };
-enum { k_iSteamGameCoordinatorCallbacks = 1700 };
-enum { k_iSteamGameServerStatsCallbacks = 1800 };
-enum { k_iSteam2AsyncCallbacks = 1900 };
-enum { k_iSteamGameStatsCallbacks = 2000 };
-enum { k_iClientHTTPCallbacks = 2100 };
-enum { k_iClientScreenshotsCallbacks = 2200 };
-enum { k_iSteamScreenshotsCallbacks = 2300 };
-enum { k_iClientAudioCallbacks = 2400 };
-
-#endif // ISTEAMCLIENT_H
+#endif // ISTEAMCLIENT011_H

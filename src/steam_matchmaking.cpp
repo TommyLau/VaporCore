@@ -25,6 +25,25 @@ Steam_Matchmaking::~Steam_Matchmaking()
     VLOG_INFO("Steam_Matchmaking destructor called");
 }
 
+// Helper methods
+Steam_Matchmaking* Steam_Matchmaking::GetInstance()
+{
+    if (!s_pInstance)
+    {
+        s_pInstance = new Steam_Matchmaking();
+    }
+    return s_pInstance;
+}
+
+void Steam_Matchmaking::ReleaseInstance()
+{
+    if (s_pInstance)
+    {
+        delete s_pInstance;
+        s_pInstance = nullptr;
+    }
+}
+
 // returns the number of favorites servers the user has stored
 int Steam_Matchmaking::GetFavoriteGameCount()
 {
@@ -57,17 +76,11 @@ bool Steam_Matchmaking::RemoveFavoriteGame( AppId_t nAppID, uint32 nIP, uint16 n
     return false;
 }
 
+///////
+// Game lobby functions
+
 // Get a list of relevant lobbies
 // this is an asynchronous request
-// results will be returned by LobbyMatchList_t callback, with the number of servers requested
-// if the user is not currently connected to Steam (i.e. SteamUser()->BLoggedOn() returns false) then
-// a LobbyMatchList_t callback will be posted immediately with no servers
-// Changed from Steam SDK v1.03, backward compatibility
-void Steam_Matchmaking::DEPRECATED_RequestLobbyList()
-{
-    VLOG_DEBUG("DEPRECATED_RequestLobbyList called");
-}
-
 // results will be returned by LobbyMatchList_t callback & call result, with the number of lobbies found
 // this will never return lobbies that are full
 // to add more filter, the filter calls below need to be call before each and every RequestLobbyList() call
@@ -94,6 +107,12 @@ SteamAPICall_t Steam_Matchmaking::RequestLobbyList()
 {
     VLOG_DEBUG("RequestLobbyList called");
     return 0;
+}
+
+// Changed from Steam SDK v1.03, backward compatibility
+void Steam_Matchmaking::DEPRECATED_RequestLobbyList()
+{
+    VLOG_DEBUG("DEPRECATED_RequestLobbyList called");
 }
 
 // filters for lobbies
@@ -153,6 +172,11 @@ void Steam_Matchmaking::AddRequestLobbyListResultCountFilter( int cMaxResults )
     VLOG_DEBUG("AddRequestLobbyListResultCountFilter called - Max Results: %d", cMaxResults);
 }
 
+void Steam_Matchmaking::AddRequestLobbyListCompatibleMembersFilter( CSteamID steamIDLobby )
+{
+    VLOG_DEBUG("AddRequestLobbyListCompatibleMembersFilter called - Lobby: %llu", steamIDLobby.GetAccountID());
+}
+
 // returns the CSteamID of a lobby, as retrieved by a RequestLobbyList call
 // should only be called after a LobbyMatchList_t callback is received
 // iLobby is of the range [0, LobbyMatchList_t::m_nLobbiesMatching)
@@ -164,19 +188,10 @@ CSteamID Steam_Matchmaking::GetLobbyByIndex( int iLobby )
 }
 
 // Create a lobby on the Steam servers.
-// If bPrivate is true, then the lobby will not be returned by any RequestLobbyList() call; the CSteamID
+// If private, then the lobby will not be returned by any RequestLobbyList() call; the CSteamID
 // of the lobby will need to be communicated via game channels or via InviteUserToLobby()
 // this is an asynchronous request
-// results will be returned by LobbyCreated_t callback when the lobby has been created;
-// local user will the join the lobby, resulting in an additional LobbyEnter_t callback being sent
-// operations on the chat room can only proceed once the LobbyEnter_t has been received
-// Removed from Steam SDK v1.03, backward compatibility
-void Steam_Matchmaking::CreateLobby( bool bPrivate )
-{
-    VLOG_DEBUG("CreateLobby called - Private: %s", bPrivate ? "true" : "false");
-}
-
-// results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this pointer
+// results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this point
 // a LobbyEnter_t callback will also be received (since the local user is joining their own lobby)
 SteamAPICall_t Steam_Matchmaking::CreateLobby( ELobbyType eLobbyType, int cMaxMembers )
 {
@@ -184,29 +199,33 @@ SteamAPICall_t Steam_Matchmaking::CreateLobby( ELobbyType eLobbyType, int cMaxMe
     return 0;
 }
 
-// results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this pointer
-// a LobbyEnter_t callback will also be received (since the local user is joining their own lobby)
+// Changed from Steam SDK v1.05, backward compatibility
 SteamAPICall_t Steam_Matchmaking::CreateLobby( ELobbyType eLobbyType )
 {
     VLOG_DEBUG("CreateLobby called - LobbyType: %d", eLobbyType);
     return 0;
 }
 
-// Joins an existing lobby
-// this is an asynchronous request
-// results will be returned by LobbyEnter_t callback when the lobby has been joined
-// Removed from Steam SDK v1.03, backward compatibility
-void Steam_Matchmaking::DEPRECATED_JoinLobby( CSteamID steamIDLobby )
+// Changed from Steam SDK v1.03, backward compatibility
+void Steam_Matchmaking::CreateLobby( bool bPrivate )
 {
-    VLOG_DEBUG("DEPRECATED_JoinLobby called - Lobby: %llu", steamIDLobby.GetAccountID());
+    VLOG_DEBUG("CreateLobby called - Private: %s", bPrivate ? "true" : "false");
 }
 
+// Joins an existing lobby
+// this is an asynchronous request
 // results will be returned by LobbyEnter_t callback & call result, check m_EChatRoomEnterResponse to see if was successful
 // lobby metadata is available to use immediately on this call completing
 SteamAPICall_t Steam_Matchmaking::JoinLobby( CSteamID steamIDLobby )
 {
     VLOG_DEBUG("JoinLobby called - Lobby: %llu", steamIDLobby.GetAccountID());
     return 0;
+}
+
+// Changed from Steam SDK v1.03, backward compatibility
+void Steam_Matchmaking::DEPRECATED_JoinLobby( CSteamID steamIDLobby )
+{
+    VLOG_DEBUG("DEPRECATED_JoinLobby called - Lobby: %llu", steamIDLobby.GetAccountID());
 }
 
 // Leave a lobby; this will take effect immediately on the client side
@@ -220,11 +239,18 @@ void Steam_Matchmaking::LeaveLobby( CSteamID steamIDLobby )
 // the target user will receive a LobbyInvite_t callback
 // will return true if the invite is successfully sent, whether or not the target responds
 // returns false if the local user is not connected to the Steam servers
+	// if the other user clicks the join link, a GameLobbyJoinRequested_t will be posted if the user is in-game,
+	// or if the game isn't running yet the game will be launched with the parameter +connect_lobby <64-bit lobby id>
 bool Steam_Matchmaking::InviteUserToLobby( CSteamID steamIDLobby, CSteamID steamIDInvitee )
 {
     VLOG_DEBUG("InviteUserToLobby called - Lobby: %llu, Invitee: %llu", steamIDLobby.GetAccountID(), steamIDInvitee.GetAccountID());
     return false;
 }
+
+	// Lobby iteration, for viewing details of users in a lobby
+	// only accessible if the lobby user is a member of the specified lobby
+	// persona information for other lobby members (name, avatar, etc.) will be asynchronously received
+	// and accessible via ISteamFriends interface
 
 // returns the number of users in the specified lobby
 int Steam_Matchmaking::GetNumLobbyMembers( CSteamID steamIDLobby )
@@ -235,6 +261,7 @@ int Steam_Matchmaking::GetNumLobbyMembers( CSteamID steamIDLobby )
 
 // returns the CSteamID of a user in the lobby
 // iMember is of range [0,GetNumLobbyMembers())
+	// note that the current user must be in a lobby to retrieve CSteamIDs of other users in that lobby
 CSteamID Steam_Matchmaking::GetLobbyMemberByIndex( CSteamID steamIDLobby, int iMember )
 {
     VLOG_DEBUG("GetLobbyMemberByIndex called - Lobby: %llu, Member: %d", steamIDLobby.GetAccountID(), iMember);
@@ -302,6 +329,8 @@ void Steam_Matchmaking::SetLobbyMemberData( CSteamID steamIDLobby, const char *p
 // Broadcasts a chat message to the all the users in the lobby
 // users in the lobby (including the local user) will receive a LobbyChatMsg_t callback
 // returns true if the message is successfully sent
+	// pvMsgBody can be binary or text data, up to 4k
+	// if pvMsgBody is text, cubMsgBody should be strlen( text ) + 1, to include the null terminator
 bool Steam_Matchmaking::SendLobbyChatMsg( CSteamID steamIDLobby, const void *pvMsgBody, int cubMsgBody )
 {
     VLOG_DEBUG("SendLobbyChatMsg called - Lobby: %llu, MsgSize: %d", steamIDLobby.GetAccountID(), cubMsgBody);
@@ -319,7 +348,8 @@ int Steam_Matchmaking::GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, CS
     return 0;
 }
 
-// Fetch metadata for a lobby you're not necessarily in right now
+	// Refreshes metadata for a lobby you're not necessarily in right now
+	// you never do this for lobbies you're a member of, only if your
 // this will send down all the metadata associated with a lobby
 // this is an asynchronous call
 // returns false if the local user is not connected to the Steam servers
@@ -332,7 +362,7 @@ bool Steam_Matchmaking::RequestLobbyData( CSteamID steamIDLobby )
 }
 
 // sets the game server associated with the lobby
-// usually at this point, the users will leave the lobby and join the specified game server
+	// usually at this point, the users will join the specified game server
 // either the IP/Port or the steamID of the game server has to be valid, depending on how you want the clients to be able to connect
 void Steam_Matchmaking::SetLobbyGameServer( CSteamID steamIDLobby, uint32 unGameServerIP, uint16 unGameServerPort, CSteamID steamIDGameServer )
 {
@@ -374,7 +404,7 @@ bool Steam_Matchmaking::RequestFriendsLobbies()
 }
 
 // updates which type of lobby it is
-// only lobbies that are k_ELobbyTypePublic will be returned by RequestLobbyList() calls
+	// only lobbies that are k_ELobbyTypePublic or k_ELobbyTypeInvisible, and are set to joinable, will be returned by RequestLobbyList() calls
 bool Steam_Matchmaking::SetLobbyType( CSteamID steamIDLobby, ELobbyType eLobbyType )
 {
     VLOG_DEBUG("SetLobbyType called - Lobby: %llu, Type: %d", steamIDLobby.GetAccountID(), eLobbyType);
@@ -408,23 +438,12 @@ bool Steam_Matchmaking::SetLobbyOwner( CSteamID steamIDLobby, CSteamID steamIDNe
     return false;
 }
 
-// Helper methods
-Steam_Matchmaking* Steam_Matchmaking::GetInstance()
+// link two lobbies for the purposes of checking player compatibility
+// you must be the lobby owner of both lobbies
+bool Steam_Matchmaking::SetLinkedLobby( CSteamID steamIDLobby, CSteamID steamIDLobbyDependent )
 {
-    if (!s_pInstance)
-    {
-        s_pInstance = new Steam_Matchmaking();
-    }
-    return s_pInstance;
-}
-
-void Steam_Matchmaking::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_DEBUG("SetLinkedLobby called - Lobby: %llu, DependentLobby: %llu", steamIDLobby.GetAccountID(), steamIDLobbyDependent.GetAccountID());
+    return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -448,6 +467,7 @@ void Steam_Matchmaking::ReleaseInstance()
 // to cancel any in-progress queries so you don't get a callback into the destructed
 // object and crash.
 //-----------------------------------------------------------------------------
+
 // Server has responded ok with updated data
 // Removed from Steam SDK v1.06, backward compatibility
 void Steam_Matchmaking_Server_List_Response::ServerResponded( int iServer )
@@ -664,6 +684,12 @@ void Steam_Matchmaking_Servers::ReleaseRequest( HServerListRequest hServerListRe
 // Get details on a given server in the list, you can get the valid range of index
 // values by calling GetServerCount().  You will also receive index values in 
 // ISteamMatchmakingServerListResponse::ServerResponded() callbacks
+gameserveritem_t *Steam_Matchmaking_Servers::GetServerDetails( HServerListRequest hRequest, int iServer )
+{
+    VLOG_DEBUG("GetServerDetails called - Request: %d, Server: %d", hRequest, iServer);
+    return nullptr;
+} 
+
 // Changed from Steam SDK v1.06, backward compatibility
 gameserveritem_t *Steam_Matchmaking_Servers::GetServerDetails( EMatchMakingType eType, int iServer )
 {
@@ -671,34 +697,22 @@ gameserveritem_t *Steam_Matchmaking_Servers::GetServerDetails( EMatchMakingType 
     return nullptr;
 } 
 
-gameserveritem_t *Steam_Matchmaking_Servers::GetServerDetails( HServerListRequest hRequest, int iServer )
-{
-    VLOG_DEBUG("GetServerDetails called - Request: %d, Server: %d", hRequest, iServer);
-    return nullptr;
-} 
-
 // Cancel an request which is operation on the given list type.  You should call this to cancel
 // any in-progress requests before destructing a callback object that may have been passed 
 // to one of the above list request calls.  Not doing so may result in a crash when a callback
 // occurs on the destructed object.
+void Steam_Matchmaking_Servers::CancelQuery( HServerListRequest hRequest )
+{
+    VLOG_DEBUG("CancelQuery called - Request: %d", hRequest);
+} 
+
 // Changed from Steam SDK v1.06, backward compatibility
 void Steam_Matchmaking_Servers::CancelQuery( EMatchMakingType eType )
 {
     VLOG_DEBUG("CancelQuery called - Type: %d", eType);
 } 
 
-void Steam_Matchmaking_Servers::CancelQuery( HServerListRequest hRequest )
-{
-    VLOG_DEBUG("CancelQuery called - Request: %d", hRequest);
-} 
-
 // Ping every server in your list again but don't update the list of servers
-// Changed from Steam SDK v1.06, backward compatibility
-void Steam_Matchmaking_Servers::RefreshQuery( EMatchMakingType eType )
-{
-    VLOG_DEBUG("RefreshQuery called - Type: %d", eType);
-} 
-
 // Query callback installed when the server list was requested will be used
 // again to post notifications and RefreshComplete, so the callback must remain
 // valid until another RefreshComplete is called on it or the request
@@ -708,7 +722,19 @@ void Steam_Matchmaking_Servers::RefreshQuery( HServerListRequest hRequest )
     VLOG_DEBUG("RefreshQuery called - Request: %d", hRequest);
 } 
 
+// Changed from Steam SDK v1.06, backward compatibility
+void Steam_Matchmaking_Servers::RefreshQuery( EMatchMakingType eType )
+{
+    VLOG_DEBUG("RefreshQuery called - Type: %d", eType);
+} 
+
 // Returns true if the list is currently refreshing its server list
+bool Steam_Matchmaking_Servers::IsRefreshing( HServerListRequest hRequest )
+{
+    VLOG_DEBUG("IsRefreshing called - Request: %d", hRequest);
+    return false;
+} 
+
 // Changed from Steam SDK v1.06, backward compatibility
 bool Steam_Matchmaking_Servers::IsRefreshing( EMatchMakingType eType )
 {
@@ -716,36 +742,30 @@ bool Steam_Matchmaking_Servers::IsRefreshing( EMatchMakingType eType )
     return false;
 } 
 
-bool Steam_Matchmaking_Servers::IsRefreshing( HServerListRequest hRequest )
-{
-    VLOG_DEBUG("IsRefreshing called - Request: %d", hRequest);
-    return false;
-} 
-
 // How many servers in the given list, GetServerDetails above takes 0... GetServerCount() - 1
-// Changed from Steam SDK v1.06, backward compatibility
-int Steam_Matchmaking_Servers::GetServerCount( EMatchMakingType eType )
-{
-    VLOG_DEBUG("GetServerCount called - Type: %d", eType);
-    return 0;
-} 
-
 int Steam_Matchmaking_Servers::GetServerCount( HServerListRequest hRequest )
 {
     VLOG_DEBUG("GetServerCount called - Request: %d", hRequest);
     return 0;
 } 
 
+// Changed from Steam SDK v1.06, backward compatibility
+int Steam_Matchmaking_Servers::GetServerCount( EMatchMakingType eType )
+{
+    VLOG_DEBUG("GetServerCount called - Type: %d", eType);
+    return 0;
+}
+
 // Refresh a single server inside of a query (rather than all the servers )
+void Steam_Matchmaking_Servers::RefreshServer( HServerListRequest hRequest, int iServer )
+{
+    VLOG_DEBUG("RefreshServer called - Request: %d, Server: %d", hRequest, iServer);
+} 
+
 // Changed from Steam SDK v1.06, backward compatibility
 void Steam_Matchmaking_Servers::RefreshServer( EMatchMakingType eType, int iServer )
 {
     VLOG_DEBUG("RefreshServer called - Type: %d, Server: %d", eType, iServer);
-} 
-
-void Steam_Matchmaking_Servers::RefreshServer( HServerListRequest hRequest, int iServer )
-{
-    VLOG_DEBUG("RefreshServer called - Request: %d, Server: %d", hRequest, iServer);
 } 
 
 
@@ -767,7 +787,7 @@ HServerQuery Steam_Matchmaking_Servers::PlayerDetails( uint32 unIP, uint16 usPor
     return 0;
 }
 
-// Request the list of rules that the server is running (See ISteamMasterServerUpdater->SetKeyValue() to set the rules server side)
+// Request the list of rules that the server is running (See ISteamGameServer::SetKeyValue() to set the rules server side)
 HServerQuery Steam_Matchmaking_Servers::ServerRules( uint32 unIP, uint16 usPort, ISteamMatchmakingRulesResponse *pRequestServersResponse )
 {
     VLOG_DEBUG("ServerRules called - IP: %u, Port: %u, Response: %p", unIP, usPort, pRequestServersResponse);

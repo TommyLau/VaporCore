@@ -200,6 +200,7 @@ ISteamContentServer *Steam_Client::GetISteamContentServer( HSteamUser hSteamUser
 }
 
 // returns the ISteamMasterServerUpdater interface
+// Removed from Steam SDK v1.17, backward compatibility
 ISteamMasterServerUpdater *Steam_Client::GetISteamMasterServerUpdater( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     // TODO: Implement master server updater interface

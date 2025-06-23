@@ -15,11 +15,13 @@
 
 #include <map>
 
+#include <isteammasterserverupdater.h>
 #include <isteamclient.h>
 #include <isteamclient007.h>
 #include <isteamclient008.h>
 #include <isteamclient009.h>
 #include <isteamclient010.h>
+#include <isteamclient011.h>
 
 // Steam pipe state enumeration
 enum Steam_Pipe {
@@ -42,7 +44,8 @@ class Steam_Client :
     public ISteamClient007,
     public ISteamClient008,
     public ISteamClient009,
-    public ISteamClient010
+    public ISteamClient010,
+    public ISteamClient011
 {
 public:
     Steam_Client();
@@ -90,6 +93,7 @@ public:
 	ISteamContentServer *GetISteamContentServer( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// returns the ISteamMasterServerUpdater interface
+	// Removed from Steam SDK v1.17, backward compatibility
 	ISteamMasterServerUpdater *GetISteamMasterServerUpdater( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// returns the ISteamMatchmakingServers interface

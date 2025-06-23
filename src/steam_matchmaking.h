@@ -30,9 +30,17 @@ class Steam_Matchmaking :
     public ISteamMatchmaking006,
     public ISteamMatchmaking007
 {
+private:
+    // Singleton instance
+    static Steam_Matchmaking* s_pInstance;
+
 public:
     Steam_Matchmaking();
     ~Steam_Matchmaking();
+
+    // Helper methods
+    static Steam_Matchmaking* GetInstance();
+    static void ReleaseInstance();
 
 	// returns the number of favorites servers the user has stored
 	int GetFavoriteGameCount() override;
@@ -50,13 +58,11 @@ public:
 	// removes the game server from the local storage; returns true if one was removed
     bool RemoveFavoriteGame( AppId_t nAppID, uint32 nIP, uint16 nConnPort, uint16 nQueryPort, uint32 unFlags ) override;
 
+	///////
+	// Game lobby functions
+
 	// Get a list of relevant lobbies
 	// this is an asynchronous request
-	// results will be returned by LobbyMatchList_t callback, with the number of servers requested
-	// if the user is not currently connected to Steam (i.e. SteamUser()->BLoggedOn() returns false) then
-	// a LobbyMatchList_t callback will be posted immediately with no servers
-	// Changed from Steam SDK v1.03, backward compatibility
-	void DEPRECATED_RequestLobbyList() override;
 	// results will be returned by LobbyMatchList_t callback & call result, with the number of lobbies found
 	// this will never return lobbies that are full
 	// to add more filter, the filter calls below need to be call before each and every RequestLobbyList() call
@@ -80,6 +86,8 @@ public:
 	*/
 	// 
 	SteamAPICall_t RequestLobbyList() override;
+	// Changed from Steam SDK v1.03, backward compatibility
+	void DEPRECATED_RequestLobbyList() override;
 
 	// filters for lobbies
 	// this needs to be called before RequestLobbyList() to take effect
@@ -103,6 +111,8 @@ public:
 	// sets how many results to return, the lower the count the faster it is to download the lobby results & details to the client
 	void AddRequestLobbyListResultCountFilter( int cMaxResults ) override;
 
+	void AddRequestLobbyListCompatibleMembersFilter( CSteamID steamIDLobby ) override;
+
 	// returns the CSteamID of a lobby, as retrieved by a RequestLobbyList call
 	// should only be called after a LobbyMatchList_t callback is received
 	// iLobby is of the range [0, LobbyMatchList_t::m_nLobbiesMatching)
@@ -110,27 +120,24 @@ public:
 	CSteamID GetLobbyByIndex( int iLobby ) override;
 
 	// Create a lobby on the Steam servers.
-	// If bPrivate is true, then the lobby will not be returned by any RequestLobbyList() call; the CSteamID
+	// If private, then the lobby will not be returned by any RequestLobbyList() call; the CSteamID
 	// of the lobby will need to be communicated via game channels or via InviteUserToLobby()
 	// this is an asynchronous request
-	// results will be returned by LobbyCreated_t callback when the lobby has been created;
-	// local user will the join the lobby, resulting in an additional LobbyEnter_t callback being sent
-	// operations on the chat room can only proceed once the LobbyEnter_t has been received
-	// Changed from Steam SDK v1.05, backward compatibility
-	void CreateLobby( bool bPrivate ) override;
-	SteamAPICall_t CreateLobby( ELobbyType eLobbyType, int cMaxMembers ) override;
-	// results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this pointer
+	// results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this point
 	// a LobbyEnter_t callback will also be received (since the local user is joining their own lobby)
+	SteamAPICall_t CreateLobby( ELobbyType eLobbyType, int cMaxMembers ) override;
+	// Changed from Steam SDK v1.05, backward compatibility
 	SteamAPICall_t CreateLobby( ELobbyType eLobbyType ) override;
+	// Changed from Steam SDK v1.03, backward compatibility
+	void CreateLobby( bool bPrivate ) override;
 
 	// Joins an existing lobby
 	// this is an asynchronous request
-	// results will be returned by LobbyEnter_t callback when the lobby has been joined
-	// Removed from Steam SDK v1.03, backward compatibility
-	void DEPRECATED_JoinLobby( CSteamID steamIDLobby ) override;
 	// results will be returned by LobbyEnter_t callback & call result, check m_EChatRoomEnterResponse to see if was successful
 	// lobby metadata is available to use immediately on this call completing
 	SteamAPICall_t JoinLobby( CSteamID steamIDLobby ) override;
+	// Changed from Steam SDK v1.03, backward compatibility
+	void DEPRECATED_JoinLobby( CSteamID steamIDLobby ) override;
 
 	// Leave a lobby; this will take effect immediately on the client side
 	// other users in the lobby will be notified by a LobbyChatUpdate_t callback
@@ -140,12 +147,20 @@ public:
 	// the target user will receive a LobbyInvite_t callback
 	// will return true if the invite is successfully sent, whether or not the target responds
 	// returns false if the local user is not connected to the Steam servers
+	// if the other user clicks the join link, a GameLobbyJoinRequested_t will be posted if the user is in-game,
+	// or if the game isn't running yet the game will be launched with the parameter +connect_lobby <64-bit lobby id>
 	bool InviteUserToLobby( CSteamID steamIDLobby, CSteamID steamIDInvitee ) override;
 
+	// Lobby iteration, for viewing details of users in a lobby
+	// only accessible if the lobby user is a member of the specified lobby
+	// persona information for other lobby members (name, avatar, etc.) will be asynchronously received
+	// and accessible via ISteamFriends interface
+	
 	// returns the number of users in the specified lobby
 	int GetNumLobbyMembers( CSteamID steamIDLobby ) override;
 	// returns the CSteamID of a user in the lobby
 	// iMember is of range [0,GetNumLobbyMembers())
+	// note that the current user must be in a lobby to retrieve CSteamIDs of other users in that lobby
 	CSteamID GetLobbyMemberByIndex( CSteamID steamIDLobby, int iMember ) override;
 
 	// Get data associated with this lobby
@@ -176,6 +191,8 @@ public:
 	// Broadcasts a chat message to the all the users in the lobby
 	// users in the lobby (including the local user) will receive a LobbyChatMsg_t callback
 	// returns true if the message is successfully sent
+	// pvMsgBody can be binary or text data, up to 4k
+	// if pvMsgBody is text, cubMsgBody should be strlen( text ) + 1, to include the null terminator
 	bool SendLobbyChatMsg( CSteamID steamIDLobby, const void *pvMsgBody, int cubMsgBody ) override;
 	// Get a chat message as specified in a LobbyChatMsg_t callback
 	// iChatID is the LobbyChatMsg_t::m_iChatID value in the callback
@@ -184,7 +201,8 @@ public:
 	// return value is the number of bytes written into the buffer
 	int GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, CSteamID *pSteamIDUser, void *pvData, int cubData, EChatEntryType *peChatEntryType ) override;
 
-	// Fetch metadata for a lobby you're not necessarily in right now
+	// Refreshes metadata for a lobby you're not necessarily in right now
+	// you never do this for lobbies you're a member of, only if your
 	// this will send down all the metadata associated with a lobby
 	// this is an asynchronous call
 	// returns false if the local user is not connected to the Steam servers
@@ -193,7 +211,7 @@ public:
 	bool RequestLobbyData( CSteamID steamIDLobby ) override;
 	
 	// sets the game server associated with the lobby
-	// usually at this point, the users will leave the lobby and join the specified game server
+	// usually at this point, the users will join the specified game server
 	// either the IP/Port or the steamID of the game server has to be valid, depending on how you want the clients to be able to connect
 	void SetLobbyGameServer( CSteamID steamIDLobby, uint32 unGameServerIP, uint16 unGameServerPort, CSteamID steamIDGameServer ) override;
 	// returns the details of a game server set in a lobby - returns false if there is no game server set, or that lobby doesn't exist
@@ -212,7 +230,7 @@ public:
 	bool RequestFriendsLobbies() override;
 
 	// updates which type of lobby it is
-	// only lobbies that are k_ELobbyTypePublic will be returned by RequestLobbyList() calls
+	// only lobbies that are k_ELobbyTypePublic or k_ELobbyTypeInvisible, and are set to joinable, will be returned by RequestLobbyList() calls
 	bool SetLobbyType( CSteamID steamIDLobby, ELobbyType eLobbyType ) override;
 
 	// sets whether or not a lobby is joinable - defaults to true for a new lobby
@@ -230,6 +248,10 @@ public:
 	// after completion, the local user will no longer be the owner
 	bool SetLobbyOwner( CSteamID steamIDLobby, CSteamID steamIDNewOwner ) override;
 
+	// link two lobbies for the purposes of checking player compatibility
+	// you must be the lobby owner of both lobbies
+	bool SetLinkedLobby( CSteamID steamIDLobby, CSteamID steamIDLobbyDependent ) override;
+
 #ifdef _PS3
 	// changes who the lobby owner is
 	// you must be the lobby owner for this to succeed, and steamIDNewOwner must be in the lobby
@@ -237,13 +259,6 @@ public:
 	void CheckForPSNGameBootInvite( unsigned int iGameBootAttributes  ) override;
 #endif
 
-    // Helper methods
-    static Steam_Matchmaking* GetInstance();
-    static void ReleaseInstance();
-
-private:
-    // Singleton instance
-    static Steam_Matchmaking* s_pInstance;
 };
 
 //-----------------------------------------------------------------------------
@@ -414,43 +429,43 @@ public:
 	// Get details on a given server in the list, you can get the valid range of index
 	// values by calling GetServerCount().  You will also receive index values in 
 	// ISteamMatchmakingServerListResponse::ServerResponded() callbacks
+	gameserveritem_t *GetServerDetails( HServerListRequest hRequest, int iServer ) override; 
 	// Changed from Steam SDK v1.06, backward compatibility
 	gameserveritem_t *GetServerDetails( EMatchMakingType eType, int iServer ) override; 
-	gameserveritem_t *GetServerDetails( HServerListRequest hRequest, int iServer ) override; 
 
 	// Cancel an request which is operation on the given list type.  You should call this to cancel
 	// any in-progress requests before destructing a callback object that may have been passed 
 	// to one of the above list request calls.  Not doing so may result in a crash when a callback
 	// occurs on the destructed object.
-	// Changed from Steam SDK v1.06, backward compatibility
-	void CancelQuery( EMatchMakingType eType ) override; 
 	// Canceling a query does not release the allocated request handle.
 	// The request handle must be released using ReleaseRequest( hRequest )
 	void CancelQuery( HServerListRequest hRequest ) override; 
+	// Changed from Steam SDK v1.06, backward compatibility
+	void CancelQuery( EMatchMakingType eType ) override; 
 
 	// Ping every server in your list again but don't update the list of servers
-	// Changed from Steam SDK v1.06, backward compatibility
-	void RefreshQuery( EMatchMakingType eType ) override; 
 	// Query callback installed when the server list was requested will be used
 	// again to post notifications and RefreshComplete, so the callback must remain
 	// valid until another RefreshComplete is called on it or the request
 	// is released with ReleaseRequest( hRequest )
 	void RefreshQuery( HServerListRequest hRequest ) override; 
+	// Changed from Steam SDK v1.06, backward compatibility
+	void RefreshQuery( EMatchMakingType eType ) override; 
 
 	// Returns true if the list is currently refreshing its server list
+	bool IsRefreshing( HServerListRequest hRequest ) override; 
 	// Changed from Steam SDK v1.06, backward compatibility
 	bool IsRefreshing( EMatchMakingType eType ) override; 
-	bool IsRefreshing( HServerListRequest hRequest ) override; 
 
 	// How many servers in the given list, GetServerDetails above takes 0... GetServerCount() - 1
+	int GetServerCount( HServerListRequest hRequest ) override; 
 	// Changed from Steam SDK v1.06, backward compatibility
 	int GetServerCount( EMatchMakingType eType ) override; 
-	int GetServerCount( HServerListRequest hRequest ) override; 
 
 	// Refresh a single server inside of a query (rather than all the servers )
+	void RefreshServer( HServerListRequest hRequest, int iServer ) override; 
 	// Changed from Steam SDK v1.06, backward compatibility
 	void RefreshServer( EMatchMakingType eType, int iServer ) override; 
-	void RefreshServer( HServerListRequest hRequest, int iServer ) override; 
 
 
 	//-----------------------------------------------------------------------------
@@ -463,7 +478,7 @@ public:
 	// Request the list of players currently playing on a server
 	HServerQuery PlayerDetails( uint32 unIP, uint16 usPort, ISteamMatchmakingPlayersResponse *pRequestServersResponse ) override;
 
-	// Request the list of rules that the server is running (See ISteamMasterServerUpdater->SetKeyValue() to set the rules server side)
+	// Request the list of rules that the server is running (See ISteamGameServer::SetKeyValue() to set the rules server side)
 	HServerQuery ServerRules( uint32 unIP, uint16 usPort, ISteamMatchmakingRulesResponse *pRequestServersResponse ) override; 
 
 	// Cancel an outstanding Ping/Players/Rules query from above.  You should call this to cancel

@@ -25,6 +25,25 @@ Steam_Screenshots::~Steam_Screenshots()
     VLOG_INFO("Steam_Screenshots destructor called");
 }
 
+// Helper methods
+Steam_Screenshots* Steam_Screenshots::GetInstance()
+{
+    if (!s_pInstance)
+    {
+        s_pInstance = new Steam_Screenshots();
+    }
+    return s_pInstance;
+}
+
+void Steam_Screenshots::ReleaseInstance()
+{
+    if (s_pInstance)
+    {
+        delete s_pInstance;
+        s_pInstance = nullptr;
+    }
+}
+
 // Writes a screenshot to the user's screenshot library given the raw image data, which must be in RGB format.
 // The return value is a handle that is valid for the duration of the game process and can be used to apply tags.
 ScreenshotHandle Steam_Screenshots::WriteScreenshot( void *pubRGB, uint32 cubRGB, int nWidth, int nHeight )
@@ -36,7 +55,8 @@ ScreenshotHandle Steam_Screenshots::WriteScreenshot( void *pubRGB, uint32 cubRGB
 // Adds a screenshot to the user's screenshot library from disk.  If a thumbnail is provided, it must be 200 pixels wide and the same aspect ratio
 // as the screenshot, otherwise a thumbnail will be generated if the user uploads the screenshot.  The screenshots must be in either JPEG or TGA format.
 // The return value is a handle that is valid for the duration of the game process and can be used to apply tags.
-ScreenshotHandle Steam_Screenshots::AddScreenshotToLibrary( const char *pchJpegOrTGAFilename, const char *pchJpegOrTGAThumbFilename, int nWidth, int nHeight )
+// JPEG, TGA, and PNG formats are supported.
+ScreenshotHandle Steam_Screenshots::AddScreenshotToLibrary( const char *pchFilename, const char *pchThumbnailFilename, int nWidth, int nHeight )
 {
     VLOG_DEBUG("AddScreenshotToLibrary called - Width: %d, Height: %d", nWidth, nHeight);
     return 0;
@@ -68,23 +88,4 @@ bool Steam_Screenshots::TagUser( ScreenshotHandle hScreenshot, CSteamID steamID 
 {
     VLOG_DEBUG("TagUser called - hScreenshot: %d, steamID: %d", hScreenshot, steamID);
     return true;
-}
-
-// Helper methods
-Steam_Screenshots* Steam_Screenshots::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new Steam_Screenshots();
-    }
-    return s_pInstance;
-}
-
-void Steam_Screenshots::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
 }
