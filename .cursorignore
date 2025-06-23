@@ -1,0 +1,3 @@
+# Cursor IDE ignore file
+# Ignore the SDK headers directory
+include/sdk 
