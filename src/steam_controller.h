@@ -17,11 +17,15 @@
 #include <isteamcontroller.h>
 
 //-----------------------------------------------------------------------------
-// Purpose: Functions for accessing stats, achievements, and leaderboard information
+// Purpose: Native Steam controller support API
 //-----------------------------------------------------------------------------
 class Steam_Controller :
     public ISteamController
 {
+private:
+    // Singleton instance
+    static Steam_Controller* s_pInstance;
+
 public:
     Steam_Controller();
     ~Steam_Controller();
@@ -30,9 +34,26 @@ public:
     static Steam_Controller* GetInstance();
     static void ReleaseInstance();
 
-private:
-    // Singleton instance
-    static Steam_Controller* s_pInstance;
+	//
+	// Native controller support API
+	//
+
+	// Must call init and shutdown when starting/ending use of the interface
+	bool Init(const char *pchAbsolutePathToControllerConfigVDF) override;
+	bool Shutdown() override;
+
+	// Pump callback/callresult events, SteamAPI_RunCallbacks will do this for you, 
+	// normally never need to call directly.
+	void RunFrame() override;
+
+	// Get the state of the specified controller, returns false if that controller is not connected
+	bool GetControllerState(uint32 unControllerIndex, SteamControllerState_t *pState) override;
+
+	// Trigger a haptic pulse on the controller
+	void TriggerHapticPulse(uint32 unControllerIndex, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec) override;
+
+	// Set the override mode which is used to choose to use different base/legacy bindings from your config file
+	void SetOverrideMode(const char *pchMode) override;
 };
 
 #endif // VAPORCORE_STEAM_CONTROLLER_H
