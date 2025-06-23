@@ -522,3 +522,23 @@ int Steam_Friends::GetFriendMessage( CSteamID steamIDFriend, int iMessageID, voi
     VLOG_DEBUG("GetFriendMessage called - SteamID: %s, MessageID: %d", steamIDFriend.GetAccountID(), iMessageID);
     return 0;
 }
+
+
+// following apis
+SteamAPICall_t Steam_Friends::GetFollowerCount( CSteamID steamID )
+{
+    VLOG_DEBUG("GetFollowerCount called - SteamID: %s", steamID.GetAccountID());
+    return 0;
+}
+
+SteamAPICall_t Steam_Friends::IsFollowing( CSteamID steamID )
+{
+    VLOG_DEBUG("IsFollowing called - SteamID: %s", steamID.GetAccountID());
+    return 0;
+}
+
+SteamAPICall_t Steam_Friends::EnumerateFollowingList( uint32 unStartIndex )
+{
+    VLOG_DEBUG("EnumerateFollowingList called - StartIndex: %d", unStartIndex);
+    return 0;
+}

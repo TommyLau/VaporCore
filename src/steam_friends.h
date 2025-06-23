@@ -88,6 +88,7 @@ public:
 	int GetFriendAvatar( CSteamID steamIDFriend, int eAvatarSize ) override;
 	// Changed from Steam SDK v1.02, backward compatibility
 	int GetFriendAvatar( CSteamID steamIDFriend ) override;
+
 	// returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
 	bool GetFriendGamePlayed( CSteamID steamIDFriend, FriendGameInfo_t *pFriendGameInfo ) override;
 	// Changed from Steam SDK v1.04, backward compatibility
@@ -241,6 +242,11 @@ public:
 	bool SetListenForFriendsMessages( bool bInterceptEnabled ) override;
 	bool ReplyToFriendMessage( CSteamID steamIDFriend, const char *pchMsgToSend ) override;
 	int GetFriendMessage( CSteamID steamIDFriend, int iMessageID, void *pvData, int cubData, EChatEntryType *peChatEntryType ) override;
+
+	// following apis
+	SteamAPICall_t GetFollowerCount( CSteamID steamID ) override;
+	SteamAPICall_t IsFollowing( CSteamID steamID ) override;
+	SteamAPICall_t EnumerateFollowingList( uint32 unStartIndex ) override;
 };
 
 #endif // VAPORCORE_STEAM_FRIENDS_H

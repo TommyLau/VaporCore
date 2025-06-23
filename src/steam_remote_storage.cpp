@@ -287,6 +287,7 @@ SteamAPICall_t Steam_Remote_Storage::DeletePublishedFile( PublishedFileId_t unPu
     return 0;
 }
 
+// enumerate the files that the current user published with this app
 SteamAPICall_t Steam_Remote_Storage::EnumerateUserPublishedFiles( uint32 unStartIndex )
 {
     VLOG_DEBUG("EnumerateUserPublishedFiles called - StartIndex: %d", unStartIndex);
@@ -308,5 +309,60 @@ SteamAPICall_t Steam_Remote_Storage::EnumerateUserSubscribedFiles( uint32 unStar
 SteamAPICall_t Steam_Remote_Storage::UnsubscribePublishedFile( PublishedFileId_t unPublishedFileId )
 {
     VLOG_DEBUG("UnsubscribePublishedFile called - FileId: %d", unPublishedFileId);
+    return 0;
+}
+
+bool Steam_Remote_Storage::UpdatePublishedFileSetChangeDescription( PublishedFileUpdateHandle_t updateHandle, const char *pchChangeDescription )
+{
+    VLOG_DEBUG("UpdatePublishedFileSetChangeDescription called - Handle: %d, Description: %s", updateHandle, pchChangeDescription);
+    return false;
+}
+
+SteamAPICall_t Steam_Remote_Storage::GetPublishedItemVoteDetails( PublishedFileId_t unPublishedFileId )
+{
+    VLOG_DEBUG("GetPublishedItemVoteDetails called - FileId: %d", unPublishedFileId);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::UpdateUserPublishedItemVote( PublishedFileId_t unPublishedFileId, bool bVoteUp )
+{
+    VLOG_DEBUG("UpdateUserPublishedItemVote called - FileId: %d, VoteUp: %s", unPublishedFileId, bVoteUp ? "true" : "false");
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::GetUserPublishedItemVoteDetails( PublishedFileId_t unPublishedFileId )
+{
+    VLOG_DEBUG("GetUserPublishedItemVoteDetails called - FileId: %d", unPublishedFileId);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::EnumerateUserSharedWorkshopFiles( CSteamID steamId, uint32 unStartIndex, SteamParamStringArray_t *pRequiredTags, SteamParamStringArray_t *pExcludedTags )
+{
+    VLOG_DEBUG("EnumerateUserSharedWorkshopFiles called - SteamID: %s, StartIndex: %d", steamId.GetAccountID(), unStartIndex);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::PublishVideo( const char *pchVideoURL, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags )
+{
+    VLOG_DEBUG("PublishVideo called - URL: %s, PreviewFile: %s, AppId: %d, Title: %s", pchVideoURL, pchPreviewFile, nConsumerAppId, pchTitle);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::SetUserPublishedFileAction( PublishedFileId_t unPublishedFileId, EWorkshopFileAction eAction )
+{
+    VLOG_DEBUG("SetUserPublishedFileAction called - FileId: %d, Action: %d", unPublishedFileId, eAction);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::EnumeratePublishedFilesByUserAction( EWorkshopFileAction eAction, uint32 unStartIndex )
+{
+    VLOG_DEBUG("EnumeratePublishedFilesByUserAction called - Action: %d, StartIndex: %d", eAction, unStartIndex);
+    return 0;
+}
+
+// this method enumerates the public view of workshop files
+SteamAPICall_t Steam_Remote_Storage::EnumeratePublishedWorkshopFiles( EWorkshopEnumerationType eEnumerationType, uint32 unStartIndex, uint32 unCount, uint32 unDays, SteamParamStringArray_t *pTags, SteamParamStringArray_t *pUserTags )
+{
+    VLOG_DEBUG("EnumeratePublishedWorkshopFiles called - Type: %d, StartIndex: %d, Count: %d, Days: %d", eEnumerationType, unStartIndex, unCount, unDays);
     return 0;
 }

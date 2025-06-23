@@ -125,10 +125,21 @@ public:
 	SteamAPICall_t CommitPublishedFileUpdate( PublishedFileUpdateHandle_t updateHandle ) override;
     SteamAPICall_t GetPublishedFileDetails( PublishedFileId_t unPublishedFileId ) override;
     SteamAPICall_t DeletePublishedFile( PublishedFileId_t unPublishedFileId ) override;
+	// enumerate the files that the current user published with this app
     SteamAPICall_t EnumerateUserPublishedFiles( uint32 unStartIndex ) override;
     SteamAPICall_t SubscribePublishedFile( PublishedFileId_t unPublishedFileId ) override;
     SteamAPICall_t EnumerateUserSubscribedFiles( uint32 unStartIndex ) override;
     SteamAPICall_t UnsubscribePublishedFile( PublishedFileId_t unPublishedFileId ) override;
+    bool UpdatePublishedFileSetChangeDescription( PublishedFileUpdateHandle_t updateHandle, const char *pchChangeDescription ) override;
+    SteamAPICall_t GetPublishedItemVoteDetails( PublishedFileId_t unPublishedFileId ) override;
+    SteamAPICall_t UpdateUserPublishedItemVote( PublishedFileId_t unPublishedFileId, bool bVoteUp ) override;
+    SteamAPICall_t GetUserPublishedItemVoteDetails( PublishedFileId_t unPublishedFileId ) override;
+    SteamAPICall_t EnumerateUserSharedWorkshopFiles( CSteamID steamId, uint32 unStartIndex, SteamParamStringArray_t *pRequiredTags, SteamParamStringArray_t *pExcludedTags ) override;
+    SteamAPICall_t PublishVideo( const char *pchVideoURL, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags ) override;
+    SteamAPICall_t SetUserPublishedFileAction( PublishedFileId_t unPublishedFileId, EWorkshopFileAction eAction ) override;
+    SteamAPICall_t EnumeratePublishedFilesByUserAction( EWorkshopFileAction eAction, uint32 unStartIndex ) override;
+    // this method enumerates the public view of workshop files
+    SteamAPICall_t EnumeratePublishedWorkshopFiles( EWorkshopEnumerationType eEnumerationType, uint32 unStartIndex, uint32 unCount, uint32 unDays, SteamParamStringArray_t *pTags, SteamParamStringArray_t *pUserTags ) override;
 };
 
 #endif // VAPORCORE_STEAM_REMOTE_STORAGE_H
