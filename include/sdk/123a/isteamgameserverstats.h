@@ -1,11 +1,8 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright © Valve Corporation, All rights reserved. =======
+//
+// Purpose: interface for game servers to steam stats and achievements
+//
+//=============================================================================
 
 #ifndef ISTEAMGAMESERVERSTATS_H
 #define ISTEAMGAMESERVERSTATS_H

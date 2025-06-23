@@ -13,6 +13,7 @@
 #pragma once
 #endif
 
+#include <isteamclient.h>
 #include <isteamhttp.h>
 #include <isteamhttp001.h>
 

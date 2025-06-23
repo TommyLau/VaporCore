@@ -1,11 +1,8 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright � 1996-2008, Valve Corporation, All rights reserved. =======
+//
+// Purpose: public interface to user remote file storage in Steam
+//
+//=============================================================================
 
 #ifndef ISTEAMREMOTESTORAGE_H
 #define ISTEAMREMOTESTORAGE_H
@@ -188,7 +185,7 @@ class ISteamRemoteStorage
 		// otherwise it will wait to download the file until all downloads with a lower priority
 		// value are completed.  Downloads with equal priority will occur simultaneously.
 		virtual SteamAPICall_t UGCDownload( UGCHandle_t hContent, uint32 unPriority ) = 0;
-
+		
 		// Gets the amount of data downloaded so far for a piece of content. pnBytesExpected can be 0 if function returns false
 		// or if the transfer hasn't started yet, so be careful to check for that before dividing to get a percentage
 		virtual bool	GetUGCDownloadProgress( UGCHandle_t hContent, int32 *pnBytesDownloaded, int32 *pnBytesExpected ) = 0;

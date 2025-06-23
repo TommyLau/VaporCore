@@ -416,3 +416,9 @@ SteamAPICall_t Steam_Remote_Storage::EnumeratePublishedWorkshopFiles( EWorkshopE
     VLOG_DEBUG("EnumeratePublishedWorkshopFiles called - Type: %d, StartIndex: %d, Count: %d, Days: %d", eEnumerationType, unStartIndex, unCount, unDays);
     return 0;
 }
+
+SteamAPICall_t Steam_Remote_Storage::UGCDownloadToLocation( UGCHandle_t hContent, const char *pchLocation, uint32 unPriority )
+{
+    VLOG_DEBUG("UGCDownloadToLocation called - Content: %llu, Location: %s, Priority: %d", hContent, pchLocation, unPriority);
+    return 0;
+}

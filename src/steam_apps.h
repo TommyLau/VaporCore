@@ -88,12 +88,15 @@ public:
 
 	bool GetCurrentBetaName( char *pchName, int cchNameBufferSize ) override; // returns current beta branch name, 'public' is the default branch
 	bool MarkContentCorrupt( bool bMissingFilesOnly ) override; // signal Steam that game files seems corrupt or missing
+	uint32 GetInstalledDepots( DepotId_t *pvecDepots, uint32 cMaxDepots ) override; // return installed depots in mount order
+
+	// returns current app install folder for AppID, returns folder name length
+	uint32 GetAppInstallDir( AppId_t appID, char *pchFolder, uint32 cchFolderBufferSize ) override;
 
 #ifdef _PS3
 	// Result returned in a RegisterActivationCodeResponse_t callresult
 	SteamAPICall_t RegisterActivationCode( const char *pchActivationCode ) override;
 #endif
-
 };
 
 #endif // VAPORCORE_STEAM_APPS_H

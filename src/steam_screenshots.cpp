@@ -89,3 +89,10 @@ bool Steam_Screenshots::TagUser( ScreenshotHandle hScreenshot, CSteamID steamID 
     VLOG_DEBUG("TagUser called - hScreenshot: %d, steamID: %d", hScreenshot, steamID);
     return true;
 }
+
+// Tags a published file as being visible in the screenshot
+bool Steam_Screenshots::TagPublishedFile( ScreenshotHandle hScreenshot, PublishedFileId_t unPublishedFileID )
+{
+    VLOG_DEBUG("TagPublishedFile called - hScreenshot: %d, unPublishedFileID: %d", hScreenshot, unPublishedFileID);
+    return true;
+}

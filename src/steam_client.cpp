@@ -66,18 +66,6 @@ const char* Steam_Client::GetInterfaceVersion(const char* pchVersion, const char
     return pchVersion ? pchVersion : pchDefaultVersion;
 }
 
-bool Steam_Client::IsValidPipe(HSteamPipe hSteamPipe)
-{
-    // TODO: Implement pipe validation
-    return true;
-}
-
-bool Steam_Client::IsValidUser(HSteamUser hSteamUser)
-{
-    // TODO: Implement user validation
-    return true; 
-}
-
 // Creates a communication pipe to the Steam client
 HSteamPipe Steam_Client::CreateSteamPipe()
 {
@@ -120,18 +108,18 @@ HSteamUser Steam_Client::ConnectToGlobalUser( HSteamPipe hSteamPipe )
 }
 
 // used by game servers, create a steam user that won't be shared with anyone else
-HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe )
-{
-    // TODO: Implement local user creation
-    VLOG_DEBUG("CreateLocalUser called with phSteamPipe=%u", phSteamPipe);
-    return VaporCore::DEFAULT_SERVER_USER;
-}
-
-// used by game servers, create a steam user that won't be shared with anyone else
 HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType eAccountType )
 {
     // TODO: Implement local user creation
     VLOG_DEBUG("CreateLocalUser called with phSteamPipe=%u and eAccountType=%d", phSteamPipe, eAccountType);
+    return VaporCore::DEFAULT_SERVER_USER;
+}
+
+// Removed from Steam SDK v1.04, backward compatibility
+HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe )
+{
+    // TODO: Implement local user creation
+    VLOG_DEBUG("CreateLocalUser called with phSteamPipe=%u", phSteamPipe);
     return VaporCore::DEFAULT_SERVER_USER;
 }
 
@@ -313,5 +301,13 @@ ISteamHTTP *Steam_Client::GetISteamHTTP( HSteamUser hSteamuser, HSteamPipe hStea
 {
     // TODO: Implement HTTP interface
     VLOG_DEBUG("GetISteamHTTP called");
+    return nullptr;
+}
+
+// Exposes the ISteamUnifiedMessages interface
+ISteamUnifiedMessages* Steam_Client::GetISteamUnifiedMessages(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+{
+    // TODO: Implement unified messages interface
+    VLOG_DEBUG("GetISteamUnifiedMessages called");
     return nullptr;
 }

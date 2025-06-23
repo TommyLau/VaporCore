@@ -13,6 +13,7 @@
 #pragma once
 #endif
 
+#include <isteamclient.h>
 #include <isteamremotestorage.h>
 #include <isteamremotestorage002.h>
 #include <isteamremotestorage004.h>
@@ -159,6 +160,8 @@ public:
     SteamAPICall_t EnumeratePublishedFilesByUserAction( EWorkshopFileAction eAction, uint32 unStartIndex ) override;
     // this method enumerates the public view of workshop files
     SteamAPICall_t EnumeratePublishedWorkshopFiles( EWorkshopEnumerationType eEnumerationType, uint32 unStartIndex, uint32 unCount, uint32 unDays, SteamParamStringArray_t *pTags, SteamParamStringArray_t *pUserTags ) override;
+
+	SteamAPICall_t UGCDownloadToLocation( UGCHandle_t hContent, const char *pchLocation, uint32 unPriority ) override;
 };
 
 #endif // VAPORCORE_STEAM_REMOTE_STORAGE_H

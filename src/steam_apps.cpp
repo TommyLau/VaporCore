@@ -172,3 +172,17 @@ bool Steam_Apps::MarkContentCorrupt( bool bMissingFilesOnly ) // signal Steam th
     VLOG_DEBUG("MarkContentCorrupt called - MissingFilesOnly: %d", bMissingFilesOnly);
     return false;
 }
+
+uint32 Steam_Apps::GetInstalledDepots( DepotId_t *pvecDepots, uint32 cMaxDepots )
+{
+    VLOG_DEBUG("GetInstalledDepots called - Depots: %p, MaxDepots: %u", pvecDepots, cMaxDepots);
+    return 0;
+}
+
+// returns current app install folder for AppID, returns folder name length
+uint32 Steam_Apps::GetAppInstallDir( AppId_t appID, char *pchFolder, uint32 cchFolderBufferSize )
+{
+    VLOG_DEBUG("GetAppInstallDir called - AppID: %u, Folder: %p, FolderBufferSize: %u", 
+               appID, pchFolder, cchFolderBufferSize);
+    return 0;
+}

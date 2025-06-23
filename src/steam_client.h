@@ -47,9 +47,40 @@ class Steam_Client :
     public ISteamClient010,
     public ISteamClient011
 {
+private:
+    // Internal state
+    HSteamUser m_hSteamUser;
+    uint32 m_unSteamPipeCounter;
+    SteamAPIWarningMessageHook_t m_pWarningMessageHook;
+    
+    // Steam pipe management
+    std::map<HSteamPipe, Steam_Pipe> m_mapSteamPipes;
+    
+    // Interface instances
+    ISteamUser* m_pSteamUser;
+    ISteamFriends* m_pSteamFriends;
+    ISteamUtils* m_pSteamUtils;
+    ISteamMatchmaking* m_pSteamMatchmaking;
+    ISteamMatchmakingServers* m_pSteamMatchmakingServers;
+    ISteamUserStats* m_pSteamUserStats;
+    ISteamApps* m_pSteamApps;
+    ISteamNetworking* m_pSteamNetworking;
+    ISteamContentServer* m_pSteamContentServer;
+    ISteamMasterServerUpdater* m_pSteamMasterServerUpdater;
+    
+    // Singleton instance
+    static Steam_Client* s_pInstance;
+    
+    // Helper methods
+    const char* GetInterfaceVersion(const char* pchVersion, const char* pchDefaultVersion);
+
 public:
     Steam_Client();
     ~Steam_Client();
+
+    // Helper methods
+    static Steam_Client* GetInstance();
+    static void ReleaseInstance();
 
 	// Creates a communication pipe to the Steam client
 	HSteamPipe CreateSteamPipe() override;
@@ -62,9 +93,9 @@ public:
 	HSteamUser ConnectToGlobalUser( HSteamPipe hSteamPipe ) override;
 
 	// used by game servers, create a steam user that won't be shared with anyone else
+	HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType eAccountType ) override;
 	// Removed from Steam SDK v1.04, backward compatibility
 	HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe ) override;
-	HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType eAccountType ) override;
 
 	// removes an allocated user
 	void ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser ) override;
@@ -146,38 +177,8 @@ public:
 	// Expose HTTP interface
 	ISteamHTTP *GetISteamHTTP( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
-    // Helper methods
-    static Steam_Client* GetInstance();
-    static void ReleaseInstance();
-    bool IsValidPipe(HSteamPipe hSteamPipe);
-    bool IsValidUser(HSteamUser hSteamUser);
-
-private:
-    // Internal state
-    HSteamUser m_hSteamUser;
-    uint32 m_unSteamPipeCounter;
-    SteamAPIWarningMessageHook_t m_pWarningMessageHook;
-    
-    // Steam pipe management
-    std::map<HSteamPipe, Steam_Pipe> m_mapSteamPipes;
-    
-    // Interface instances
-    ISteamUser* m_pSteamUser;
-    ISteamFriends* m_pSteamFriends;
-    ISteamUtils* m_pSteamUtils;
-    ISteamMatchmaking* m_pSteamMatchmaking;
-    ISteamMatchmakingServers* m_pSteamMatchmakingServers;
-    ISteamUserStats* m_pSteamUserStats;
-    ISteamApps* m_pSteamApps;
-    ISteamNetworking* m_pSteamNetworking;
-    ISteamContentServer* m_pSteamContentServer;
-    ISteamMasterServerUpdater* m_pSteamMasterServerUpdater;
-    
-    // Singleton instance
-    static Steam_Client* s_pInstance;
-    
-    // Helper methods
-    const char* GetInterfaceVersion(const char* pchVersion, const char* pchDefaultVersion);
+	// Exposes the ISteamUnifiedMessages interface
+	ISteamUnifiedMessages *GetISteamUnifiedMessages( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 };
 
 #endif // VAPORCORE_STEAM_CLIENT_H 
