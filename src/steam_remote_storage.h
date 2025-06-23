@@ -21,6 +21,7 @@
 #include <isteamremotestorage006.h>
 #include <isteamremotestorage008.h>
 #include <isteamremotestorage010.h>
+#include <isteamremotestorage011.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing, reading and writing files stored remotely 
@@ -33,7 +34,8 @@ class Steam_Remote_Storage :
     public ISteamRemoteStorage005,
     public ISteamRemoteStorage006,
     public ISteamRemoteStorage008,
-    public ISteamRemoteStorage010
+    public ISteamRemoteStorage010,
+    public ISteamRemoteStorage011
 {
 private:
     // Singleton instance
@@ -107,6 +109,8 @@ public:
 	// enough memory for each chunk).  Once the last byte is read, the file is implicitly closed and further calls to UGCRead will fail
 	// unless UGCDownload is called again.
 	// For especially large files (anything over 100MB) it is a requirement that the file is read in chunks.
+	int32 UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead, uint32 cOffset, EUGCReadAction eAction ) override;
+    // Changed from Steam SDK v1.26, backward compatibility
 	int32 UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead, uint32 cOffset ) override;
     // Changed from Steam SDK v1.22, backward compatibility
     int32 UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead ) override;

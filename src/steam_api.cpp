@@ -30,6 +30,9 @@ static ISteamMatchmakingServers* g_pSteamMatchmakingServers = nullptr;
 static ISteamRemoteStorage* g_pSteamRemoteStorage = nullptr;
 static ISteamScreenshots* g_pSteamScreenshots = nullptr;
 static ISteamHTTP* g_pSteamHTTP = nullptr;
+static ISteamUnifiedMessages* g_pSteamUnifiedMessages = nullptr;
+static ISteamController* g_pSteamController = nullptr;
+static ISteamUGC* g_pSteamUGC = nullptr;
 
 // Global pipe and user handles
 static HSteamPipe g_hSteamPipe = 0;
@@ -46,7 +49,7 @@ static uintp g_uSteamAPICallCounter = 0;
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 
 // S_API void SteamAPI_Init(); (see below)
-S_API void SteamAPI_Shutdown() {
+S_API void S_CALLTYPE SteamAPI_Shutdown() {
     // TODO: Implement SteamAPI_Shutdown
     VLOG_INFO("SteamAPI_Shutdown called");
     
@@ -67,6 +70,12 @@ S_API void SteamAPI_Shutdown() {
     g_pSteamUserStats = nullptr;
     g_pSteamApps = nullptr;
     g_pSteamNetworking = nullptr;
+    g_pSteamRemoteStorage = nullptr;
+    g_pSteamScreenshots = nullptr;
+    g_pSteamHTTP = nullptr;
+    g_pSteamUnifiedMessages = nullptr;
+    g_pSteamController = nullptr;
+    g_pSteamUGC = nullptr;
 
     g_hSteamUser = 0;
     g_hSteamPipe = 0;
@@ -80,7 +89,7 @@ S_API void SteamAPI_Shutdown() {
 }
 
 // checks if a local Steam client is running 
-S_API bool SteamAPI_IsSteamRunning()
+S_API bool S_CALLTYPE SteamAPI_IsSteamRunning()
 {
     VLOG_DEBUG("SteamAPI_IsSteamRunning called");
     return true;
@@ -88,7 +97,7 @@ S_API bool SteamAPI_IsSteamRunning()
 
 // restart your app through Steam to enable required Steamworks features
 // Removed from Steam SDK v1.07, backward compatibility
-S_API bool SteamAPI_RestartApp( uint32 unOwnAppID )
+S_API bool S_CALLTYPE SteamAPI_RestartApp( uint32 unOwnAppID )
 {
     VLOG_DEBUG("SteamAPI_RestartApp called - AppID: %d", unOwnAppID);
     return true;
@@ -105,25 +114,25 @@ S_API bool SteamAPI_RestartApp( uint32 unOwnAppID )
 //
 // NOTE: This function should be used only if you are using CEG or not using Steam's DRM. Once applied
 //       to your executable, Steam's DRM will handle restarting through Steam if necessary.
-S_API bool SteamAPI_RestartAppIfNecessary( uint32 unOwnAppID )
+S_API bool S_CALLTYPE SteamAPI_RestartAppIfNecessary( uint32 unOwnAppID )
 {
     VLOG_DEBUG("SteamAPI_RestartAppIfNecessary called - AppID: %d", unOwnAppID);
     return true;
 }
 
 // crash dump recording functions
-S_API void SteamAPI_WriteMiniDump( uint32 uStructuredExceptionCode, void* pvExceptionInfo, uint32 uBuildID )
+S_API void S_CALLTYPE SteamAPI_WriteMiniDump( uint32 uStructuredExceptionCode, void* pvExceptionInfo, uint32 uBuildID )
 {
     VLOG_DEBUG("SteamAPI_WriteMiniDump called - Structured Exception Code: %d, Exception Info: %p, Build ID: %d", uStructuredExceptionCode, pvExceptionInfo, uBuildID);
 }
 
-S_API void SteamAPI_SetMiniDumpComment( const char *pchMsg )
+S_API void S_CALLTYPE SteamAPI_SetMiniDumpComment( const char *pchMsg )
 {
     VLOG_DEBUG("SteamAPI_SetMiniDumpComment called - Comment: %s", pchMsg);
 }
 
 // interface pointers, configured by SteamAPI_Init()
-S_API ISteamClient *SteamClient() {
+S_API ISteamClient *S_CALLTYPE SteamClient() {
     // TODO: Implement SteamClient
     return g_pSteamClient;
 }
@@ -138,12 +147,12 @@ S_API ISteamClient *SteamClient() {
 // If you don't use VERSION_SAFE_STEAM_API_INTERFACES, then you can use SteamAPI_Init() and the SteamXXXX() 
 // functions below to get at the Steam interfaces.
 //
-S_API bool SteamAPI_InitSafe() {
+S_API bool S_CALLTYPE SteamAPI_InitSafe() {
     VLOG_INFO("SteamAPI_InitSafe called");
     return SteamAPI_Init();
 }
 
-S_API bool SteamAPI_Init() {
+S_API bool S_CALLTYPE SteamAPI_Init() {
     // TODO: Implement SteamAPI_Init
 #ifdef VAPORCORE_ENABLE_LOGGING
     // Initialize logger
@@ -191,60 +200,75 @@ S_API bool SteamAPI_Init() {
     return true;
 }
 
-S_API ISteamUser *SteamUser() {
+S_API ISteamUser *S_CALLTYPE SteamUser() {
     // TODO: Implement SteamUser
     VLOG_DEBUG("SteamUser() called");
     return g_pSteamUser;
 }
 
-S_API ISteamFriends *SteamFriends() {
+S_API ISteamFriends *S_CALLTYPE SteamFriends() {
     // TODO: Implement SteamFriends
     return g_pSteamFriends;
 }
 
-S_API ISteamUtils *SteamUtils() {
+S_API ISteamUtils *S_CALLTYPE SteamUtils() {
     // TODO: Implement SteamUtils
     return g_pSteamUtils;
 }
 
-S_API ISteamMatchmaking *SteamMatchmaking() {
+S_API ISteamMatchmaking *S_CALLTYPE SteamMatchmaking() {
     // TODO: Implement SteamMatchmaking
     return g_pSteamMatchmaking;
 }
 
-S_API ISteamUserStats *SteamUserStats() {
+S_API ISteamUserStats *S_CALLTYPE SteamUserStats() {
     // TODO: Implement SteamUserStats
     return g_pSteamUserStats;
 }
 
-S_API ISteamApps *SteamApps() {
+S_API ISteamApps *S_CALLTYPE SteamApps() {
     // TODO: Implement SteamApps
     return g_pSteamApps;
 }
 
-S_API ISteamNetworking *SteamNetworking() {
+S_API ISteamNetworking *S_CALLTYPE SteamNetworking() {
     // TODO: Implement SteamNetworking
     return g_pSteamNetworking;
 }
 
-S_API ISteamMatchmakingServers *SteamMatchmakingServers() {
+S_API ISteamMatchmakingServers *S_CALLTYPE SteamMatchmakingServers() {
     // TODO: Implement SteamMatchmakingServers
     return g_pSteamMatchmakingServers;
 }
 
-S_API ISteamRemoteStorage *SteamRemoteStorage() {
+S_API ISteamRemoteStorage *S_CALLTYPE SteamRemoteStorage() {
     // TODO: Implement SteamRemoteStorage
     return g_pSteamRemoteStorage;
 }
 
-S_API ISteamScreenshots *SteamScreenshots() {
+S_API ISteamScreenshots *S_CALLTYPE SteamScreenshots() {
     // TODO: Implement SteamScreenshots
     return g_pSteamScreenshots;
 }
 
-S_API ISteamHTTP *SteamHTTP() {
+S_API ISteamHTTP *S_CALLTYPE SteamHTTP() {
     // TODO: Implement SteamHTTP
     return g_pSteamHTTP;
+}
+
+S_API ISteamUnifiedMessages *S_CALLTYPE SteamUnifiedMessages() {
+    // TODO: Implement SteamUnifiedMessages
+    return g_pSteamUnifiedMessages;
+}
+
+S_API ISteamController *S_CALLTYPE SteamController() {
+    // TODO: Implement SteamController
+    return g_pSteamController;
+}
+
+S_API ISteamUGC *S_CALLTYPE SteamUGC() {
+    // TODO: Implement SteamUGC
+    return g_pSteamUGC;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -256,25 +280,25 @@ S_API ISteamHTTP *SteamHTTP() {
 //	These functors are triggered via the SteamAPI_RunCallbacks() function, mapping the callback
 //  to as many functions/objects as are registered to it
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
-S_API void SteamAPI_RunCallbacks() {
+S_API void S_CALLTYPE SteamAPI_RunCallbacks() {
     // TODO: Implement SteamAPI_RunCallbacks
 }
 
 // functions used by the utility CCallback objects to receive callbacks
-S_API void SteamAPI_RegisterCallback( class CCallbackBase *pCallback, int iCallback ) {
+S_API void S_CALLTYPE SteamAPI_RegisterCallback( class CCallbackBase *pCallback, int iCallback ) {
     // TODO: Implement SteamAPI_RegisterCallback
 }
 
-S_API void SteamAPI_UnregisterCallback( class CCallbackBase *pCallback ) {
+S_API void S_CALLTYPE SteamAPI_UnregisterCallback( class CCallbackBase *pCallback ) {
     // TODO: Implement SteamAPI_UnregisterCallback
 }
 
 // functions used by the utility CCallResult objects to receive async call results
-S_API void SteamAPI_RegisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall ) {
+S_API void S_CALLTYPE SteamAPI_RegisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall ) {
     // TODO: Implement SteamAPI_RegisterCallResult
 }
 
-S_API void SteamAPI_UnregisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall ) {
+S_API void S_CALLTYPE SteamAPI_UnregisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall ) {
     // TODO: Implement SteamAPI_UnregisterCallResult
 }
 

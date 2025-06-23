@@ -171,6 +171,13 @@ const char *Steam_Friends::GetFriendPersonaNameHistory( CSteamID steamIDFriend, 
     return "";
 }
 
+// Returns nickname the current user has set for the specified player. Returns NULL if the no nickname has been set for that player.
+const char *Steam_Friends::GetPlayerNickname( CSteamID steamIDPlayer )
+{
+    VLOG_DEBUG("GetPlayerNickname called - SteamID: %s", steamIDPlayer.GetAccountID());
+    return "";
+}
+
 // returns true if the specified user meets any of the criteria specified in iFriendFlags
 // iFriendFlags can be the union (binary or, |) of one or more k_EFriendFlags values
 bool Steam_Friends::HasFriend( CSteamID steamIDFriend, int iFriendFlags )
@@ -491,7 +498,7 @@ bool Steam_Friends::SendClanChatMessage( CSteamID steamIDClanChat, const char *p
     return false;
 }
 
-int Steam_Friends::GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *, CSteamID * )
+int Steam_Friends::GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *peChatEntryType, CSteamID *psteamidChatter )
 {
     VLOG_DEBUG("GetClanChatMessage called - SteamID: %s, Message: %d", steamIDClanChat.GetAccountID(), iMessage);
     return 0;

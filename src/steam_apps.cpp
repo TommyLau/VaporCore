@@ -172,7 +172,15 @@ bool Steam_Apps::MarkContentCorrupt( bool bMissingFilesOnly ) // signal Steam th
     VLOG_DEBUG("MarkContentCorrupt called - MissingFilesOnly: %d", bMissingFilesOnly);
     return false;
 }
+	
+// return installed depots in mount order
+uint32 Steam_Apps::GetInstalledDepots( AppId_t appID, DepotId_t *pvecDepots, uint32 cMaxDepots )
+{
+    VLOG_DEBUG("GetInstalledDepots called - AppID: %u, Depots: %p, MaxDepots: %u", appID, pvecDepots, cMaxDepots);
+    return 0;
+}
 
+// Changed from Steam SDK v1.26, backward compatibility
 uint32 Steam_Apps::GetInstalledDepots( DepotId_t *pvecDepots, uint32 cMaxDepots )
 {
     VLOG_DEBUG("GetInstalledDepots called - Depots: %p, MaxDepots: %u", pvecDepots, cMaxDepots);
@@ -191,4 +199,21 @@ bool Steam_Apps::BIsAppInstalled( AppId_t appID )
 {
     VLOG_DEBUG("BIsAppInstalled called - AppID: %u", appID);
     return false;
+}
+
+// returns the SteamID of the original owner. If different from current user, it's borrowed
+CSteamID Steam_Apps::GetAppOwner()
+{
+    VLOG_DEBUG("GetAppOwner called");
+    return CSteamID();
+}
+
+// Returns the associated launch param if the game is run via steam://run/<appid>//?param1=value1;param2=value2;param3=value3 etc.
+// Parameter names starting with the character '@' are reserved for internal use and will always return and empty string.
+// Parameter names starting with an underscore '_' are reserved for steam features -- they can be queried by the game,
+// but it is advised that you not param names beginning with an underscore for your own features.
+const char *Steam_Apps::GetLaunchQueryParam( const char *pchKey )
+{
+    VLOG_DEBUG("GetLaunchQueryParam called - Key: %s", pchKey);
+    return "";
 }

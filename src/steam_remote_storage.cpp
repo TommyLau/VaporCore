@@ -220,6 +220,13 @@ bool Steam_Remote_Storage::GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID
 // enough memory for each chunk).  Once the last byte is read, the file is implicitly closed and further calls to UGCRead will fail
 // unless UGCDownload is called again.
 // For especially large files (anything over 100MB) it is a requirement that the file is read in chunks.
+int32 Steam_Remote_Storage::UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead, uint32 cOffset, EUGCReadAction eAction )
+{
+    VLOG_DEBUG("UGCRead called - Content: %d, DataSize: %d, Offset: %d, Action: %d", hContent, cubDataToRead, cOffset, eAction);
+    return 0;
+}
+
+// Changed from Steam SDK v1.26, backward compatibility
 int32 Steam_Remote_Storage::UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead, uint32 cOffset )
 {
     VLOG_DEBUG("UGCRead called - Content: %d, DataSize: %d, Offset: %d", hContent, cubDataToRead, cOffset);

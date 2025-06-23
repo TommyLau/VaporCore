@@ -179,6 +179,12 @@ public:
 
 	// Exposes the ISteamUnifiedMessages interface
 	ISteamUnifiedMessages *GetISteamUnifiedMessages( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	// Exposes the ISteamController interface
+	ISteamController *GetISteamController( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	// Exposes the ISteamUGC interface
+	ISteamUGC *GetISteamUGC( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 };
 
 #endif // VAPORCORE_STEAM_CLIENT_H 

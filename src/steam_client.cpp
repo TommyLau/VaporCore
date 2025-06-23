@@ -311,3 +311,20 @@ ISteamUnifiedMessages* Steam_Client::GetISteamUnifiedMessages(HSteamUser hSteamu
     VLOG_DEBUG("GetISteamUnifiedMessages called");
     return nullptr;
 }
+
+
+// Exposes the ISteamController interface
+ISteamController* Steam_Client::GetISteamController(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+{
+    // TODO: Implement controller interface
+    VLOG_DEBUG("GetISteamController called");
+    return nullptr;
+}
+
+// Exposes the ISteamUGC interface 
+ISteamUGC* Steam_Client::GetISteamUGC(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+{
+    // TODO: Implement UGC interface
+    VLOG_DEBUG("GetISteamUGC called");
+    return nullptr;
+}

@@ -19,6 +19,7 @@
 #include <isteamapps002.h>
 #include <isteamapps003.h>
 #include <isteamapps004.h>
+#include <isteamapps005.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to app data
@@ -28,7 +29,8 @@ class Steam_Apps :
     public ISteamApps001,
     public ISteamApps002,
     public ISteamApps003,
-    public ISteamApps004
+    public ISteamApps004,
+    public ISteamApps005
 {
 private:
     // Singleton instance
@@ -88,11 +90,21 @@ public:
 
 	bool GetCurrentBetaName( char *pchName, int cchNameBufferSize ) override; // returns current beta branch name, 'public' is the default branch
 	bool MarkContentCorrupt( bool bMissingFilesOnly ) override; // signal Steam that game files seems corrupt or missing
+	uint32 GetInstalledDepots( AppId_t appID, DepotId_t *pvecDepots, uint32 cMaxDepots ) override; // return installed depots in mount order
+	// Changed from Steam SDK v1.26, backward compatibility
 	uint32 GetInstalledDepots( DepotId_t *pvecDepots, uint32 cMaxDepots ) override; // return installed depots in mount order
 
 	// returns current app install folder for AppID, returns folder name length
 	uint32 GetAppInstallDir( AppId_t appID, char *pchFolder, uint32 cchFolderBufferSize ) override;
 	bool BIsAppInstalled( AppId_t appID ) override;
+	
+	CSteamID GetAppOwner() override; // returns the SteamID of the original owner. If different from current user, it's borrowed
+
+	// Returns the associated launch param if the game is run via steam://run/<appid>//?param1=value1;param2=value2;param3=value3 etc.
+	// Parameter names starting with the character '@' are reserved for internal use and will always return and empty string.
+	// Parameter names starting with an underscore '_' are reserved for steam features -- they can be queried by the game,
+	// but it is advised that you not param names beginning with an underscore for your own features.
+	const char *GetLaunchQueryParam( const char *pchKey ) override;
 
 #ifdef _PS3
 	// Result returned in a RegisterActivationCodeResponse_t callresult
