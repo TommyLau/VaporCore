@@ -186,3 +186,9 @@ uint32 Steam_Apps::GetAppInstallDir( AppId_t appID, char *pchFolder, uint32 cchF
                appID, pchFolder, cchFolderBufferSize);
     return 0;
 }
+
+bool Steam_Apps::BIsAppInstalled( AppId_t appID )
+{
+    VLOG_DEBUG("BIsAppInstalled called - AppID: %u", appID);
+    return false;
+}

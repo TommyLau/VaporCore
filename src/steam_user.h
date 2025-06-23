@@ -21,6 +21,7 @@
 #include <isteamuser012.h>
 #include <isteamuser013.h>
 #include <isteamuser014.h>
+#include <isteamuser016.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing and manipulating a steam account
@@ -33,7 +34,8 @@ class Steam_User :
     public ISteamUser011,
     public ISteamUser012,
     public ISteamUser013,
-    public ISteamUser014
+    public ISteamUser014,
+    public ISteamUser016
 {
 private:
     // Singleton instance
@@ -185,6 +187,14 @@ public:
 
 	// retrieve a finished ticket
 	bool GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket ) override;
+
+	// Trading Card badges data access
+	// if you only have one set of cards, the series will be 1
+	// the user has can have two different badges for a series; the regular (max level 5) and the foil (max level 1)
+	int GetGameBadgeLevel( int nSeries, bool bFoil ) override;
+
+	// gets the Steam Level of the user, as shown on their profile
+	int GetPlayerSteamLevel() override;
 
 #ifdef _PS3
 	// Initiates PS3 Logon request using just PSN ticket.  

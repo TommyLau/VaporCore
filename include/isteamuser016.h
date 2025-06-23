@@ -7,40 +7,17 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef ISTEAMUSER_H
-#define ISTEAMUSER_H
+#ifndef ISTEAMUSER016_H
+#define ISTEAMUSER016_H
 #ifdef _WIN32
 #pragma once
 #endif
-
-#include "isteamclient.h"
-
-// structure that contains client callback data
-// see callbacks documentation for more details
-#if defined( VALVE_CALLBACK_PACK_SMALL )
-#pragma pack( push, 4 )
-#elif defined( VALVE_CALLBACK_PACK_LARGE )
-#pragma pack( push, 8 )
-#else
-#error isteamclient.h must be included
-#endif 
-struct CallbackMsg_t
-{
-	HSteamUser m_hSteamUser;
-	int m_iCallback;
-	uint8 *m_pubParam;
-	int m_cubParam;
-};
-#pragma pack( pop )
-
-// reference to a steam call, to filter results by
-typedef int32 HSteamCall;
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing and manipulating a steam account
 //			associated with one client instance
 //-----------------------------------------------------------------------------
-class ISteamUser
+class ISteamUser016
 {
 public:
 	// returns the HSteamUser this interface represents
@@ -161,14 +138,6 @@ public:
 	// retrieve a finished ticket
 	virtual bool GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket ) = 0;
 
-	// Trading Card badges data access
-	// if you only have one set of cards, the series will be 1
-	// the user has can have two different badges for a series; the regular (max level 5) and the foil (max level 1)
-	virtual int GetGameBadgeLevel( int nSeries, bool bFoil ) = 0;
-
-	// gets the Steam Level of the user, as shown on their profile
-	virtual int GetPlayerSteamLevel() = 0;
-
 #ifdef _PS3
 	// Initiates PS3 Logon request using just PSN ticket.  
 	//
@@ -208,143 +177,6 @@ public:
 
 };
 
-#define STEAMUSER_INTERFACE_VERSION "SteamUser017"
+#define STEAMUSER_INTERFACE_VERSION016 "SteamUser016"
 
-
-// callbacks
-#if defined( VALVE_CALLBACK_PACK_SMALL )
-#pragma pack( push, 4 )
-#elif defined( VALVE_CALLBACK_PACK_LARGE )
-#pragma pack( push, 8 )
-#else
-#error isteamclient.h must be included
-#endif 
-
-//-----------------------------------------------------------------------------
-// Purpose: called when a connections to the Steam back-end has been established
-//			this means the Steam client now has a working connection to the Steam servers
-//			usually this will have occurred before the game has launched, and should
-//			only be seen if the user has dropped connection due to a networking issue
-//			or a Steam server update
-//-----------------------------------------------------------------------------
-struct SteamServersConnected_t
-{
-	enum { k_iCallback = k_iSteamUserCallbacks + 1 };
-};
-
-//-----------------------------------------------------------------------------
-// Purpose: called when a connection attempt has failed
-//			this will occur periodically if the Steam client is not connected, 
-//			and has failed in it's retry to establish a connection
-//-----------------------------------------------------------------------------
-struct SteamServerConnectFailure_t
-{
-	enum { k_iCallback = k_iSteamUserCallbacks + 2 };
-	EResult m_eResult;
-};
-
-
-//-----------------------------------------------------------------------------
-// Purpose: called if the client has lost connection to the Steam servers
-//			real-time services will be disabled until a matching SteamServersConnected_t has been posted
-//-----------------------------------------------------------------------------
-struct SteamServersDisconnected_t
-{
-	enum { k_iCallback = k_iSteamUserCallbacks + 3 };
-	EResult m_eResult;
-};
-
-
-//-----------------------------------------------------------------------------
-// Purpose: Sent by the Steam server to the client telling it to disconnect from the specified game server,
-//			which it may be in the process of or already connected to.
-//			The game client should immediately disconnect upon receiving this message.
-//			This can usually occur if the user doesn't have rights to play on the game server.
-//-----------------------------------------------------------------------------
-struct ClientGameServerDeny_t
-{
-	enum { k_iCallback = k_iSteamUserCallbacks + 13 };
-
-	uint32 m_uAppID;
-	uint32 m_unGameServerIP;
-	uint16 m_usGameServerPort;
-	uint16 m_bSecure;
-	uint32 m_uReason;
-};
-
-
-//-----------------------------------------------------------------------------
-// Purpose: called when the callback system for this client is in an error state (and has flushed pending callbacks)
-//			When getting this message the client should disconnect from Steam, reset any stored Steam state and reconnect.
-//			This usually occurs in the rare event the Steam client has some kind of fatal error.
-//-----------------------------------------------------------------------------
-struct IPCFailure_t
-{
-	enum { k_iCallback = k_iSteamUserCallbacks + 17 };
-	enum EFailureType 
-	{ 
-		k_EFailureFlushedCallbackQueue, 
-		k_EFailurePipeFail,
-	};
-	uint8 m_eFailureType;
-};
-
-
-//-----------------------------------------------------------------------------
-// callback for BeginAuthSession
-//-----------------------------------------------------------------------------
-struct ValidateAuthTicketResponse_t
-{
-	enum { k_iCallback = k_iSteamUserCallbacks + 43 };
-	CSteamID m_SteamID;
-	EAuthSessionResponse m_eAuthSessionResponse;
-};
-
-
-//-----------------------------------------------------------------------------
-// Purpose: called when a user has responded to a microtransaction authorization request
-//-----------------------------------------------------------------------------
-struct MicroTxnAuthorizationResponse_t
-{
-	enum { k_iCallback = k_iSteamUserCallbacks + 52 };
-	
-	uint32 m_unAppID;			// AppID for this microtransaction
-	uint64 m_ulOrderID;			// OrderID provided for the microtransaction
-	uint8 m_bAuthorized;		// if user authorized transaction
-};
-
-
-//-----------------------------------------------------------------------------
-// Purpose: Result from RequestEncryptedAppTicket
-//-----------------------------------------------------------------------------
-struct EncryptedAppTicketResponse_t
-{
-	enum { k_iCallback = k_iSteamUserCallbacks + 54 };
-
-	EResult m_eResult;
-};
-
-//-----------------------------------------------------------------------------
-// callback for GetAuthSessionTicket
-//-----------------------------------------------------------------------------
-struct GetAuthSessionTicketResponse_t
-{
-	enum { k_iCallback = k_iSteamUserCallbacks + 63 };
-	HAuthTicket m_hAuthTicket;
-	EResult m_eResult;
-};
-
-
-//-----------------------------------------------------------------------------
-// Purpose: sent to your game in response to a steam://gamewebcallback/ command
-//-----------------------------------------------------------------------------
-struct GameWebCallback_t
-{
-	enum { k_iCallback = k_iSteamUserCallbacks + 64 };
-	char m_szURL[256];
-};
-
-
-#pragma pack( pop )
-
-#endif // ISTEAMUSER_H
+#endif // ISTEAMUSER016_H

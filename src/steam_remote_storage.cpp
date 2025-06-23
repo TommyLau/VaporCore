@@ -215,6 +215,11 @@ bool Steam_Remote_Storage::GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID
 }
 
 // After download, gets the content of the file
+// Small files can be read all at once by calling this function with an offset of 0 and cubDataToRead equal to the size of the file.
+// Larger files can be read in chunks to reduce memory usage (since both sides of the IPC client and the game itself must allocate
+// enough memory for each chunk).  Once the last byte is read, the file is implicitly closed and further calls to UGCRead will fail
+// unless UGCDownload is called again.
+// For especially large files (anything over 100MB) it is a requirement that the file is read in chunks.
 int32 Steam_Remote_Storage::UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead, uint32 cOffset )
 {
     VLOG_DEBUG("UGCRead called - Content: %d, DataSize: %d, Offset: %d", hContent, cubDataToRead, cOffset);
@@ -317,6 +322,16 @@ SteamAPICall_t Steam_Remote_Storage::CommitPublishedFileUpdate( PublishedFileUpd
     return 0;
 }
 
+// Gets published file details for the given publishedfileid.  If unMaxSecondsOld is greater than 0,
+// cached data may be returned, depending on how long ago it was cached.  A value of 0 will force a refresh.
+// A value of k_WorkshopForceLoadPublishedFileDetailsFromCache will use cached data if it exists, no matter how old it is.
+SteamAPICall_t Steam_Remote_Storage::GetPublishedFileDetails( PublishedFileId_t unPublishedFileId, uint32 unMaxSecondsOld )
+{
+    VLOG_DEBUG("GetPublishedFileDetails called - FileId: %d, MaxSecondsOld: %u", unPublishedFileId, unMaxSecondsOld);
+    return 0;
+}
+
+// Changed from Steam SDK v1.25, backward compatibility
 SteamAPICall_t Steam_Remote_Storage::GetPublishedFileDetails( PublishedFileId_t unPublishedFileId )
 {
     VLOG_DEBUG("GetPublishedFileDetails called - FileId: %d", unPublishedFileId);

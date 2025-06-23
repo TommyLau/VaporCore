@@ -235,3 +235,10 @@ bool Steam_Utils::GetEnteredGamepadTextInput(char *pchText, uint32 cchText)
     }
     return false;
 }
+
+// returns the language the steam client is running in, you probably want ISteamApps::GetCurrentGameLanguage instead, this is for very special usage cases
+const char *Steam_Utils::GetSteamUILanguage()
+{
+    VLOG_DEBUG("GetSteamUILanguage called");
+    return "english";
+}

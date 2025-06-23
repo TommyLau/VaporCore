@@ -315,3 +315,19 @@ bool Steam_User::GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *
     VLOG_DEBUG("GetEncryptedAppTicket called - Ticket: %s, MaxTicket: %d, pcbTicket: %d", pTicket, cbMaxTicket, pcbTicket);
     return false;
 }
+
+// Trading Card badges data access
+// if you only have one set of cards, the series will be 1
+// the user has can have two different badges for a series; the regular (max level 5) and the foil (max level 1)
+int Steam_User::GetGameBadgeLevel( int nSeries, bool bFoil )
+{
+    VLOG_DEBUG("GetGameBadgeLevel called - Series: %d, Foil: %d", nSeries, bFoil);
+    return 0;
+}
+
+// gets the Steam Level of the user, as shown on their profile
+int Steam_User::GetPlayerSteamLevel()
+{
+    VLOG_DEBUG("GetPlayerSteamLevel called");
+    return 0;
+}

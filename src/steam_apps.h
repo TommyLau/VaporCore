@@ -92,6 +92,7 @@ public:
 
 	// returns current app install folder for AppID, returns folder name length
 	uint32 GetAppInstallDir( AppId_t appID, char *pchFolder, uint32 cchFolderBufferSize ) override;
+	bool BIsAppInstalled( AppId_t appID ) override;
 
 #ifdef _PS3
 	// Result returned in a RegisterActivationCodeResponse_t callresult

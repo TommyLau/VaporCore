@@ -20,6 +20,7 @@
 #include <isteamremotestorage005.h>
 #include <isteamremotestorage006.h>
 #include <isteamremotestorage008.h>
+#include <isteamremotestorage010.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing, reading and writing files stored remotely 
@@ -31,7 +32,8 @@ class Steam_Remote_Storage :
     public ISteamRemoteStorage004,
     public ISteamRemoteStorage005,
     public ISteamRemoteStorage006,
-    public ISteamRemoteStorage008
+    public ISteamRemoteStorage008,
+    public ISteamRemoteStorage010
 {
 private:
     // Singleton instance
@@ -45,14 +47,14 @@ public:
     static Steam_Remote_Storage* GetInstance();
     static void ReleaseInstance();
 
-    // NOTE
-    //
-    // Filenames are case-insensitive, and will be converted to lowercase automatically.
-    // So "foo.bar" and "Foo.bar" are the same file, and if you write "Foo.bar" then
-    // iterate the files, the filename returned will be "foo.bar".
-    //
+	// NOTE
+	//
+	// Filenames are case-insensitive, and will be converted to lowercase automatically.
+	// So "foo.bar" and "Foo.bar" are the same file, and if you write "Foo.bar" then
+	// iterate the files, the filename returned will be "foo.bar".
+	//
 
-    // file operations
+	// file operations
     bool FileWrite( const char *pchFile, const void *pvData, int32 cubData ) override;
     int32 FileRead( const char *pchFile, void *pvData, int32 cubDataToRead ) override;
     bool FileForget( const char *pchFile ) override;
@@ -60,7 +62,7 @@ public:
     SteamAPICall_t FileShare( const char *pchFile ) override;
     bool SetSyncPlatforms( const char *pchFile, ERemoteStoragePlatform eRemoteStoragePlatform ) override;
 
-    // file operations that cause network IO
+	// file operations that cause network IO
     UGCFileWriteStreamHandle_t FileWriteStreamOpen( const char *pchFile ) override;
     bool FileWriteStreamWriteChunk( UGCFileWriteStreamHandle_t writeHandle, const void *pvData, int32 cubData ) override;
     bool FileWriteStreamClose( UGCFileWriteStreamHandle_t writeHandle ) override;
@@ -73,21 +75,21 @@ public:
     int64 GetFileTimestamp( const char *pchFile ) override;
     ERemoteStoragePlatform GetSyncPlatforms( const char *pchFile ) override;
 
-    // iteration
+	// iteration
     int32 GetFileCount() override;
     const char *GetFileNameAndSize( int iFile, int32 *pnFileSizeInBytes ) override;
 
-    // configuration management
+	// configuration management
     bool GetQuota( int32 *pnTotalBytes, int32 *puAvailableBytes ) override;
     bool IsCloudEnabledForAccount() override;
     bool IsCloudEnabledForApp() override;
     void SetCloudEnabledForApp( bool bEnabled ) override;
 
-    // user generated content
+	// user generated content
 
-    // Downloads a UGC file.  A priority value of 0 will download the file immediately,
-    // otherwise it will wait to download the file until all downloads with a lower priority
-    // value are completed.  Downloads with equal priority will occur simultaneously.
+	// Downloads a UGC file.  A priority value of 0 will download the file immediately,
+	// otherwise it will wait to download the file until all downloads with a lower priority
+	// value are completed.  Downloads with equal priority will occur simultaneously.
     SteamAPICall_t UGCDownload( UGCHandle_t hContent, uint32 unPriority ) override;
     // Changed from Steam SDK v1.22, backward compatibility
     SteamAPICall_t UGCDownload( UGCHandle_t hContent ) override;
@@ -98,7 +100,13 @@ public:
 
 	// Gets metadata for a file after it has been downloaded. This is the same metadata given in the RemoteStorageDownloadUGCResult_t call result
     bool GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, char **ppchName, int32 *pnFileSizeInBytes, CSteamID *pSteamIDOwner ) override;
-	// After download, gets the content of the file
+
+	// After download, gets the content of the file.  
+	// Small files can be read all at once by calling this function with an offset of 0 and cubDataToRead equal to the size of the file.
+	// Larger files can be read in chunks to reduce memory usage (since both sides of the IPC client and the game itself must allocate
+	// enough memory for each chunk).  Once the last byte is read, the file is implicitly closed and further calls to UGCRead will fail
+	// unless UGCDownload is called again.
+	// For especially large files (anything over 100MB) it is a requirement that the file is read in chunks.
 	int32 UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead, uint32 cOffset ) override;
     // Changed from Steam SDK v1.22, backward compatibility
     int32 UGCRead( UGCHandle_t hContent, void *pvData, int32 cubDataToRead ) override;
@@ -107,25 +115,25 @@ public:
     int32 GetCachedUGCCount() override;
     UGCHandle_t GetCachedUGCHandle( int32 iCachedContent ) override;
 
-    // The following functions are only necessary on the Playstation 3. On PC & Mac, the Steam client will handle these operations for you
-    // On Playstation 3, the game controls which files are stored in the cloud, via FilePersist, FileFetch, and FileForget.
-			
+	// The following functions are only necessary on the Playstation 3. On PC & Mac, the Steam client will handle these operations for you
+	// On Playstation 3, the game controls which files are stored in the cloud, via FilePersist, FileFetch, and FileForget.
+
 #if defined(_PS3) || defined(_SERVER)
-    // Connect to Steam and get a list of files in the Cloud - results in a RemoteStorageAppSyncStatusCheck_t callback
+	// Connect to Steam and get a list of files in the Cloud - results in a RemoteStorageAppSyncStatusCheck_t callback
     void GetFileListFromServer() override;
-    // Indicate this file should be downloaded in the next sync
+	// Indicate this file should be downloaded in the next sync
     bool FileFetch( const char *pchFile ) override;
-    // Indicate this file should be persisted in the next sync
+	// Indicate this file should be persisted in the next sync
     bool FilePersist( const char *pchFile ) override;
-    // Pull any requested files down from the Cloud - results in a RemoteStorageAppSyncedClient_t callback
+	// Pull any requested files down from the Cloud - results in a RemoteStorageAppSyncedClient_t callback
     bool SynchronizeToClient() override;
-    // Upload any requested files to the Cloud - results in a RemoteStorageAppSyncedServer_t callback
+	// Upload any requested files to the Cloud - results in a RemoteStorageAppSyncedServer_t callback
     bool SynchronizeToServer() override;
-    // Reset any fetch/persist/etc requests
+	// Reset any fetch/persist/etc requests
     bool ResetFileRequestState() override;
 #endif
 
-    // publishing UGC
+	// publishing UGC
     // Removed from Steam SDK v1.18, backward compatibility
     SteamAPICall_t PublishFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags ) override;
     // Removed from Steam SDK v1.18, backward compatibility
@@ -141,6 +149,11 @@ public:
 	bool UpdatePublishedFileVisibility( PublishedFileUpdateHandle_t updateHandle, ERemoteStoragePublishedFileVisibility eVisibility ) override;
 	bool UpdatePublishedFileTags( PublishedFileUpdateHandle_t updateHandle, SteamParamStringArray_t *pTags ) override;
 	SteamAPICall_t CommitPublishedFileUpdate( PublishedFileUpdateHandle_t updateHandle ) override;
+	// Gets published file details for the given publishedfileid.  If unMaxSecondsOld is greater than 0,
+	// cached data may be returned, depending on how long ago it was cached.  A value of 0 will force a refresh.
+	// A value of k_WorkshopForceLoadPublishedFileDetailsFromCache will use cached data if it exists, no matter how old it is.
+	SteamAPICall_t GetPublishedFileDetails( PublishedFileId_t unPublishedFileId, uint32 unMaxSecondsOld ) override;
+    // Changed from Steam SDK v1.25, backward compatibility
     SteamAPICall_t GetPublishedFileDetails( PublishedFileId_t unPublishedFileId ) override;
     SteamAPICall_t DeletePublishedFile( PublishedFileId_t unPublishedFileId ) override;
 	// enumerate the files that the current user published with this app
@@ -158,7 +171,7 @@ public:
     SteamAPICall_t PublishVideo( const char *pchVideoURL, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags ) override;
     SteamAPICall_t SetUserPublishedFileAction( PublishedFileId_t unPublishedFileId, EWorkshopFileAction eAction ) override;
     SteamAPICall_t EnumeratePublishedFilesByUserAction( EWorkshopFileAction eAction, uint32 unStartIndex ) override;
-    // this method enumerates the public view of workshop files
+	// this method enumerates the public view of workshop files
     SteamAPICall_t EnumeratePublishedWorkshopFiles( EWorkshopEnumerationType eEnumerationType, uint32 unStartIndex, uint32 unCount, uint32 unDays, SteamParamStringArray_t *pTags, SteamParamStringArray_t *pUserTags ) override;
 
 	SteamAPICall_t UGCDownloadToLocation( UGCHandle_t hContent, const char *pchLocation, uint32 unPriority ) override;
