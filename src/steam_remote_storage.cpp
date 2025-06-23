@@ -88,6 +88,31 @@ bool Steam_Remote_Storage::SetSyncPlatforms( const char *pchFile, ERemoteStorage
     return false;
 }
 
+// file operations that cause network IO
+UGCFileWriteStreamHandle_t Steam_Remote_Storage::FileWriteStreamOpen( const char *pchFile )
+{
+    VLOG_DEBUG("FileWriteStreamOpen called - File: %s", pchFile);
+    return 0;
+}
+
+bool Steam_Remote_Storage::FileWriteStreamWriteChunk( UGCFileWriteStreamHandle_t writeHandle, const void *pvData, int32 cubData )
+{
+    VLOG_DEBUG("FileWriteStreamWriteChunk called - Handle: %llu, DataSize: %d", writeHandle, cubData);
+    return false;
+}
+
+bool Steam_Remote_Storage::FileWriteStreamClose( UGCFileWriteStreamHandle_t writeHandle )
+{
+    VLOG_DEBUG("FileWriteStreamClose called - Handle: %llu", writeHandle);
+    return false;
+}
+
+bool Steam_Remote_Storage::FileWriteStreamCancel( UGCFileWriteStreamHandle_t writeHandle )
+{
+    VLOG_DEBUG("FileWriteStreamCancel called - Handle: %llu", writeHandle);
+    return false;
+}
+
 // file information
 bool Steam_Remote_Storage::FileExists( const char *pchFile )
 {
@@ -342,6 +367,14 @@ SteamAPICall_t Steam_Remote_Storage::EnumerateUserSharedWorkshopFiles( CSteamID 
     return 0;
 }
 
+SteamAPICall_t Steam_Remote_Storage::PublishVideo( EWorkshopVideoProvider eVideoProvider, const char *pchVideoAccount, const char *pchVideoIdentifier, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags )
+{
+    VLOG_DEBUG("PublishVideo called - Provider: %d, Account: %s, Identifier: %s, PreviewFile: %s, AppId: %d, Title: %s", 
+               eVideoProvider, pchVideoAccount, pchVideoIdentifier, pchPreviewFile, nConsumerAppId, pchTitle);
+    return 0;
+}
+
+// Changed from Steam SDK v1.20, backward compatibility
 SteamAPICall_t Steam_Remote_Storage::PublishVideo( const char *pchVideoURL, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags )
 {
     VLOG_DEBUG("PublishVideo called - URL: %s, PreviewFile: %s, AppId: %d, Title: %s", pchVideoURL, pchPreviewFile, nConsumerAppId, pchTitle);

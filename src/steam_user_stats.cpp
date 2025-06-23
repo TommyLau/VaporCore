@@ -25,7 +25,26 @@ Steam_User_Stats::~Steam_User_Stats()
     VLOG_INFO("Steam_User_Stats destructor called");
 }
 
-// Ask the server to send down this user's data and achievements for nGameID
+// Helper methods
+Steam_User_Stats* Steam_User_Stats::GetInstance()
+{
+    if (!s_pInstance)
+    {
+        s_pInstance = new Steam_User_Stats();
+    }
+    return s_pInstance;
+}
+
+void Steam_User_Stats::ReleaseInstance()
+{
+    if (s_pInstance)
+    {
+        delete s_pInstance;
+        s_pInstance = nullptr;
+    }
+}
+
+// Ask the server to send down this user's data and achievements for this game
 bool Steam_User_Stats::RequestCurrentStats( )
 {
     VLOG_DEBUG("RequestCurrentStats called");
@@ -109,17 +128,21 @@ bool Steam_User_Stats::StoreStats( )
     return true;
 }
 
-// Gets the icon of the achievement, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set. 
-// A return value of 0 may indicate we are still fetching data, and you can wait for the UserAchievementIconReady_t callback
-// which will notify you when the bits are actually read.  If the callback still returns zero, then there is no image set
-// and there never will be.
+// Achievement / GroupAchievement metadata
+
+// Gets the icon of the achievement, which is a handle to be used in ISteamUtils::GetImageRGBA(), or 0 if none set. 
+// A return value of 0 may indicate we are still fetching data, and you can wait for the UserAchievementIconFetched_t callback
+// which will notify you when the bits are ready. If the callback still returns zero, then there is no image set for the
+// specified achievement.
 int Steam_User_Stats::GetAchievementIcon( const char *pchName )
 {
     VLOG_DEBUG("GetAchievementIcon called - Name: %s", pchName ? pchName : "null");
     return 0;
 }
 
-// Get general attributes (display name / text, etc) for an Achievement
+// Get general attributes for an achievement. Accepts the following keys:
+// - "name" and "desc" for retrieving the localized achievement name and description (returned in UTF8)
+// - "hidden" for retrieving if an achievement is hidden (returns "0" when not hidden, "1" when hidden)
 const char *Steam_User_Stats::GetAchievementDisplayAttribute( const char *pchName, const char *pchKey )
 {
     VLOG_DEBUG("GetAchievementDisplayAttribute called - Name: %s, Key: %s", 
@@ -134,6 +157,21 @@ bool Steam_User_Stats::IndicateAchievementProgress( const char *pchName, uint32 
     VLOG_DEBUG("IndicateAchievementProgress called - Name: %s, Progress: %u/%u", 
                pchName ? pchName : "null", nCurProgress, nMaxProgress);
     return true;
+}
+
+// Used for iterating achievements. In general games should not need these functions because they should have a
+// list of existing achievements compiled into them
+uint32 Steam_User_Stats::GetNumAchievements()
+{
+    VLOG_DEBUG("GetNumAchievements called");
+    return 0;
+}
+
+// Get achievement name iAchievement in [0,GetNumAchievements)
+const char* Steam_User_Stats::GetAchievementName(uint32 iAchievement)
+{
+    VLOG_DEBUG("GetAchievementName called - Achievement: %u", iAchievement);
+    return "";
 }
 
 // Friends stats & achievements
@@ -228,7 +266,6 @@ ELeaderboardDisplayType Steam_User_Stats::GetLeaderboardDisplayType( SteamLeader
     return ELeaderboardDisplayType::k_ELeaderboardDisplayTypeNone;
 }
 
-
 // Asks the Steam back-end for a set of rows in the leaderboard.
 // This call is asynchronous, with the result returned in LeaderboardScoresDownloaded_t
 // LeaderboardScoresDownloaded_t will contain a handle to pull the results from GetDownloadedLeaderboardEntries() (below)
@@ -276,14 +313,14 @@ bool Steam_User_Stats::GetDownloadedLeaderboardEntry( SteamLeaderboardEntries_t 
 // This call is asynchronous, with the result returned in LeaderboardScoreUploaded_t
 // Details are extra game-defined information regarding how the user got that score
 // pScoreDetails points to an array of int32's, cScoreDetailsCount is the number of int32's in the list
-// Changed from Steam SDK v1.05, backward compatibility
-SteamAPICall_t Steam_User_Stats::UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, int32 nScore, int32 *pScoreDetails, int cScoreDetailsCount )
+SteamAPICall_t Steam_User_Stats::UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardUploadScoreMethod eLeaderboardUploadScoreMethod, int32 nScore, const int32 *pScoreDetails, int cScoreDetailsCount )
 {
     VLOG_DEBUG("UploadLeaderboardScore called - Leaderboard: %u, Score: %d, Details: %d", hSteamLeaderboard, nScore, cScoreDetailsCount);
     return 0;
 }
 
-SteamAPICall_t Steam_User_Stats::UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardUploadScoreMethod eLeaderboardUploadScoreMethod, int32 nScore, const int32 *pScoreDetails, int cScoreDetailsCount )
+// Changed from Steam SDK v1.05, backward compatibility
+SteamAPICall_t Steam_User_Stats::UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, int32 nScore, int32 *pScoreDetails, int cScoreDetailsCount )
 {
     VLOG_DEBUG("UploadLeaderboardScore called - Leaderboard: %u, Score: %d, Details: %d", hSteamLeaderboard, nScore, cScoreDetailsCount);
     return 0;
@@ -378,23 +415,3 @@ int32 Steam_User_Stats::GetGlobalStatHistory( const char *pchStatName, double *p
     VLOG_DEBUG("GetGlobalStatHistory called");
     return 0;
 }
-
-// Helper methods
-Steam_User_Stats* Steam_User_Stats::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new Steam_User_Stats();
-    }
-    return s_pInstance;
-}
-
-void Steam_User_Stats::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
-}
-

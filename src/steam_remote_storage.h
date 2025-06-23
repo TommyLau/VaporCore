@@ -17,6 +17,7 @@
 #include <isteamremotestorage002.h>
 #include <isteamremotestorage004.h>
 #include <isteamremotestorage005.h>
+#include <isteamremotestorage006.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing, reading and writing files stored remotely 
@@ -26,7 +27,8 @@ class Steam_Remote_Storage :
     public ISteamRemoteStorage,
     public ISteamRemoteStorage002,
     public ISteamRemoteStorage004,
-    public ISteamRemoteStorage005
+    public ISteamRemoteStorage005,
+    public ISteamRemoteStorage006
 {
 private:
     // Singleton instance
@@ -54,6 +56,12 @@ public:
     bool FileDelete( const char *pchFile ) override;
     SteamAPICall_t FileShare( const char *pchFile ) override;
     bool SetSyncPlatforms( const char *pchFile, ERemoteStoragePlatform eRemoteStoragePlatform ) override;
+
+    // file operations that cause network IO
+    UGCFileWriteStreamHandle_t FileWriteStreamOpen( const char *pchFile ) override;
+    bool FileWriteStreamWriteChunk( UGCFileWriteStreamHandle_t writeHandle, const void *pvData, int32 cubData ) override;
+    bool FileWriteStreamClose( UGCFileWriteStreamHandle_t writeHandle ) override;
+    bool FileWriteStreamCancel( UGCFileWriteStreamHandle_t writeHandle ) override;
 
 	// file information
     bool FileExists( const char *pchFile ) override;
@@ -135,6 +143,8 @@ public:
     SteamAPICall_t UpdateUserPublishedItemVote( PublishedFileId_t unPublishedFileId, bool bVoteUp ) override;
     SteamAPICall_t GetUserPublishedItemVoteDetails( PublishedFileId_t unPublishedFileId ) override;
     SteamAPICall_t EnumerateUserSharedWorkshopFiles( CSteamID steamId, uint32 unStartIndex, SteamParamStringArray_t *pRequiredTags, SteamParamStringArray_t *pExcludedTags ) override;
+	SteamAPICall_t PublishVideo( EWorkshopVideoProvider eVideoProvider, const char *pchVideoAccount, const char *pchVideoIdentifier, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags ) override;
+    // Changed from Steam SDK v1.20, backward compatibility
     SteamAPICall_t PublishVideo( const char *pchVideoURL, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags ) override;
     SteamAPICall_t SetUserPublishedFileAction( PublishedFileId_t unPublishedFileId, EWorkshopFileAction eAction ) override;
     SteamAPICall_t EnumeratePublishedFilesByUserAction( EWorkshopFileAction eAction, uint32 unStartIndex ) override;

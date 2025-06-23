@@ -28,7 +28,7 @@ public:
 	virtual const char *GetPersonaName() = 0;
 	
 	// sets the player name, stores it on the server and publishes the changes to all friends who are online
-	virtual void SetPersonaName( const char *pchPersonaName ) = 0;
+	virtual void DEPRECATED_SetPersonaName( const char *pchPersonaName ) = 0;
 
 	// gets the status of the current user
 	virtual EPersonaState GetPersonaState() = 0;

@@ -65,8 +65,21 @@ const char *Steam_Friends::GetPersonaName()
     return "VaporCore User";
 }
 
-// sets the player name, stores it on the server and publishes the changes to all friends who are online
-void Steam_Friends::SetPersonaName( const char *pchPersonaName )
+// Sets the player name, stores it on the server and publishes the changes to all friends who are online.
+// Changes take place locally immediately, and a PersonaStateChange_t is posted, presuming success.
+//
+// The final results are available through the return value SteamAPICall_t, using SetPersonaNameResponse_t.
+//
+// If the name change fails to happen on the server, then an additional global PersonaStateChange_t will be posted
+// to change the name back, in addition to the SetPersonaNameResponse_t callback.
+SteamAPICall_t Steam_Friends::SetPersonaName( const char *pchPersonaName )
+{
+    VLOG_DEBUG("SetPersonaName called - Name: %s", pchPersonaName ? pchPersonaName : "null");
+    return 0;
+}
+
+// Changed from Steam SDK v1.20, backward compatibility
+void Steam_Friends::DEPRECATED_SetPersonaName( const char *pchPersonaName )
 {
     VLOG_DEBUG("SetPersonaName called - Name: %s", pchPersonaName ? pchPersonaName : "null");
 }
@@ -260,6 +273,12 @@ void Steam_Friends::ActivateGameOverlayToWebPage( const char *pchURL )
 }
 
 // activates game overlay to store page for app
+void Steam_Friends::ActivateGameOverlayToStore( AppId_t nAppID, EOverlayToStoreFlag eFlag )
+{
+    VLOG_DEBUG("ActivateGameOverlayToStore called - AppID: %d, Flag: %d", nAppID, eFlag);
+}
+
+// Changed from Steam SDK v1.20, backward compatibility
 void Steam_Friends::ActivateGameOverlayToStore( AppId_t nAppID )
 {
     VLOG_DEBUG("ActivateGameOverlayToStore called - AppID: %d", nAppID);

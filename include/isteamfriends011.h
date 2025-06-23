@@ -7,8 +7,8 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef ISTEAMFRIENDS009_H
-#define ISTEAMFRIENDS009_H
+#ifndef ISTEAMFRIENDS011_H
+#define ISTEAMFRIENDS011_H
 #ifdef _WIN32
 #pragma once
 #endif
@@ -17,7 +17,7 @@
 // Purpose: interface to accessing information about individual users,
 //			that can be a friend, in a group, on a game server or in a lobby with the local user
 //-----------------------------------------------------------------------------
-class ISteamFriends009
+class ISteamFriends011
 {
 public:
 	// returns the local players name - guaranteed to not be NULL.
@@ -71,6 +71,10 @@ public:
 	virtual CSteamID GetClanByIndex( int iClan ) = 0;
 	virtual const char *GetClanName( CSteamID steamIDClan ) = 0;
 	virtual const char *GetClanTag( CSteamID steamIDClan ) = 0;
+	// returns the most recent information we have about what's happening in a clan
+	virtual bool GetClanActivityCounts( CSteamID steamIDClan, int *pnOnline, int *pnInGame, int *pnChatting ) = 0;
+	// for clans a user is a member of, they will have reasonably up-to-date information, but for others you'll have to download the info to have the latest
+	virtual SteamAPICall_t DownloadClanActivityCounts( CSteamID *psteamIDClans, int cClansToRequest ) = 0;
 
 	// iterators for getting users in a chat room, lobby, game server or clan
 	// note that large clans that cannot be iterated by the local user
@@ -86,13 +90,14 @@ public:
 	virtual void SetInGameVoiceSpeaking( CSteamID steamIDUser, bool bSpeaking ) = 0;
 
 	// activates the game overlay, with an optional dialog to open 
-	// valid options are "Friends", "Community", "Players", "Settings", "LobbyInvite", "OfficialGameGroup", "Stats", "Achievements"
+	// valid options are "Friends", "Community", "Players", "Settings", "OfficialGameGroup", "Stats", "Achievements"
 	virtual void ActivateGameOverlay( const char *pchDialog ) = 0;
 
 	// activates game overlay to a specific place
 	// valid options are
 	//		"steamid" - opens the overlay web browser to the specified user or groups profile
 	//		"chat" - opens a chat window to the specified user, or joins the group chat 
+	//		"jointrade" - opens a window to a Steam Trading session that was started with the ISteamEconomy/StartTrade Web API
 	//		"stats" - opens the overlay web browser to the specified user's stats
 	//		"achievements" - opens the overlay web browser to the specified user's achievements
 	virtual void ActivateGameOverlayToUser( const char *pchDialog, CSteamID steamID ) = 0;
@@ -109,7 +114,6 @@ public:
 	virtual void SetPlayedWith( CSteamID steamIDUserPlayedWith ) = 0;
 
 	// activates game overlay to open the invite dialog. Invitations will be sent for the provided lobby.
-	// You can also use ActivateGameOverlay( "LobbyInvite" ) to allow the user to create invitations for their current public lobby.
 	virtual void ActivateGameOverlayInviteDialog( CSteamID steamIDLobby ) = 0;
 
 	// gets the small (32x32) avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
@@ -165,6 +169,8 @@ public:
 	virtual const char *GetFriendRichPresence( CSteamID steamIDFriend, const char *pchKey ) = 0;
 	virtual int GetFriendRichPresenceKeyCount( CSteamID steamIDFriend ) = 0;
 	virtual const char *GetFriendRichPresenceKeyByIndex( CSteamID steamIDFriend, int iKey ) = 0;
+	// Requests rich presence for a specific user.
+	virtual void RequestFriendRichPresence( CSteamID steamIDFriend ) = 0;
 
 	// rich invite support
 	// if the target accepts the invite, the pchConnectString gets added to the command-line for launching the game
@@ -179,8 +185,36 @@ public:
 	virtual CSteamID GetCoplayFriend( int iCoplayFriend ) = 0;
 	virtual int GetFriendCoplayTime( CSteamID steamIDFriend ) = 0;
 	virtual AppId_t GetFriendCoplayGame( CSteamID steamIDFriend ) = 0;
+
+	// chat interface for games
+	// this allows in-game access to group (clan) chats from in the game
+	// the behavior is somewhat sophisticated, because the user may or may not be already in the group chat from outside the game or in the overlay
+	// use ActivateGameOverlayToUser( "chat", steamIDClan ) to open the in-game overlay version of the chat
+	virtual SteamAPICall_t JoinClanChatRoom( CSteamID steamIDClan ) = 0;
+	virtual bool LeaveClanChatRoom( CSteamID steamIDClan ) = 0;
+	virtual int GetClanChatMemberCount( CSteamID steamIDClan ) = 0;
+	virtual CSteamID GetChatMemberByIndex( CSteamID steamIDClan, int iUser ) = 0;
+	virtual bool SendClanChatMessage( CSteamID steamIDClanChat, const char *pchText ) = 0;
+	virtual int GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *, CSteamID * ) = 0;
+	virtual bool IsClanChatAdmin( CSteamID steamIDClanChat, CSteamID steamIDUser ) = 0;
+
+	// interact with the Steam (game overlay / desktop)
+	virtual bool IsClanChatWindowOpenInSteam( CSteamID steamIDClanChat ) = 0;
+	virtual bool OpenClanChatWindowInSteam( CSteamID steamIDClanChat ) = 0;
+	virtual bool CloseClanChatWindowInSteam( CSteamID steamIDClanChat ) = 0;
+
+	// peer-to-peer chat interception
+	// this is so you can show P2P chats inline in the game
+	virtual bool SetListenForFriendsMessages( bool bInterceptEnabled ) = 0;
+	virtual bool ReplyToFriendMessage( CSteamID steamIDFriend, const char *pchMsgToSend ) = 0;
+	virtual int GetFriendMessage( CSteamID steamIDFriend, int iMessageID, void *pvData, int cubData, EChatEntryType *peChatEntryType ) = 0;
+
+	// following apis
+	virtual SteamAPICall_t GetFollowerCount( CSteamID steamID ) = 0;
+	virtual SteamAPICall_t IsFollowing( CSteamID steamID ) = 0;
+	virtual SteamAPICall_t EnumerateFollowingList( uint32 unStartIndex ) = 0;
 };
 
-#define STEAMFRIENDS_INTERFACE_VERSION009 "SteamFriends009"
+#define STEAMFRIENDS_INTERFACE_VERSION011 "SteamFriends011"
 
-#endif // ISTEAMFRIENDS009_H
+#endif // ISTEAMFRIENDS011_H

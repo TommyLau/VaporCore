@@ -20,6 +20,7 @@
 #include <isteamfriends006.h>
 #include <isteamfriends007.h>
 #include <isteamfriends009.h>
+#include <isteamfriends011.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to accessing information about individual users,
@@ -32,7 +33,8 @@ class Steam_Friends :
 	public ISteamFriends005,
 	public ISteamFriends006,
 	public ISteamFriends007,
-	public ISteamFriends009
+	public ISteamFriends009,
+	public ISteamFriends011
 {
 private:
     // Singleton instance
@@ -53,8 +55,16 @@ public:
 	// off; it will eventually be free'd or re-allocated
 	const char *GetPersonaName() override;
 	
-	// sets the player name, stores it on the server and publishes the changes to all friends who are online
-	void SetPersonaName( const char *pchPersonaName ) override;
+	// Sets the player name, stores it on the server and publishes the changes to all friends who are online.
+	// Changes take place locally immediately, and a PersonaStateChange_t is posted, presuming success.
+	//
+	// The final results are available through the return value SteamAPICall_t, using SetPersonaNameResponse_t.
+	//
+	// If the name change fails to happen on the server, then an additional global PersonaStateChange_t will be posted
+	// to change the name back, in addition to the SetPersonaNameResponse_t callback.
+	SteamAPICall_t SetPersonaName( const char *pchPersonaName ) override;
+	// Changed from Steam SDK v1.20, backward compatibility
+	void DEPRECATED_SetPersonaName( const char *pchPersonaName ) override;
 
 	// gets the status of the current user
 	EPersonaState GetPersonaState() override;
@@ -141,6 +151,8 @@ public:
 	void ActivateGameOverlayToWebPage( const char *pchURL ) override;
 
 	// activates game overlay to store page for app
+	void ActivateGameOverlayToStore( AppId_t nAppID, EOverlayToStoreFlag eFlag ) override;
+	// Changed from Steam SDK v1.20, backward compatibility
 	void ActivateGameOverlayToStore( AppId_t nAppID ) override;
 
 	// Mark a target user as 'played with'. This is a client-side only feature that requires that the calling user is 
