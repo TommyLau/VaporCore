@@ -25,9 +25,17 @@ class Steam_Utils :
 	public ISteamUtils002,
 	public ISteamUtils004
 {
+private:
+    // Singleton instance
+    static Steam_Utils* s_pInstance;
+
 public:
     Steam_Utils();
     ~Steam_Utils();
+
+    // Helper methods
+    static Steam_Utils* GetInstance();
+    static void ReleaseInstance();
 
 	// return the number of seconds since the user 
 	uint32 GetSecondsSinceAppActive() override;
@@ -63,7 +71,7 @@ public:
 	// Sets the position where the overlay instance for the currently calling game should show notifications.
 	// This position is per-game and if this function is called from outside of a game context it will do nothing.
 	void SetOverlayNotificationPosition( ENotificationPosition eNotificationPosition ) override;
-	
+
 	// API asynchronous call results
 	// can be used directly, but more commonly used via the callback dispatch API (see steam_api.h)
 	bool IsAPICallCompleted( SteamAPICall_t hSteamAPICall, bool *pbFailed ) override;
@@ -123,13 +131,12 @@ public:
 	void SetPSNGameBootInviteStrings( const char *pchSubject, const char *pchBody ) override;
 #endif
 
-    // Helper methods
-    static Steam_Utils* GetInstance();
-    static void ReleaseInstance();
+	// Activates the Big Picture text input dialog which only supports gamepad input
+	bool ShowGamepadTextInput( EGamepadTextInputMode eInputMode, EGamepadTextInputLineMode eLineInputMode, const char *pchDescription, uint32 unCharMax ) override;
 
-private:
-    // Singleton instance
-    static Steam_Utils* s_pInstance;
+	// Returns previously entered text & length
+	uint32 GetEnteredGamepadTextLength() override;
+	bool GetEnteredGamepadTextInput( char *pchText, uint32 cchText ) override;
 };
 
 #endif // VAPORCORE_STEAM_UTILS_H

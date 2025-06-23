@@ -26,6 +26,25 @@ Steam_Utils::~Steam_Utils()
     VLOG_INFO("Steam_Utils destructor called");
 }
 
+// Helper methods
+Steam_Utils* Steam_Utils::GetInstance()
+{
+    if (!s_pInstance)
+    {
+        s_pInstance = new Steam_Utils();
+    }
+    return s_pInstance;
+}
+
+void Steam_Utils::ReleaseInstance()
+{
+    if (s_pInstance)
+    {
+        delete s_pInstance;
+        s_pInstance = nullptr;
+    }
+}
+
 // return the number of seconds since the user 
 uint32 Steam_Utils::GetSecondsSinceAppActive()
 {
@@ -178,29 +197,41 @@ bool Steam_Utils::BOverlayNeedsPresent()
     return false;
 }
 
-// Asynchronous call to check if file is signed, result is returned in CheckFileSignature_t
+// Asynchronous call to check if an executable file has been signed using the public key set on the signing tab
+// of the partner site, for example to refuse to load modified executable files.  
+// The result is returned in CheckFileSignature_t.
+//   k_ECheckFileSignatureNoSignaturesFoundForThisApp - This app has not been configured on the signing tab of the partner site to enable this function.
+//   k_ECheckFileSignatureNoSignaturesFoundForThisFile - This file is not listed on the signing tab for the partner site.
+//   k_ECheckFileSignatureFileNotFound - The file does not exist on disk.
+//   k_ECheckFileSignatureInvalidSignature - The file exists, and the signing tab has been set for this file, but the file is either not signed or the signature does not match.
+//   k_ECheckFileSignatureValidSignature - The file is signed and the signature is valid.
 SteamAPICall_t Steam_Utils::CheckFileSignature( const char *szFileName )
 {
     VLOG_DEBUG("CheckFileSignature called - File: %s", szFileName);
     return k_uAPICallInvalid;
 }
 
-// Helper methods
-Steam_Utils* Steam_Utils::GetInstance()
+// Activates the Big Picture text input dialog which only supports gamepad input
+bool Steam_Utils::ShowGamepadTextInput(EGamepadTextInputMode eInputMode, EGamepadTextInputLineMode eLineInputMode, const char *pchDescription, uint32 unCharMax)
 {
-    if (!s_pInstance)
-    {
-        s_pInstance = new Steam_Utils();
-    }
-    return s_pInstance;
+    VLOG_DEBUG("ShowGamepadTextInput called - Mode: %d, LineMode: %d, Description: %s, MaxChars: %u", 
+               eInputMode, eLineInputMode, pchDescription ? pchDescription : "null", unCharMax);
+    return false;
 }
 
-void Steam_Utils::ReleaseInstance()
+// Returns previously entered text & length
+uint32 Steam_Utils::GetEnteredGamepadTextLength()
 {
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_DEBUG("GetEnteredGamepadTextLength called");
+    return 0;
 }
 
+bool Steam_Utils::GetEnteredGamepadTextInput(char *pchText, uint32 cchText)
+{
+    VLOG_DEBUG("GetEnteredGamepadTextInput called - BufferSize: %u", cchText);
+    if (pchText && cchText > 0)
+    {
+        pchText[0] = '\0';
+    }
+    return false;
+}
