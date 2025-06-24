@@ -448,9 +448,10 @@ def main():
     # Extract version number
     version_num = extract_interface_version(content)
     if not version_num:
-        print("Error: Could not find interface version number in the file")
+        print("Warning: Could not find interface version number in the file")
         print("Looking for patterns like STEAMAPPS_INTERFACE_VERSION004 or similar")
-        sys.exit(1)
+        print("Assuming version 001")
+        version_num = "001"
     
     # Extract class name
     class_name = get_class_name(content)
