@@ -242,35 +242,48 @@ class FlatAPIGenerator:
         return_type = return_type.strip()
         
         # Handle pointer types
-        if '*' in return_type or 'Handle' in return_type:
-            if 'ScreenshotHandle' in return_type:
-                return 'INVALID_SCREENSHOT_HANDLE'
-            elif 'HServerListRequest' in return_type:
-                return 'nullptr'
-            elif 'HServerQuery' in return_type:
-                return 'HSERVERQUERY_INVALID'
-            elif 'SListenSocket_t' in return_type:
-                return 'INVALID_LISTEN_SOCKET'
-            elif 'SNetSocket_t' in return_type:
-                return 'INVALID_SOCKET'
-            elif 'UGCHandle_t' in return_type:
-                return 'k_UGCHandleInvalid'
-            elif 'UGCFileWriteStreamHandle_t' in return_type:
-                return 'k_UGCFileStreamHandleInvalid'
-            elif 'PublishedFileUpdateHandle_t' in return_type:
-                return 'k_PublishedFileUpdateHandleInvalid'
-            elif 'HTTPRequestHandle' in return_type:
-                return 'INVALID_HTTPREQUEST_HANDLE'
-            elif 'HTTPCookieContainerHandle' in return_type:
-                return 'INVALID_HTTPCOOKIE_HANDLE'
-            elif 'ClientUnifiedMessageHandle' in return_type:
-                return 'ISteamUnifiedMessages::k_InvalidUnifiedMessageHandle'
-            elif 'UGCQueryHandle_t' in return_type:
-                return 'k_UGCQueryHandleInvalid'
-            elif 'UGCUpdateHandle_t' in return_type:
-                return 'k_UGCUpdateHandleInvalid'
-            else:
-                return 'nullptr'
+        if '*' in return_type:
+            return 'nullptr'
+        
+        # Handle struct return types
+        if 'struct ' in return_type:
+            return '{}'
+        
+        # Handle controller handle types (uint64 typedefs)
+        if any(handle in return_type for handle in ['ControllerActionSetHandle_t', 'ControllerDigitalActionHandle_t', 
+                                                   'ControllerAnalogActionHandle_t', 'ControllerHandle_t']):
+            return '0'
+        
+        # Handle other specific handle types that have special invalid values
+        if 'ScreenshotHandle' in return_type:
+            return 'INVALID_SCREENSHOT_HANDLE'
+        elif 'HServerListRequest' in return_type:
+            return 'nullptr'
+        elif 'HServerQuery' in return_type:
+            return 'HSERVERQUERY_INVALID'
+        elif 'SListenSocket_t' in return_type:
+            return 'INVALID_LISTEN_SOCKET'
+        elif 'SNetSocket_t' in return_type:
+            return '0'
+        elif 'UGCHandle_t' in return_type:
+            return 'k_UGCHandleInvalid'
+        elif 'UGCFileWriteStreamHandle_t' in return_type:
+            return 'k_UGCFileStreamHandleInvalid'
+        elif 'PublishedFileUpdateHandle_t' in return_type:
+            return 'k_PublishedFileUpdateHandleInvalid'
+        elif 'HTTPRequestHandle' in return_type:
+            return 'INVALID_HTTPREQUEST_HANDLE'
+        elif 'HTTPCookieContainerHandle' in return_type:
+            return 'INVALID_HTTPCOOKIE_HANDLE'
+        elif 'ClientUnifiedMessageHandle' in return_type:
+            return 'ISteamUnifiedMessages::k_InvalidUnifiedMessageHandle'
+        elif 'UGCQueryHandle_t' in return_type:
+            return 'k_UGCQueryHandleInvalid'
+        elif 'UGCUpdateHandle_t' in return_type:
+            return 'k_UGCUpdateHandleInvalid'
+        elif 'Handle' in return_type:
+            # Generic fallback for other handle types
+            return '0'
         
         # Handle Steam API call types
         if 'SteamAPICall_t' in return_type:
@@ -303,7 +316,7 @@ class FlatAPIGenerator:
             return ''
         elif 'bool' in return_type:
             return 'false'
-        elif any(t in return_type for t in ['int', 'uint', 'AppId_t', 'DepotId_t', 'HAuthTicket', 'HSteamUser', 'HSteamPipe']):
+        elif any(t in return_type for t in ['int', 'uint', 'HSteamUser', 'HSteamPipe', 'HAuthTicket']):
             return '0'
         elif 'float' in return_type:
             return '0.0f'
