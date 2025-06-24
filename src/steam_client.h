@@ -24,6 +24,8 @@
 #include <isteamclient011.h>
 #include <isteamclient012.h>
 #include <isteamclient014.h>
+#include <isteamclient015.h>
+#include <isteamclient016.h>
 
 // Steam pipe state enumeration
 enum Steam_Pipe {
@@ -49,7 +51,9 @@ class Steam_Client :
     public ISteamClient010,
     public ISteamClient011,
     public ISteamClient012,
-    public ISteamClient014
+    public ISteamClient014,
+    public ISteamClient015,
+    public ISteamClient016
 {
 private:
     // Internal state
@@ -198,10 +202,20 @@ public:
 
 	// Music Player Remote
 	ISteamMusicRemote *GetISteamMusicRemote( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	// html page display
 	ISteamHTMLSurface *GetISteamHTMLSurface(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion) override;
+
+	// Helper functions for internal Steam usage
 	void Set_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func) override;
 	void Remove_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func) override;
 	void Set_SteamAPI_CCheckCallbackRegisteredInProcess(SteamAPI_CheckCallbackRegistered_t func) override;
+
+	// inventory
+	ISteamInventory *GetISteamInventory( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	// Video
+	ISteamVideo *GetISteamVideo( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 };
 
 #endif // VAPORCORE_STEAM_CLIENT_H 

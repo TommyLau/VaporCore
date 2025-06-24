@@ -107,7 +107,7 @@ enum EWorkshopFileType
 	k_EWorkshopFileTypeSteamworksAccessInvite = 13,
 	k_EWorkshopFileTypeSteamVideo			  = 14,
 
-	// Update k_EWorkshopFileTypeMax if you add values
+	// Update k_EWorkshopFileTypeMax if you add values.
 	k_EWorkshopFileTypeMax = 15
 
 };
@@ -217,7 +217,7 @@ public:
 	virtual bool	GetUGCDownloadProgress( UGCHandle_t hContent, int32 *pnBytesDownloaded, int32 *pnBytesExpected ) = 0;
 
 	// Gets metadata for a file after it has been downloaded. This is the same metadata given in the RemoteStorageDownloadUGCResult_t call result
-	virtual bool	GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, char **ppchName, int32 *pnFileSizeInBytes, CSteamID *pSteamIDOwner ) = 0;
+	virtual bool	GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, char **ppchName, int32 *pnFileSizeInBytes, OUT_STRUCT() CSteamID *pSteamIDOwner ) = 0;
 
 	// After download, gets the content of the file.  
 	// Small files can be read all at once by calling this function with an offset of 0 and cubDataToRead equal to the size of the file.

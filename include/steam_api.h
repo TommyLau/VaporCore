@@ -31,6 +31,8 @@
 #include "isteamugc.h"
 #include "isteamapplist.h"
 #include "isteamhtmlsurface.h"
+#include "isteaminventory.h"
+#include "isteamvideo.h"
 
 #if defined( _PS3 )
 #include "steamps3params.h"
@@ -131,6 +133,8 @@ S_API ISteamAppList *S_CALLTYPE SteamAppList();
 S_API ISteamMusic *S_CALLTYPE SteamMusic();
 S_API ISteamMusicRemote *S_CALLTYPE SteamMusicRemote();
 S_API ISteamHTMLSurface *S_CALLTYPE SteamHTMLSurface();
+S_API ISteamInventory *S_CALLTYPE SteamInventory();
+S_API ISteamVideo *S_CALLTYPE SteamVideo();
 #ifdef _PS3
 S_API ISteamPS3OverlayRender *S_CALLTYPE SteamPS3OverlayRender();
 #endif
@@ -417,6 +421,8 @@ public:
 	ISteamMusic*		SteamMusic()						{ return m_pSteamMusic; }
 	ISteamMusicRemote*	SteamMusicRemote()					{ return m_pSteamMusicRemote; }
 	ISteamHTMLSurface*	SteamHTMLSurface()					{ return m_pSteamHTMLSurface; }
+	ISteamInventory*	SteamInventory()					{ return m_pSteamInventory; }
+	ISteamVideo*		SteamVideo()						{ return m_pSteamVideo; }
 #ifdef _PS3
 	ISteamPS3OverlayRender* SteamPS3OverlayRender()		{ return m_pSteamPS3OverlayRender; }
 #endif
@@ -440,6 +446,8 @@ private:
 	ISteamMusic			*m_pSteamMusic;
 	ISteamMusicRemote	*m_pSteamMusicRemote;
 	ISteamHTMLSurface	*m_pSteamHTMLSurface;
+	ISteamInventory		*m_pSteamInventory;
+	ISteamVideo			*m_pSteamVideo;
 #ifdef _PS3
 	ISteamPS3OverlayRender *m_pSteamPS3OverlayRender;
 #endif
@@ -471,6 +479,7 @@ inline void CSteamAPIContext::Clear()
 	m_pSteamMusic = NULL;
 	m_pSteamMusicRemote= NULL;
 	m_pSteamHTMLSurface = NULL;
+	m_pSteamInventory = NULL;
 #ifdef _PS3
 	m_pSteamPS3OverlayRender = NULL;
 #endif
@@ -562,6 +571,19 @@ inline bool CSteamAPIContext::Init()
 	{
 		return false;
 	}
+
+	m_pSteamInventory = SteamClient()->GetISteamInventory( hSteamUser, hSteamPipe, STEAMINVENTORY_INTERFACE_VERSION );
+	if ( !m_pSteamInventory )
+	{
+		return false;
+	}
+
+	m_pSteamVideo = SteamClient()->GetISteamVideo( hSteamUser, hSteamPipe, STEAMVIDEO_INTERFACE_VERSION );
+	if ( !m_pSteamVideo )
+	{
+		return false;
+	}
+
 #ifdef _PS3
 	m_pSteamPS3OverlayRender = SteamClient()->GetISteamPS3OverlayRender();
 #endif

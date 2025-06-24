@@ -18,6 +18,7 @@
 #include "steam_utils.h"
 #include "steam_master_server_updater.h"
 #include "steam_networking.h"
+#include "steam_inventory.h"
 
 // Global Steam client interface pointer for game server
 static Steam_Client* g_pSteamGameServerClient = nullptr;
@@ -29,6 +30,7 @@ static ISteamMasterServerUpdater* g_pSteamMasterServerUpdater = nullptr;
 static ISteamNetworking* g_pSteamGameServerNetworking = nullptr;
 static ISteamGameServerStats* g_pSteamGameServerStats = nullptr;
 static ISteamHTTP* g_pSteamGameServerHTTP = nullptr;
+static ISteamInventory* g_pSteamGameServerInventory = nullptr;
 S_API ISteamClient *g_pSteamClientGameServer;
 
 // Global pipe and user handles for game server
@@ -106,11 +108,27 @@ S_API ISteamHTTP *SteamGameServerHTTP()
     return g_pSteamGameServerHTTP;
 }
 
+S_API ISteamInventory *SteamGameServerInventory()
+{
+    VLOG_DEBUG("SteamGameServerInventory() called");
+    return g_pSteamGameServerInventory;
+}
+
+
 S_API void SteamGameServer_Shutdown()
 {
     VLOG_INFO("SteamGameServer_Shutdown called");
 
     // TODO: Implement game server shutdown
+    
+    // Reset global interface pointers
+    g_pSteamGameServer = nullptr;
+    g_pSteamGameServerUtils = nullptr;
+    g_pSteamMasterServerUpdater = nullptr;
+    g_pSteamGameServerNetworking = nullptr;
+    g_pSteamGameServerStats = nullptr;
+    g_pSteamGameServerHTTP = nullptr;
+    g_pSteamGameServerInventory = nullptr;
 
     VLOG_INFO("SteamGameServer_Shutdown completed");
 }

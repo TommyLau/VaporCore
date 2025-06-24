@@ -42,7 +42,7 @@
 #error ???
 #endif 
 
-typedef struct
+typedef struct ValvePackingSentinel_t
 {
     uint32 m_u32;
     uint64 m_u64;
@@ -100,6 +100,8 @@ class ISteamController;
 class ISteamUGC;
 class ISteamAppList;
 class ISteamHTMLSurface;
+class ISteamInventory;
+class ISteamVideo;
 
 //-----------------------------------------------------------------------------
 // Purpose: Interface to creating a new steam instance, or to
@@ -215,13 +217,24 @@ public:
 
 	// Music Player Remote
 	virtual ISteamMusicRemote *GetISteamMusicRemote(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion) = 0;
+
+	// html page display
 	virtual ISteamHTMLSurface *GetISteamHTMLSurface(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion) = 0;
+
+	// Helper functions for internal Steam usage
 	virtual void Set_SteamAPI_CPostAPIResultInProcess( SteamAPI_PostAPIResultInProcess_t func ) = 0;
 	virtual void Remove_SteamAPI_CPostAPIResultInProcess( SteamAPI_PostAPIResultInProcess_t func ) = 0;
 	virtual void Set_SteamAPI_CCheckCallbackRegisteredInProcess( SteamAPI_CheckCallbackRegistered_t func ) = 0;
+
+	// inventory
+	virtual ISteamInventory *GetISteamInventory( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
+
+	// Video
+	virtual ISteamVideo *GetISteamVideo( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
 };
 
-#define STEAMCLIENT_INTERFACE_VERSION		"SteamClient016"
+
+#define STEAMCLIENT_INTERFACE_VERSION		"SteamClient017"
 
 //-----------------------------------------------------------------------------
 // Purpose: Base values for callback identifiers, each callback must
@@ -273,6 +286,7 @@ enum { k_iClientReservedCallbacks = 4300 };
 enum { k_iSteamReservedCallbacks = 4400 };
 enum { k_iSteamHTMLSurfaceCallbacks = 4500 };
 enum { k_iClientVideoCallbacks = 4600 };
+enum { k_iClientInventoryCallbacks = 4700 };
 
 //-----------------------------------------------------------------------------
 // The CALLBACK macros are for client side callback logging enabled with
@@ -421,6 +435,7 @@ struct callbackname : SteamCallback_t { \
 	END_CALLBACK_INTERNAL_SWITCH( 8 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 9 ) \
 	END_CALLBACK_INTERNAL_END()
+
 #define END_DEFINE_CALLBACK_11() \
 	END_CALLBACK_INTERNAL_BEGIN( 11 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 0 ) \
@@ -435,6 +450,7 @@ struct callbackname : SteamCallback_t { \
 	END_CALLBACK_INTERNAL_SWITCH( 9 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 10 ) \
 	END_CALLBACK_INTERNAL_END()
+
 #define END_DEFINE_CALLBACK_12() \
 	END_CALLBACK_INTERNAL_BEGIN( 12 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 0 ) \
@@ -450,6 +466,7 @@ struct callbackname : SteamCallback_t { \
 	END_CALLBACK_INTERNAL_SWITCH( 10 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 11 ) \
 	END_CALLBACK_INTERNAL_END()
+
 #define END_DEFINE_CALLBACK_13() \
 	END_CALLBACK_INTERNAL_BEGIN( 13 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 0 ) \
@@ -466,6 +483,7 @@ struct callbackname : SteamCallback_t { \
 	END_CALLBACK_INTERNAL_SWITCH( 11 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 12 ) \
 	END_CALLBACK_INTERNAL_END()
+
 #define END_DEFINE_CALLBACK_14() \
 	END_CALLBACK_INTERNAL_BEGIN( 14 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 0 ) \
@@ -483,4 +501,5 @@ struct callbackname : SteamCallback_t { \
 	END_CALLBACK_INTERNAL_SWITCH( 12 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 13 ) \
 	END_CALLBACK_INTERNAL_END()
+
 #endif // ISTEAMCLIENT_H

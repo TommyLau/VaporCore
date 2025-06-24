@@ -22,6 +22,7 @@
 #include <isteamuser013.h>
 #include <isteamuser014.h>
 #include <isteamuser016.h>
+#include <isteamuser017.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing and manipulating a steam account
@@ -35,7 +36,8 @@ class Steam_User :
     public ISteamUser012,
     public ISteamUser013,
     public ISteamUser014,
-    public ISteamUser016
+    public ISteamUser016,
+    public ISteamUser017
 {
 private:
     // Singleton instance
@@ -113,9 +115,9 @@ public:
 	// levels of speech are detected.
 	// nUncompressedVoiceDesiredSampleRate is necessary to know the number of bytes to return in pcbUncompressed - can be set to 0 if you don't need uncompressed (the usual case)
 	// If you're upgrading from an older Steamworks API, you'll want to pass in 11025 to nUncompressedVoiceDesiredSampleRate
-	EVoiceResult GetAvailableVoice(uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate) override;
+	EVoiceResult GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate ) override;
 	// Changed from Steam SDK v1.13, backward compatibility
-	EVoiceResult GetAvailableVoice(uint32 *pcbCompressed, uint32 *pcbUncompressed) override;
+	EVoiceResult GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed ) override;
 
 	// Gets the latest voice data. It should be called as often as possible once recording has started.
 	// nBytesWritten is set to the number of bytes written to pDestBuffer. 
@@ -195,6 +197,18 @@ public:
 
 	// gets the Steam Level of the user, as shown on their profile
 	int GetPlayerSteamLevel() override;
+
+	// Requests a URL which authenticates an in-game browser for store check-out,
+	// and then redirects to the specified URL. As long as the in-game browser
+	// accepts and handles session cookies, Steam microtransaction checkout pages
+	// will automatically recognize the user instead of presenting a login page.
+	// The result of this API call will be a StoreAuthURLResponse_t callback.
+	// NOTE: The URL has a very short lifetime to prevent history-snooping attacks,
+	// so you should only call this API when you are about to launch the browser,
+	// or else immediately navigate to the result URL using a hidden browser window.
+	// NOTE 2: The resulting authorization cookie has an expiration time of one day,
+	// so it would be a good idea to request and visit a new auth URL every 12 hours.
+	SteamAPICall_t RequestStoreAuthURL( const char *pchRedirectURL ) override;
 
 #ifdef _PS3
 	// Initiates PS3 Logon request using just PSN ticket.  

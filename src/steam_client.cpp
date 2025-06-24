@@ -353,6 +353,7 @@ ISteamMusicRemote* Steam_Client::GetISteamMusicRemote(HSteamUser hSteamuser, HSt
     return nullptr;
 }
 
+// html page display
 ISteamHTMLSurface* Steam_Client::GetISteamHTMLSurface(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
 {
     // TODO: Implement HTML surface interface
@@ -360,6 +361,7 @@ ISteamHTMLSurface* Steam_Client::GetISteamHTMLSurface(HSteamUser hSteamuser, HSt
     return nullptr;
 }
 
+// Helper functions for internal Steam usage
 void Steam_Client::Set_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func)
 {
     VLOG_DEBUG("Set_SteamAPI_CPostAPIResultInProcess called");
@@ -373,4 +375,20 @@ void Steam_Client::Remove_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResul
 void Steam_Client::Set_SteamAPI_CCheckCallbackRegisteredInProcess(SteamAPI_CheckCallbackRegistered_t func)
 {
     VLOG_DEBUG("Set_SteamAPI_CCheckCallbackRegisteredInProcess called");
+}
+
+// inventory
+ISteamInventory* Steam_Client::GetISteamInventory(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+{
+    // TODO: Implement inventory interface
+    VLOG_DEBUG("GetISteamInventory called");
+    return nullptr;
+}
+
+// Video
+ISteamVideo* Steam_Client::GetISteamVideo(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+{
+    // TODO: Implement video interface
+    VLOG_DEBUG("GetISteamVideo called");
+    return nullptr;
 }

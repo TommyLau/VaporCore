@@ -100,7 +100,7 @@ public:
 	// levels of speech are detected.
 	// nUncompressedVoiceDesiredSampleRate is necessary to know the number of bytes to return in pcbUncompressed - can be set to 0 if you don't need uncompressed (the usual case)
 	// If you're upgrading from an older Steamworks API, you'll want to pass in 11025 to nUncompressedVoiceDesiredSampleRate
-	virtual EVoiceResult GetAvailableVoice(uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate) = 0;
+	virtual EVoiceResult GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate ) = 0;
 
 	// Gets the latest voice data from the microphone. Compressed data is an arbitrary format, and is meant to be handed back to 
 	// DecompressVoice() for playback later as a binary blob. Uncompressed data is 16-bit, signed integer, 11025Hz PCM format.
@@ -169,6 +169,18 @@ public:
 	// gets the Steam Level of the user, as shown on their profile
 	virtual int GetPlayerSteamLevel() = 0;
 
+	// Requests a URL which authenticates an in-game browser for store check-out,
+	// and then redirects to the specified URL. As long as the in-game browser
+	// accepts and handles session cookies, Steam microtransaction checkout pages
+	// will automatically recognize the user instead of presenting a login page.
+	// The result of this API call will be a StoreAuthURLResponse_t callback.
+	// NOTE: The URL has a very short lifetime to prevent history-snooping attacks,
+	// so you should only call this API when you are about to launch the browser,
+	// or else immediately navigate to the result URL using a hidden browser window.
+	// NOTE 2: The resulting authorization cookie has an expiration time of one day,
+	// so it would be a good idea to request and visit a new auth URL every 12 hours.
+	virtual SteamAPICall_t RequestStoreAuthURL( const char *pchRedirectURL ) = 0;
+
 #ifdef _PS3
 	// Initiates PS3 Logon request using just PSN ticket.  
 	//
@@ -208,7 +220,7 @@ public:
 
 };
 
-#define STEAMUSER_INTERFACE_VERSION "SteamUser017"
+#define STEAMUSER_INTERFACE_VERSION "SteamUser018"
 
 
 // callbacks
@@ -291,6 +303,15 @@ struct IPCFailure_t
 
 
 //-----------------------------------------------------------------------------
+// Purpose: Signaled whenever licenses change
+//-----------------------------------------------------------------------------
+struct LicensesUpdated_t
+{
+	enum { k_iCallback = k_iSteamUserCallbacks + 25 };
+};
+
+
+//-----------------------------------------------------------------------------
 // callback for BeginAuthSession
 //-----------------------------------------------------------------------------
 struct ValidateAuthTicketResponse_t
@@ -344,6 +365,16 @@ struct GameWebCallback_t
 	enum { k_iCallback = k_iSteamUserCallbacks + 64 };
 	char m_szURL[256];
 };
+
+//-----------------------------------------------------------------------------
+// Purpose: sent to your game in response to ISteamUser::RequestStoreAuthURL
+//-----------------------------------------------------------------------------
+struct StoreAuthURLResponse_t
+{
+	enum { k_iCallback = k_iSteamUserCallbacks + 65 };
+	char m_szURL[512];
+};
+
 
 
 #pragma pack( pop )

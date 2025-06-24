@@ -83,6 +83,7 @@ enum EHTTPStatusCode
 	k_EHTTPStatusCode415UnsupportedMediaType =	415,
 	k_EHTTPStatusCode416RequestedRangeNotSatisfiable = 416,
 	k_EHTTPStatusCode417ExpectationFailed =		417,
+	k_EHTTPStatusCode4xxUnknown = 				418, // 418 is reserved, so we'll use it to mean unknown
 	k_EHTTPStatusCode429TooManyRequests	=		429,
 
 	// Server error codes
@@ -92,6 +93,7 @@ enum EHTTPStatusCode
 	k_EHTTPStatusCode503ServiceUnavailable =	503,
 	k_EHTTPStatusCode504GatewayTimeout =		504,
 	k_EHTTPStatusCode505HTTPVersionNotSupported = 505,
+	k_EHTTPStatusCode5xxUnknown =				599,
 };
 
 #endif // STEAMHTTPENUMS_H

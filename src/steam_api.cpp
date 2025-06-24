@@ -35,6 +35,10 @@ static ISteamController* g_pSteamController = nullptr;
 static ISteamUGC* g_pSteamUGC = nullptr;
 static ISteamAppList* g_pSteamAppList = nullptr;
 static ISteamMusic* g_pSteamMusic = nullptr;
+static ISteamMusicRemote* g_pSteamMusicRemote = nullptr;
+static ISteamHTMLSurface* g_pSteamHTMLSurface = nullptr;
+static ISteamInventory* g_pSteamInventory = nullptr;
+static ISteamVideo* g_pSteamVideo = nullptr;
 
 // Global pipe and user handles
 static HSteamPipe g_hSteamPipe = 0;
@@ -80,6 +84,10 @@ S_API void S_CALLTYPE SteamAPI_Shutdown() {
     g_pSteamUGC = nullptr;
     g_pSteamAppList = nullptr;
     g_pSteamMusic = nullptr;
+    g_pSteamMusicRemote = nullptr;
+    g_pSteamHTMLSurface = nullptr;
+    g_pSteamInventory = nullptr;
+    g_pSteamVideo = nullptr;
 
     g_hSteamUser = 0;
     g_hSteamPipe = 0;
@@ -211,78 +219,117 @@ S_API ISteamUser *S_CALLTYPE SteamUser() {
 }
 
 S_API ISteamFriends *S_CALLTYPE SteamFriends() {
+    VLOG_DEBUG("SteamFriends() called");
     // TODO: Implement SteamFriends
     return g_pSteamFriends;
 }
 
 S_API ISteamUtils *S_CALLTYPE SteamUtils() {
+    VLOG_DEBUG("SteamUtils() called");
     // TODO: Implement SteamUtils
     return g_pSteamUtils;
 }
 
 S_API ISteamMatchmaking *S_CALLTYPE SteamMatchmaking() {
+    VLOG_DEBUG("SteamMatchmaking() called");
     // TODO: Implement SteamMatchmaking
     return g_pSteamMatchmaking;
 }
 
 S_API ISteamUserStats *S_CALLTYPE SteamUserStats() {
+    VLOG_DEBUG("SteamUserStats() called");
     // TODO: Implement SteamUserStats
     return g_pSteamUserStats;
 }
 
 S_API ISteamApps *S_CALLTYPE SteamApps() {
+    VLOG_DEBUG("SteamApps() called");
     // TODO: Implement SteamApps
     return g_pSteamApps;
 }
 
 S_API ISteamNetworking *S_CALLTYPE SteamNetworking() {
+    VLOG_DEBUG("SteamNetworking() called");
     // TODO: Implement SteamNetworking
     return g_pSteamNetworking;
 }
 
 S_API ISteamMatchmakingServers *S_CALLTYPE SteamMatchmakingServers() {
+    VLOG_DEBUG("SteamMatchmakingServers() called");
     // TODO: Implement SteamMatchmakingServers
     return g_pSteamMatchmakingServers;
 }
 
 S_API ISteamRemoteStorage *S_CALLTYPE SteamRemoteStorage() {
+    VLOG_DEBUG("SteamRemoteStorage() called");
     // TODO: Implement SteamRemoteStorage
     return g_pSteamRemoteStorage;
 }
 
 S_API ISteamScreenshots *S_CALLTYPE SteamScreenshots() {
+    VLOG_DEBUG("SteamScreenshots() called");
     // TODO: Implement SteamScreenshots
     return g_pSteamScreenshots;
 }
 
 S_API ISteamHTTP *S_CALLTYPE SteamHTTP() {
+    VLOG_DEBUG("SteamHTTP() called");
     // TODO: Implement SteamHTTP
     return g_pSteamHTTP;
 }
 
 S_API ISteamUnifiedMessages *S_CALLTYPE SteamUnifiedMessages() {
+    VLOG_DEBUG("SteamUnifiedMessages() called");
     // TODO: Implement SteamUnifiedMessages
     return g_pSteamUnifiedMessages;
 }
 
 S_API ISteamController *S_CALLTYPE SteamController() {
+    VLOG_DEBUG("SteamController() called");
     // TODO: Implement SteamController
     return g_pSteamController;
 }
 
 S_API ISteamUGC *S_CALLTYPE SteamUGC() {
+    VLOG_DEBUG("SteamUGC() called");
     // TODO: Implement SteamUGC
     return g_pSteamUGC;
 }
 
 S_API ISteamAppList *S_CALLTYPE SteamAppList() {
+    VLOG_DEBUG("SteamAppList() called");
     // TODO: Implement SteamAppList
     return g_pSteamAppList;
 }
 
 S_API ISteamMusic *S_CALLTYPE SteamMusic() {
+    VLOG_DEBUG("SteamMusic() called");
     // TODO: Implement SteamMusic
     return g_pSteamMusic;
+}
+
+S_API ISteamMusicRemote *S_CALLTYPE SteamMusicRemote()
+{
+    VLOG_DEBUG("SteamMusicRemote() called");
+    return g_pSteamMusicRemote;
+}
+
+S_API ISteamHTMLSurface *S_CALLTYPE SteamHTMLSurface()
+{
+    VLOG_DEBUG("SteamHTMLSurface() called");
+    return g_pSteamHTMLSurface;
+}
+
+S_API ISteamInventory *S_CALLTYPE SteamInventory()
+{
+    VLOG_DEBUG("SteamInventory() called");
+    return g_pSteamInventory;
+}
+
+S_API ISteamVideo *S_CALLTYPE SteamVideo()
+{
+    VLOG_DEBUG("SteamVideo() called");
+    return g_pSteamVideo;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//

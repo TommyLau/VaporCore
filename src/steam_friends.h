@@ -23,6 +23,7 @@
 #include <isteamfriends009.h>
 #include <isteamfriends011.h>
 #include <isteamfriends013.h>
+#include <isteamfriends014.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to accessing information about individual users,
@@ -37,7 +38,8 @@ class Steam_Friends :
 	public ISteamFriends007,
 	public ISteamFriends009,
 	public ISteamFriends011,
-	public ISteamFriends013
+	public ISteamFriends013,
+    public ISteamFriends014
 {
 private:
     // Singleton instance
@@ -103,14 +105,28 @@ public:
 	int GetFriendAvatar( CSteamID steamIDFriend ) override;
 
 	// returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
-	bool GetFriendGamePlayed( CSteamID steamIDFriend, FriendGameInfo_t *pFriendGameInfo ) override;
+	bool GetFriendGamePlayed( CSteamID steamIDFriend, OUT_STRUCT() FriendGameInfo_t *pFriendGameInfo ) override;
 	// Changed from Steam SDK v1.04, backward compatibility
 	bool GetFriendGamePlayed( CSteamID steamIDFriend, uint64 *pulGameID, uint32 *punGameIP, uint16 *pusGamePort, uint16 *pusQueryPort ) override;
 	// accesses old friends names - returns an empty string when their are no more items in the history
 	const char *GetFriendPersonaNameHistory( CSteamID steamIDFriend, int iPersonaName ) override;
+	// friends steam level
+	int GetFriendSteamLevel( CSteamID steamIDFriend ) override;
 
 	// Returns nickname the current user has set for the specified player. Returns NULL if the no nickname has been set for that player.
 	const char *GetPlayerNickname( CSteamID steamIDPlayer ) override;
+
+	// friend grouping (tag) apis
+	// returns the number of friends groups
+	int GetFriendsGroupCount() override;
+	// returns the friends group ID for the given index (invalid indices return k_FriendsGroupID_Invalid)
+	FriendsGroupID_t GetFriendsGroupIDByIndex( int iFG ) override;
+	// returns the name for the given friends group (NULL in the case of invalid friends group IDs)
+	const char *GetFriendsGroupName( FriendsGroupID_t friendsGroupID ) override;
+	// returns the number of members in a given friends group
+	int GetFriendsGroupMembersCount( FriendsGroupID_t friendsGroupID ) override;
+	// gets up to nMembersCount members of the given friends group, if fewer exist than requested those positions' SteamIDs will be invalid
+	void GetFriendsGroupMembersList( FriendsGroupID_t friendsGroupID, OUT_ARRAY_CALL(nMembersCount, GetFriendsGroupMembersCount, friendsGroupID ) CSteamID *pOutSteamIDMembers, int nMembersCount ) override;
 
 	// returns true if the specified user meets any of the criteria specified in iFriendFlags
 	// iFriendFlags can be the union (binary or, |) of one or more k_EFriendFlags values
@@ -142,7 +158,7 @@ public:
 	// activates the game overlay, with an optional dialog to open 
 	// valid options are "Friends", "Community", "Players", "Settings", "OfficialGameGroup", "Stats", "Achievements"
 	void ActivateGameOverlay( const char *pchDialog ) override;
-	
+
 	// activates game overlay to a specific place
 	// valid options are
 	//		"steamid" - opens the overlay web browser to the specified user or groups profile
@@ -251,7 +267,7 @@ public:
 	int GetClanChatMemberCount( CSteamID steamIDClan ) override;
 	CSteamID GetChatMemberByIndex( CSteamID steamIDClan, int iUser ) override;
 	bool SendClanChatMessage( CSteamID steamIDClanChat, const char *pchText ) override;
-	int GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *peChatEntryType, CSteamID *psteamidChatter ) override;
+	int GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *peChatEntryType, OUT_STRUCT() CSteamID *psteamidChatter ) override;
 	bool IsClanChatAdmin( CSteamID steamIDClanChat, CSteamID steamIDUser ) override;
 
 	// interact with the Steam (game overlay / desktop)

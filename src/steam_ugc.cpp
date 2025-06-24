@@ -203,7 +203,7 @@ bool Steam_UGC::SetItemContent( UGCUpdateHandle_t handle, const char *pszContent
     return false;
 }
 
-// change preview image file for this item. pszPreviewFile points to local image file
+// change preview image file for this item. pszPreviewFile points to local image file, which must be under 1MB in size
 bool Steam_UGC::SetItemPreview( UGCUpdateHandle_t handle, const char *pszPreviewFile )
 {
     VLOG_DEBUG("SetItemPreview called");
@@ -253,6 +253,8 @@ uint32 Steam_UGC::GetSubscribedItems( PublishedFileId_t* pvecPublishedFileID, ui
     return 0;
 }
 
+// Get info about the item on disk.  If you are supporting items published through the legacy RemoteStorage APIs then *pbLegacyItem will be set to true
+// and pchFolder will contain the full path to the file rather than the containing folder.
 // returns true if item is installed
 bool Steam_UGC::GetItemInstallInfo( PublishedFileId_t nPublishedFileID, uint64 *punSizeOnDisk, char *pchFolder, uint32 cchFolderSize, bool *pbLegacyItem )
 {

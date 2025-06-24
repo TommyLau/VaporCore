@@ -89,7 +89,7 @@ bool Steam_HTTP::SetHTTPRequestGetOrPostParameter( HTTPRequestHandle hRequest, c
 }
 
 // Sends the HTTP request, will return false on a bad handle, otherwise use SteamCallHandle to wait on
-// asyncronous response via callback.
+// asynchronous response via callback.
 //
 // Note: If the user is in offline mode in Steam, then this will add a only-if-cached cache-control 
 // header and only do a local cache lookup rather than sending any actual remote request.
@@ -100,7 +100,7 @@ bool Steam_HTTP::SendHTTPRequest( HTTPRequestHandle hRequest, SteamAPICall_t *pC
 }
 
 // Sends the HTTP request, will return false on a bad handle, otherwise use SteamCallHandle to wait on
-// asyncronous response via callback for completion, and listen for HTTPRequestHeadersReceived_t and 
+// asynchronous response via callback for completion, and listen for HTTPRequestHeadersReceived_t and 
 // HTTPRequestDataReceived_t callbacks while streaming.
 bool Steam_HTTP::SendHTTPRequestAndStreamResponse( HTTPRequestHandle hRequest, SteamAPICall_t *pCallHandle )
 {
@@ -159,7 +159,7 @@ bool Steam_HTTP::GetHTTPResponseBodyData( HTTPRequestHandle hRequest, uint8 *pBo
     return true;
 }
 
-// Gets the body data from a streaming HTTP response given a handle from HTTPRequestCompleted_t. Will return false if the 
+// Gets the body data from a streaming HTTP response given a handle from HTTPRequestDataReceived_t. Will return false if the 
 // handle is invalid or is to a non-streaming response (meaning it wasn't sent with SendHTTPRequestAndStreamResponse), or if the buffer size and offset 
 // do not match the size and offset sent in HTTPRequestDataReceived_t.
 bool Steam_HTTP::GetHTTPStreamingResponseBodyData( HTTPRequestHandle hRequest, uint32 cOffset, uint8 *pBodyDataBuffer, uint32 unBufferSize )
@@ -192,5 +192,68 @@ bool Steam_HTTP::GetHTTPDownloadProgressPct( HTTPRequestHandle hRequest, float *
 bool Steam_HTTP::SetHTTPRequestRawPostBody( HTTPRequestHandle hRequest, const char *pchContentType, uint8 *pubBody, uint32 unBodyLen )
 {
     VLOG_INFO("SetHTTPRequestRawPostBody called - Request: %u, Content Type: %s, Body: %p, Length: %u", hRequest, pchContentType, pubBody, unBodyLen);
+    return true;
+}
+
+// Creates a cookie container handle which you must later free with ReleaseCookieContainer().  If bAllowResponsesToModify=true
+// than any response to your requests using this cookie container may add new cookies which may be transmitted with
+// future requests.  If bAllowResponsesToModify=false than only cookies you explicitly set will be sent.  This API is just for
+// during process lifetime, after steam restarts no cookies are persisted and you have no way to access the cookie container across
+// repeat executions of your process.
+HTTPCookieContainerHandle Steam_HTTP::CreateCookieContainer( bool bAllowResponsesToModify )
+{
+    VLOG_INFO("CreateCookieContainer called - AllowResponsesToModify: %s", bAllowResponsesToModify ? "true" : "false");
+    return 0;
+}
+
+// Release a cookie container you are finished using, freeing it's memory
+bool Steam_HTTP::ReleaseCookieContainer( HTTPCookieContainerHandle hCookieContainer )
+{
+    VLOG_INFO("ReleaseCookieContainer called - Container: %u", hCookieContainer);
+    return true;
+}
+
+// Adds a cookie to the specified cookie container that will be used with future requests.
+bool Steam_HTTP::SetCookie( HTTPCookieContainerHandle hCookieContainer, const char *pchHost, const char *pchUrl, const char *pchCookie )
+{
+    VLOG_INFO("SetCookie called - Container: %u, Host: %s, URL: %s, Cookie: %s", 
+              hCookieContainer, pchHost, pchUrl, pchCookie);
+    return true;
+}
+
+// Set the cookie container to use for a HTTP request
+bool Steam_HTTP::SetHTTPRequestCookieContainer( HTTPRequestHandle hRequest, HTTPCookieContainerHandle hCookieContainer )
+{
+    VLOG_INFO("SetHTTPRequestCookieContainer called - Request: %u, Container: %u", hRequest, hCookieContainer);
+    return true;
+}
+
+// Set the extra user agent info for a request, this doesn't clobber the normal user agent, it just adds the extra info on the end
+bool Steam_HTTP::SetHTTPRequestUserAgentInfo( HTTPRequestHandle hRequest, const char *pchUserAgentInfo )
+{
+    VLOG_INFO("SetHTTPRequestUserAgentInfo called - Request: %u, User Agent: %s", hRequest, pchUserAgentInfo);
+    return true;
+}
+
+// Set that https request should require verified SSL certificate via machines certificate trust store
+bool Steam_HTTP::SetHTTPRequestRequiresVerifiedCertificate( HTTPRequestHandle hRequest, bool bRequireVerifiedCertificate )
+{
+    VLOG_INFO("SetHTTPRequestRequiresVerifiedCertificate called - Request: %u, Require Verified: %s", 
+              hRequest, bRequireVerifiedCertificate ? "true" : "false");
+    return true;
+}
+
+// Set an absolute timeout on the HTTP request, this is just a total time timeout different than the network activity timeout
+// which can bump everytime we get more data
+bool Steam_HTTP::SetHTTPRequestAbsoluteTimeoutMS( HTTPRequestHandle hRequest, uint32 unMilliseconds )
+{
+    VLOG_INFO("SetHTTPRequestAbsoluteTimeoutMS called - Request: %u, Timeout: %u ms", hRequest, unMilliseconds);
+    return true;
+}
+
+// Check if the reason the request failed was because we timed it out (rather than some harder failure)
+bool Steam_HTTP::GetHTTPRequestWasTimedOut( HTTPRequestHandle hRequest, bool *pbWasTimedOut )
+{
+    VLOG_INFO("GetHTTPRequestWasTimedOut called - Request: %u", hRequest);
     return true;
 }

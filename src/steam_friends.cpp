@@ -151,7 +151,7 @@ int Steam_Friends::GetFriendAvatar( CSteamID steamIDFriend )
 }
 
 // returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
-bool Steam_Friends::GetFriendGamePlayed( CSteamID steamIDFriend, FriendGameInfo_t *pFriendGameInfo )
+bool Steam_Friends::GetFriendGamePlayed( CSteamID steamIDFriend, OUT_STRUCT() FriendGameInfo_t *pFriendGameInfo )
 {
     VLOG_DEBUG("GetFriendGamePlayed called - SteamID: %s, GameID: %llu", steamIDFriend.GetAccountID(), pFriendGameInfo->m_gameID);
     return false;
@@ -171,11 +171,54 @@ const char *Steam_Friends::GetFriendPersonaNameHistory( CSteamID steamIDFriend, 
     return "";
 }
 
+// friends steam level
+int Steam_Friends::GetFriendSteamLevel( CSteamID steamIDFriend )
+{
+    VLOG_DEBUG("GetFriendSteamLevel called - SteamID: %s", steamIDFriend.GetAccountID());
+    return 0;
+}
+
 // Returns nickname the current user has set for the specified player. Returns NULL if the no nickname has been set for that player.
 const char *Steam_Friends::GetPlayerNickname( CSteamID steamIDPlayer )
 {
     VLOG_DEBUG("GetPlayerNickname called - SteamID: %s", steamIDPlayer.GetAccountID());
     return "";
+}
+
+// friend grouping (tag) apis
+// returns the number of friends groups
+int Steam_Friends::GetFriendsGroupCount()
+{
+    VLOG_DEBUG("GetFriendsGroupCount called");
+    return 0;
+}
+
+// returns the friends group ID for the given index (invalid indices return k_FriendsGroupID_Invalid)
+FriendsGroupID_t Steam_Friends::GetFriendsGroupIDByIndex( int iFG )
+{
+    VLOG_DEBUG("GetFriendsGroupIDByIndex called - Index: %d", iFG);
+    return k_FriendsGroupID_Invalid;
+}
+
+// returns the name for the given friends group (NULL in the case of invalid friends group IDs)
+const char *Steam_Friends::GetFriendsGroupName( FriendsGroupID_t friendsGroupID )
+{
+    VLOG_DEBUG("GetFriendsGroupName called - GroupID: %d", friendsGroupID);
+    return nullptr;
+}
+
+// returns the number of members in a given friends group
+int Steam_Friends::GetFriendsGroupMembersCount( FriendsGroupID_t friendsGroupID )
+{
+    VLOG_DEBUG("GetFriendsGroupMembersCount called - GroupID: %d", friendsGroupID);
+    return 0;
+}
+
+// gets up to nMembersCount members of the given friends group, if fewer exist than requested those positions' SteamIDs will be invalid
+void Steam_Friends::GetFriendsGroupMembersList( FriendsGroupID_t friendsGroupID, CSteamID *pOutSteamIDMembers, int nMembersCount )
+{
+    VLOG_DEBUG("GetFriendsGroupMembersList called - GroupID: %d, Members: %p, Count: %d", 
+               friendsGroupID, pOutSteamIDMembers, nMembersCount);
 }
 
 // returns true if the specified user meets any of the criteria specified in iFriendFlags
@@ -498,7 +541,7 @@ bool Steam_Friends::SendClanChatMessage( CSteamID steamIDClanChat, const char *p
     return false;
 }
 
-int Steam_Friends::GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *peChatEntryType, CSteamID *psteamidChatter )
+int Steam_Friends::GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *peChatEntryType, OUT_STRUCT() CSteamID *psteamidChatter )
 {
     VLOG_DEBUG("GetClanChatMessage called - SteamID: %s, Message: %d", steamIDClanChat.GetAccountID(), iMessage);
     return 0;

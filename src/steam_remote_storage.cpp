@@ -208,7 +208,7 @@ bool Steam_Remote_Storage::GetUGCDownloadProgress( UGCHandle_t hContent, int32 *
 }
 
 // Gets metadata for a file after it has been downloaded. This is the same metadata given in the RemoteStorageDownloadUGCResult_t call result
-bool Steam_Remote_Storage::GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, char **ppchName, int32 *pnFileSizeInBytes, CSteamID *pSteamIDOwner )
+bool Steam_Remote_Storage::GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, char **ppchName, int32 *pnFileSizeInBytes, OUT_STRUCT() CSteamID *pSteamIDOwner )
 {
     VLOG_DEBUG("GetUGCDetails called - Content: %d", hContent);
     return false;

@@ -217,3 +217,18 @@ const char *Steam_Apps::GetLaunchQueryParam( const char *pchKey )
     VLOG_DEBUG("GetLaunchQueryParam called - Key: %s", pchKey);
     return "";
 }
+
+// get download progress for optional DLC
+bool Steam_Apps::GetDlcDownloadProgress( AppId_t nAppID, uint64 *punBytesDownloaded, uint64 *punBytesTotal )
+{
+    VLOG_DEBUG("GetDlcDownloadProgress called - AppID: %u, BytesDownloaded: %p, BytesTotal: %p",
+               nAppID, punBytesDownloaded, punBytesTotal);
+    return false;
+}
+
+// return the buildid of this app, may change at any time based on backend updates to the game
+int Steam_Apps::GetAppBuildId()
+{
+    VLOG_DEBUG("GetAppBuildId called");
+    return 0;
+}

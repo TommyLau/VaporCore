@@ -167,14 +167,14 @@ void Steam_User::StopVoiceRecording( )
 // levels of speech are detected.
 // nUncompressedVoiceDesiredSampleRate is necessary to know the number of bytes to return in pcbUncompressed - can be set to 0 if you don't need uncompressed (the usual case)
 // If you're upgrading from an older Steamworks API, you'll want to pass in 11025 to nUncompressedVoiceDesiredSampleRate
-EVoiceResult Steam_User::GetAvailableVoice(uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate)
+EVoiceResult Steam_User::GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate )
 {
     VLOG_DEBUG("GetAvailableVoice called - Compressed: %d, Uncompressed: %d, DesiredSampleRate: %d", pcbCompressed, pcbUncompressed, nUncompressedVoiceDesiredSampleRate);
     return EVoiceResult::k_EVoiceResultOK;
 }
 
 // Changed from Steam SDK v1.13, backward compatibility
-EVoiceResult Steam_User::GetAvailableVoice(uint32 *pcbCompressed, uint32 *pcbUncompressed)
+EVoiceResult Steam_User::GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed )
 {
     VLOG_DEBUG("GetAvailableVoice called - Compressed: %d, Uncompressed: %d", pcbCompressed, pcbUncompressed);
     return EVoiceResult::k_EVoiceResultOK;
@@ -329,5 +329,21 @@ int Steam_User::GetGameBadgeLevel( int nSeries, bool bFoil )
 int Steam_User::GetPlayerSteamLevel()
 {
     VLOG_DEBUG("GetPlayerSteamLevel called");
+    return 0;
+}
+
+// Requests a URL which authenticates an in-game browser for store check-out,
+// and then redirects to the specified URL. As long as the in-game browser
+// accepts and handles session cookies, Steam microtransaction checkout pages
+// will automatically recognize the user instead of presenting a login page.
+// The result of this API call will be a StoreAuthURLResponse_t callback.
+// NOTE: The URL has a very short lifetime to prevent history-snooping attacks,
+// so you should only call this API when you are about to launch the browser,
+// or else immediately navigate to the result URL using a hidden browser window.
+// NOTE 2: The resulting authorization cookie has an expiration time of one day,
+// so it would be a good idea to request and visit a new auth URL every 12 hours.
+SteamAPICall_t Steam_User::RequestStoreAuthURL( const char *pchRedirectURL )
+{
+    VLOG_DEBUG("RequestStoreAuthURL called - RedirectURL: %s", pchRedirectURL);
     return 0;
 }

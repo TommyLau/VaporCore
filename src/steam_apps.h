@@ -20,6 +20,7 @@
 #include <isteamapps003.h>
 #include <isteamapps004.h>
 #include <isteamapps005.h>
+#include <isteamapps006.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to app data
@@ -30,7 +31,8 @@ class Steam_Apps :
     public ISteamApps002,
     public ISteamApps003,
     public ISteamApps004,
-    public ISteamApps005
+    public ISteamApps005,
+    public ISteamApps006
 {
 private:
     // Singleton instance
@@ -106,6 +108,11 @@ public:
 	// but it is advised that you not param names beginning with an underscore for your own features.
 	const char *GetLaunchQueryParam( const char *pchKey ) override;
 
+	// get download progress for optional DLC
+	bool GetDlcDownloadProgress( AppId_t nAppID, uint64 *punBytesDownloaded, uint64 *punBytesTotal ) override; 
+
+	// return the buildid of this app, may change at any time based on backend updates to the game
+	int GetAppBuildId() override;
 #ifdef _PS3
 	// Result returned in a RegisterActivationCodeResponse_t callresult
 	SteamAPICall_t RegisterActivationCode( const char *pchActivationCode ) override;

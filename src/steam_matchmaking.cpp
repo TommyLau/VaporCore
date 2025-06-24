@@ -342,7 +342,7 @@ bool Steam_Matchmaking::SendLobbyChatMsg( CSteamID steamIDLobby, const void *pvM
 // *pSteamIDUser is filled in with the CSteamID of the member
 // *pvData is filled in with the message itself
 // return value is the number of bytes written into the buffer
-int Steam_Matchmaking::GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, CSteamID *pSteamIDUser, void *pvData, int cubData, EChatEntryType *peChatEntryType )
+int Steam_Matchmaking::GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, OUT_STRUCT() CSteamID *pSteamIDUser, void *pvData, int cubData, EChatEntryType *peChatEntryType )
 {
     VLOG_DEBUG("GetLobbyChatEntry called - Lobby: %llu, ChatID: %d, DataSize: %d", steamIDLobby.GetAccountID(), iChatID, cubData);
     return 0;
@@ -371,7 +371,7 @@ void Steam_Matchmaking::SetLobbyGameServer( CSteamID steamIDLobby, uint32 unGame
 }
 
 // returns the details of a game server set in a lobby - returns false if there is no game server set, or that lobby doesn't exist
-bool Steam_Matchmaking::GetLobbyGameServer( CSteamID steamIDLobby, uint32 *punGameServerIP, uint16 *punGameServerPort, CSteamID *psteamIDGameServer )
+bool Steam_Matchmaking::GetLobbyGameServer( CSteamID steamIDLobby, uint32 *punGameServerIP, uint16 *punGameServerPort, OUT_STRUCT() CSteamID *psteamIDGameServer )
 {
     VLOG_DEBUG("GetLobbyGameServer called - Lobby: %llu, ServerIP: %u, ServerPort: %u, GameServer: %llu", 
                steamIDLobby.GetAccountID(), punGameServerIP, punGameServerPort, psteamIDGameServer->GetAccountID());
@@ -626,7 +626,7 @@ void Steam_Matchmaking_Servers::RequestSpectatorServerList( AppId_t iApp, MatchM
     VLOG_DEBUG("RequestSpectatorServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
 }
 
-HServerListRequest Steam_Matchmaking_Servers::RequestInternetServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+HServerListRequest Steam_Matchmaking_Servers::RequestInternetServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
 {
     VLOG_DEBUG("RequestInternetServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
     return 0;
@@ -638,25 +638,25 @@ HServerListRequest Steam_Matchmaking_Servers::RequestLANServerList( AppId_t iApp
     return 0;
 }
 
-HServerListRequest Steam_Matchmaking_Servers::RequestFriendsServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+HServerListRequest Steam_Matchmaking_Servers::RequestFriendsServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
 {
     VLOG_DEBUG("RequestFriendsServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
     return 0;
 }
 
-HServerListRequest Steam_Matchmaking_Servers::RequestFavoritesServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+HServerListRequest Steam_Matchmaking_Servers::RequestFavoritesServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
 {
     VLOG_DEBUG("RequestFavoritesServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
     return 0;
 }
 
-HServerListRequest Steam_Matchmaking_Servers::RequestHistoryServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+HServerListRequest Steam_Matchmaking_Servers::RequestHistoryServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
 {
     VLOG_DEBUG("RequestHistoryServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
     return 0;
 }
 
-HServerListRequest Steam_Matchmaking_Servers::RequestSpectatorServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
+HServerListRequest Steam_Matchmaking_Servers::RequestSpectatorServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
 {
     VLOG_DEBUG("RequestSpectatorServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
     return 0;
