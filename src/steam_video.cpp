@@ -49,3 +49,10 @@ void Steam_Video::GetVideoURL( AppId_t unVideoAppID )
 {
 	VLOG_DEBUG("GetVideoURL called - %d", unVideoAppID);
 }
+
+// returns true if user is uploading a live broadcast
+bool Steam_Video::IsBroadcasting( int *pnNumViewers )
+{
+    VLOG_DEBUG("IsBroadcasting called");
+    return false;
+}

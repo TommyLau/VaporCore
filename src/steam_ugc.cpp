@@ -59,6 +59,13 @@ UGCQueryHandle_t Steam_UGC::CreateQueryAllUGCRequest( EUGCQuery eQueryType, EUGC
     return k_UGCQueryHandleInvalid;
 }
 
+// Query for the details of the given published file ids (the RequestUGCDetails call is deprecated and replaced with this)
+UGCQueryHandle_t Steam_UGC::CreateQueryUGCDetailsRequest( PublishedFileId_t *pvecPublishedFileID, uint32 unNumPublishedFileIDs )
+{
+    VLOG_DEBUG("CreateQueryUGCDetailsRequest called");
+    return k_UGCQueryHandleInvalid;
+}
+
 // Send the query to Steam
 SteamAPICall_t Steam_UGC::SendQueryUGCRequest( UGCQueryHandle_t handle )
 {
@@ -70,6 +77,42 @@ SteamAPICall_t Steam_UGC::SendQueryUGCRequest( UGCQueryHandle_t handle )
 bool Steam_UGC::GetQueryUGCResult( UGCQueryHandle_t handle, uint32 index, SteamUGCDetails_t *pDetails )
 {
     VLOG_DEBUG("GetQueryUGCResult called");
+    return false;
+}
+
+bool Steam_UGC::GetQueryUGCPreviewURL( UGCQueryHandle_t handle, uint32 index, char *pchURL, uint32 cchURLSize )
+{
+    VLOG_DEBUG("GetQueryUGCPreviewURL called");
+    return false;
+}
+
+bool Steam_UGC::GetQueryUGCMetadata( UGCQueryHandle_t handle, uint32 index, char *pchMetadata, uint32 cchMetadatasize )
+{
+    VLOG_DEBUG("GetQueryUGCMetadata called");
+    return false;
+}
+
+bool Steam_UGC::GetQueryUGCChildren( UGCQueryHandle_t handle, uint32 index, PublishedFileId_t* pvecPublishedFileID, uint32 cMaxEntries )
+{
+    VLOG_DEBUG("GetQueryUGCChildren called");
+    return false;
+}
+
+bool Steam_UGC::GetQueryUGCStatistic( UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint32 *pStatValue )
+{
+    VLOG_DEBUG("GetQueryUGCStatistic called");
+    return false;
+}
+
+uint32 Steam_UGC::GetQueryUGCNumAdditionalPreviews( UGCQueryHandle_t handle, uint32 index )
+{
+    VLOG_DEBUG("GetQueryUGCNumAdditionalPreviews called");
+    return 0;
+}
+
+bool Steam_UGC::GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, char *pchURLOrVideoID, uint32 cchURLSize, bool *pbIsImage )
+{
+    VLOG_DEBUG("GetQueryUGCAdditionalPreview called");
     return false;
 }
 
@@ -96,6 +139,24 @@ bool Steam_UGC::AddExcludedTag( UGCQueryHandle_t handle, const char *pTagName )
 bool Steam_UGC::SetReturnLongDescription( UGCQueryHandle_t handle, bool bReturnLongDescription )
 {
     VLOG_DEBUG("SetReturnLongDescription called");
+    return false;
+}
+
+bool Steam_UGC::SetReturnMetadata( UGCQueryHandle_t handle, bool bReturnMetadata )
+{
+    VLOG_DEBUG("SetReturnMetadata called");
+    return false;
+}
+
+bool Steam_UGC::SetReturnChildren( UGCQueryHandle_t handle, bool bReturnChildren )
+{
+    VLOG_DEBUG("SetReturnChildren called");
+    return false;
+}
+
+bool Steam_UGC::SetReturnAdditionalPreviews( UGCQueryHandle_t handle, bool bReturnAdditionalPreviews )
+{
+    VLOG_DEBUG("SetReturnAdditionalPreviews called");
     return false;
 }
 
@@ -138,6 +199,7 @@ bool Steam_UGC::SetRankedByTrendDays( UGCQueryHandle_t handle, uint32 unDays )
 }
 
 // Request full details for one piece of UGC
+// DEPRECATED - Use CreateQueryUGCDetailsRequest call above instead!
 SteamAPICall_t Steam_UGC::RequestUGCDetails( PublishedFileId_t nPublishedFileID, uint32 unMaxAgeSeconds )
 {
     VLOG_DEBUG("RequestUGCDetails called");
@@ -179,6 +241,13 @@ bool Steam_UGC::SetItemTitle( UGCUpdateHandle_t handle, const char *pchTitle )
 bool Steam_UGC::SetItemDescription( UGCUpdateHandle_t handle, const char *pchDescription )
 {
     VLOG_DEBUG("SetItemDescription called");
+    return false;
+}
+
+// change the metadata of an UGC item (max = k_cchDeveloperMetadataMax)
+bool Steam_UGC::SetItemMetadata( UGCUpdateHandle_t handle, const char *pchMetaData )
+{
+    VLOG_DEBUG("SetItemMetadata called");
     return false;
 }
 
@@ -225,7 +294,19 @@ EItemUpdateStatus Steam_UGC::GetItemUpdateProgress( UGCUpdateHandle_t handle, ui
 
 // Steam Workshop Consumer API
 
-// subscript to this item, will be installed ASAP
+SteamAPICall_t Steam_UGC::AddItemToFavorites( AppId_t nAppId, PublishedFileId_t nPublishedFileID )
+{
+    VLOG_DEBUG("AddItemToFavorites called");
+    return 0;
+}
+
+SteamAPICall_t Steam_UGC::RemoveItemFromFavorites( AppId_t nAppId, PublishedFileId_t nPublishedFileID )
+{
+    VLOG_DEBUG("RemoveItemFromFavorites called");
+    return 0;
+}
+
+// subscribe to this item, will be installed ASAP
 SteamAPICall_t Steam_UGC::SubscribeItem( PublishedFileId_t nPublishedFileID )
 {
     VLOG_DEBUG("SubscribeItem called");
@@ -253,9 +334,24 @@ uint32 Steam_UGC::GetSubscribedItems( PublishedFileId_t* pvecPublishedFileID, ui
     return 0;
 }
 
+// get EItemState flags about item on this client
+uint32 Steam_UGC::GetItemState( PublishedFileId_t nPublishedFileID )
+{
+    VLOG_DEBUG("GetItemState called");
+    return 0;
+}
+
+// get info about currently installed content on disc for items that have k_EItemStateInstalled set
+// if k_EItemStateLegacyItem is set, pchFolder contains the path to the legacy file itself (not a folder)
+bool Steam_UGC::GetItemInstallInfo( PublishedFileId_t nPublishedFileID, uint64 *punSizeOnDisk, char *pchFolder, uint32 cchFolderSize, uint32 *punTimeStamp )
+{
+    VLOG_DEBUG("GetItemInstallInfo called");
+    return false;
+}
+
 // Get info about the item on disk.  If you are supporting items published through the legacy RemoteStorage APIs then *pbLegacyItem will be set to true
 // and pchFolder will contain the full path to the file rather than the containing folder.
-// returns true if item is installed
+// Changed from Steam SDK v1.33, backward compatibility
 bool Steam_UGC::GetItemInstallInfo( PublishedFileId_t nPublishedFileID, uint64 *punSizeOnDisk, char *pchFolder, uint32 cchFolderSize, bool *pbLegacyItem )
 {
     VLOG_DEBUG("GetItemInstallInfo called");
@@ -269,8 +365,25 @@ bool Steam_UGC::GetItemInstallInfo( PublishedFileId_t nPublishedFileID, uint64 *
     return false;
 }
 
+// get info about pending update for items that have k_EItemStateNeedsUpdate set. punBytesTotal will be valid after download started once
+bool Steam_UGC::GetItemDownloadInfo( PublishedFileId_t nPublishedFileID, uint64 *punBytesDownloaded, uint64 *punBytesTotal )
+{
+    VLOG_DEBUG("GetItemDownloadInfo called");
+    return false;
+}
+
+// Removed from Steam SDK v1.31, backward compatibility
 bool Steam_UGC::GetItemUpdateInfo( PublishedFileId_t nPublishedFileID, bool *pbNeedsUpdate, bool *pbIsDownloading, uint64 *punBytesDownloaded, uint64 *punBytesTotal )
 {
     VLOG_DEBUG("GetItemUpdateInfo called");
+    return false;
+}
+
+// download new or update already installed item. If function returns true, wait for DownloadItemResult_t. If the item is already installed,
+// then files on disk should not be used until callback received. If item is not subscribed to, it will be cached for some time.
+// If bHighPriority is set, any other item download will be suspended and this item downloaded ASAP.
+bool Steam_UGC::DownloadItem( PublishedFileId_t nPublishedFileID, bool bHighPriority )
+{
+    VLOG_DEBUG("DownloadItem called");
     return false;
 }

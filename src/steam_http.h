@@ -18,7 +18,7 @@
 #include <isteamhttp001.h>
 
 //-----------------------------------------------------------------------------
-// Purpose: interface to building depots
+// Purpose: interface to http client
 //-----------------------------------------------------------------------------
 class Steam_HTTP :
     public ISteamHTTP,
@@ -37,8 +37,8 @@ public:
     static void ReleaseInstance();
 
 	// Initializes a new HTTP request, returning a handle to use in further operations on it.  Requires
-	// the method (GET or POST) and the absolute URL for the request.  Only http requests (ie, not https) are
-	// currently supported, so this string must start with http:// or https:// and should look like http://store.steampowered.com/app/250/ 
+	// the method (GET or POST) and the absolute URL for the request.  Both http and https are supported,
+	// so this string must start with http:// or https:// and should look like http://store.steampowered.com/app/250/ 
 	// or such.
 	HTTPRequestHandle CreateHTTPRequest( EHTTPMethod eHTTPRequestMethod, const char *pchAbsoluteURL ) override;
 

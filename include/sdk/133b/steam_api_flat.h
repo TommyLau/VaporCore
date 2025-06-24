@@ -1,11 +1,9 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright (c) 1996-2014, Valve Corporation, All rights reserved. =======
+//
+// Purpose: Header for flatted SteamAPI. Use this for binding to other languages.
+// This file is auto-generated, do not edit it.
+//
+//=============================================================================
 
 #ifndef STEAMAPIFLAT_H
 #define STEAMAPIFLAT_H
@@ -14,6 +12,7 @@
 #endif
 
 #include <stdint.h>
+#include "steam/steamvr.h"
 
 
 S_API HSteamPipe SteamAPI_ISteamClient_CreateSteamPipe(intptr_t instancePtr);
@@ -527,14 +526,14 @@ S_API void SteamAPI_ISteamHTMLSurface_GoBack(intptr_t instancePtr, HHTMLBrowser 
 S_API void SteamAPI_ISteamHTMLSurface_GoForward(intptr_t instancePtr, HHTMLBrowser unBrowserHandle);
 S_API void SteamAPI_ISteamHTMLSurface_AddHeader(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, const char * pchKey, const char * pchValue);
 S_API void SteamAPI_ISteamHTMLSurface_ExecuteJavascript(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, const char * pchScript);
-S_API void SteamAPI_ISteamHTMLSurface_MouseUp(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, EHTMLMouseButton eMouseButton);
-S_API void SteamAPI_ISteamHTMLSurface_MouseDown(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, EHTMLMouseButton eMouseButton);
-S_API void SteamAPI_ISteamHTMLSurface_MouseDoubleClick(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, EHTMLMouseButton eMouseButton);
+S_API void SteamAPI_ISteamHTMLSurface_MouseUp(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, ISteamHTMLSurface::EHTMLMouseButton eMouseButton);
+S_API void SteamAPI_ISteamHTMLSurface_MouseDown(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, ISteamHTMLSurface::EHTMLMouseButton eMouseButton);
+S_API void SteamAPI_ISteamHTMLSurface_MouseDoubleClick(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, ISteamHTMLSurface::EHTMLMouseButton eMouseButton);
 S_API void SteamAPI_ISteamHTMLSurface_MouseMove(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, int x, int y);
 S_API void SteamAPI_ISteamHTMLSurface_MouseWheel(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, int32 nDelta);
-S_API void SteamAPI_ISteamHTMLSurface_KeyDown(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers);
-S_API void SteamAPI_ISteamHTMLSurface_KeyUp(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers);
-S_API void SteamAPI_ISteamHTMLSurface_KeyChar(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 cUnicodeChar, EHTMLKeyModifiers eHTMLKeyModifiers);
+S_API void SteamAPI_ISteamHTMLSurface_KeyDown(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, ISteamHTMLSurface::EHTMLKeyModifiers eHTMLKeyModifiers);
+S_API void SteamAPI_ISteamHTMLSurface_KeyUp(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, ISteamHTMLSurface::EHTMLKeyModifiers eHTMLKeyModifiers);
+S_API void SteamAPI_ISteamHTMLSurface_KeyChar(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 cUnicodeChar, ISteamHTMLSurface::EHTMLKeyModifiers eHTMLKeyModifiers);
 S_API void SteamAPI_ISteamHTMLSurface_SetHorizontalScroll(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nAbsolutePixelScroll);
 S_API void SteamAPI_ISteamHTMLSurface_SetVerticalScroll(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nAbsolutePixelScroll);
 S_API void SteamAPI_ISteamHTMLSurface_SetKeyFocus(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, bool bHasKeyFocus);
@@ -574,6 +573,68 @@ S_API bool SteamAPI_ISteamInventory_GetItemDefinitionIDs(intptr_t instancePtr, S
 S_API bool SteamAPI_ISteamInventory_GetItemDefinitionProperty(intptr_t instancePtr, SteamItemDef_t iDefinition, const char * pchPropertyName, char * pchValueBuffer, uint32 * punValueBufferSize);
 S_API void SteamAPI_ISteamVideo_GetVideoURL(intptr_t instancePtr, AppId_t unVideoAppID);
 S_API bool SteamAPI_ISteamVideo_IsBroadcasting(intptr_t instancePtr, int * pnNumViewers);
+S_API void SteamAPI_vr_IVRSystem_GetWindowBounds(intptr_t instancePtr, int32_t * pnX, int32_t * pnY, uint32_t * pnWidth, uint32_t * pnHeight);
+S_API void SteamAPI_vr_IVRSystem_GetRecommendedRenderTargetSize(intptr_t instancePtr, uint32_t * pnWidth, uint32_t * pnHeight);
+S_API void SteamAPI_vr_IVRSystem_GetEyeOutputViewport(intptr_t instancePtr, vr::Hmd_Eye eEye, uint32_t * pnX, uint32_t * pnY, uint32_t * pnWidth, uint32_t * pnHeight);
+S_API struct vr::HmdMatrix44_t SteamAPI_vr_IVRSystem_GetProjectionMatrix(intptr_t instancePtr, vr::Hmd_Eye eEye, float fNearZ, float fFarZ, vr::GraphicsAPIConvention eProjType);
+S_API void SteamAPI_vr_IVRSystem_GetProjectionRaw(intptr_t instancePtr, vr::Hmd_Eye eEye, float * pfLeft, float * pfRight, float * pfTop, float * pfBottom);
+S_API struct vr::DistortionCoordinates_t SteamAPI_vr_IVRSystem_ComputeDistortion(intptr_t instancePtr, vr::Hmd_Eye eEye, float fU, float fV);
+S_API struct vr::HmdMatrix34_t SteamAPI_vr_IVRSystem_GetEyeToHeadTransform(intptr_t instancePtr, vr::Hmd_Eye eEye);
+S_API bool SteamAPI_vr_IVRSystem_GetTimeSinceLastVsync(intptr_t instancePtr, float * pfSecondsSinceLastVsync, uint64_t * pulFrameCounter);
+S_API int32_t SteamAPI_vr_IVRSystem_GetD3D9AdapterIndex(intptr_t instancePtr);
+S_API void SteamAPI_vr_IVRSystem_GetDXGIOutputInfo(intptr_t instancePtr, int32_t * pnAdapterIndex, int32_t * pnAdapterOutputIndex);
+S_API void SteamAPI_vr_IVRSystem_AttachToWindow(intptr_t instancePtr, void * hWnd);
+S_API void SteamAPI_vr_IVRSystem_GetDeviceToAbsoluteTrackingPose(intptr_t instancePtr, vr::TrackingUniverseOrigin eOrigin, float fPredictedSecondsToPhotonsFromNow, struct vr::TrackedDevicePose_t * pTrackedDevicePoseArray, uint32_t unTrackedDevicePoseArrayCount);
+S_API void SteamAPI_vr_IVRSystem_ResetSeatedZeroPose(intptr_t instancePtr);
+S_API struct vr::HmdMatrix34_t SteamAPI_vr_IVRSystem_GetSeatedZeroPoseToStandingAbsoluteTrackingPose(intptr_t instancePtr);
+S_API bool SteamAPI_vr_IVRSystem_LoadRenderModel(intptr_t instancePtr, const char * pchRenderModelName, struct vr::RenderModel_t * pRenderModel);
+S_API void SteamAPI_vr_IVRSystem_FreeRenderModel(intptr_t instancePtr, struct vr::RenderModel_t * pRenderModel);
+S_API vr::TrackedDeviceClass SteamAPI_vr_IVRSystem_GetTrackedDeviceClass(intptr_t instancePtr, vr::TrackedDeviceIndex_t unDeviceIndex);
+S_API bool SteamAPI_vr_IVRSystem_IsTrackedDeviceConnected(intptr_t instancePtr, vr::TrackedDeviceIndex_t unDeviceIndex);
+S_API bool SteamAPI_vr_IVRSystem_GetBoolTrackedDeviceProperty(intptr_t instancePtr, vr::TrackedDeviceIndex_t unDeviceIndex, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError * pError);
+S_API float SteamAPI_vr_IVRSystem_GetFloatTrackedDeviceProperty(intptr_t instancePtr, vr::TrackedDeviceIndex_t unDeviceIndex, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError * pError);
+S_API int32_t SteamAPI_vr_IVRSystem_GetInt32TrackedDeviceProperty(intptr_t instancePtr, vr::TrackedDeviceIndex_t unDeviceIndex, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError * pError);
+S_API uint64_t SteamAPI_vr_IVRSystem_GetUint64TrackedDeviceProperty(intptr_t instancePtr, vr::TrackedDeviceIndex_t unDeviceIndex, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError * pError);
+S_API struct vr::HmdMatrix34_t SteamAPI_vr_IVRSystem_GetMatrix34TrackedDeviceProperty(intptr_t instancePtr, vr::TrackedDeviceIndex_t unDeviceIndex, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError * pError);
+S_API uint32_t SteamAPI_vr_IVRSystem_GetStringTrackedDeviceProperty(intptr_t instancePtr, vr::TrackedDeviceIndex_t unDeviceIndex, vr::TrackedDeviceProperty prop, char * pchValue, uint32_t unBufferSize, vr::TrackedPropertyError * pError);
+S_API const char * SteamAPI_vr_IVRSystem_GetPropErrorNameFromEnum(intptr_t instancePtr, vr::TrackedPropertyError error);
+S_API bool SteamAPI_vr_IVRSystem_PollNextEvent(intptr_t instancePtr, struct vr::VREvent_t * pEvent);
+S_API const char * SteamAPI_vr_IVRSystem_GetEventTypeNameFromEnum(intptr_t instancePtr, vr::EVREventType eType);
+S_API struct vr::HiddenAreaMesh_t SteamAPI_vr_IVRSystem_GetHiddenAreaMesh(intptr_t instancePtr, vr::Hmd_Eye eEye);
+S_API vr::ChaperoneCalibrationState SteamAPI_vr_IVRChaperone_GetCalibrationState(intptr_t instancePtr);
+S_API bool SteamAPI_vr_IVRChaperone_GetSoftBoundsInfo(intptr_t instancePtr, struct vr::ChaperoneSoftBoundsInfo_t * pInfo);
+S_API bool SteamAPI_vr_IVRChaperone_GetHardBoundsInfo(intptr_t instancePtr, struct vr::HmdQuad_t * pQuadsBuffer, uint32_t * punQuadsCount);
+S_API bool SteamAPI_vr_IVRChaperone_GetSeatedBoundsInfo(intptr_t instancePtr, struct vr::ChaperoneSeatedBoundsInfo_t * pInfo);
+S_API uint32_t SteamAPI_vr_IVRCompositor_GetLastError(intptr_t instancePtr, char * pchBuffer, uint32_t unBufferSize);
+S_API void SteamAPI_vr_IVRCompositor_SetVSync(intptr_t instancePtr, bool bVSync);
+S_API bool SteamAPI_vr_IVRCompositor_GetVSync(intptr_t instancePtr);
+S_API void SteamAPI_vr_IVRCompositor_SetGamma(intptr_t instancePtr, float fGamma);
+S_API float SteamAPI_vr_IVRCompositor_GetGamma(intptr_t instancePtr);
+S_API void SteamAPI_vr_IVRCompositor_SetGraphicsDevice(intptr_t instancePtr, vr::Compositor_DeviceType eType, void * pDevice);
+S_API void SteamAPI_vr_IVRCompositor_WaitGetPoses(intptr_t instancePtr, struct vr::TrackedDevicePose_t * pPoseArray, uint32_t unPoseArrayCount);
+S_API void SteamAPI_vr_IVRCompositor_Submit(intptr_t instancePtr, vr::Hmd_Eye eEye, void * pTexture, struct vr::Compositor_TextureBounds * pBounds);
+S_API void SteamAPI_vr_IVRCompositor_ClearLastSubmittedFrame(intptr_t instancePtr);
+S_API void SteamAPI_vr_IVRCompositor_GetOverlayDefaults(intptr_t instancePtr, struct vr::Compositor_OverlaySettings * pSettings);
+S_API void SteamAPI_vr_IVRCompositor_SetOverlay(intptr_t instancePtr, void * pTexture, struct vr::Compositor_OverlaySettings * pSettings);
+S_API void SteamAPI_vr_IVRCompositor_SetOverlayRaw(intptr_t instancePtr, void * buffer, uint32_t width, uint32_t height, uint32_t depth, struct vr::Compositor_OverlaySettings * pSettings);
+S_API void SteamAPI_vr_IVRCompositor_SetOverlayFromFile(intptr_t instancePtr, const char * pchFilePath, struct vr::Compositor_OverlaySettings * pSettings);
+S_API void SteamAPI_vr_IVRCompositor_ClearOverlay(intptr_t instancePtr);
+S_API bool SteamAPI_vr_IVRCompositor_GetFrameTiming(intptr_t instancePtr, struct vr::Compositor_FrameTiming * pTiming, uint32_t unFramesAgo);
+S_API void SteamAPI_vr_IVRCompositor_FadeToColor(intptr_t instancePtr, float fSeconds, float fRed, float fGreen, float fBlue, float fAlpha, bool bBackground);
+S_API void SteamAPI_vr_IVRCompositor_FadeGrid(intptr_t instancePtr, float fSeconds, bool bFadeIn);
+S_API void SteamAPI_vr_IVRCompositor_CompositorBringToFront(intptr_t instancePtr);
+S_API void SteamAPI_vr_IVRCompositor_CompositorGoToBack(intptr_t instancePtr);
+S_API void SteamAPI_vr_IVRCompositor_CompositorQuit(intptr_t instancePtr);
+S_API bool SteamAPI_vr_IVRCompositor_IsFullscreen(intptr_t instancePtr);
+S_API uint32_t SteamAPI_vr_IVRControlPanel_GetDriverCount(intptr_t instancePtr);
+S_API uint32_t SteamAPI_vr_IVRControlPanel_GetDriverId(intptr_t instancePtr, uint32_t unDriverIndex, char * pchBuffer, uint32_t unBufferLen);
+S_API uint32_t SteamAPI_vr_IVRControlPanel_GetDriverDisplayCount(intptr_t instancePtr, const char * pchDriverId);
+S_API uint32_t SteamAPI_vr_IVRControlPanel_GetDriverDisplayId(intptr_t instancePtr, const char * pchDriverId, uint32_t unDisplayIndex, char * pchBuffer, uint32_t unBufferLen);
+S_API uint32_t SteamAPI_vr_IVRControlPanel_GetDriverDisplayModelNumber(intptr_t instancePtr, const char * pchDriverId, const char * pchDisplayId, char * pchBuffer, uint32_t unBufferLen);
+S_API uint32_t SteamAPI_vr_IVRControlPanel_GetDriverDisplaySerialNumber(intptr_t instancePtr, const char * pchDriverId, const char * pchDisplayId, char * pchBuffer, uint32_t unBufferLen);
+S_API uint32_t SteamAPI_vr_IVRControlPanel_LoadSharedResource(intptr_t instancePtr, const char * pchResourceName, char * pchBuffer, uint32_t unBufferLen);
+S_API float SteamAPI_vr_IVRControlPanel_GetIPD(intptr_t instancePtr);
+S_API void SteamAPI_vr_IVRControlPanel_SetIPD(intptr_t instancePtr, float fIPD);
 S_API bool SteamAPI_ISteamGameServer_InitGameServer(intptr_t instancePtr, uint32 unIP, uint16 usGamePort, uint16 usQueryPort, uint32 unFlags, AppId_t nGameAppId, const char * pchVersionString);
 S_API void SteamAPI_ISteamGameServer_SetProduct(intptr_t instancePtr, const char * pszProduct);
 S_API void SteamAPI_ISteamGameServer_SetGameDescription(intptr_t instancePtr, const char * pszGameDescription);

@@ -17,7 +17,7 @@
 #include <isteamvideo.h>
 
 //-----------------------------------------------------------------------------
-// Purpose: Steam Video api
+// Purpose: Steam Video API
 //-----------------------------------------------------------------------------
 class Steam_Video :
 	public ISteamVideo
@@ -36,6 +36,9 @@ public:
 
 	// Get a URL suitable for streaming the given Video app ID's video
 	void GetVideoURL( AppId_t unVideoAppID ) override;
+
+	// returns true if user is uploading a live broadcast
+	bool IsBroadcasting( int *pnNumViewers ) override;
 };
 
 #endif // VAPORCORE_STEAM_VIDEO_H

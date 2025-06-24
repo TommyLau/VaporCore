@@ -1,11 +1,8 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright © 1996-2014 Valve Corporation, All rights reserved. =======
+//
+// Purpose: interface to Steam Video
+//
+//=============================================================================
 
 #ifndef ISTEAMVIDEO_H
 #define ISTEAMVIDEO_H

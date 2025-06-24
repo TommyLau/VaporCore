@@ -3220,7 +3220,7 @@ S_API void SteamAPI_ISteamController_RunFrame(intptr_t instancePtr)
     reinterpret_cast<ISteamController*>(instancePtr)->RunFrame();
 }
 
-S_API bool SteamAPI_ISteamController_GetControllerState(intptr_t instancePtr, uint32 unControllerIndex, struct SteamControllerState_t * pState)
+S_API bool SteamAPI_ISteamController_GetControllerState(intptr_t instancePtr, uint32 unControllerIndex, struct SteamControllerState001_t * pState)
 {
     VLOG_DEBUG("SteamAPI_ISteamController_GetControllerState called");
     if (!instancePtr) return false;
@@ -3260,6 +3260,13 @@ S_API UGCQueryHandle_t SteamAPI_ISteamUGC_CreateQueryAllUGCRequest(intptr_t inst
     return reinterpret_cast<ISteamUGC*>(instancePtr)->CreateQueryAllUGCRequest(eQueryType, eMatchingeMatchingUGCTypeFileType, nCreatorAppID, nConsumerAppID, unPage);
 }
 
+S_API UGCQueryHandle_t SteamAPI_ISteamUGC_CreateQueryUGCDetailsRequest(intptr_t instancePtr, PublishedFileId_t * pvecPublishedFileID, uint32 unNumPublishedFileIDs)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_CreateQueryUGCDetailsRequest called");
+    if (!instancePtr) return k_UGCQueryHandleInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->CreateQueryUGCDetailsRequest(pvecPublishedFileID, unNumPublishedFileIDs);
+}
+
 S_API SteamAPICall_t SteamAPI_ISteamUGC_SendQueryUGCRequest(intptr_t instancePtr, UGCQueryHandle_t handle)
 {
     VLOG_DEBUG("SteamAPI_ISteamUGC_SendQueryUGCRequest called");
@@ -3272,6 +3279,48 @@ S_API bool SteamAPI_ISteamUGC_GetQueryUGCResult(intptr_t instancePtr, UGCQueryHa
     VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCResult called");
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCResult(handle, index, pDetails);
+}
+
+S_API bool SteamAPI_ISteamUGC_GetQueryUGCPreviewURL(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, char * pchURL, uint32 cchURLSize)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCPreviewURL called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCPreviewURL(handle, index, pchURL, cchURLSize);
+}
+
+S_API bool SteamAPI_ISteamUGC_GetQueryUGCMetadata(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, char * pchMetadata, uint32 cchMetadatasize)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCMetadata called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCMetadata(handle, index, pchMetadata, cchMetadatasize);
+}
+
+S_API bool SteamAPI_ISteamUGC_GetQueryUGCChildren(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, PublishedFileId_t * pvecPublishedFileID, uint32 cMaxEntries)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCChildren called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCChildren(handle, index, pvecPublishedFileID, cMaxEntries);
+}
+
+S_API bool SteamAPI_ISteamUGC_GetQueryUGCStatistic(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint32 * pStatValue)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCStatistic called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCStatistic(handle, index, eStatType, pStatValue);
+}
+
+S_API uint32 SteamAPI_ISteamUGC_GetQueryUGCNumAdditionalPreviews(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCNumAdditionalPreviews called");
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCNumAdditionalPreviews(handle, index);
+}
+
+S_API bool SteamAPI_ISteamUGC_GetQueryUGCAdditionalPreview(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, char * pchURLOrVideoID, uint32 cchURLSize, bool * pbIsImage)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCAdditionalPreview called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCAdditionalPreview(handle, index, previewIndex, pchURLOrVideoID, cchURLSize, pbIsImage);
 }
 
 S_API bool SteamAPI_ISteamUGC_ReleaseQueryUGCRequest(intptr_t instancePtr, UGCQueryHandle_t handle)
@@ -3300,6 +3349,27 @@ S_API bool SteamAPI_ISteamUGC_SetReturnLongDescription(intptr_t instancePtr, UGC
     VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnLongDescription called");
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnLongDescription(handle, bReturnLongDescription);
+}
+
+S_API bool SteamAPI_ISteamUGC_SetReturnMetadata(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnMetadata)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnMetadata called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnMetadata(handle, bReturnMetadata);
+}
+
+S_API bool SteamAPI_ISteamUGC_SetReturnChildren(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnChildren)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnChildren called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnChildren(handle, bReturnChildren);
+}
+
+S_API bool SteamAPI_ISteamUGC_SetReturnAdditionalPreviews(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnAdditionalPreviews)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnAdditionalPreviews called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnAdditionalPreviews(handle, bReturnAdditionalPreviews);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetReturnTotalOnly(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnTotalOnly)
@@ -3379,6 +3449,13 @@ S_API bool SteamAPI_ISteamUGC_SetItemDescription(intptr_t instancePtr, UGCUpdate
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemDescription(handle, pchDescription);
 }
 
+S_API bool SteamAPI_ISteamUGC_SetItemMetadata(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchMetaData)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_SetItemMetadata called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemMetadata(handle, pchMetaData);
+}
+
 S_API bool SteamAPI_ISteamUGC_SetItemVisibility(intptr_t instancePtr, UGCUpdateHandle_t handle, ERemoteStoragePublishedFileVisibility eVisibility)
 {
     VLOG_DEBUG("SteamAPI_ISteamUGC_SetItemVisibility called");
@@ -3421,6 +3498,20 @@ S_API EItemUpdateStatus SteamAPI_ISteamUGC_GetItemUpdateProgress(intptr_t instan
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetItemUpdateProgress(handle, punBytesProcessed, punBytesTotal);
 }
 
+S_API SteamAPICall_t SteamAPI_ISteamUGC_AddItemToFavorites(intptr_t instancePtr, AppId_t nAppId, PublishedFileId_t nPublishedFileID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_AddItemToFavorites called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->AddItemToFavorites(nAppId, nPublishedFileID);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUGC_RemoveItemFromFavorites(intptr_t instancePtr, AppId_t nAppId, PublishedFileId_t nPublishedFileID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_RemoveItemFromFavorites called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->RemoveItemFromFavorites(nAppId, nPublishedFileID);
+}
+
 S_API SteamAPICall_t SteamAPI_ISteamUGC_SubscribeItem(intptr_t instancePtr, PublishedFileId_t nPublishedFileID)
 {
     VLOG_DEBUG("SteamAPI_ISteamUGC_SubscribeItem called");
@@ -3449,18 +3540,32 @@ S_API uint32 SteamAPI_ISteamUGC_GetSubscribedItems(intptr_t instancePtr, Publish
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetSubscribedItems(pvecPublishedFileID, cMaxEntries);
 }
 
-S_API bool SteamAPI_ISteamUGC_GetItemInstallInfo(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, uint64 * punSizeOnDisk, char * pchFolder, uint32 cchFolderSize, bool * pbLegacyItem)
+S_API uint32 SteamAPI_ISteamUGC_GetItemState(intptr_t instancePtr, PublishedFileId_t nPublishedFileID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetItemState called");
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetItemState(nPublishedFileID);
+}
+
+S_API bool SteamAPI_ISteamUGC_GetItemInstallInfo(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, uint64 * punSizeOnDisk, char * pchFolder, uint32 cchFolderSize, uint32 * punTimeStamp)
 {
     VLOG_DEBUG("SteamAPI_ISteamUGC_GetItemInstallInfo called");
     if (!instancePtr) return false;
-    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetItemInstallInfo(nPublishedFileID, punSizeOnDisk, pchFolder, cchFolderSize, pbLegacyItem);
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetItemInstallInfo(nPublishedFileID, punSizeOnDisk, pchFolder, cchFolderSize, punTimeStamp);
 }
 
-S_API bool SteamAPI_ISteamUGC_GetItemUpdateInfo(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, bool * pbNeedsUpdate, bool * pbIsDownloading, uint64 * punBytesDownloaded, uint64 * punBytesTotal)
+S_API bool SteamAPI_ISteamUGC_GetItemDownloadInfo(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, uint64 * punBytesDownloaded, uint64 * punBytesTotal)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetItemUpdateInfo called");
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetItemDownloadInfo called");
     if (!instancePtr) return false;
-    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetItemUpdateInfo(nPublishedFileID, pbNeedsUpdate, pbIsDownloading, punBytesDownloaded, punBytesTotal);
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetItemDownloadInfo(nPublishedFileID, punBytesDownloaded, punBytesTotal);
+}
+
+S_API bool SteamAPI_ISteamUGC_DownloadItem(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, bool bHighPriority)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_DownloadItem called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->DownloadItem(nPublishedFileID, bHighPriority);
 }
 
 
@@ -3599,21 +3704,21 @@ S_API void SteamAPI_ISteamHTMLSurface_ExecuteJavascript(intptr_t instancePtr, HH
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->ExecuteJavascript(unBrowserHandle, pchScript);
 }
 
-S_API void SteamAPI_ISteamHTMLSurface_MouseUp(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, ISteamHTMLSurface::EHTMLMouseButton eMouseButton)
+S_API void SteamAPI_ISteamHTMLSurface_MouseUp(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, EHTMLMouseButton eMouseButton)
 {
     VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_MouseUp called");
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->MouseUp(unBrowserHandle, eMouseButton);
 }
 
-S_API void SteamAPI_ISteamHTMLSurface_MouseDown(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, ISteamHTMLSurface::EHTMLMouseButton eMouseButton)
+S_API void SteamAPI_ISteamHTMLSurface_MouseDown(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, EHTMLMouseButton eMouseButton)
 {
     VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_MouseDown called");
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->MouseDown(unBrowserHandle, eMouseButton);
 }
 
-S_API void SteamAPI_ISteamHTMLSurface_MouseDoubleClick(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, ISteamHTMLSurface::EHTMLMouseButton eMouseButton)
+S_API void SteamAPI_ISteamHTMLSurface_MouseDoubleClick(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, EHTMLMouseButton eMouseButton)
 {
     VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_MouseDoubleClick called");
     if (!instancePtr) return;
@@ -3634,21 +3739,21 @@ S_API void SteamAPI_ISteamHTMLSurface_MouseWheel(intptr_t instancePtr, HHTMLBrow
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->MouseWheel(unBrowserHandle, nDelta);
 }
 
-S_API void SteamAPI_ISteamHTMLSurface_KeyDown(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, ISteamHTMLSurface::EHTMLKeyModifiers eHTMLKeyModifiers)
+S_API void SteamAPI_ISteamHTMLSurface_KeyDown(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers)
 {
     VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_KeyDown called");
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->KeyDown(unBrowserHandle, nNativeKeyCode, eHTMLKeyModifiers);
 }
 
-S_API void SteamAPI_ISteamHTMLSurface_KeyUp(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, ISteamHTMLSurface::EHTMLKeyModifiers eHTMLKeyModifiers)
+S_API void SteamAPI_ISteamHTMLSurface_KeyUp(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers)
 {
     VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_KeyUp called");
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->KeyUp(unBrowserHandle, nNativeKeyCode, eHTMLKeyModifiers);
 }
 
-S_API void SteamAPI_ISteamHTMLSurface_KeyChar(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 cUnicodeChar, ISteamHTMLSurface::EHTMLKeyModifiers eHTMLKeyModifiers)
+S_API void SteamAPI_ISteamHTMLSurface_KeyChar(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 cUnicodeChar, EHTMLKeyModifiers eHTMLKeyModifiers)
 {
     VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_KeyChar called");
     if (!instancePtr) return;
@@ -3730,6 +3835,13 @@ S_API void SteamAPI_ISteamHTMLSurface_SetPageScaleFactor(intptr_t instancePtr, H
     VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_SetPageScaleFactor called");
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetPageScaleFactor(unBrowserHandle, flZoom, nPointX, nPointY);
+}
+
+S_API void SteamAPI_ISteamHTMLSurface_SetBackgroundMode(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, bool bBackgroundMode)
+{
+    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_SetBackgroundMode called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetBackgroundMode(unBrowserHandle, bBackgroundMode);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_AllowStartRequest(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, bool bAllowed)
@@ -3922,6 +4034,13 @@ S_API void SteamAPI_ISteamVideo_GetVideoURL(intptr_t instancePtr, AppId_t unVide
     VLOG_DEBUG("SteamAPI_ISteamVideo_GetVideoURL called");
     if (!instancePtr) return;
     reinterpret_cast<ISteamVideo*>(instancePtr)->GetVideoURL(unVideoAppID);
+}
+
+S_API bool SteamAPI_ISteamVideo_IsBroadcasting(intptr_t instancePtr, int * pnNumViewers)
+{
+    VLOG_DEBUG("SteamAPI_ISteamVideo_IsBroadcasting called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamVideo*>(instancePtr)->IsBroadcasting(pnNumViewers);
 }
 
 

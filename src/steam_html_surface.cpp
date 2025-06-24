@@ -241,6 +241,16 @@ void Steam_HTML_Surface::SetPageScaleFactor( HHTMLBrowser unBrowserHandle, float
                unBrowserHandle, flZoom, nPointX, nPointY);
 }
 
+// Enable/disable low-resource background mode, where javascript and repaint timers are throttled, resources are
+// more aggressively purged from memory, and audio/video elements are paused. When background mode is enabled,
+// all HTML5 video and audio objects will execute ".pause()" and gain the property "._steam_background_paused = 1".
+// When background mode is disabled, any video or audio objects with that property will resume with ".play()".
+void Steam_HTML_Surface::SetBackgroundMode(HHTMLBrowser unBrowserHandle, bool bBackgroundMode)
+{
+    VLOG_DEBUG("Steam_HTML_Surface::SetBackgroundMode called - Handle: %u, BackgroundMode: %s",
+               unBrowserHandle, bBackgroundMode ? "true" : "false");
+}
+
 // CALLBACKS - These set of functions are used as responses to callback requests
 
 // You MUST call this in response to a HTML_StartRequest_t callback

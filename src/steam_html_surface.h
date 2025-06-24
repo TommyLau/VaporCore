@@ -15,74 +15,14 @@
 
 #include <isteamclient.h>
 #include <isteamhtmlsurface.h>
-
-enum EHTMLMouseButton
-{
-	eHTMLMouseButton_Left = 0,
-	eHTMLMouseButton_Right = 1,
-	eHTMLMouseButton_Middle = 2,
-};
-
-enum EMouseCursor
-{
-	dc_user = 0,
-	dc_none,
-	dc_arrow,
-	dc_ibeam,
-	dc_hourglass,
-	dc_waitarrow,
-	dc_crosshair,
-	dc_up,
-	dc_sizenw,
-	dc_sizese,
-	dc_sizene,
-	dc_sizesw,
-	dc_sizew,
-	dc_sizee,
-	dc_sizen,
-	dc_sizes,
-	dc_sizewe,
-	dc_sizens,
-	dc_sizeall,
-	dc_no,
-	dc_hand,
-	dc_blank, // don't show any custom cursor, just use your default
-	dc_middle_pan,
-	dc_north_pan,
-	dc_north_east_pan,
-	dc_east_pan,
-	dc_south_east_pan,
-	dc_south_pan,
-	dc_south_west_pan,
-	dc_west_pan,
-	dc_north_west_pan,
-	dc_alias,
-	dc_cell,
-	dc_colresize,
-	dc_copycur,
-	dc_verticaltext,
-	dc_rowresize,
-	dc_zoomin,
-	dc_zoomout,
-	dc_help,
-	dc_custom,
-
-	dc_last, // custom cursors start from this value and up
-};
-
-enum EHTMLKeyModifiers
-{
-	eHTMLKeyModifier_None = 0,
-	eHTMLKeyModifier_AltDown = 1 << 0,
-	eHTMLKeyModifier_CrtlDown = 1 << 1,
-	eHTMLKeyModifier_ShiftDown = 1 << 2,
-};
+#include <isteamhtmlsurface002.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for displaying HTML pages and interacting with them
 //-----------------------------------------------------------------------------
 class Steam_HTML_Surface :
-	public ISteamHTMLSurface
+	public ISteamHTMLSurface,
+    public ISteamHTMLSurface002
 {
 private:
     // Singleton instance
@@ -172,8 +112,14 @@ public:
 	// set a webcookie for the hostname in question
 	void SetCookie( const char *pchHostname, const char *pchKey, const char *pchValue, const char *pchPath = "/", RTime32 nExpires = 0, bool bSecure = false, bool bHTTPOnly = false ) override;
 
-	// Zoom the current page by flZoom ( from 0.0 to 4.0, so to zoom to 120% use 1.2 ), zooming around point X,Y in the page (use 0,0 if you don't care)
+	// Zoom the current page by flZoom ( from 0.0 to 2.0, so to zoom to 120% use 1.2 ), zooming around point X,Y in the page (use 0,0 if you don't care)
 	void SetPageScaleFactor( HHTMLBrowser unBrowserHandle, float flZoom, int nPointX, int nPointY ) override;
+
+	// Enable/disable low-resource background mode, where javascript and repaint timers are throttled, resources are
+	// more aggressively purged from memory, and audio/video elements are paused. When background mode is enabled,
+	// all HTML5 video and audio objects will execute ".pause()" and gain the property "._steam_background_paused = 1".
+	// When background mode is disabled, any video or audio objects with that property will resume with ".play()".
+	void SetBackgroundMode( HHTMLBrowser unBrowserHandle, bool bBackgroundMode ) override;
 
 	// CALLBACKS
 	//

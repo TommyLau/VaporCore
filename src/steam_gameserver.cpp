@@ -31,6 +31,8 @@ static ISteamNetworking* g_pSteamGameServerNetworking = nullptr;
 static ISteamGameServerStats* g_pSteamGameServerStats = nullptr;
 static ISteamHTTP* g_pSteamGameServerHTTP = nullptr;
 static ISteamInventory* g_pSteamGameServerInventory = nullptr;
+static ISteamUGC* g_pSteamGameServerUGC = nullptr;
+
 S_API ISteamClient *g_pSteamClientGameServer;
 
 // Global pipe and user handles for game server
@@ -114,6 +116,11 @@ S_API ISteamInventory *SteamGameServerInventory()
     return g_pSteamGameServerInventory;
 }
 
+S_API ISteamUGC *SteamGameServerUGC()
+{
+    VLOG_DEBUG("SteamGameServerUGC() called");
+    return g_pSteamGameServerUGC;
+}
 
 S_API void SteamGameServer_Shutdown()
 {
@@ -129,6 +136,7 @@ S_API void SteamGameServer_Shutdown()
     g_pSteamGameServerStats = nullptr;
     g_pSteamGameServerHTTP = nullptr;
     g_pSteamGameServerInventory = nullptr;
+    g_pSteamGameServerUGC = nullptr;
 
     VLOG_INFO("SteamGameServer_Shutdown completed");
 }
