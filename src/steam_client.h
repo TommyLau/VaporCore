@@ -40,8 +40,9 @@ enum Steam_Pipe {
 //			different process or is local.
 //
 //			For most scenarios this is all handled automatically via SteamAPI_Init().
-//			You'll only need to use these interfaces if you have a more complex versioning scheme,
-//			where you want to get different versions of the same interface in different dll's in your project.
+//			You'll only need these APIs if you have a more complex versioning scheme,
+//			or if you want to implement a multiplexed gameserver where a single process
+//			is handling multiple games at once with independent gameserver SteamIDs.
 //-----------------------------------------------------------------------------
 class Steam_Client :
 	public ISteamClient,
@@ -90,22 +91,27 @@ public:
     static Steam_Client* GetInstance();
     static void ReleaseInstance();
 
-	// Creates a communication pipe to the Steam client
+	// Creates a communication pipe to the Steam client.
+	// NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
 	HSteamPipe CreateSteamPipe() override;
 
 	// Releases a previously created communications pipe
+	// NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
 	bool BReleaseSteamPipe( HSteamPipe hSteamPipe ) override;
 
 	// connects to an existing global user, failing if none exists
 	// used by the game to coordinate with the steamUI
+	// NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
 	HSteamUser ConnectToGlobalUser( HSteamPipe hSteamPipe ) override;
 
 	// used by game servers, create a steam user that won't be shared with anyone else
+	// NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
 	HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType eAccountType ) override;
 	// Changed from Steam SDK v1.04, backward compatibility
 	HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe ) override;
 
 	// removes an allocated user
+	// NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
 	void ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser ) override;
 
 	// retrieves the ISteamUser interface associated with the handle
@@ -159,9 +165,9 @@ public:
 	// user screenshots
 	ISteamScreenshots *GetISteamScreenshots( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
-	// this needs to be called every frame to process matchmaking results
-	// redundant if you're already calling SteamAPI_RunCallbacks()
-	void RunFrame() override;
+	// Deprecated. Applications should use SteamAPI_RunCallbacks() or SteamGameServer_RunCallbacks() instead.
+	// Changed from Steam SDK v1.36, backward compatibility
+	STEAM_PRIVATE_API( void RunFrame() override; )
 
 	// returns the number of IPC calls made since the last time this function was called
 	// Used for perf debugging so you can understand how many IPC calls your game makes per frame
@@ -172,15 +178,11 @@ public:
 	// API warning handling
 	// 'int' is the severity; 0 for msg, 1 for warning
 	// 'const char *' is the text of the message
-	// callbacks will occur directly after the API function is called that generated the warning or message
+	// callbacks will occur directly after the API function is called that generated the warning or message.
 	void SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction ) override;
 
 	// Trigger global shutdown for the DLL
 	bool BShutdownIfAllPipesClosed() override;
-
-#ifdef _PS3
-	ISteamPS3OverlayRender *GetISteamPS3OverlayRender() override;
-#endif
 
 	// Expose HTTP interface
 	ISteamHTTP *GetISteamHTTP( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
@@ -207,9 +209,12 @@ public:
 	ISteamHTMLSurface *GetISteamHTMLSurface(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion) override;
 
 	// Helper functions for internal Steam usage
-	void Set_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func) override;
-	void Remove_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func) override;
-	void Set_SteamAPI_CCheckCallbackRegisteredInProcess(SteamAPI_CheckCallbackRegistered_t func) override;
+	// Changed from Steam SDK v1.36, backward compatibility
+	STEAM_PRIVATE_API( void Set_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func) override; )
+	// Changed from Steam SDK v1.36, backward compatibility
+	STEAM_PRIVATE_API( void Remove_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func) override; )
+	// Changed from Steam SDK v1.36, backward compatibility
+	STEAM_PRIVATE_API( void Set_SteamAPI_CCheckCallbackRegisteredInProcess(SteamAPI_CheckCallbackRegistered_t func) override; )
 
 	// inventory
 	ISteamInventory *GetISteamInventory( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;

@@ -47,6 +47,7 @@ public:
 	// identify your client on web servers.
 	//   The userCSS string lets you apply a CSS style sheet to every displayed page, leave null if
 	// you do not require this functionality.
+	CALL_RESULT( HTML_BrowserReady_t )
 	SteamAPICall_t CreateBrowser( const char *pchUserAgent, const char *pchUserCSS ) override;
 
 	// Call this when you are done with a html surface, this lets us free the resources being used by it
@@ -137,6 +138,7 @@ public:
 	void JSDialogResponse( HHTMLBrowser unBrowserHandle, bool bResult ) override;
 
 	// You MUST call this in response to a HTML_FileOpenDialog_t callback
+	IGNOREATTR()
 	void FileLoadDialogResponse( HHTMLBrowser unBrowserHandle, const char **pchSelectedFiles ) override;
 };
 

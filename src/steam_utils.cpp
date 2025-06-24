@@ -148,8 +148,8 @@ bool Steam_Utils::GetAPICallResult( SteamAPICall_t hSteamAPICall, void *pCallbac
     return false;
 }
 
-// this needs to be called every frame to process matchmaking results
-// redundant if you're already calling SteamAPI_RunCallbacks()
+// Deprecated. Applications should use SteamAPI_RunCallbacks() instead. Game servers do not need to call this function.
+// Changed from Steam SDK v1.36, backward compatibility
 void Steam_Utils::RunFrame()
 {
     VLOG_DEBUG("RunFrame called");

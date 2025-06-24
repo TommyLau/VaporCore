@@ -67,6 +67,7 @@ const char* Steam_Client::GetInterfaceVersion(const char* pchVersion, const char
 }
 
 // Creates a communication pipe to the Steam client
+// NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
 HSteamPipe Steam_Client::CreateSteamPipe()
 {
     VLOG_DEBUG("CreateSteamPipe called");
@@ -78,6 +79,7 @@ HSteamPipe Steam_Client::CreateSteamPipe()
 }
 
 // Releases a previously created communications pipe
+// NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
 bool Steam_Client::BReleaseSteamPipe( HSteamPipe hSteamPipe )
 {
     VLOG_DEBUG("BReleaseSteamPipe called with hSteamPipe=%u", hSteamPipe);
@@ -92,6 +94,7 @@ bool Steam_Client::BReleaseSteamPipe( HSteamPipe hSteamPipe )
 
 // connects to an existing global user, failing if none exists
 // used by the game to coordinate with the steamUI
+// NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
 HSteamUser Steam_Client::ConnectToGlobalUser( HSteamPipe hSteamPipe )
 {
     VLOG_DEBUG("ConnectToGlobalUser called with hSteamPipe=%u", hSteamPipe);
@@ -108,6 +111,7 @@ HSteamUser Steam_Client::ConnectToGlobalUser( HSteamPipe hSteamPipe )
 }
 
 // used by game servers, create a steam user that won't be shared with anyone else
+// NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
 HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType eAccountType )
 {
     // TODO: Implement local user creation
@@ -124,6 +128,7 @@ HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe )
 }
 
 // removes an allocated user
+// NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
 void Steam_Client::ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser )
 {
     // TODO: Implement user release logic
@@ -260,8 +265,8 @@ ISteamScreenshots *Steam_Client::GetISteamScreenshots( HSteamUser hSteamuser, HS
     return nullptr;
 }
 
-// this needs to be called every frame to process matchmaking results
-// redundant if you're already calling SteamAPI_RunCallbacks()
+// Deprecated. Applications should use SteamAPI_RunCallbacks() or SteamGameServer_RunCallbacks() instead.
+// Changed from Steam SDK v1.36, backward compatibility
 void Steam_Client::RunFrame()
 {
     // TODO: Implement frame processing
@@ -362,16 +367,19 @@ ISteamHTMLSurface* Steam_Client::GetISteamHTMLSurface(HSteamUser hSteamuser, HSt
 }
 
 // Helper functions for internal Steam usage
+// Changed from Steam SDK v1.36, backward compatibility
 void Steam_Client::Set_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func)
 {
     VLOG_DEBUG("Set_SteamAPI_CPostAPIResultInProcess called");
 }
 
+// Changed from Steam SDK v1.36, backward compatibility
 void Steam_Client::Remove_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func)
 {
     VLOG_DEBUG("Remove_SteamAPI_CPostAPIResultInProcess called");
 }
 
+// Changed from Steam SDK v1.36, backward compatibility
 void Steam_Client::Set_SteamAPI_CCheckCallbackRegisteredInProcess(SteamAPI_CheckCallbackRegistered_t func)
 {
     VLOG_DEBUG("Set_SteamAPI_CCheckCallbackRegisteredInProcess called");

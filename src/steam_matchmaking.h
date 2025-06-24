@@ -89,6 +89,7 @@ public:
 		}
 	*/
 	// 
+	CALL_RESULT( LobbyMatchList_t )
 	SteamAPICall_t RequestLobbyList() override;
 	// Changed from Steam SDK v1.03, backward compatibility
 	void DEPRECATED_RequestLobbyList() override;
@@ -129,6 +130,7 @@ public:
 	// this is an asynchronous request
 	// results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this point
 	// a LobbyEnter_t callback will also be received (since the local user is joining their own lobby)
+	CALL_RESULT( LobbyCreated_t )
 	SteamAPICall_t CreateLobby( ELobbyType eLobbyType, int cMaxMembers ) override;
 	// Changed from Steam SDK v1.05, backward compatibility
 	SteamAPICall_t CreateLobby( ELobbyType eLobbyType ) override;
@@ -139,6 +141,7 @@ public:
 	// this is an asynchronous request
 	// results will be returned by LobbyEnter_t callback & call result, check m_EChatRoomEnterResponse to see if was successful
 	// lobby metadata is available to use immediately on this call completing
+	CALL_RESULT( LobbyEnter_t )
 	SteamAPICall_t JoinLobby( CSteamID steamIDLobby ) override;
 	// Changed from Steam SDK v1.03, backward compatibility
 	void DEPRECATED_JoinLobby( CSteamID steamIDLobby ) override;
@@ -262,7 +265,6 @@ public:
 	// after completion, the local user will no longer be the owner
 	void CheckForPSNGameBootInvite( unsigned int iGameBootAttributes  ) override;
 #endif
-
 };
 
 //-----------------------------------------------------------------------------

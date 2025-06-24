@@ -272,7 +272,8 @@ public:
 	// these two functions s are deprecated, and will not return results
 	// they will be removed in a future version of the SDK
 	void GetGameplayStats( ) override;
-	SteamAPICall_t GetServerReputation( ) override;
+	CALL_RESULT( GSReputation_t )
+	SteamAPICall_t GetServerReputation() override;
 
 	// Returns the public IP of the server according to Steam, useful when the server is 
 	// behind NAT and you want to advertise its IP in a lobby for other clients to directly
@@ -319,9 +320,11 @@ public:
 	void ForceHeartbeat() override;
 
 	// associate this game server with this clan for the purposes of computing player compat
+	CALL_RESULT( AssociateWithClanResult_t )
 	SteamAPICall_t AssociateWithClan( CSteamID steamIDClan ) override;
 	
 	// ask if any of the current players dont want to play with this new player - or vice versa
+	CALL_RESULT( ComputeNewPlayerCompatibilityResult_t )
 	SteamAPICall_t ComputeNewPlayerCompatibility( CSteamID steamIDNewPlayer ) override;
 };
 

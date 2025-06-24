@@ -99,6 +99,8 @@ public:
 	// Changed from Steam SDK v1.35a, backward compatibility
 	void TriggerHapticPulse(uint32 unControllerIndex, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec) override;
 
+	void TriggerRepeatedHapticPulse( ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec, unsigned short usOffMicroSec, unsigned short unRepeat, unsigned int nFlags ) override;
+
 	// Set the override mode which is used to choose to use different base/legacy bindings from your config file
 	// Removed from Steam SDK v1.35a, backward compatibility
 	void SetOverrideMode(const char *pchMode) override;

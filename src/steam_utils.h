@@ -81,9 +81,9 @@ public:
 	ESteamAPICallFailure GetAPICallFailureReason( SteamAPICall_t hSteamAPICall ) override;
 	bool GetAPICallResult( SteamAPICall_t hSteamAPICall, void *pCallback, int cubCallback, int iCallbackExpected, bool *pbFailed ) override;
 
-	// this needs to be called every frame to process matchmaking results
-	// redundant if you're already calling SteamAPI_RunCallbacks()
-	void RunFrame() override;
+	// Deprecated. Applications should use SteamAPI_RunCallbacks() instead. Game servers do not need to call this function.
+	// Changed from Steam SDK v1.36, backward compatibility
+	STEAM_PRIVATE_API( void RunFrame() override; )
 
 	// returns the number of IPC calls made since the last time this function was called
 	// Used for perf debugging so you can understand how many IPC calls your game makes per frame
@@ -112,7 +112,6 @@ public:
 	// refresh the screen with Present or SwapBuffers to allow the overlay to do it's work.
 	bool BOverlayNeedsPresent() override;
 
-#ifndef _PS3
 	// Asynchronous call to check if an executable file has been signed using the public key set on the signing tab
 	// of the partner site, for example to refuse to load modified executable files.  
 	// The result is returned in CheckFileSignature_t.
@@ -121,18 +120,8 @@ public:
 	//   k_ECheckFileSignatureFileNotFound - The file does not exist on disk.
 	//   k_ECheckFileSignatureInvalidSignature - The file exists, and the signing tab has been set for this file, but the file is either not signed or the signature does not match.
 	//   k_ECheckFileSignatureValidSignature - The file is signed and the signature is valid.
+	CALL_RESULT( CheckFileSignature_t )
 	SteamAPICall_t CheckFileSignature( const char *szFileName ) override;
-#endif
-
-#ifdef _PS3
-	void PostPS3SysutilCallback( uint64_t status, uint64_t param, void* userdata ) override;
-	bool BIsReadyToShutdown() override;
-	bool BIsPSNOnline() override;
-
-	// Call this with localized strings for the language the game is running in, otherwise default english
-	// strings will be used by Steam.
-	void SetPSNGameBootInviteStrings( const char *pchSubject, const char *pchBody ) override;
-#endif
 
 	// Activates the Big Picture text input dialog which only supports gamepad input
 	bool ShowGamepadTextInput( EGamepadTextInputMode eInputMode, EGamepadTextInputLineMode eLineInputMode, const char *pchDescription, uint32 unCharMax, const char *pchExistingText ) override;
@@ -154,4 +143,3 @@ public:
 };
 
 #endif // VAPORCORE_STEAM_UTILS_H
-

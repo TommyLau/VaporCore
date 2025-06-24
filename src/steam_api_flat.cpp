@@ -12,6 +12,7 @@
 #include <steam_gameserver.h>
 #include <steam_game_server_stats.h>
 
+#include "vaporcore_base.h"
 #include "logger.h"
 
 //-----------------------------------------------------------------------------
@@ -3340,6 +3341,13 @@ S_API void SteamAPI_ISteamController_TriggerHapticPulse(intptr_t instancePtr, Co
     reinterpret_cast<ISteamController*>(instancePtr)->TriggerHapticPulse(controllerHandle, eTargetPad, usDurationMicroSec);
 }
 
+S_API void SteamAPI_ISteamController_TriggerRepeatedHapticPulse(intptr_t instancePtr, ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec, unsigned short usOffMicroSec, unsigned short unRepeat, unsigned int nFlags)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_TriggerRepeatedHapticPulse called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamController*>(instancePtr)->TriggerRepeatedHapticPulse(controllerHandle, eTargetPad, usDurationMicroSec, usOffMicroSec, unRepeat, nFlags);
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamUGC flat API implementations
@@ -4041,13 +4049,6 @@ S_API void SteamAPI_ISteamHTMLSurface_JSDialogResponse(intptr_t instancePtr, HHT
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->JSDialogResponse(unBrowserHandle, bResult);
 }
 
-S_API void SteamAPI_ISteamHTMLSurface_FileLoadDialogResponse(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, const char ** pchSelectedFiles)
-{
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_FileLoadDialogResponse called");
-    if (!instancePtr) return;
-    reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->FileLoadDialogResponse(unBrowserHandle, pchSelectedFiles);
-}
-
 
 //-----------------------------------------------------------------------------
 // ISteamInventory flat API implementations
@@ -4612,4 +4613,36 @@ S_API SteamAPICall_t SteamAPI_ISteamGameServerStats_StoreUserStats(intptr_t inst
     VLOG_DEBUG("SteamAPI_ISteamGameServerStats_StoreUserStats called");
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamGameServerStats*>(instancePtr)->StoreUserStats(steamIDUser);
+}
+
+//-----------------------------------------------------------------------------
+// Preserved existing functions
+//-----------------------------------------------------------------------------
+
+S_API void SteamAPI_ISteamHTMLSurface_FileLoadDialogResponse(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, const char ** pchSelectedFiles)
+{
+    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_FileLoadDialogResponse called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->FileLoadDialogResponse(unBrowserHandle, pchSelectedFiles);
+}
+
+S_API bool SteamAPI_ISteamController_GetControllerState(intptr_t instancePtr, uint32 unControllerIndex, struct SteamControllerState001_t * pState)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetControllerState called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamController001*>(instancePtr)->GetControllerState(unControllerIndex, pState);
+}
+
+S_API void SteamAPI_ISteamController_SetOverrideMode(intptr_t instancePtr, const char * pchMode)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_SetOverrideMode called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamController001*>(instancePtr)->SetOverrideMode(pchMode);
+}
+
+S_API bool SteamAPI_ISteamUGC_GetItemUpdateInfo(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, bool * pbNeedsUpdate, bool * pbIsDownloading, uint64 * punBytesDownloaded, uint64 * punBytesTotal)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetItemUpdateInfo called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC003*>(instancePtr)->GetItemUpdateInfo(nPublishedFileID, pbNeedsUpdate, pbIsDownloading, punBytesDownloaded, punBytesTotal);
 }

@@ -17,7 +17,33 @@
 
 #include <mutex>
 
-#include <isteamclient.h>
+// Steam API headers with steam_ prefix from src folder
+#include "steam_apps.h"
+#include "steam_app_list.h"
+#include "steam_app_ticket.h"
+#include "steam_client.h"
+#include "steam_controller.h"
+#include "steam_friends.h"
+#include "steam_game_coordinator.h"
+#include "steam_game_server.h"
+#include "steam_game_server_stats.h"
+#include "steam_game_stats.h"
+#include "steam_html_surface.h"
+#include "steam_http.h"
+#include "steam_inventory.h"
+#include "steam_master_server_updater.h"
+#include "steam_matchmaking.h"
+#include "steam_music.h"
+#include "steam_music_remote.h"
+#include "steam_networking.h"
+#include "steam_remote_storage.h"
+#include "steam_screenshots.h"
+#include "steam_ugc.h"
+#include "steam_unified_messages.h"
+#include "steam_user.h"
+#include "steam_user_stats.h"
+#include "steam_utils.h"
+#include "steam_video.h"
 
 namespace VaporCore {
     

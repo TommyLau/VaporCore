@@ -202,6 +202,12 @@ void Steam_Controller::TriggerHapticPulse(uint32 unControllerIndex, ESteamContro
                unControllerIndex, eTargetPad, usDurationMicroSec);
 }
 
+void Steam_Controller::TriggerRepeatedHapticPulse(ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec, unsigned short usOffMicroSec, unsigned short unRepeat, unsigned int nFlags)
+{
+    VLOG_DEBUG("Steam_Controller::TriggerRepeatedHapticPulse called for controller %llu, pad %d, duration %u, off duration %u, repeat %u, flags %u",
+               controllerHandle, eTargetPad, usDurationMicroSec, usOffMicroSec, unRepeat, nFlags);
+}
+
 // Set the override mode which is used to choose to use different base/legacy bindings from your config file
 void Steam_Controller::SetOverrideMode(const char *pchMode)
 {
