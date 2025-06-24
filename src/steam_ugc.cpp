@@ -116,6 +116,18 @@ bool Steam_UGC::GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 in
     return false;
 }
 
+uint32 Steam_UGC::GetQueryUGCNumKeyValueTags( UGCQueryHandle_t handle, uint32 index )
+{
+    VLOG_DEBUG("GetQueryUGCNumKeyValueTags called");
+    return 0;
+}
+
+bool Steam_UGC::GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, uint32 keyValueTagIndex, char *pchKey, uint32 cchKeySize, char *pchValue, uint32 cchValueSize )
+{
+    VLOG_DEBUG("GetQueryUGCKeyValueTag called");
+    return false;
+}
+
 // Release the request to free up memory, after retrieving results
 bool Steam_UGC::ReleaseQueryUGCRequest( UGCQueryHandle_t handle )
 {
@@ -133,6 +145,12 @@ bool Steam_UGC::AddRequiredTag( UGCQueryHandle_t handle, const char *pTagName )
 bool Steam_UGC::AddExcludedTag( UGCQueryHandle_t handle, const char *pTagName )
 {
     VLOG_DEBUG("AddExcludedTag called");
+    return false;
+}
+
+bool Steam_UGC::SetReturnKeyValueTags( UGCQueryHandle_t handle, bool bReturnKeyValueTags )
+{
+    VLOG_DEBUG("SetReturnKeyValueTags called");
     return false;
 }
 
@@ -166,6 +184,12 @@ bool Steam_UGC::SetReturnTotalOnly( UGCQueryHandle_t handle, bool bReturnTotalOn
     return false;
 }
 
+bool Steam_UGC::SetLanguage( UGCQueryHandle_t handle, const char *pchLanguage )
+{
+    VLOG_DEBUG("SetLanguage called");
+    return false;
+}
+
 bool Steam_UGC::SetAllowCachedResponse( UGCQueryHandle_t handle, uint32 unMaxAgeSeconds )
 {
     VLOG_DEBUG("SetAllowCachedResponse called");
@@ -195,6 +219,12 @@ bool Steam_UGC::SetSearchText( UGCQueryHandle_t handle, const char *pSearchText 
 bool Steam_UGC::SetRankedByTrendDays( UGCQueryHandle_t handle, uint32 unDays )
 {
     VLOG_DEBUG("SetRankedByTrendDays called");
+    return false;
+}
+
+bool Steam_UGC::AddRequiredKeyValueTag( UGCQueryHandle_t handle, const char *pKey, const char *pValue )
+{
+    VLOG_DEBUG("AddRequiredKeyValueTag called");
     return false;
 }
 
@@ -244,6 +274,13 @@ bool Steam_UGC::SetItemDescription( UGCUpdateHandle_t handle, const char *pchDes
     return false;
 }
 
+// specify the language of the title or description that will be set
+bool Steam_UGC::SetItemUpdateLanguage( UGCUpdateHandle_t handle, const char *pchLanguage )
+{
+    VLOG_DEBUG("SetItemUpdateLanguage called");
+    return false;
+}
+
 // change the metadata of an UGC item (max = k_cchDeveloperMetadataMax)
 bool Steam_UGC::SetItemMetadata( UGCUpdateHandle_t handle, const char *pchMetaData )
 {
@@ -279,6 +316,20 @@ bool Steam_UGC::SetItemPreview( UGCUpdateHandle_t handle, const char *pszPreview
     return false;
 }
 
+// remove any existing key-value tags with the specified key
+bool Steam_UGC::RemoveItemKeyValueTags( UGCUpdateHandle_t handle, const char *pchKey )
+{
+    VLOG_DEBUG("RemoveItemKeyValueTags called");
+    return false;
+}
+
+// add new key-value tags for the item. Note that there can be multiple values for a tag.
+bool Steam_UGC::AddItemKeyValueTag( UGCUpdateHandle_t handle, const char *pchKey, const char *pchValue )
+{
+    VLOG_DEBUG("AddItemKeyValueTag called");
+    return false;
+}
+
 // commit update process started with StartItemUpdate()
 SteamAPICall_t Steam_UGC::SubmitItemUpdate( UGCUpdateHandle_t handle, const char *pchChangeNote )
 {
@@ -293,6 +344,18 @@ EItemUpdateStatus Steam_UGC::GetItemUpdateProgress( UGCUpdateHandle_t handle, ui
 }
 
 // Steam Workshop Consumer API
+
+SteamAPICall_t Steam_UGC::SetUserItemVote( PublishedFileId_t nPublishedFileID, bool bVoteUp )
+{
+    VLOG_DEBUG("SetUserItemVote called");
+    return 0;
+}
+
+SteamAPICall_t Steam_UGC::GetUserItemVote( PublishedFileId_t nPublishedFileID )
+{
+    VLOG_DEBUG("GetUserItemVote called");
+    return 0;
+}
 
 SteamAPICall_t Steam_UGC::AddItemToFavorites( AppId_t nAppId, PublishedFileId_t nPublishedFileID )
 {

@@ -148,6 +148,9 @@ public:
 
 	// returns true if Steam itself is running in VR mode
 	bool IsSteamRunningInVR() override;
+	
+	// Sets the inset of the overlay notification from the corner specified by SetOverlayNotificationPosition.
+	void SetOverlayNotificationInset( int nHorizontalInset, int nVerticalInset ) override;
 };
 
 #endif // VAPORCORE_STEAM_UTILS_H

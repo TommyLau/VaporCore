@@ -1,9 +1,10 @@
 /*
- * VaporCore Steam API Implementation - Flat API
+ * VaporCore Steam API Implementation
  * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
  * 
  * This file is part of VaporCore.
- * Auto-generated from steam_api_flat.h
+ * 
+ * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
 #include <steam_api.h>
@@ -1122,6 +1123,13 @@ S_API bool SteamAPI_ISteamUtils_IsSteamRunningInVR(intptr_t instancePtr)
     VLOG_DEBUG("SteamAPI_ISteamUtils_IsSteamRunningInVR called");
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->IsSteamRunningInVR();
+}
+
+S_API void SteamAPI_ISteamUtils_SetOverlayNotificationInset(intptr_t instancePtr, int nHorizontalInset, int nVerticalInset)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUtils_SetOverlayNotificationInset called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamUtils*>(instancePtr)->SetOverlayNotificationInset(nHorizontalInset, nVerticalInset);
 }
 
 
@@ -3323,6 +3331,20 @@ S_API bool SteamAPI_ISteamUGC_GetQueryUGCAdditionalPreview(intptr_t instancePtr,
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCAdditionalPreview(handle, index, previewIndex, pchURLOrVideoID, cchURLSize, pbIsImage);
 }
 
+S_API uint32 SteamAPI_ISteamUGC_GetQueryUGCNumKeyValueTags(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCNumKeyValueTags called");
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCNumKeyValueTags(handle, index);
+}
+
+S_API bool SteamAPI_ISteamUGC_GetQueryUGCKeyValueTag(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, uint32 keyValueTagIndex, char * pchKey, uint32 cchKeySize, char * pchValue, uint32 cchValueSize)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCKeyValueTag called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCKeyValueTag(handle, index, keyValueTagIndex, pchKey, cchKeySize, pchValue, cchValueSize);
+}
+
 S_API bool SteamAPI_ISteamUGC_ReleaseQueryUGCRequest(intptr_t instancePtr, UGCQueryHandle_t handle)
 {
     VLOG_DEBUG("SteamAPI_ISteamUGC_ReleaseQueryUGCRequest called");
@@ -3342,6 +3364,13 @@ S_API bool SteamAPI_ISteamUGC_AddExcludedTag(intptr_t instancePtr, UGCQueryHandl
     VLOG_DEBUG("SteamAPI_ISteamUGC_AddExcludedTag called");
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->AddExcludedTag(handle, pTagName);
+}
+
+S_API bool SteamAPI_ISteamUGC_SetReturnKeyValueTags(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnKeyValueTags)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnKeyValueTags called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnKeyValueTags(handle, bReturnKeyValueTags);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetReturnLongDescription(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnLongDescription)
@@ -3379,6 +3408,13 @@ S_API bool SteamAPI_ISteamUGC_SetReturnTotalOnly(intptr_t instancePtr, UGCQueryH
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnTotalOnly(handle, bReturnTotalOnly);
 }
 
+S_API bool SteamAPI_ISteamUGC_SetLanguage(intptr_t instancePtr, UGCQueryHandle_t handle, const char * pchLanguage)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_SetLanguage called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->SetLanguage(handle, pchLanguage);
+}
+
 S_API bool SteamAPI_ISteamUGC_SetAllowCachedResponse(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 unMaxAgeSeconds)
 {
     VLOG_DEBUG("SteamAPI_ISteamUGC_SetAllowCachedResponse called");
@@ -3412,6 +3448,13 @@ S_API bool SteamAPI_ISteamUGC_SetRankedByTrendDays(intptr_t instancePtr, UGCQuer
     VLOG_DEBUG("SteamAPI_ISteamUGC_SetRankedByTrendDays called");
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetRankedByTrendDays(handle, unDays);
+}
+
+S_API bool SteamAPI_ISteamUGC_AddRequiredKeyValueTag(intptr_t instancePtr, UGCQueryHandle_t handle, const char * pKey, const char * pValue)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_AddRequiredKeyValueTag called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->AddRequiredKeyValueTag(handle, pKey, pValue);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_RequestUGCDetails(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, uint32 unMaxAgeSeconds)
@@ -3449,6 +3492,13 @@ S_API bool SteamAPI_ISteamUGC_SetItemDescription(intptr_t instancePtr, UGCUpdate
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemDescription(handle, pchDescription);
 }
 
+S_API bool SteamAPI_ISteamUGC_SetItemUpdateLanguage(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchLanguage)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_SetItemUpdateLanguage called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemUpdateLanguage(handle, pchLanguage);
+}
+
 S_API bool SteamAPI_ISteamUGC_SetItemMetadata(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchMetaData)
 {
     VLOG_DEBUG("SteamAPI_ISteamUGC_SetItemMetadata called");
@@ -3484,6 +3534,20 @@ S_API bool SteamAPI_ISteamUGC_SetItemPreview(intptr_t instancePtr, UGCUpdateHand
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemPreview(handle, pszPreviewFile);
 }
 
+S_API bool SteamAPI_ISteamUGC_RemoveItemKeyValueTags(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchKey)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_RemoveItemKeyValueTags called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->RemoveItemKeyValueTags(handle, pchKey);
+}
+
+S_API bool SteamAPI_ISteamUGC_AddItemKeyValueTag(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchKey, const char * pchValue)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_AddItemKeyValueTag called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->AddItemKeyValueTag(handle, pchKey, pchValue);
+}
+
 S_API SteamAPICall_t SteamAPI_ISteamUGC_SubmitItemUpdate(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchChangeNote)
 {
     VLOG_DEBUG("SteamAPI_ISteamUGC_SubmitItemUpdate called");
@@ -3496,6 +3560,20 @@ S_API EItemUpdateStatus SteamAPI_ISteamUGC_GetItemUpdateProgress(intptr_t instan
     VLOG_DEBUG("SteamAPI_ISteamUGC_GetItemUpdateProgress called");
     if (!instancePtr) return k_EItemUpdateStatusInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetItemUpdateProgress(handle, punBytesProcessed, punBytesTotal);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUGC_SetUserItemVote(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, bool bVoteUp)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_SetUserItemVote called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->SetUserItemVote(nPublishedFileID, bVoteUp);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUGC_GetUserItemVote(intptr_t instancePtr, PublishedFileId_t nPublishedFileID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetUserItemVote called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetUserItemVote(nPublishedFileID);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_AddItemToFavorites(intptr_t instancePtr, AppId_t nAppId, PublishedFileId_t nPublishedFileID)

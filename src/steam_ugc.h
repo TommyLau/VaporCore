@@ -19,6 +19,7 @@
 #include <isteamugc001.h>
 #include <isteamugc002.h>
 #include <isteamugc003.h>
+#include <isteamugc005.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Steam UGC support API
@@ -27,7 +28,8 @@ class Steam_UGC :
     public ISteamUGC,
     public ISteamUGC001,
     public ISteamUGC002,
-    public ISteamUGC003
+    public ISteamUGC003,
+    public ISteamUGC005
 {
 private:
     // Singleton instance
@@ -61,6 +63,8 @@ public:
 	bool GetQueryUGCStatistic( UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint32 *pStatValue ) override;
 	uint32 GetQueryUGCNumAdditionalPreviews( UGCQueryHandle_t handle, uint32 index ) override;
 	bool GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, char *pchURLOrVideoID, uint32 cchURLSize, bool *pbIsImage ) override;
+	uint32 GetQueryUGCNumKeyValueTags( UGCQueryHandle_t handle, uint32 index ) override;
+	bool GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, uint32 keyValueTagIndex, char *pchKey, uint32 cchKeySize, char *pchValue, uint32 cchValueSize ) override;
 
 	// Release the request to free up memory, after retrieving results
 	bool ReleaseQueryUGCRequest( UGCQueryHandle_t handle ) override;
@@ -68,11 +72,13 @@ public:
 	// Options to set for querying UGC
 	bool AddRequiredTag( UGCQueryHandle_t handle, const char *pTagName ) override;
 	bool AddExcludedTag( UGCQueryHandle_t handle, const char *pTagName ) override;
+	bool SetReturnKeyValueTags( UGCQueryHandle_t handle, bool bReturnKeyValueTags ) override;
 	bool SetReturnLongDescription( UGCQueryHandle_t handle, bool bReturnLongDescription ) override;
 	bool SetReturnMetadata( UGCQueryHandle_t handle, bool bReturnMetadata ) override;
 	bool SetReturnChildren( UGCQueryHandle_t handle, bool bReturnChildren ) override;
 	bool SetReturnAdditionalPreviews( UGCQueryHandle_t handle, bool bReturnAdditionalPreviews ) override;
 	bool SetReturnTotalOnly( UGCQueryHandle_t handle, bool bReturnTotalOnly ) override;
+	bool SetLanguage( UGCQueryHandle_t handle, const char *pchLanguage ) override;
 	bool SetAllowCachedResponse( UGCQueryHandle_t handle, uint32 unMaxAgeSeconds ) override;
 
 	// Options only for querying user UGC
@@ -82,6 +88,7 @@ public:
 	bool SetMatchAnyTag( UGCQueryHandle_t handle, bool bMatchAnyTag ) override;
 	bool SetSearchText( UGCQueryHandle_t handle, const char *pSearchText ) override;
 	bool SetRankedByTrendDays( UGCQueryHandle_t handle, uint32 unDays ) override;
+	bool AddRequiredKeyValueTag( UGCQueryHandle_t handle, const char *pKey, const char *pValue ) override;
 
 	// Request full details for one piece of UGC
 	// DEPRECATED - Use CreateQueryUGCDetailsRequest call above instead!
@@ -96,16 +103,21 @@ public:
 
 	bool SetItemTitle( UGCUpdateHandle_t handle, const char *pchTitle ) override; // change the title of an UGC item
 	bool SetItemDescription( UGCUpdateHandle_t handle, const char *pchDescription ) override; // change the description of an UGC item
+	bool SetItemUpdateLanguage( UGCUpdateHandle_t handle, const char *pchLanguage ) override; // specify the language of the title or description that will be set
 	bool SetItemMetadata( UGCUpdateHandle_t handle, const char *pchMetaData ) override; // change the metadata of an UGC item (max = k_cchDeveloperMetadataMax)
 	bool SetItemVisibility( UGCUpdateHandle_t handle, ERemoteStoragePublishedFileVisibility eVisibility ) override; // change the visibility of an UGC item
 	bool SetItemTags( UGCUpdateHandle_t updateHandle, const SteamParamStringArray_t *pTags ) override; // change the tags of an UGC item
 	bool SetItemContent( UGCUpdateHandle_t handle, const char *pszContentFolder ) override; // update item content from this local folder
 	bool SetItemPreview( UGCUpdateHandle_t handle, const char *pszPreviewFile ) override; //  change preview image file for this item. pszPreviewFile points to local image file, which must be under 1MB in size
+	bool RemoveItemKeyValueTags( UGCUpdateHandle_t handle, const char *pchKey ) override; // remove any existing key-value tags with the specified key
+	bool AddItemKeyValueTag( UGCUpdateHandle_t handle, const char *pchKey, const char *pchValue ) override; // add new key-value tags for the item. Note that there can be multiple values for a tag.
 
 	SteamAPICall_t SubmitItemUpdate( UGCUpdateHandle_t handle, const char *pchChangeNote ) override; // commit update process started with StartItemUpdate()
 	EItemUpdateStatus GetItemUpdateProgress( UGCUpdateHandle_t handle, uint64 *punBytesProcessed, uint64* punBytesTotal ) override;
 
 	// Steam Workshop Consumer API
+	SteamAPICall_t SetUserItemVote( PublishedFileId_t nPublishedFileID, bool bVoteUp ) override;
+	SteamAPICall_t GetUserItemVote( PublishedFileId_t nPublishedFileID ) override;
 	SteamAPICall_t AddItemToFavorites( AppId_t nAppId, PublishedFileId_t nPublishedFileID ) override;
 	SteamAPICall_t RemoveItemFromFavorites( AppId_t nAppId, PublishedFileId_t nPublishedFileID ) override;
 	SteamAPICall_t SubscribeItem( PublishedFileId_t nPublishedFileID ) override; // subscribe to this item, will be installed ASAP

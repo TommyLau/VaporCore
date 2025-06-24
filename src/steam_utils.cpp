@@ -258,3 +258,9 @@ bool Steam_Utils::IsSteamRunningInVR()
     VLOG_DEBUG("IsSteamRunningInVR called");
     return false;
 }
+
+// Sets the inset of the overlay notification from the corner specified by SetOverlayNotificationPosition.
+void Steam_Utils::SetOverlayNotificationInset(int nHorizontalInset, int nVerticalInset)
+{
+    VLOG_DEBUG("SetOverlayNotificationInset called - Horizontal: %d, Vertical: %d", nHorizontalInset, nVerticalInset);
+}

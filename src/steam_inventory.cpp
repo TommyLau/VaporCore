@@ -220,14 +220,14 @@ bool Steam_Inventory::AddPromoItems( SteamInventoryResult_t *pResultHandle, ARRA
 	return false;
 }
 
-// ConsumeItem() removes items from the inventory, permenantly. They cannot be recovered.
+// ConsumeItem() removes items from the inventory, permanently. They cannot be recovered.
 // Not for the faint of heart - if your game implements item removal at all, a high-friction
 // UI confirmation process is highly recommended. Similar to GenerateItems, punArrayQuantity
 // can be NULL or else an array of the same length as pArrayItems which describe the quantity
 // of each item to destroy. ConsumeItem can be restricted to certain item definitions or
 // fully blocked via the Steamworks website to minimize support/abuse issues such as the
 // clasic "my brother borrowed my laptop and deleted all of my rare items".
-METHOD_DESC(ConsumeItem() removes items from the inventory permenantly.)
+METHOD_DESC(ConsumeItem() removes items from the inventory permanently.)
 bool Steam_Inventory::ConsumeItem( SteamInventoryResult_t *pResultHandle, SteamItemInstanceID_t itemConsume, uint32 unQuantity )
 {
 	VLOG_DEBUG("ConsumeItem called - %d, %d, %d", pResultHandle, itemConsume, unQuantity);
