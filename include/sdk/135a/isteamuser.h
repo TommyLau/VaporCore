@@ -1,11 +1,8 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright (c) 1996-2008, Valve Corporation, All rights reserved. =======
+//
+// Purpose: interface to user account information in Steam
+//
+//=============================================================================
 
 #ifndef ISTEAMUSER_H
 #define ISTEAMUSER_H
@@ -57,7 +54,7 @@ public:
 	virtual CSteamID GetSteamID() = 0;
 
 	// Multiplayer Authentication functions
-
+	
 	// InitiateGameConnection() starts the state machine for authenticating the game client with the game server
 	// It is the client portion of a three-way handshake between the client, the game server, and the steam servers
 	//

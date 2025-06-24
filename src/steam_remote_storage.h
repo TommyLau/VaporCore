@@ -22,6 +22,7 @@
 #include <isteamremotestorage008.h>
 #include <isteamremotestorage010.h>
 #include <isteamremotestorage011.h>
+#include <isteamremotestorage012.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing, reading and writing files stored remotely 
@@ -35,7 +36,8 @@ class Steam_Remote_Storage :
     public ISteamRemoteStorage006,
     public ISteamRemoteStorage008,
     public ISteamRemoteStorage010,
-    public ISteamRemoteStorage011
+    public ISteamRemoteStorage011,
+    public ISteamRemoteStorage012
 {
 private:
     // Singleton instance
@@ -59,6 +61,12 @@ public:
 	// file operations
     bool FileWrite( const char *pchFile, const void *pvData, int32 cubData ) override;
     int32 FileRead( const char *pchFile, void *pvData, int32 cubDataToRead ) override;
+
+	SteamAPICall_t FileWriteAsync( const char *pchFile, const void *pvData, uint32 cubData ) override;
+	
+	SteamAPICall_t FileReadAsync( const char *pchFile, uint32 nOffset, uint32 cubToRead ) override;
+	bool FileReadAsyncComplete( SteamAPICall_t hReadCall, void *pvBuffer, uint32 cubToRead ) override;
+
     bool FileForget( const char *pchFile ) override;
     bool FileDelete( const char *pchFile ) override;
     SteamAPICall_t FileShare( const char *pchFile ) override;

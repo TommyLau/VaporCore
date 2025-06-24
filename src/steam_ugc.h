@@ -148,6 +148,13 @@ public:
 	// then files on disk should not be used until callback received. If item is not subscribed to, it will be cached for some time.
 	// If bHighPriority is set, any other item download will be suspended and this item downloaded ASAP.
 	bool DownloadItem( PublishedFileId_t nPublishedFileID, bool bHighPriority ) override;
+
+	// game servers can set a specific workshop folder before issuing any UGC commands.
+	// This is helpful if you want to support multiple game servers running out of the same install folder
+	bool BInitWorkshopForGameServer( DepotId_t unWorkshopDepotID, const char *pszFolder ) override;
+
+	// SuspendDownloads( true ) will suspend all workshop downloads until SuspendDownloads( false ) is called or the game ends
+	void SuspendDownloads( bool bSuspend ) override;
 };
 
 #endif // VAPORCORE_STEAM_UGC_H

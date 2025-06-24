@@ -1508,42 +1508,42 @@ S_API void SteamAPI_ISteamMatchmakingRulesResponse_RulesRefreshComplete(intptr_t
 S_API HServerListRequest SteamAPI_ISteamMatchmakingServers_RequestInternetServerList(intptr_t instancePtr, AppId_t iApp, struct MatchMakingKeyValuePair_t ** ppchFilters, uint32 nFilters, class ISteamMatchmakingServerListResponse * pRequestServersResponse)
 {
     VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RequestInternetServerList called");
-    if (!instancePtr) return 0;
+    if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RequestInternetServerList(iApp, ppchFilters, nFilters, pRequestServersResponse);
 }
 
 S_API HServerListRequest SteamAPI_ISteamMatchmakingServers_RequestLANServerList(intptr_t instancePtr, AppId_t iApp, class ISteamMatchmakingServerListResponse * pRequestServersResponse)
 {
     VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RequestLANServerList called");
-    if (!instancePtr) return 0;
+    if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RequestLANServerList(iApp, pRequestServersResponse);
 }
 
 S_API HServerListRequest SteamAPI_ISteamMatchmakingServers_RequestFriendsServerList(intptr_t instancePtr, AppId_t iApp, struct MatchMakingKeyValuePair_t ** ppchFilters, uint32 nFilters, class ISteamMatchmakingServerListResponse * pRequestServersResponse)
 {
     VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RequestFriendsServerList called");
-    if (!instancePtr) return 0;
+    if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RequestFriendsServerList(iApp, ppchFilters, nFilters, pRequestServersResponse);
 }
 
 S_API HServerListRequest SteamAPI_ISteamMatchmakingServers_RequestFavoritesServerList(intptr_t instancePtr, AppId_t iApp, struct MatchMakingKeyValuePair_t ** ppchFilters, uint32 nFilters, class ISteamMatchmakingServerListResponse * pRequestServersResponse)
 {
     VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RequestFavoritesServerList called");
-    if (!instancePtr) return 0;
+    if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RequestFavoritesServerList(iApp, ppchFilters, nFilters, pRequestServersResponse);
 }
 
 S_API HServerListRequest SteamAPI_ISteamMatchmakingServers_RequestHistoryServerList(intptr_t instancePtr, AppId_t iApp, struct MatchMakingKeyValuePair_t ** ppchFilters, uint32 nFilters, class ISteamMatchmakingServerListResponse * pRequestServersResponse)
 {
     VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RequestHistoryServerList called");
-    if (!instancePtr) return 0;
+    if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RequestHistoryServerList(iApp, ppchFilters, nFilters, pRequestServersResponse);
 }
 
 S_API HServerListRequest SteamAPI_ISteamMatchmakingServers_RequestSpectatorServerList(intptr_t instancePtr, AppId_t iApp, struct MatchMakingKeyValuePair_t ** ppchFilters, uint32 nFilters, class ISteamMatchmakingServerListResponse * pRequestServersResponse)
 {
     VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RequestSpectatorServerList called");
-    if (!instancePtr) return 0;
+    if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RequestSpectatorServerList(iApp, ppchFilters, nFilters, pRequestServersResponse);
 }
 
@@ -1599,21 +1599,21 @@ S_API void SteamAPI_ISteamMatchmakingServers_RefreshServer(intptr_t instancePtr,
 S_API HServerQuery SteamAPI_ISteamMatchmakingServers_PingServer(intptr_t instancePtr, uint32 unIP, uint16 usPort, class ISteamMatchmakingPingResponse * pRequestServersResponse)
 {
     VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_PingServer called");
-    if (!instancePtr) return 0;
+    if (!instancePtr) return HSERVERQUERY_INVALID;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->PingServer(unIP, usPort, pRequestServersResponse);
 }
 
 S_API HServerQuery SteamAPI_ISteamMatchmakingServers_PlayerDetails(intptr_t instancePtr, uint32 unIP, uint16 usPort, class ISteamMatchmakingPlayersResponse * pRequestServersResponse)
 {
     VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_PlayerDetails called");
-    if (!instancePtr) return 0;
+    if (!instancePtr) return HSERVERQUERY_INVALID;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->PlayerDetails(unIP, usPort, pRequestServersResponse);
 }
 
 S_API HServerQuery SteamAPI_ISteamMatchmakingServers_ServerRules(intptr_t instancePtr, uint32 unIP, uint16 usPort, class ISteamMatchmakingRulesResponse * pRequestServersResponse)
 {
     VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_ServerRules called");
-    if (!instancePtr) return 0;
+    if (!instancePtr) return HSERVERQUERY_INVALID;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->ServerRules(unIP, usPort, pRequestServersResponse);
 }
 
@@ -1641,6 +1641,27 @@ S_API int32 SteamAPI_ISteamRemoteStorage_FileRead(intptr_t instancePtr, const ch
     VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileRead called");
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileRead(pchFile, pvData, cubDataToRead);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_FileWriteAsync(intptr_t instancePtr, const char * pchFile, const void * pvData, uint32 cubData)
+{
+    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileWriteAsync called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileWriteAsync(pchFile, pvData, cubData);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_FileReadAsync(intptr_t instancePtr, const char * pchFile, uint32 nOffset, uint32 cubToRead)
+{
+    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileReadAsync called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileReadAsync(pchFile, nOffset, cubToRead);
+}
+
+S_API bool SteamAPI_ISteamRemoteStorage_FileReadAsyncComplete(intptr_t instancePtr, SteamAPICall_t hReadCall, void * pvBuffer, uint32 cubToRead)
+{
+    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileReadAsyncComplete called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileReadAsyncComplete(hReadCall, pvBuffer, cubToRead);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_FileForget(intptr_t instancePtr, const char * pchFile)
@@ -3207,11 +3228,11 @@ S_API bool SteamAPI_ISteamUnifiedMessages_SendNotification(intptr_t instancePtr,
 // ISteamController flat API implementations
 //-----------------------------------------------------------------------------
 
-S_API bool SteamAPI_ISteamController_Init(intptr_t instancePtr, const char * pchAbsolutePathToControllerConfigVDF)
+S_API bool SteamAPI_ISteamController_Init(intptr_t instancePtr)
 {
     VLOG_DEBUG("SteamAPI_ISteamController_Init called");
     if (!instancePtr) return false;
-    return reinterpret_cast<ISteamController*>(instancePtr)->Init(pchAbsolutePathToControllerConfigVDF);
+    return reinterpret_cast<ISteamController*>(instancePtr)->Init();
 }
 
 S_API bool SteamAPI_ISteamController_Shutdown(intptr_t instancePtr)
@@ -3228,25 +3249,95 @@ S_API void SteamAPI_ISteamController_RunFrame(intptr_t instancePtr)
     reinterpret_cast<ISteamController*>(instancePtr)->RunFrame();
 }
 
-S_API bool SteamAPI_ISteamController_GetControllerState(intptr_t instancePtr, uint32 unControllerIndex, struct SteamControllerState001_t * pState)
+S_API int SteamAPI_ISteamController_GetConnectedControllers(intptr_t instancePtr, ControllerHandle_t * handlesOut)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetControllerState called");
-    if (!instancePtr) return false;
-    return reinterpret_cast<ISteamController*>(instancePtr)->GetControllerState(unControllerIndex, pState);
+    VLOG_DEBUG("SteamAPI_ISteamController_GetConnectedControllers called");
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetConnectedControllers(handlesOut);
 }
 
-S_API void SteamAPI_ISteamController_TriggerHapticPulse(intptr_t instancePtr, uint32 unControllerIndex, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec)
+S_API bool SteamAPI_ISteamController_ShowBindingPanel(intptr_t instancePtr, ControllerHandle_t controllerHandle)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_ShowBindingPanel called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamController*>(instancePtr)->ShowBindingPanel(controllerHandle);
+}
+
+S_API ControllerActionSetHandle_t SteamAPI_ISteamController_GetActionSetHandle(intptr_t instancePtr, const char * pszActionSetName)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetActionSetHandle called");
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetActionSetHandle(pszActionSetName);
+}
+
+S_API void SteamAPI_ISteamController_ActivateActionSet(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_ActivateActionSet called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamController*>(instancePtr)->ActivateActionSet(controllerHandle, actionSetHandle);
+}
+
+S_API ControllerActionSetHandle_t SteamAPI_ISteamController_GetCurrentActionSet(intptr_t instancePtr, ControllerHandle_t controllerHandle)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetCurrentActionSet called");
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetCurrentActionSet(controllerHandle);
+}
+
+S_API ControllerDigitalActionHandle_t SteamAPI_ISteamController_GetDigitalActionHandle(intptr_t instancePtr, const char * pszActionName)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetDigitalActionHandle called");
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetDigitalActionHandle(pszActionName);
+}
+
+S_API struct ControllerDigitalActionData_t SteamAPI_ISteamController_GetDigitalActionData(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetDigitalActionData called");
+    if (!instancePtr) return {};
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetDigitalActionData(controllerHandle, digitalActionHandle);
+}
+
+S_API int SteamAPI_ISteamController_GetDigitalActionOrigins(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerDigitalActionHandle_t digitalActionHandle, EControllerActionOrigin * originsOut)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetDigitalActionOrigins called");
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetDigitalActionOrigins(controllerHandle, actionSetHandle, digitalActionHandle, originsOut);
+}
+
+S_API ControllerAnalogActionHandle_t SteamAPI_ISteamController_GetAnalogActionHandle(intptr_t instancePtr, const char * pszActionName)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetAnalogActionHandle called");
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetAnalogActionHandle(pszActionName);
+}
+
+S_API struct ControllerAnalogActionData_t SteamAPI_ISteamController_GetAnalogActionData(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetAnalogActionData called");
+    if (!instancePtr) return {};
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetAnalogActionData(controllerHandle, analogActionHandle);
+}
+
+S_API int SteamAPI_ISteamController_GetAnalogActionOrigins(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerAnalogActionHandle_t analogActionHandle, EControllerActionOrigin * originsOut)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetAnalogActionOrigins called");
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetAnalogActionOrigins(controllerHandle, actionSetHandle, analogActionHandle, originsOut);
+}
+
+S_API void SteamAPI_ISteamController_StopAnalogActionMomentum(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t eAction)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_StopAnalogActionMomentum called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamController*>(instancePtr)->StopAnalogActionMomentum(controllerHandle, eAction);
+}
+
+S_API void SteamAPI_ISteamController_TriggerHapticPulse(intptr_t instancePtr, ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec)
 {
     VLOG_DEBUG("SteamAPI_ISteamController_TriggerHapticPulse called");
     if (!instancePtr) return;
-    reinterpret_cast<ISteamController*>(instancePtr)->TriggerHapticPulse(unControllerIndex, eTargetPad, usDurationMicroSec);
-}
-
-S_API void SteamAPI_ISteamController_SetOverrideMode(intptr_t instancePtr, const char * pchMode)
-{
-    VLOG_DEBUG("SteamAPI_ISteamController_SetOverrideMode called");
-    if (!instancePtr) return;
-    reinterpret_cast<ISteamController*>(instancePtr)->SetOverrideMode(pchMode);
+    reinterpret_cast<ISteamController*>(instancePtr)->TriggerHapticPulse(controllerHandle, eTargetPad, usDurationMicroSec);
 }
 
 
@@ -3644,6 +3735,20 @@ S_API bool SteamAPI_ISteamUGC_DownloadItem(intptr_t instancePtr, PublishedFileId
     VLOG_DEBUG("SteamAPI_ISteamUGC_DownloadItem called");
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->DownloadItem(nPublishedFileID, bHighPriority);
+}
+
+S_API bool SteamAPI_ISteamUGC_BInitWorkshopForGameServer(intptr_t instancePtr, DepotId_t unWorkshopDepotID, const char * pszFolder)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_BInitWorkshopForGameServer called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->BInitWorkshopForGameServer(unWorkshopDepotID, pszFolder);
+}
+
+S_API void SteamAPI_ISteamUGC_SuspendDownloads(intptr_t instancePtr, bool bSuspend)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_SuspendDownloads called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamUGC*>(instancePtr)->SuspendDownloads(bSuspend);
 }
 
 

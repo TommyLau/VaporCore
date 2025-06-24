@@ -332,20 +332,42 @@ S_API ISteamVideo *S_CALLTYPE SteamVideo()
     return g_pSteamVideo;
 }
 
+// Most Steam API functions allocate some amount of thread-local memory for
+// parameter storage. The SteamAPI_ReleaseCurrentThreadMemory() function
+// will free all API-related memory associated with the calling thread.
+// This memory is also released automatically by SteamAPI_RunCallbacks(), so
+// a single-threaded program does not need to explicitly call this function.
+S_API void S_CALLTYPE SteamAPI_ReleaseCurrentThreadMemory() {
+    VLOG_DEBUG("SteamAPI_ReleaseCurrentThreadMemory called");
+}
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
-//	steam callback helper functions
+//	steam callback and call-result helpers
 //
-//	The following classes/macros are used to be able to easily multiplex callbacks 
-//	from the Steam API into various objects in the app in a thread-safe manner
+//	The following macros and classes are used to register your application for
+//	callbacks and call-results, which are delivered in a predictable manner.
 //
-//	These functors are triggered via the SteamAPI_RunCallbacks() function, mapping the callback
-//  to as many functions/objects as are registered to it
+//	STEAM_CALLBACK macros are meant for use inside of a C++ class definition.
+//	They map a Steam notification callback directly to a class member function
+//	which is automatically prototyped as "void func( callback_type *pParam )".
+//
+//	CCallResult is used with specific Steam APIs that return "result handles".
+//	The handle can be passed to a CCallResult object's Set function, along with
+//	an object pointer and member-function pointer. The member function will
+//	be executed once the results of the Steam API call are available.
+//
+//	CCallback and CCallbackManual classes can be used instead of STEAM_CALLBACK
+//	macros if you require finer control over registration and unregistration.
+//
+//	Callbacks and call-results are queued automatically and are only
+//	delivered/executed when your application calls SteamAPI_RunCallbacks().
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
+
 S_API void S_CALLTYPE SteamAPI_RunCallbacks() {
     // TODO: Implement SteamAPI_RunCallbacks
 }
 
-// functions used by the utility CCallback objects to receive callbacks
+// Internal functions used by the utility CCallback objects to receive callbacks
 S_API void S_CALLTYPE SteamAPI_RegisterCallback( class CCallbackBase *pCallback, int iCallback ) {
     // TODO: Implement SteamAPI_RegisterCallback
 }
@@ -354,7 +376,7 @@ S_API void S_CALLTYPE SteamAPI_UnregisterCallback( class CCallbackBase *pCallbac
     // TODO: Implement SteamAPI_UnregisterCallback
 }
 
-// functions used by the utility CCallResult objects to receive async call results
+// Internal functions used by the utility CCallResult objects to receive async call results
 S_API void S_CALLTYPE SteamAPI_RegisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall ) {
     // TODO: Implement SteamAPI_RegisterCallResult
 }

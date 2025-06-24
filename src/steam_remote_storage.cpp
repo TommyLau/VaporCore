@@ -64,6 +64,24 @@ int32 Steam_Remote_Storage::FileRead( const char *pchFile, void *pvData, int32 c
     return 0;
 }
 
+SteamAPICall_t Steam_Remote_Storage::FileWriteAsync( const char *pchFile, const void *pvData, uint32 cubData )
+{
+    VLOG_DEBUG("FileWriteAsync called - File: %s, DataSize: %d", pchFile, cubData);
+    return 0;
+}
+
+SteamAPICall_t Steam_Remote_Storage::FileReadAsync( const char *pchFile, uint32 nOffset, uint32 cubToRead )
+{
+    VLOG_DEBUG("FileReadAsync called - File: %s, Offset: %d, DataSize: %d", pchFile, nOffset, cubToRead);
+    return 0;
+}
+
+bool Steam_Remote_Storage::FileReadAsyncComplete( SteamAPICall_t hReadCall, void *pvBuffer, uint32 cubToRead )
+{
+    VLOG_DEBUG("FileReadAsyncComplete called - Call: %llu, DataSize: %d", hReadCall, cubToRead);
+    return false;
+}
+
 bool Steam_Remote_Storage::FileForget( const char *pchFile )
 {
     VLOG_DEBUG("FileForget called - File: %s", pchFile);

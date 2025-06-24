@@ -15,12 +15,14 @@
 
 #include <isteamclient.h>
 #include <isteamcontroller.h>
+#include <isteamcontroller001.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Native Steam controller support API
 //-----------------------------------------------------------------------------
 class Steam_Controller :
-    public ISteamController
+    public ISteamController,
+    public ISteamController001
 {
 private:
     // Singleton instance
@@ -34,25 +36,71 @@ public:
     static Steam_Controller* GetInstance();
     static void ReleaseInstance();
 
-	//
-	// Native controller support API
-	//
-
+	// Init and Shutdown must be called when starting/ending use of this interface
+	bool Init() override;
 	// Must call init and shutdown when starting/ending use of the interface
+	// Changed from Steam SDK v1.35a, backward compatibility
 	bool Init(const char *pchAbsolutePathToControllerConfigVDF) override;
 	bool Shutdown() override;
 
-	// Pump callback/callresult events, SteamAPI_RunCallbacks will do this for you, 
-	// normally never need to call directly.
+	// Pump callback/callresult events
+	// Note: SteamAPI_RunCallbacks will do this for you, so you should never need to call this directly.
 	void RunFrame() override;
 
 	// Get the state of the specified controller, returns false if that controller is not connected
+	// Removed from Steam SDK v1.35a, backward compatibility
 	bool GetControllerState(uint32 unControllerIndex, SteamControllerState_t *pState) override;
 
+	// Enumerate currently connected controllers
+	// handlesOut should point to a STEAM_CONTROLLER_MAX_COUNT sized array of ControllerHandle_t handles
+	// Returns the number of handles written to handlesOut
+	int GetConnectedControllers( ControllerHandle_t *handlesOut ) override;
+
+	// Invokes the Steam overlay and brings up the binding screen
+	// Returns false is overlay is disabled / unavailable, or the user is not in Big Picture mode
+	bool ShowBindingPanel( ControllerHandle_t controllerHandle ) override;
+
+	// ACTION SETS
+	// Lookup the handle for an Action Set. Best to do this once on startup, and store the handles for all future API calls.
+	ControllerActionSetHandle_t GetActionSetHandle( const char *pszActionSetName ) override;
+
+	// Reconfigure the controller to use the specified action set (ie 'Menu', 'Walk' or 'Drive')
+	// This is cheap, and can be safely called repeatedly. It's often easier to repeatedly call it in
+	// your state loops, instead of trying to place it in all of your state transitions.
+	void ActivateActionSet( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle ) override;
+	ControllerActionSetHandle_t GetCurrentActionSet( ControllerHandle_t controllerHandle ) override;
+
+	// ACTIONS
+	// Lookup the handle for a digital action. Best to do this once on startup, and store the handles for all future API calls.
+	ControllerDigitalActionHandle_t GetDigitalActionHandle( const char *pszActionName ) override;
+
+	// Returns the current state of the supplied digital game action
+	ControllerDigitalActionData_t GetDigitalActionData( ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle ) override;
+
+	// Get the origin(s) for a digital action within an action set. Returns the number of origins supplied in originsOut. Use this to display the appropriate on-screen prompt for the action.
+	// originsOut should point to a STEAM_CONTROLLER_MAX_ORIGINS sized array of EControllerActionOrigin handles
+	int GetDigitalActionOrigins( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerDigitalActionHandle_t digitalActionHandle, EControllerActionOrigin *originsOut ) override;
+
+	// Lookup the handle for an analog action. Best to do this once on startup, and store the handles for all future API calls.
+	ControllerAnalogActionHandle_t GetAnalogActionHandle( const char *pszActionName ) override;
+
+	// Returns the current state of these supplied analog game action
+	ControllerAnalogActionData_t GetAnalogActionData( ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle ) override;
+
+	// Get the origin(s) for an analog action within an action set. Returns the number of origins supplied in originsOut. Use this to display the appropriate on-screen prompt for the action.
+	// originsOut should point to a STEAM_CONTROLLER_MAX_ORIGINS sized array of EControllerActionOrigin handles
+	int GetAnalogActionOrigins( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerAnalogActionHandle_t analogActionHandle, EControllerActionOrigin *originsOut ) override;
+
+	void StopAnalogActionMomentum( ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t eAction ) override;
+
+	// Trigger a haptic pulse on a controller
+	void TriggerHapticPulse( ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec ) override;
 	// Trigger a haptic pulse on the controller
+	// Changed from Steam SDK v1.35a, backward compatibility
 	void TriggerHapticPulse(uint32 unControllerIndex, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec) override;
 
 	// Set the override mode which is used to choose to use different base/legacy bindings from your config file
+	// Removed from Steam SDK v1.35a, backward compatibility
 	void SetOverrideMode(const char *pchMode) override;
 };
 

@@ -450,3 +450,17 @@ bool Steam_UGC::DownloadItem( PublishedFileId_t nPublishedFileID, bool bHighPrio
     VLOG_DEBUG("DownloadItem called");
     return false;
 }
+
+// game servers can set a specific workshop folder before issuing any UGC commands.
+// This is helpful if you want to support multiple game servers running out of the same install folder
+bool Steam_UGC::BInitWorkshopForGameServer( DepotId_t unWorkshopDepotID, const char *pszFolder )
+{
+    VLOG_DEBUG("BInitWorkshopForGameServer called");
+    return false;
+}
+
+// SuspendDownloads( true ) will suspend all workshop downloads until SuspendDownloads( false ) is called or the game ends
+void Steam_UGC::SuspendDownloads( bool bSuspend )
+{
+    VLOG_DEBUG("SuspendDownloads called");
+}
