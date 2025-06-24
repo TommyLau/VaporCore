@@ -244,15 +244,15 @@ def strip_header_content(content, original_filename, version_num, class_name):
     version_define_match = re.search(version_define_pattern, content)
     
     if version_define_match:
-        # Use the original pattern but with the new version number
+        # Use the original pattern but with the new version number and underscore format
         original_base = version_define_match.group(1)  # e.g., "STEAMREMOTESTORAGE_INTERFACE_VERSION"
         original_value = version_define_match.group(2)  # e.g., "STEAMREMOTESTORAGE_INTERFACE_VERSION005"
         
-        # Create the versioned define with original naming pattern
-        version_define = f'#define {original_base}{version_num} "{original_value}"'
+        # Create the versioned define with underscore format
+        version_define = f'#define {original_base}_{version_num} "{original_value}"'
     else:
         # Fallback if pattern not found
-        version_define = f'#define {base_name.upper()}_INTERFACE_VERSION{version_num} "{base_name.upper()}_INTERFACE_VERSION{version_num}"'
+        version_define = f'#define {base_name.upper()}_INTERFACE_VERSION_{version_num} "{base_name.upper()}_INTERFACE_VERSION{version_num}"'
     
     # Create the stripped content
     if comment_block:
