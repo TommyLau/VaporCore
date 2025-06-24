@@ -110,6 +110,13 @@ uint32 Steam_UGC::GetQueryUGCNumAdditionalPreviews( UGCQueryHandle_t handle, uin
     return 0;
 }
 
+bool Steam_UGC::GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, char *pchURLOrVideoID, uint32 cchURLSize, char *pchOriginalFileName, uint32 cchOriginalFileNameSize, EItemPreviewType *pPreviewType )
+{
+    VLOG_DEBUG("GetQueryUGCAdditionalPreview called");
+    return false;
+}
+
+// Changed from Steam SDK v1.37, backward compatibility
 bool Steam_UGC::GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, char *pchURLOrVideoID, uint32 cchURLSize, bool *pbIsImage )
 {
     VLOG_DEBUG("GetQueryUGCAdditionalPreview called");
@@ -327,6 +334,41 @@ bool Steam_UGC::RemoveItemKeyValueTags( UGCUpdateHandle_t handle, const char *pc
 bool Steam_UGC::AddItemKeyValueTag( UGCUpdateHandle_t handle, const char *pchKey, const char *pchValue )
 {
     VLOG_DEBUG("AddItemKeyValueTag called");
+    return false;
+}
+
+// add preview file for this item. pszPreviewFile points to local file, which must be under 1MB in size
+bool Steam_UGC::AddItemPreviewFile( UGCUpdateHandle_t handle, const char *pszPreviewFile, EItemPreviewType type )
+{
+    VLOG_DEBUG("AddItemPreviewFile called");
+    return false;
+}
+
+// add preview video for this item
+bool Steam_UGC::AddItemPreviewVideo( UGCUpdateHandle_t handle, const char *pszVideoID )
+{
+    VLOG_DEBUG("AddItemPreviewVideo called");
+    return false;
+}
+
+// updates an existing preview file for this item. pszPreviewFile points to local file, which must be under 1MB in size
+bool Steam_UGC::UpdateItemPreviewFile( UGCUpdateHandle_t handle, uint32 index, const char *pszPreviewFile )
+{
+    VLOG_DEBUG("UpdateItemPreviewFile called");
+    return false;
+}
+
+// updates an existing preview video for this item
+bool Steam_UGC::UpdateItemPreviewVideo( UGCUpdateHandle_t handle, uint32 index, const char *pszVideoID )
+{
+    VLOG_DEBUG("UpdateItemPreviewVideo called");
+    return false;
+}
+
+// remove a preview by index starting at 0 (previews are sorted)
+bool Steam_UGC::RemoveItemPreview( UGCUpdateHandle_t handle, uint32 index )
+{
+    VLOG_DEBUG("RemoveItemPreview called");
     return false;
 }
 

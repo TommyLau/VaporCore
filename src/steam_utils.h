@@ -18,6 +18,7 @@
 #include <isteamutils002.h>
 #include <isteamutils004.h>
 #include <isteamutils005.h>
+#include <isteamutils007.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to user independent utility functions
@@ -26,7 +27,8 @@ class Steam_Utils :
 	public ISteamUtils,
 	public ISteamUtils002,
 	public ISteamUtils004,
-	public ISteamUtils005
+	public ISteamUtils005,
+    public ISteamUtils007
 {
 private:
     // Singleton instance
@@ -140,6 +142,14 @@ public:
 	
 	// Sets the inset of the overlay notification from the corner specified by SetOverlayNotificationPosition.
 	void SetOverlayNotificationInset( int nHorizontalInset, int nVerticalInset ) override;
+
+	// returns true if Steam & the Steam Overlay are running in Big Picture mode
+	// Games much be launched through the Steam client to enable the Big Picture overlay. During development,
+	// a game can be added as a non-steam game to the developers library to test this feature
+	bool IsSteamInBigPictureMode() override;
+
+	// ask SteamUI to create and render its OpenVR dashboard
+	void StartVRDashboard() override;
 };
 
 #endif // VAPORCORE_STEAM_UTILS_H

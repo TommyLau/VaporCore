@@ -20,6 +20,7 @@
 #include <isteamugc002.h>
 #include <isteamugc003.h>
 #include <isteamugc005.h>
+#include <isteamugc007.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Steam UGC support API
@@ -29,7 +30,8 @@ class Steam_UGC :
     public ISteamUGC001,
     public ISteamUGC002,
     public ISteamUGC003,
-    public ISteamUGC005
+    public ISteamUGC005,
+    public ISteamUGC007
 {
 private:
     // Singleton instance
@@ -63,6 +65,8 @@ public:
 	bool GetQueryUGCChildren( UGCQueryHandle_t handle, uint32 index, PublishedFileId_t* pvecPublishedFileID, uint32 cMaxEntries ) override;
 	bool GetQueryUGCStatistic( UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint32 *pStatValue ) override;
 	uint32 GetQueryUGCNumAdditionalPreviews( UGCQueryHandle_t handle, uint32 index ) override;
+	bool GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, OUT_STRING_COUNT(cchURLSize) char *pchURLOrVideoID, uint32 cchURLSize, OUT_STRING_COUNT(cchURLSize) char *pchOriginalFileName, uint32 cchOriginalFileNameSize, EItemPreviewType *pPreviewType ) override;
+	// Changed from Steam SDK v1.37, backward compatibility
 	bool GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, OUT_STRING_COUNT(cchURLSize) char *pchURLOrVideoID, uint32 cchURLSize, bool *pbIsImage ) override;
 	uint32 GetQueryUGCNumKeyValueTags( UGCQueryHandle_t handle, uint32 index ) override;
 	bool GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, uint32 keyValueTagIndex, OUT_STRING_COUNT(cchKeySize) char *pchKey, uint32 cchKeySize, OUT_STRING_COUNT(cchValueSize) char *pchValue, uint32 cchValueSize ) override;
@@ -113,6 +117,11 @@ public:
 	bool SetItemPreview( UGCUpdateHandle_t handle, const char *pszPreviewFile ) override; //  change preview image file for this item. pszPreviewFile points to local image file, which must be under 1MB in size
 	bool RemoveItemKeyValueTags( UGCUpdateHandle_t handle, const char *pchKey ) override; // remove any existing key-value tags with the specified key
 	bool AddItemKeyValueTag( UGCUpdateHandle_t handle, const char *pchKey, const char *pchValue ) override; // add new key-value tags for the item. Note that there can be multiple values for a tag.
+	bool AddItemPreviewFile( UGCUpdateHandle_t handle, const char *pszPreviewFile, EItemPreviewType type ) override; //  add preview file for this item. pszPreviewFile points to local file, which must be under 1MB in size
+	bool AddItemPreviewVideo( UGCUpdateHandle_t handle, const char *pszVideoID ) override; //  add preview video for this item
+	bool UpdateItemPreviewFile( UGCUpdateHandle_t handle, uint32 index, const char *pszPreviewFile ) override; //  updates an existing preview file for this item. pszPreviewFile points to local file, which must be under 1MB in size
+	bool UpdateItemPreviewVideo( UGCUpdateHandle_t handle, uint32 index, const char *pszVideoID ) override; //  updates an existing preview video for this item
+	bool RemoveItemPreview( UGCUpdateHandle_t handle, uint32 index ) override; // remove a preview by index starting at 0 (previews are sorted)
 
 	CALL_RESULT( SubmitItemUpdateResult_t )
 	SteamAPICall_t SubmitItemUpdate( UGCUpdateHandle_t handle, const char *pchChangeNote ) override; // commit update process started with StartItemUpdate()

@@ -146,7 +146,7 @@ void Steam_Apps::UninstallDLC( AppId_t nAppID )
     VLOG_DEBUG("UninstallDLC called - AppID: %u", nAppID);
 }
 
-// Request cd-key for yourself or owned DLC. If you are interested in this
+// Request legacy cd-key for yourself or owned DLC. If you are interested in this
 // data then make sure you provide us with a list of valid keys to be distributed
 // to users when they purchase the game, before the game ships.
 // You'll receive an AppProofOfPurchaseKeyResponse_t callback when
@@ -231,4 +231,13 @@ int Steam_Apps::GetAppBuildId()
 {
     VLOG_DEBUG("GetAppBuildId called");
     return 0;
+}
+
+// Request all proof of purchase keys for the calling appid and asociated DLC.
+// A series of AppProofOfPurchaseKeyResponse_t callbacks will be sent with
+// appropriate appid values, ending with a final callback where the m_nAppId
+// member is k_uAppIdInvalid (zero).
+void Steam_Apps::RequestAllProofOfPurchaseKeys()
+{
+    VLOG_DEBUG("RequestAllProofOfPurchaseKeys called");
 }

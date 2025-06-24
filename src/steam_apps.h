@@ -21,6 +21,7 @@
 #include <isteamapps004.h>
 #include <isteamapps005.h>
 #include <isteamapps006.h>
+#include <isteamapps007.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to app data
@@ -32,7 +33,8 @@ class Steam_Apps :
     public ISteamApps003,
     public ISteamApps004,
     public ISteamApps005,
-    public ISteamApps006
+    public ISteamApps006,
+    public ISteamApps007
 {
 private:
     // Singleton instance
@@ -83,7 +85,7 @@ public:
 	void InstallDLC( AppId_t nAppID ) override;
 	void UninstallDLC( AppId_t nAppID ) override;
 
-	// Request cd-key for yourself or owned DLC. If you are interested in this
+	// Request legacy cd-key for yourself or owned DLC. If you are interested in this
 	// data then make sure you provide us with a list of valid keys to be distributed
 	// to users when they purchase the game, before the game ships.
 	// You'll receive an AppProofOfPurchaseKeyResponse_t callback when
@@ -98,8 +100,8 @@ public:
 
 	// returns current app install folder for AppID, returns folder name length
 	uint32 GetAppInstallDir( AppId_t appID, char *pchFolder, uint32 cchFolderBufferSize ) override;
-	bool BIsAppInstalled( AppId_t appID ) override;
-	
+	bool BIsAppInstalled( AppId_t appID ) override; // returns true if that app is installed (not necessarily owned)
+
 	CSteamID GetAppOwner() override; // returns the SteamID of the original owner. If different from current user, it's borrowed
 
 	// Returns the associated launch param if the game is run via steam://run/<appid>//?param1=value1;param2=value2;param3=value3 etc.
@@ -113,10 +115,12 @@ public:
 
 	// return the buildid of this app, may change at any time based on backend updates to the game
 	int GetAppBuildId() override;
-#ifdef _PS3
-	// Result returned in a RegisterActivationCodeResponse_t callresult
-	SteamAPICall_t RegisterActivationCode( const char *pchActivationCode ) override;
-#endif
+
+	// Request all proof of purchase keys for the calling appid and asociated DLC.
+	// A series of AppProofOfPurchaseKeyResponse_t callbacks will be sent with
+	// appropriate appid values, ending with a final callback where the m_nAppId
+	// member is k_uAppIdInvalid (zero).
+	void RequestAllProofOfPurchaseKeys() override;
 };
 
 #endif // VAPORCORE_STEAM_APPS_H

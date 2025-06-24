@@ -23,8 +23,10 @@
 #define REFERENCE(arg) ((void)arg)
 #endif
 
-#ifdef STEAM_API_EXPORTS
+#if defined(STEAM_API_EXPORTS) && !defined(API_GEN)
 #define STEAM_PRIVATE_API( ... ) __VA_ARGS__
+#elif defined(STEAM_API_EXPORTS) && defined(API_GEN)
+#define STEAM_PRIVATE_API( ... )
 #else
 #define STEAM_PRIVATE_API( ... ) protected: __VA_ARGS__ public:
 #endif
@@ -289,8 +291,8 @@ enum { k_iSteamAppListCallbacks = 3900 };
 enum { k_iSteamMusicCallbacks = 4000 };
 enum { k_iSteamMusicRemoteCallbacks = 4100 };
 enum { k_iClientVRCallbacks = 4200 };
-enum { k_iClientReservedCallbacks = 4300 };
-enum { k_iSteamReservedCallbacks = 4400 };
+enum { k_iClientGameNotificationCallbacks = 4300 }; 
+enum { k_iSteamGameNotificationCallbacks = 4400 }; 
 enum { k_iSteamHTMLSurfaceCallbacks = 4500 };
 enum { k_iClientVideoCallbacks = 4600 };
 enum { k_iClientInventoryCallbacks = 4700 };
@@ -302,14 +304,11 @@ enum { k_iClientBluetoothManagerCallbacks = 4800 };
 // Do not change any of these. 
 //-----------------------------------------------------------------------------
 
-struct SteamCallback_t
-{
-public:
-	SteamCallback_t() {}
-};
+#ifdef STEAM_CALLBACK_INSPECTION_ENABLED
 
 #define DEFINE_CALLBACK( callbackname, callbackid ) \
-struct callbackname : SteamCallback_t { \
+struct callbackname { \
+	typedef callbackname SteamCallback_t; \
 	enum { k_iCallback = callbackid }; \
 	static callbackname *GetNullPointer() { return 0; } \
 	static const char *GetCallbackName() { return #callbackname; } \
@@ -347,6 +346,17 @@ struct callbackname : SteamCallback_t { \
 	static bool    GetMemberVariable( uint32 index, uint32 &varOffset, uint32 &varSize,  uint32 &varCount, const char **pszName, const char **pszType ) { REFERENCE( pszType ); REFERENCE( pszName ); REFERENCE( varCount ); REFERENCE( varSize ); REFERENCE( varOffset ); REFERENCE( index ); return false; } \
 	};
 	
+#else
+
+#define DEFINE_CALLBACK( callbackname, callbackid )	struct callbackname { typedef callbackname SteamCallback_t; enum { k_iCallback = callbackid };
+#define CALLBACK_MEMBER( varidx, vartype, varname )	public: vartype varname ; 
+#define CALLBACK_ARRAY( varidx, vartype, varname, varcount ) public: vartype varname [ varcount ];
+#define END_CALLBACK_INTERNAL_BEGIN( numvars )  
+#define END_CALLBACK_INTERNAL_SWITCH( varidx )
+#define END_CALLBACK_INTERNAL_END()					};
+#define END_DEFINE_CALLBACK_0()						};
+
+#endif
 
 #define END_DEFINE_CALLBACK_1() \
 	END_CALLBACK_INTERNAL_BEGIN( 1 ) \

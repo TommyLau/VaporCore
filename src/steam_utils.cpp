@@ -264,3 +264,18 @@ void Steam_Utils::SetOverlayNotificationInset(int nHorizontalInset, int nVertica
 {
     VLOG_DEBUG("SetOverlayNotificationInset called - Horizontal: %d, Vertical: %d", nHorizontalInset, nVerticalInset);
 }
+
+// returns true if Steam & the Steam Overlay are running in Big Picture mode
+// Games much be launched through the Steam client to enable the Big Picture overlay. During development,
+// a game can be added as a non-steam game to the developers library to test this feature
+bool Steam_Utils::IsSteamInBigPictureMode()
+{
+    VLOG_DEBUG("IsSteamInBigPictureMode called");
+    return false;
+}
+
+// ask SteamUI to create and render its OpenVR dashboard
+void Steam_Utils::StartVRDashboard()
+{
+    VLOG_DEBUG("StartVRDashboard called");
+}

@@ -54,116 +54,9 @@ static uintp g_uSteamAPICallCounter = 0;
 //
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-// S_API void SteamAPI_Init(); (see below)
-S_API void S_CALLTYPE SteamAPI_Shutdown() {
-    // TODO: Implement SteamAPI_Shutdown
-    VLOG_INFO("SteamAPI_Shutdown called");
-    
-    if (g_pSteamClient && g_hSteamPipe) {
-        // Release user and pipe through Steam client
-        //g_pSteamClient->ReleaseUser(g_hSteamPipe, g_hSteamUser);
-        g_pSteamClient->BReleaseSteamPipe(g_hSteamPipe);
-    }
 
-    // Clean up global interface pointers in the order as in the header
-    g_uSteamAPICallCounter--;
-
-    g_pSteamUser = nullptr;
-    g_pSteamFriends = nullptr;
-    g_pSteamUtils = nullptr;
-    g_pSteamMatchmaking = nullptr;
-    g_pSteamMatchmakingServers = nullptr;
-    g_pSteamUserStats = nullptr;
-    g_pSteamApps = nullptr;
-    g_pSteamNetworking = nullptr;
-    g_pSteamRemoteStorage = nullptr;
-    g_pSteamScreenshots = nullptr;
-    g_pSteamHTTP = nullptr;
-    g_pSteamUnifiedMessages = nullptr;
-    g_pSteamController = nullptr;
-    g_pSteamUGC = nullptr;
-    g_pSteamAppList = nullptr;
-    g_pSteamMusic = nullptr;
-    g_pSteamMusicRemote = nullptr;
-    g_pSteamHTMLSurface = nullptr;
-    g_pSteamInventory = nullptr;
-    g_pSteamVideo = nullptr;
-
-    g_hSteamUser = 0;
-    g_hSteamPipe = 0;
-
-    if (g_uSteamAPICallCounter == 0) {
-        Steam_Client::ReleaseInstance();
-        g_pSteamClient = nullptr;
-    }
-    
-    VLOG_INFO("SteamAPI_Shutdown completed");
-}
-
-// checks if a local Steam client is running 
-S_API bool S_CALLTYPE SteamAPI_IsSteamRunning()
-{
-    VLOG_DEBUG("SteamAPI_IsSteamRunning called");
-    return true;
-}
-
-// restart your app through Steam to enable required Steamworks features
-// Removed from Steam SDK v1.07, backward compatibility
-S_API bool S_CALLTYPE SteamAPI_RestartApp( uint32 unOwnAppID )
-{
-    VLOG_DEBUG("SteamAPI_RestartApp called - AppID: %d", unOwnAppID);
-    return true;
-}
-
-// Detects if your executable was launched through the Steam client, and restarts your game through 
-// the client if necessary. The Steam client will be started if it is not running.
-//
-// Returns: true if your executable was NOT launched through the Steam client. This function will
-//          then start your application through the client. Your current process should exit.
-//
-//          false if your executable was started through the Steam client or a steam_appid.txt file
-//          is present in your game's directory (for development). Your current process should continue.
-//
-// NOTE: This function should be used only if you are using CEG or not using Steam's DRM. Once applied
-//       to your executable, Steam's DRM will handle restarting through Steam if necessary.
-S_API bool S_CALLTYPE SteamAPI_RestartAppIfNecessary( uint32 unOwnAppID )
-{
-    VLOG_DEBUG("SteamAPI_RestartAppIfNecessary called - AppID: %d", unOwnAppID);
-    return true;
-}
-
-// crash dump recording functions
-S_API void S_CALLTYPE SteamAPI_WriteMiniDump( uint32 uStructuredExceptionCode, void* pvExceptionInfo, uint32 uBuildID )
-{
-    VLOG_DEBUG("SteamAPI_WriteMiniDump called - Structured Exception Code: %d, Exception Info: %p, Build ID: %d", uStructuredExceptionCode, pvExceptionInfo, uBuildID);
-}
-
-S_API void S_CALLTYPE SteamAPI_SetMiniDumpComment( const char *pchMsg )
-{
-    VLOG_DEBUG("SteamAPI_SetMiniDumpComment called - Comment: %s", pchMsg);
-}
-
-// interface pointers, configured by SteamAPI_Init()
-S_API ISteamClient *S_CALLTYPE SteamClient() {
-    // TODO: Implement SteamClient
-    return g_pSteamClient;
-}
-
-//
-// VERSION_SAFE_STEAM_API_INTERFACES is usually not necessary, but it provides safety against releasing
-// new steam_api.dll's without recompiling/rereleasing modules that use it.
-//
-// If you use VERSION_SAFE_STEAM_API_INTERFACES, then you should call SteamAPI_InitSafe(). Also, to get the 
-// Steam interfaces, you must create and Init() a CSteamAPIContext (below) and use the interfaces in there.
-//
-// If you don't use VERSION_SAFE_STEAM_API_INTERFACES, then you can use SteamAPI_Init() and the SteamXXXX() 
-// functions below to get at the Steam interfaces.
-//
-S_API bool S_CALLTYPE SteamAPI_InitSafe() {
-    VLOG_INFO("SteamAPI_InitSafe called");
-    return SteamAPI_Init();
-}
-
+// SteamAPI_Init must be called before using any other API functions. If it fails, an
+// error message will be output to the debugger (or stderr) with further information.
 S_API bool S_CALLTYPE SteamAPI_Init() {
     // TODO: Implement SteamAPI_Init
 #ifdef VAPORCORE_ENABLE_LOGGING
@@ -210,6 +103,108 @@ S_API bool S_CALLTYPE SteamAPI_Init() {
     */
 
     return true;
+}
+
+// SteamAPI_Shutdown should be called during process shutdown if possible.
+S_API void S_CALLTYPE SteamAPI_Shutdown() {
+    // TODO: Implement SteamAPI_Shutdown
+    VLOG_INFO("SteamAPI_Shutdown called");
+    
+    if (g_pSteamClient && g_hSteamPipe) {
+        // Release user and pipe through Steam client
+        //g_pSteamClient->ReleaseUser(g_hSteamPipe, g_hSteamUser);
+        g_pSteamClient->BReleaseSteamPipe(g_hSteamPipe);
+    }
+
+    // Clean up global interface pointers in the order as in the header
+    g_uSteamAPICallCounter--;
+
+    g_pSteamUser = nullptr;
+    g_pSteamFriends = nullptr;
+    g_pSteamUtils = nullptr;
+    g_pSteamMatchmaking = nullptr;
+    g_pSteamMatchmakingServers = nullptr;
+    g_pSteamUserStats = nullptr;
+    g_pSteamApps = nullptr;
+    g_pSteamNetworking = nullptr;
+    g_pSteamRemoteStorage = nullptr;
+    g_pSteamScreenshots = nullptr;
+    g_pSteamHTTP = nullptr;
+    g_pSteamUnifiedMessages = nullptr;
+    g_pSteamController = nullptr;
+    g_pSteamUGC = nullptr;
+    g_pSteamAppList = nullptr;
+    g_pSteamMusic = nullptr;
+    g_pSteamMusicRemote = nullptr;
+    g_pSteamHTMLSurface = nullptr;
+    g_pSteamInventory = nullptr;
+    g_pSteamVideo = nullptr;
+
+    g_hSteamUser = 0;
+    g_hSteamPipe = 0;
+
+    if (g_uSteamAPICallCounter == 0) {
+        Steam_Client::ReleaseInstance();
+        g_pSteamClient = nullptr;
+    }
+    
+    VLOG_INFO("SteamAPI_Shutdown completed");
+}
+
+// restart your app through Steam to enable required Steamworks features
+// Removed from Steam SDK v1.07, backward compatibility
+S_API bool S_CALLTYPE SteamAPI_RestartApp( uint32 unOwnAppID )
+{
+    VLOG_DEBUG("SteamAPI_RestartApp called - AppID: %d", unOwnAppID);
+    return true;
+}
+
+// SteamAPI_RestartAppIfNecessary ensures that your executable was launched through Steam.
+//
+// Returns true if the current process should terminate. Steam is now re-launching your application.
+//
+// Returns false if no action needs to be taken. This means that your executable was started through
+// the Steam client, or a steam_appid.txt file is present in your game's directory (for development).
+// Your current process should continue if false is returned.
+//
+// NOTE: If you use the Steam DRM wrapper on your primary executable file, this check is unnecessary
+// since the DRM wrapper will ensure that your application was launched properly through Steam.
+S_API bool S_CALLTYPE SteamAPI_RestartAppIfNecessary( uint32 unOwnAppID )
+{
+    VLOG_DEBUG("SteamAPI_RestartAppIfNecessary called - AppID: %d", unOwnAppID);
+    return true;
+}
+
+// Most Steam API functions allocate some amount of thread-local memory for parameter storage.
+// SteamAPI_ReleaseCurrentThreadMemory() will free API memory associated with the calling thread.
+// This function is also called automatically by SteamAPI_RunCallbacks(), so a single-threaded
+// program never needs to explicitly call this function.
+S_API void S_CALLTYPE SteamAPI_ReleaseCurrentThreadMemory()
+{
+    VLOG_DEBUG("SteamAPI_ReleaseCurrentThreadMemory called");
+}
+
+
+// crash dump recording functions
+S_API void S_CALLTYPE SteamAPI_WriteMiniDump( uint32 uStructuredExceptionCode, void* pvExceptionInfo, uint32 uBuildID )
+{
+    VLOG_DEBUG("SteamAPI_WriteMiniDump called - Structured Exception Code: %d, Exception Info: %p, Build ID: %d", uStructuredExceptionCode, pvExceptionInfo, uBuildID);
+}
+
+S_API void S_CALLTYPE SteamAPI_SetMiniDumpComment( const char *pchMsg )
+{
+    VLOG_DEBUG("SteamAPI_SetMiniDumpComment called - Comment: %s", pchMsg);
+}
+
+
+// If your application contains modules or libraries which could be built against different SDK
+// versions, then you should define VERSION_SAFE_STEAM_API_INTERFACES to enforce that you cannot
+// use the un-versioned global accessors. Instead, always create and use CSteamAPIContext objects
+// to retrieve interface pointers which match the Steamworks SDK headers which match your build.
+
+S_API ISteamClient *S_CALLTYPE SteamClient() {
+    // TODO: Implement SteamClient
+    return g_pSteamClient;
 }
 
 S_API ISteamUser *S_CALLTYPE SteamUser() {
@@ -332,15 +327,6 @@ S_API ISteamVideo *S_CALLTYPE SteamVideo()
     return g_pSteamVideo;
 }
 
-// Most Steam API functions allocate some amount of thread-local memory for
-// parameter storage. The SteamAPI_ReleaseCurrentThreadMemory() function
-// will free all API-related memory associated with the calling thread.
-// This memory is also released automatically by SteamAPI_RunCallbacks(), so
-// a single-threaded program does not need to explicitly call this function.
-S_API void S_CALLTYPE SteamAPI_ReleaseCurrentThreadMemory() {
-    VLOG_DEBUG("SteamAPI_ReleaseCurrentThreadMemory called");
-}
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 //	steam callback and call-result helpers
 //
@@ -363,27 +349,37 @@ S_API void S_CALLTYPE SteamAPI_ReleaseCurrentThreadMemory() {
 //	delivered/executed when your application calls SteamAPI_RunCallbacks().
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-S_API void S_CALLTYPE SteamAPI_RunCallbacks() {
+// SteamAPI_RunCallbacks is safe to call from multiple threads simultaneously,
+// but if you choose to do this, callback code could be executed on any thread.
+// One alternative is to call SteamAPI_RunCallbacks from the main thread only,
+// and call SteamAPI_ReleaseCurrentThreadMemory regularly on other threads.
+S_API void S_CALLTYPE SteamAPI_RunCallbacks()
+{
     // TODO: Implement SteamAPI_RunCallbacks
 }
 
 // Internal functions used by the utility CCallback objects to receive callbacks
-S_API void S_CALLTYPE SteamAPI_RegisterCallback( class CCallbackBase *pCallback, int iCallback ) {
+S_API void S_CALLTYPE SteamAPI_RegisterCallback( class CCallbackBase *pCallback, int iCallback )
+{
     // TODO: Implement SteamAPI_RegisterCallback
 }
 
-S_API void S_CALLTYPE SteamAPI_UnregisterCallback( class CCallbackBase *pCallback ) {
+S_API void S_CALLTYPE SteamAPI_UnregisterCallback( class CCallbackBase *pCallback )
+{
     // TODO: Implement SteamAPI_UnregisterCallback
 }
 
 // Internal functions used by the utility CCallResult objects to receive async call results
-S_API void S_CALLTYPE SteamAPI_RegisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall ) {
+S_API void S_CALLTYPE SteamAPI_RegisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall )
+{
     // TODO: Implement SteamAPI_RegisterCallResult
 }
 
-S_API void S_CALLTYPE SteamAPI_UnregisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall ) {
+S_API void S_CALLTYPE SteamAPI_UnregisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall )
+{
     // TODO: Implement SteamAPI_UnregisterCallResult
 }
+
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 //	steamclient.dll private wrapper functions
@@ -391,24 +387,37 @@ S_API void S_CALLTYPE SteamAPI_UnregisterCallResult( class CCallbackBase *pCallb
 //	The following functions are part of abstracting API access to the steamclient.dll, but should only be used in very specific cases
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-// pumps out all the steam messages, calling the register callback
-S_API void Steam_RunCallbacks( HSteamPipe hSteamPipe, bool bGameServerCallbacks ) {
+// SteamAPI_IsSteamRunning() returns true if Steam is currently running
+S_API bool S_CALLTYPE SteamAPI_IsSteamRunning()
+{
+    VLOG_DEBUG("SteamAPI_IsSteamRunning called");
+    return true;
+}
+
+// Pumps out all the steam messages, calling registered callbacks.
+// NOT THREADSAFE - do not call from multiple threads simultaneously.
+S_API void Steam_RunCallbacks( HSteamPipe hSteamPipe, bool bGameServerCallbacks )
+{
     // TODO: Implement Steam_RunCallbacks
 }
 
 // register the callback funcs to use to interact with the steam dll
-S_API void Steam_RegisterInterfaceFuncs( void *hModule ) {
+S_API void Steam_RegisterInterfaceFuncs( void *hModule )
+{
     // TODO: Implement Steam_RegisterInterfaceFuncs
 }
 
 // returns the HSteamUser of the last user to dispatch a callback
-S_API HSteamUser Steam_GetHSteamUserCurrent() {
+S_API HSteamUser Steam_GetHSteamUserCurrent()
+{
     // TODO: Implement Steam_GetHSteamUserCurrent
     return g_hSteamUser;
 }
 
-// returns the filename path of the current running Steam process, used if you need to load an explicit steam dll by name
-S_API const char *SteamAPI_GetSteamInstallPath() {
+// returns the filename path of the current running Steam process, used if you need to load an explicit steam dll by name.
+// DEPRECATED - implementation is Windows only, and the path returned is a UTF-8 string which must be converted to UTF-16 for use with Win32 APIs
+S_API const char *SteamAPI_GetSteamInstallPath()
+{
     // TODO: Implement SteamAPI_GetSteamInstallPath
     static const char* steamPath = "C:\\Program Files (x86)\\Steam";
     return steamPath;
@@ -434,34 +443,8 @@ S_API HSteamUser GetHSteamUser() {
     return g_hSteamUser;
 }
 
-//----------------------------------------------------------------------------------------------------------------------------------------------------------//
-// VERSION_SAFE_STEAM_API_INTERFACES uses CSteamAPIContext to provide interfaces to each module in a way that 
-// lets them each specify the interface versions they are compiled with.
-//
-// It's important that these stay inlined in the header so the calling module specifies the interface versions
-// for whatever Steam API version it has.
-//----------------------------------------------------------------------------------------------------------------------------------------------------------//
-
-S_API HSteamUser SteamAPI_GetHSteamUser() {
-    // TODO: Implement SteamAPI_GetHSteamUser
-    return g_hSteamUser;
-}
-
-// this should be called before the game initialized the steam APIs
-// pchDate should be of the format "Mmm dd yyyy" (such as from the __DATE__ macro )
-// pchTime should be of the format "hh:mm:ss" (such as from the __TIME__ macro )
-// bFullMemoryDumps (Win32 only) -- writes out a uuid-full.dmp in the client/dumps folder
-// pvContext-- can be NULL, will be the void * context passed into m_pfnPreMinidumpCallback
-// PFNPreMinidumpCallback m_pfnPreMinidumpCallback   -- optional callback which occurs just before a .dmp file is written during a crash.  Applications can hook this to allow adding additional information into the .dmp comment stream.
-// Steam SDK v1.09
-// S_API void SteamAPI_UseBreakpadCrashHandler( char const *pchVersion, char const *pchDate, char const *pchTime )
-// Steam SDK v1.10
-S_API void SteamAPI_UseBreakpadCrashHandler( char const *pchVersion, char const *pchDate, char const *pchTime, bool bFullMemoryDumps, void *pvContext, PFNPreMinidumpCallback m_pfnPreMinidumpCallback )
-{
-    VLOG_DEBUG("SteamAPI_UseBreakpadCrashHandler called - Version: %s, Date: %s, Time: %s", pchVersion, pchDate, pchTime);
-}
-
-S_API void SteamAPI_SetBreakpadAppID( uint32 unAppID )
-{
-    VLOG_DEBUG("SteamAPI_SetBreakpadAppID called - AppID: %u", unAppID);
+// backwards compat with older SDKs
+S_API bool S_CALLTYPE SteamAPI_InitSafe() {
+    VLOG_INFO("SteamAPI_InitSafe called");
+    return SteamAPI_Init();
 }

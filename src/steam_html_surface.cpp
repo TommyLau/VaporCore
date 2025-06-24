@@ -57,20 +57,32 @@ bool Steam_HTML_Surface::Shutdown()
     return true;
 }
 
-// Create a browser object for display of a html page
+// Create a browser object for display of a html page, when creation is complete the call handle
+// will return a HTML_BrowserReady_t callback for the HHTMLBrowser of your new browser.
+//   The user agent string is a substring to be added to the general user agent string so you can
+// identify your client on web servers.
+//   The userCSS string lets you apply a CSS style sheet to every displayed page, leave null if
+// you do not require this functionality.
+//
+// YOU MUST HAVE IMPLEMENTED HANDLERS FOR HTML_BrowserReady_t, HTML_StartRequest_t,
+// HTML_JSAlert_t, HTML_JSConfirm_t, and HTML_FileOpenDialog_t! See the CALLBACKS
+// section of this interface (AllowStartRequest, etc) for more details. If you do
+// not implement these callback handlers, the browser may appear to hang instead of
+// navigating to new pages or triggering javascript popups.
+//
 SteamAPICall_t Steam_HTML_Surface::CreateBrowser( const char *pchUserAgent, const char *pchUserCSS )
 {
     VLOG_DEBUG("Steam_HTML_Surface::CreateBrowser called - UserAgent: %s", pchUserAgent ? pchUserAgent : "null");
     return 0;
 }
 
-// Call this when you are done with a html surface
+// Call this when you are done with a html surface, this lets us free the resources being used by it
 void Steam_HTML_Surface::RemoveBrowser( HHTMLBrowser unBrowserHandle )
 {
     VLOG_DEBUG("Steam_HTML_Surface::RemoveBrowser called - Handle: %u", unBrowserHandle);
 }
 
-// Navigate to this URL
+// Navigate to this URL, results in a HTML_StartRequest_t as the request commences 
 void Steam_HTML_Surface::LoadURL( HHTMLBrowser unBrowserHandle, const char *pchURL, const char *pchPostData )
 {
     VLOG_DEBUG("Steam_HTML_Surface::LoadURL called - Handle: %u, URL: %s", unBrowserHandle, pchURL ? pchURL : "null");
@@ -161,7 +173,7 @@ void Steam_HTML_Surface::KeyUp( HHTMLBrowser unBrowserHandle, uint32 nNativeKeyC
                unBrowserHandle, nNativeKeyCode, eHTMLKeyModifiers);
 }
 
-// cUnicodeChar is the unicode character point for this keypress
+// cUnicodeChar is the unicode character point for this keypress (and potentially multiple chars per press)
 void Steam_HTML_Surface::KeyChar( HHTMLBrowser unBrowserHandle, uint32 cUnicodeChar, EHTMLKeyModifiers eHTMLKeyModifiers )
 {
     VLOG_DEBUG("Steam_HTML_Surface::KeyChar called - Handle: %u, Char: %u, Modifiers: %d", 
@@ -181,7 +193,7 @@ void Steam_HTML_Surface::SetVerticalScroll( HHTMLBrowser unBrowserHandle, uint32
                unBrowserHandle, nAbsolutePixelScroll);
 }
 
-// tell the html control if it has key focus currently
+// tell the html control if it has key focus currently, controls showing the I-beam cursor in text controls amongst other things
 void Steam_HTML_Surface::SetKeyFocus( HHTMLBrowser unBrowserHandle, bool bHasKeyFocus )
 {
     VLOG_DEBUG("Steam_HTML_Surface::SetKeyFocus called - Handle: %u, HasFocus: %s", 
@@ -206,7 +218,7 @@ void Steam_HTML_Surface::PasteFromClipboard( HHTMLBrowser unBrowserHandle )
     VLOG_DEBUG("Steam_HTML_Surface::PasteFromClipboard called - Handle: %u", unBrowserHandle);
 }
 
-// find this string in the browser
+// find this string in the browser, if bCurrentlyInFind is true then instead cycle to the next matching element
 void Steam_HTML_Surface::Find( HHTMLBrowser unBrowserHandle, const char *pchSearchStr, bool bCurrentlyInFind, bool bReverse )
 {
     VLOG_DEBUG("Steam_HTML_Surface::Find called - Handle: %u, SearchStr: %s, InFind: %s, Reverse: %s", 
@@ -234,7 +246,7 @@ void Steam_HTML_Surface::SetCookie( const char *pchHostname, const char *pchKey,
                pchHostname ? pchHostname : "null", pchKey ? pchKey : "null", pchValue ? pchValue : "null");
 }
 
-// Zoom the current page by flZoom
+// Zoom the current page by flZoom ( from 0.0 to 2.0, so to zoom to 120% use 1.2 ), zooming around point X,Y in the page (use 0,0 if you don't care)
 void Steam_HTML_Surface::SetPageScaleFactor( HHTMLBrowser unBrowserHandle, float flZoom, int nPointX, int nPointY )
 {
     VLOG_DEBUG("Steam_HTML_Surface::SetPageScaleFactor called - Handle: %u, Zoom: %f, Point: %d,%d", 
@@ -251,9 +263,14 @@ void Steam_HTML_Surface::SetBackgroundMode(HHTMLBrowser unBrowserHandle, bool bB
                unBrowserHandle, bBackgroundMode ? "true" : "false");
 }
 
-// CALLBACKS - These set of functions are used as responses to callback requests
+//
+//  These set of functions are used as responses to callback requests
+//
 
 // You MUST call this in response to a HTML_StartRequest_t callback
+//  Set bAllowed to true to allow this navigation, false to cancel it and stay 
+// on the current page. You can use this feature to limit the valid pages
+// allowed in your HTML surface.
 void Steam_HTML_Surface::AllowStartRequest( HHTMLBrowser unBrowserHandle, bool bAllowed )
 {
     VLOG_DEBUG("Steam_HTML_Surface::AllowStartRequest called - Handle: %u, Allowed: %s", 
@@ -261,6 +278,7 @@ void Steam_HTML_Surface::AllowStartRequest( HHTMLBrowser unBrowserHandle, bool b
 }
 
 // You MUST call this in response to a HTML_JSAlert_t or HTML_JSConfirm_t callback
+//  Set bResult to true for the OK option of a confirm, use false otherwise
 void Steam_HTML_Surface::JSDialogResponse( HHTMLBrowser unBrowserHandle, bool bResult )
 {
     VLOG_DEBUG("Steam_HTML_Surface::JSDialogResponse called - Handle: %u, Result: %s", 

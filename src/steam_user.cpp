@@ -347,3 +347,17 @@ SteamAPICall_t Steam_User::RequestStoreAuthURL( const char *pchRedirectURL )
     VLOG_DEBUG("RequestStoreAuthURL called - RedirectURL: %s", pchRedirectURL);
     return 0;
 }
+
+// gets whether the users phone number is verified 
+bool Steam_User::BIsPhoneVerified()
+{
+    VLOG_DEBUG("BIsPhoneVerified called");
+    return false;
+}
+
+// gets whether the user has two factor enabled on their account
+bool Steam_User::BIsTwoFactorEnabled()
+{
+    VLOG_DEBUG("BIsTwoFactorEnabled called");
+    return false;
+}
