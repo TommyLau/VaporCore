@@ -58,6 +58,48 @@ class FlatAPIGenerator:
         self.functions: List[FunctionSignature] = []
         self.interface_groups: Dict[str, List[FunctionSignature]] = {}
     
+    def _fix_original_header_file(self, header_path: str, content: str) -> None:
+        """Fix the original header file by removing VR functions and fixing HTML Surface enums"""
+        print(f"Fixing original header file: {header_path}")
+        
+        # Split content into lines
+        lines = content.split('\n')
+        fixed_lines = []
+        
+        for line in lines:
+            # Skip VR function declarations
+            if line.strip().startswith('S_API') and 'SteamAPI_vr_' in line:
+                continue
+            
+            # Fix HTML Surface enum references
+            if 'ISteamHTMLSurface::EHTMLMouseButton' in line:
+                line = line.replace('ISteamHTMLSurface::EHTMLMouseButton', 'EHTMLMouseButton')
+            if 'ISteamHTMLSurface::EHTMLKeyModifiers' in line:
+                line = line.replace('ISteamHTMLSurface::EHTMLKeyModifiers', 'EHTMLKeyModifiers')
+            if 'ISteamHTMLSurface::EMouseCursor' in line:
+                line = line.replace('ISteamHTMLSurface::EMouseCursor', 'EMouseCursor')
+            
+            fixed_lines.append(line)
+        
+        # Add missing include if not present
+        include_line = '#include "isteamhtmlsurface.h"'
+        if include_line not in content:
+            # Find the position after existing includes
+            insert_pos = 0
+            for i, line in enumerate(fixed_lines):
+                if line.strip().startswith('#include'):
+                    insert_pos = i + 1
+            
+            if insert_pos > 0:
+                fixed_lines.insert(insert_pos, include_line)
+        
+        # Write the fixed content back to the file
+        fixed_content = '\n'.join(fixed_lines)
+        with open(header_path, 'w', encoding='utf-8') as f:
+            f.write(fixed_content)
+        
+        print(f"Fixed header file - removed VR functions and fixed HTML Surface enums")
+    
     def parse_header_file(self, header_path: str) -> None:
         """Parse the header file and extract function signatures"""
         print(f"Parsing header file: {header_path}")
@@ -65,10 +107,18 @@ class FlatAPIGenerator:
         with open(header_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # Remove comments and preprocessor directives
+        # First, fix the original header file
+        self._fix_original_header_file(header_path, content)
+        
+        # Remove comments and preprocessor directives for parsing
         content = re.sub(r'//.*$', '', content, flags=re.MULTILINE)
         content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
         content = re.sub(r'^\s*#.*$', '', content, flags=re.MULTILINE)
+        
+        # Fix global enum references that shouldn't have interface scope prefix
+        content = content.replace('ISteamHTMLSurface::EHTMLMouseButton', 'EHTMLMouseButton')
+        content = content.replace('ISteamHTMLSurface::EHTMLKeyModifiers', 'EHTMLKeyModifiers')
+        content = content.replace('ISteamHTMLSurface::EMouseCursor', 'EMouseCursor')
         
         # Find all function declarations
         # Pattern matches: S_API return_type function_name(parameters);
@@ -77,6 +127,10 @@ class FlatAPIGenerator:
         
         for match in matches:
             return_type, function_name, params_str = match
+            
+            # Skip SteamAPI_vr_ functions entirely
+            if function_name.startswith('SteamAPI_vr_'):
+                continue
             
             # Clean up parameters
             parameters = []
@@ -187,12 +241,22 @@ class FlatAPIGenerator:
         if func.method_name == 'DestructISteamHTMLSurface':
             return f"// reinterpret_cast<{func.interface_name}*>(instancePtr)->{func.method_name}();"
         
-        # Extract parameter names for the call
+        # Extract parameter names for the call, handling global enum types
         param_names = []
         for param in func.parameters[1:]:  # Skip instancePtr
             # Extract parameter name (last word before any array brackets or default values)
             param_clean = re.sub(r'\s*=\s*[^,]*', '', param)  # Remove default values
             param_clean = re.sub(r'\[.*?\]', '', param_clean)  # Remove array brackets
+            
+            # Handle global enum types that shouldn't have interface scope prefix
+            # Remove ISteamHTMLSurface:: prefix for certain enum types that are now global
+            if 'ISteamHTMLSurface::EHTMLMouseButton' in param_clean:
+                param_clean = param_clean.replace('ISteamHTMLSurface::EHTMLMouseButton', 'EHTMLMouseButton')
+            elif 'ISteamHTMLSurface::EHTMLKeyModifiers' in param_clean:
+                param_clean = param_clean.replace('ISteamHTMLSurface::EHTMLKeyModifiers', 'EHTMLKeyModifiers')
+            elif 'ISteamHTMLSurface::EMouseCursor' in param_clean:
+                param_clean = param_clean.replace('ISteamHTMLSurface::EMouseCursor', 'EMouseCursor')
+            
             words = param_clean.split()
             if words:
                 param_name = words[-1].lstrip('*&')  # Remove pointer/reference symbols
