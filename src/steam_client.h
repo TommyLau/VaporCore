@@ -23,6 +23,7 @@
 #include <isteamclient010.h>
 #include <isteamclient011.h>
 #include <isteamclient012.h>
+#include <isteamclient014.h>
 
 // Steam pipe state enumeration
 enum Steam_Pipe {
@@ -47,7 +48,8 @@ class Steam_Client :
     public ISteamClient009,
     public ISteamClient010,
     public ISteamClient011,
-    public ISteamClient012
+    public ISteamClient012,
+    public ISteamClient014
 {
 private:
     // Internal state
@@ -96,7 +98,7 @@ public:
 
 	// used by game servers, create a steam user that won't be shared with anyone else
 	HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType eAccountType ) override;
-	// Removed from Steam SDK v1.04, backward compatibility
+	// Changed from Steam SDK v1.04, backward compatibility
 	HSteamUser CreateLocalUser( HSteamPipe *phSteamPipe ) override;
 
 	// removes an allocated user
@@ -193,6 +195,9 @@ public:
 	
 	// Music Player
 	ISteamMusic *GetISteamMusic( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	// Music Player Remote
+	ISteamMusicRemote *GetISteamMusicRemote( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 };
 
 #endif // VAPORCORE_STEAM_CLIENT_H 

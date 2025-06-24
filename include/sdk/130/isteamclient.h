@@ -1,11 +1,9 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright � 1996-2008, Valve Corporation, All rights reserved. =======
+//
+// Purpose: Main interface for loading and accessing Steamworks API's from the 
+//			Steam client.
+//			For most uses, this code is wrapped inside of SteamAPI_Init()
+//=============================================================================
 
 #ifndef ISTEAMCLIENT_H
 #define ISTEAMCLIENT_H
@@ -169,6 +167,7 @@ public:
 
 	// user screenshots
 	virtual ISteamScreenshots *GetISteamScreenshots( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
+
 
 	// this needs to be called every frame to process matchmaking results
 	// redundant if you're already calling SteamAPI_RunCallbacks()

@@ -115,7 +115,7 @@ HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType 
     return VaporCore::DEFAULT_SERVER_USER;
 }
 
-// Removed from Steam SDK v1.04, backward compatibility
+// Changed from Steam SDK v1.04, backward compatibility
 HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe )
 {
     // TODO: Implement local user creation
@@ -342,5 +342,13 @@ ISteamMusic* Steam_Client::GetISteamMusic(HSteamUser hSteamuser, HSteamPipe hSte
 {
     // TODO: Implement music interface
     VLOG_DEBUG("GetISteamMusic called");
+    return nullptr;
+}
+
+// Music Player Remote
+ISteamMusicRemote* Steam_Client::GetISteamMusicRemote(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+{
+    // TODO: Implement music remote interface
+    VLOG_DEBUG("GetISteamMusicRemote called");
     return nullptr;
 }
