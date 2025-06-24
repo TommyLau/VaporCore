@@ -25,7 +25,7 @@ public:
 	virtual int GetAppData( AppId_t nAppID, const char *pchKey, char *pchValue, int cchValueMax ) = 0;
 };
 
-#define STEAMAPPS_INTERFACE_VERSION001 "STEAMAPPS_INTERFACE_VERSION001"
+#define STEAMAPPS_INTERFACE_VERSION_001 "STEAMAPPS_INTERFACE_VERSION001"
 
 //-----------------------------------------------------------------------------
 // Purpose: called when new information about an app has arrived

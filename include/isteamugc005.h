@@ -105,6 +105,6 @@ public:
 	virtual bool DownloadItem( PublishedFileId_t nPublishedFileID, bool bHighPriority ) = 0;
 };
 
-#define STEAMUGC_INTERFACE_VERSION005 "STEAMUGC_INTERFACE_VERSION005"
+#define STEAMUGC_INTERFACE_VERSION_005 "STEAMUGC_INTERFACE_VERSION005"
 
 #endif // ISTEAMUGC005_H

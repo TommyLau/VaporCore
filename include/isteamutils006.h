@@ -124,6 +124,6 @@ public:
 	virtual const char *GetSteamUILanguage() = 0;
 };
 
-#define STEAMUTILS_INTERFACE_VERSION006 "SteamUtils006"
+#define STEAMUTILS_INTERFACE_VERSION_006 "SteamUtils006"
 
 #endif // ISTEAMUTILS006_H

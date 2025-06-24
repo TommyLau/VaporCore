@@ -138,6 +138,6 @@ public:
 	virtual int GetMaxPacketSize( SNetSocket_t hSocket ) = 0;
 };
 
-#define STEAMNETWORKING_INTERFACE_VERSION003 "SteamNetworking003"
+#define STEAMNETWORKING_INTERFACE_VERSION_003 "SteamNetworking003"
 
 #endif // ISTEAMNETWORKING003_H

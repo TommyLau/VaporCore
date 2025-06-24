@@ -99,6 +99,6 @@ public:
 	virtual EUserHasLicenseForAppResult UserHasLicenseForApp( CSteamID steamID, AppId_t appID ) = 0;
 };
 
-#define STEAMUSER_INTERFACE_VERSION012 "SteamUser012"
+#define STEAMUSER_INTERFACE_VERSION_012 "SteamUser012"
 
 #endif // ISTEAMUSER012_H

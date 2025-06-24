@@ -177,6 +177,6 @@ public:
 
 };
 
-#define STEAMUSER_INTERFACE_VERSION016 "SteamUser016"
+#define STEAMUSER_INTERFACE_VERSION_016 "SteamUser016"
 
 #endif // ISTEAMUSER016_H

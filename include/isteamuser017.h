@@ -185,6 +185,6 @@ public:
 
 };
 
-#define STEAMUSER_INTERFACE_VERSION017 "SteamUser017"
+#define STEAMUSER_INTERFACE_VERSION_017 "SteamUser017"
 
 #endif // ISTEAMUSER017_H

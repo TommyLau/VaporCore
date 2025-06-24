@@ -150,6 +150,6 @@ public:
 	virtual uint32 GetUserRestrictions() = 0;
 };
 
-#define STEAMFRIENDS_INTERFACE_VERSION008 "SteamFriends008"
+#define STEAMFRIENDS_INTERFACE_VERSION_008 "SteamFriends008"
 
 #endif // ISTEAMFRIENDS008_H

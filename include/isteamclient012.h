@@ -121,6 +121,6 @@ public:
 	virtual ISteamUGC *GetISteamUGC( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
 };
 
-#define STEAMCLIENT_INTERFACE_VERSION012 "SteamClient012"
+#define STEAMCLIENT_INTERFACE_VERSION_012 "SteamClient012"
 
 #endif // ISTEAMCLIENT012_H

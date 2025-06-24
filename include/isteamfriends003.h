@@ -89,6 +89,6 @@ public:
 	virtual void ActivateGameOverlay( const char *pchDialog ) = 0;
 };
 
-#define STEAMFRIENDS_INTERFACE_VERSION003 "SteamFriends003"
+#define STEAMFRIENDS_INTERFACE_VERSION_003 "SteamFriends003"
 
 #endif // ISTEAMFRIENDS003_H

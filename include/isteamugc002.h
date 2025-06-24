@@ -78,6 +78,6 @@ public:
 	virtual bool GetItemUpdateInfo( PublishedFileId_t nPublishedFileID, bool *pbNeedsUpdate, bool *pbIsDownloading, uint64 *punBytesDownloaded, uint64 *punBytesTotal ) = 0;
 };
 
-#define STEAMUGC_INTERFACE_VERSION002 "STEAMUGC_INTERFACE_VERSION002"
+#define STEAMUGC_INTERFACE_VERSION_002 "STEAMUGC_INTERFACE_VERSION002"
 
 #endif // ISTEAMUGC002_H

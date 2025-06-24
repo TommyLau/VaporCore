@@ -93,6 +93,6 @@ public:
 	virtual bool SetHTTPRequestRawPostBody( HTTPRequestHandle hRequest, const char *pchContentType, uint8 *pubBody, uint32 unBodyLen ) = 0;
 };
 
-#define STEAMHTTP_INTERFACE_VERSION001 "STEAMHTTP_INTERFACE_VERSION001"
+#define STEAMHTTP_INTERFACE_VERSION_001 "STEAMHTTP_INTERFACE_VERSION001"
 
 #endif // ISTEAMHTTP001_H

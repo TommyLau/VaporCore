@@ -114,6 +114,6 @@ public:
 	virtual void ActivateGameOverlayInviteDialog( CSteamID steamIDLobby ) = 0;
 };
 
-#define STEAMFRIENDS_INTERFACE_VERSION006 "SteamFriends006"
+#define STEAMFRIENDS_INTERFACE_VERSION_006 "SteamFriends006"
 
 #endif // ISTEAMFRIENDS006_H

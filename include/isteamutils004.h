@@ -81,6 +81,6 @@ public:
 	virtual bool IsOverlayEnabled() = 0;
 };
 
-#define STEAMUTILS_INTERFACE_VERSION004 "SteamUtils004"
+#define STEAMUTILS_INTERFACE_VERSION_004 "SteamUtils004"
 
 #endif // ISTEAMUTILS004_H

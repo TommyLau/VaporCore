@@ -60,6 +60,6 @@ public:
 	virtual void TrackAppUsageEvent( CGameID gameID, int eAppUsageEvent, const char *pchExtraInfo = "" ) = 0;
 };
 
-#define STEAMUSER_INTERFACE_VERSION010 "SteamUser010"
+#define STEAMUSER_INTERFACE_VERSION_010 "SteamUser010"
 
 #endif // ISTEAMUSER010_H

@@ -181,6 +181,6 @@ public:
 	virtual AppId_t GetFriendCoplayGame( CSteamID steamIDFriend ) = 0;
 };
 
-#define STEAMFRIENDS_INTERFACE_VERSION009 "SteamFriends009"
+#define STEAMFRIENDS_INTERFACE_VERSION_009 "SteamFriends009"
 
 #endif // ISTEAMFRIENDS009_H

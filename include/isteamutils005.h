@@ -121,6 +121,6 @@ public:
 	virtual bool GetEnteredGamepadTextInput( char *pchText, uint32 cchText ) = 0;	
 };
 
-#define STEAMUTILS_INTERFACE_VERSION005 "SteamUtils005"
+#define STEAMUTILS_INTERFACE_VERSION_005 "SteamUtils005"
 
 #endif // ISTEAMUTILS005_H

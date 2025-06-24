@@ -123,6 +123,6 @@ public:
 	virtual SteamAPICall_t UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, int32 nScore, int32 *pScoreDetails, int cScoreDetailsCount ) = 0;
 };
 
-#define STEAMUSERSTATS_INTERFACE_VERSION005 "STEAMUSERSTATS_INTERFACE_VERSION005"
+#define STEAMUSERSTATS_INTERFACE_VERSION_005 "STEAMUSERSTATS_INTERFACE_VERSION005"
 
 #endif // ISTEAMUSERSTATS005_H

@@ -99,6 +99,6 @@ public:
 
 };
 
-#define STEAMCLIENT_INTERFACE_VERSION008 "SteamClient008"
+#define STEAMCLIENT_INTERFACE_VERSION_008 "SteamClient008"
 
 #endif // ISTEAMCLIENT008_H

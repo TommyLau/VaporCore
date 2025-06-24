@@ -107,6 +107,6 @@ public:
 	virtual void SetPlayedWith( CSteamID steamIDUserPlayedWith ) = 0;
 };
 
-#define STEAMFRIENDS_INTERFACE_VERSION005 "SteamFriends005"
+#define STEAMFRIENDS_INTERFACE_VERSION_005 "SteamFriends005"
 
 #endif // ISTEAMFRIENDS005_H

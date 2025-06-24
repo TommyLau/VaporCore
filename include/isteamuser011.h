@@ -81,6 +81,6 @@ public:
 	virtual EVoiceResult DecompressVoice( void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten ) = 0;
 };
 
-#define STEAMUSER_INTERFACE_VERSION011 "SteamUser011"
+#define STEAMUSER_INTERFACE_VERSION_011 "SteamUser011"
 
 #endif // ISTEAMUSER011_H

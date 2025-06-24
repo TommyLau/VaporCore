@@ -104,6 +104,6 @@ public:
 	virtual uint32 GetPublicIP() = 0;
 };
 
-#define STEAMGAMESERVER_INTERFACE_VERSION008 "SteamGameServer008"
+#define STEAMGAMESERVER_INTERFACE_VERSION_008 "SteamGameServer008"
 
 #endif // ISTEAMGAMESERVER008_H

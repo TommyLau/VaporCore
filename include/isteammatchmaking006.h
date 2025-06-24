@@ -177,6 +177,6 @@ public:
 	virtual CSteamID GetLobbyOwner( CSteamID steamIDLobby ) = 0;
 };
 
-#define STEAMMATCHMAKING_INTERFACE_VERSION006 "SteamMatchMaking006"
+#define STEAMMATCHMAKING_INTERFACE_VERSION_006 "SteamMatchMaking006"
 
 #endif // ISTEAMMATCHMAKING

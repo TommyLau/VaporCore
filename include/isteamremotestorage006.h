@@ -118,6 +118,6 @@ class ISteamRemoteStorage006
 		virtual SteamAPICall_t	EnumeratePublishedWorkshopFiles( EWorkshopEnumerationType eEnumerationType, uint32 unStartIndex, uint32 unCount, uint32 unDays, SteamParamStringArray_t *pTags, SteamParamStringArray_t *pUserTags ) = 0;
 };
 
-#define STEAMREMOTESTORAGE_INTERFACE_VERSION006 "STEAMREMOTESTORAGE_INTERFACE_VERSION006"
+#define STEAMREMOTESTORAGE_INTERFACE_VERSION_006 "STEAMREMOTESTORAGE_INTERFACE_VERSION006"
 
 #endif // ISTEAMREMOTESTORAGE006_H

@@ -129,6 +129,6 @@ public:
 	virtual ISteamMusicRemote *GetISteamMusicRemote(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion) = 0;
 };
 
-#define STEAMCLIENT_INTERFACE_VERSION015 "SteamClient015"
+#define STEAMCLIENT_INTERFACE_VERSION_015 "SteamClient015"
 
 #endif // ISTEAMCLIENT015_H

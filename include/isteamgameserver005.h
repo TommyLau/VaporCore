@@ -92,6 +92,6 @@ public:
 	virtual bool BGetUserAchievementStatus( CSteamID steamID, const char *pchAchievementName ) = 0;
 };
 
-#define STEAMGAMESERVER_INTERFACE_VERSION005 "SteamGameServer005"
+#define STEAMGAMESERVER_INTERFACE_VERSION_005 "SteamGameServer005"
 
 #endif // ISTEAMGAMESERVER005_H

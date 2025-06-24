@@ -122,6 +122,6 @@ public:
 	virtual int GetLargeFriendAvatar( CSteamID steamIDFriend ) = 0;
 };
 
-#define STEAMFRIENDS_INTERFACE_VERSION007 "SteamFriends007"
+#define STEAMFRIENDS_INTERFACE_VERSION_007 "SteamFriends007"
 
 #endif // ISTEAMFRIENDS007_H

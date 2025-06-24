@@ -61,6 +61,6 @@ public:
 	virtual bool GetAPICallResult( SteamAPICall_t hSteamAPICall, void *pCallback, int cubCallback, int iCallbackExpected, bool *pbFailed ) = 0;
 };
 
-#define STEAMUTILS_INTERFACE_VERSION002 "SteamUtils002"
+#define STEAMUTILS_INTERFACE_VERSION_002 "SteamUtils002"
 
 #endif // ISTEAMUTILS002_H

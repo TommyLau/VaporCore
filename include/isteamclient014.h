@@ -126,6 +126,6 @@ public:
 	virtual ISteamMusic *GetISteamMusic( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
 };
 
-#define STEAMCLIENT_INTERFACE_VERSION014 "SteamClient014"
+#define STEAMCLIENT_INTERFACE_VERSION_014 "SteamClient014"
 
 #endif // ISTEAMCLIENT014_H

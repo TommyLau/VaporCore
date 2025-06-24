@@ -225,6 +225,6 @@ public:
 	virtual SteamAPICall_t EnumerateFollowingList( uint32 unStartIndex ) = 0;
 };
 
-#define STEAMFRIENDS_INTERFACE_VERSION013 "SteamFriends013"
+#define STEAMFRIENDS_INTERFACE_VERSION_013 "SteamFriends013"
 
 #endif // ISTEAMFRIENDS013_H

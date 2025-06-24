@@ -133,6 +133,6 @@ public:
 	virtual void Set_SteamAPI_CCheckCallbackRegisteredInProcess( SteamAPI_CheckCallbackRegistered_t func ) = 0;
 };
 
-#define STEAMCLIENT_INTERFACE_VERSION016 "SteamClient016"
+#define STEAMCLIENT_INTERFACE_VERSION_016 "SteamClient016"
 
 #endif // ISTEAMCLIENT016_H

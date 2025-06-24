@@ -211,7 +211,7 @@ public:
 	virtual bool SetLobbyOwner( CSteamID steamIDLobby, CSteamID steamIDNewOwner ) = 0;
 };
 
-#define STEAMMATCHMAKING_INTERFACE_VERSION007 "SteamMatchMaking007"
+#define STEAMMATCHMAKING_INTERFACE_VERSION_007 "SteamMatchMaking007"
 
 //-----------------------------------------------------------------------------
 // Callback interfaces for server list functions (see ISteamMatchmakingServers below)
@@ -316,6 +316,6 @@ public:
 	virtual void CancelServerQuery( HServerQuery hServerQuery ) = 0; 
 };
 
-#define STEAMMATCHMAKINGSERVERS_INTERFACE_VERSION001 "SteamMatchMakingServers001"
+#define STEAMMATCHMAKINGSERVERS_INTERFACE_VERSION_001 "SteamMatchMakingServers001"
 
 #endif // ISTEAMMATCHMAKING007_H

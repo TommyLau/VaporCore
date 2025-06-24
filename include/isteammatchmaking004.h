@@ -154,6 +154,6 @@ public:
 	virtual bool RequestFriendsLobbies() = 0;
 };
 
-#define STEAMMATCHMAKING_INTERFACE_VERSION004 "SteamMatchMaking004"
+#define STEAMMATCHMAKING_INTERFACE_VERSION_004 "SteamMatchMaking004"
 
 #endif // ISTEAMMATCHMAKING004_H

@@ -114,6 +114,6 @@ public:
 	virtual EUserHasLicenseForAppResult UserHasLicenseForApp( CSteamID steamID, AppId_t appID ) = 0;
 };
 
-#define STEAMGAMESERVER_INTERFACE_VERSION009 "SteamGameServer009"
+#define STEAMGAMESERVER_INTERFACE_VERSION_009 "SteamGameServer009"
 
 #endif // ISTEAMGAMESERVER009_H
