@@ -3,7 +3,7 @@
 VaporCore Flat API Generator
 Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
 
-This script automatically finds the latest SDK version, copies steam_api_flat.h to the include directory,
+This script automatically finds the latest SDK version, generates steam_api_flat.h in the include directory,
 and generates steam_api_flat.cpp from it.
 
 Usage: python generate_flat_api.py
@@ -55,78 +55,8 @@ class SDKManager:
         print(f"✅ Latest SDK version: {latest_version[1]} (numeric: {latest_version[0]})")
         return latest_version[2]
     
-    def copy_flat_api_header(self, sdk_path: Path) -> Optional[Path]:
-        """Copy steam_api_flat.h from SDK to include directory"""
-        source_file = sdk_path / "steam_api_flat.h"
-        target_file = self.include_dir / "steam_api_flat.h"
-        
-        if not source_file.exists():
-            print(f"❌ steam_api_flat.h not found in SDK: {source_file}")
-            return None
-        
-        try:
-            print(f"📋 Copying {source_file} -> {target_file}")
-            shutil.copy2(source_file, target_file)
-            print(f"✅ Successfully copied flat API header")
-            return target_file
-        except Exception as e:
-            print(f"❌ Error copying flat API header: {e}")
-            return None
-    
-    def update_from_latest_sdk(self) -> Optional[Path]:
-        """Find latest SDK and copy the flat API header"""
-        latest_sdk = self.find_latest_sdk_version()
-        if not latest_sdk:
-            return None
-        
-        return self.copy_flat_api_header(latest_sdk)
-
-
-class FunctionSignature:
-    def __init__(self, return_type: str, function_name: str, parameters: List[str], full_signature: str):
-        self.return_type = return_type.strip()
-        self.function_name = function_name.strip()
-        self.parameters = parameters
-        self.full_signature = full_signature.strip()
-        self.interface_name = self._extract_interface_name()
-        self.method_name = self._extract_method_name()
-    
-    def _extract_interface_name(self) -> str:
-        """Extract interface name from function name like SteamAPI_ISteamClient_CreateSteamPipe"""
-        # Match the interface name which ends after the first underscore following 'ISteam'
-        match = re.match(r'SteamAPI_(ISteam\w+?)_', self.function_name)
-        return match.group(1) if match else ""
-    
-    def _extract_method_name(self) -> str:
-        """Extract method name from function name"""
-        # First extract the interface name, then get everything after it
-        interface_name = self._extract_interface_name()
-        if interface_name:
-            # Remove the SteamAPI_ prefix and interface name, get the rest
-            prefix = f"SteamAPI_{interface_name}_"
-            if self.function_name.startswith(prefix):
-                method_name = self.function_name[len(prefix):]
-                
-                # Handle overloaded functions: remove trailing numbers (like GetUserStat0 -> GetUserStat)
-                # But preserve complex names with numbers inside (like SetPNGIcon_64x64)
-                # Pattern: if the method name ends with just digits, remove them
-                if re.match(r'^.*\d+$', method_name) and not re.match(r'^.*_\d+x\d+$', method_name):
-                    # Remove trailing digits for overloaded functions
-                    method_name = re.sub(r'\d+$', '', method_name)
-                
-                return method_name
-        return ""
-
-
-class FlatAPIGenerator:
-    def __init__(self):
-        self.functions: List[FunctionSignature] = []
-        self.interface_groups: Dict[str, List[FunctionSignature]] = {}
-    
-    def _fix_original_header_file(self, header_path: str, content: str) -> None:
-        """Fix the original header file by removing VR functions and fixing HTML Surface enums"""
-        print(f"🔧 Fixing original header file: {header_path}")
-        
+    def _convert_header_content(self, content: str) -> str:
+        """Convert the original header content to VaporCore format"""
         # Split content into lines
         lines = content.split('\n')
         fixed_lines = []
@@ -177,12 +107,157 @@ class FlatAPIGenerator:
             
             fixed_lines.append(line)
         
-        # Write the fixed content back to the file
-        fixed_content = '\n'.join(fixed_lines)
-        with open(header_path, 'w', encoding='utf-8') as f:
-            f.write(fixed_content)
+        return '\n'.join(fixed_lines)
+    
+    def generate_flat_api_header(self, sdk_path: Path) -> Optional[Path]:
+        """Generate steam_api_flat.h from SDK to include directory"""
+        source_file = sdk_path / "steam_api_flat.h"
+        target_file = self.include_dir / "steam_api_flat.h"
         
-        print(f"✅ Fixed header file - replaced header comment, removed VR functions and fixed HTML Surface enums")
+        if not source_file.exists():
+            print(f"❌ steam_api_flat.h not found in SDK: {source_file}")
+            return None
+        
+        try:
+            print(f"🔄 Generating {target_file} from {source_file}")
+            
+            # Read the original file
+            with open(source_file, 'r', encoding='utf-8') as f:
+                original_content = f.read()
+            
+            # Convert the content
+            converted_content = self._convert_header_content(original_content)
+            
+            # Write the converted content to target file
+            with open(target_file, 'w', encoding='utf-8') as f:
+                f.write(converted_content)
+            
+            print(f"✅ Successfully generated flat API header")
+            print(f"   - Replaced header comment with VaporCore format")
+            print(f"   - Removed VR functions")
+            print(f"   - Fixed HTML Surface enum references")
+            return target_file
+            
+        except Exception as e:
+            print(f"❌ Error generating flat API header: {e}")
+            return None
+    
+    def update_from_latest_sdk(self) -> Optional[Path]:
+        """Find latest SDK and generate the flat API header"""
+        latest_sdk = self.find_latest_sdk_version()
+        if not latest_sdk:
+            return None
+        
+        return self.generate_flat_api_header(latest_sdk)
+
+
+class FunctionSignature:
+    def __init__(self, return_type: str, function_name: str, parameters: List[str], full_signature: str):
+        self.return_type = return_type.strip()
+        self.function_name = function_name.strip()
+        self.parameters = parameters
+        self.full_signature = full_signature.strip()
+        self.interface_name = self._extract_interface_name()
+        self.method_name = self._extract_method_name()
+    
+    def _extract_interface_name(self) -> str:
+        """Extract interface name from function name like SteamAPI_ISteamClient_CreateSteamPipe"""
+        # Match the interface name which ends after the first underscore following 'ISteam'
+        match = re.match(r'SteamAPI_(ISteam\w+?)_', self.function_name)
+        return match.group(1) if match else ""
+    
+    def _extract_method_name(self) -> str:
+        """Extract method name from function name"""
+        # First extract the interface name, then get everything after it
+        interface_name = self._extract_interface_name()
+        if interface_name:
+            # Remove the SteamAPI_ prefix and interface name, get the rest
+            prefix = f"SteamAPI_{interface_name}_"
+            if self.function_name.startswith(prefix):
+                method_name = self.function_name[len(prefix):]
+                
+                # Handle overloaded functions: remove trailing numbers (like GetUserStat0 -> GetUserStat)
+                # But preserve complex names with numbers inside (like SetPNGIcon_64x64)
+                # Pattern: if the method name ends with just digits, remove them
+                if re.match(r'^.*\d+$', method_name) and not re.match(r'^.*_\d+x\d+$', method_name):
+                    # Remove trailing digits for overloaded functions
+                    method_name = re.sub(r'\d+$', '', method_name)
+                
+                return method_name
+        return ""
+
+
+class FlatAPIGenerator:
+    def __init__(self):
+        self.functions: List[FunctionSignature] = []
+        self.interface_groups: Dict[str, List[FunctionSignature]] = {}
+        self.existing_functions: Dict[str, str] = {}  # function_name -> implementation
+    
+    def _parse_existing_cpp_file(self, cpp_path: str) -> None:
+        """Parse existing .cpp file to extract function implementations"""
+        if not os.path.exists(cpp_path):
+            print(f"ℹ️  No existing .cpp file found at {cpp_path}")
+            return
+            
+        print(f"📖 Parsing existing .cpp file: {cpp_path}")
+        
+        with open(cpp_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Find all function implementations using regex
+        # Pattern matches: S_API return_type function_name(parameters) { ... }
+        # We need to properly handle nested braces, so we'll find functions manually
+        matches = []
+        
+        # Find S_API function starts
+        import re
+        func_starts = [(m.start(), m.group()) for m in re.finditer(r'S_API\s+[^{]+?\s+(\w+)\s*\([^)]*\)\s*\{', content, re.MULTILINE | re.DOTALL)]
+        
+        for i, (start_pos, func_header) in enumerate(func_starts):
+            # Extract function name from header
+            name_match = re.search(r'S_API\s+[^{]+?\s+(\w+)\s*\([^)]*\)\s*\{', func_header)
+            if not name_match:
+                continue
+            function_name = name_match.group(1)
+            
+            # Find the matching closing brace
+            brace_count = 0
+            found_first_brace = False
+            end_pos = start_pos
+            
+            for j, char in enumerate(content[start_pos:]):
+                if char == '{':
+                    if not found_first_brace:
+                        found_first_brace = True
+                    brace_count += 1
+                elif char == '}':
+                    brace_count -= 1
+                    if found_first_brace and brace_count == 0:
+                        end_pos = start_pos + j + 1
+                        break
+            
+            if found_first_brace and brace_count == 0:
+                full_implementation = content[start_pos:end_pos]
+                matches.append((full_implementation, function_name))
+        
+        for full_implementation, function_name in matches:
+            # Clean up the implementation (remove extra whitespace)
+            lines = full_implementation.split('\n')
+            cleaned_lines = []
+            for line in lines:
+                cleaned_lines.append(line.rstrip())
+            
+            self.existing_functions[function_name] = '\n'.join(cleaned_lines)
+        
+        print(f"✅ Found {len(self.existing_functions)} existing functions in .cpp file")
+    
+    def _extract_function_name_from_signature(self, signature: str) -> str:
+        """Extract function name from a function signature"""
+        # Pattern to match function name in signature like "S_API return_type function_name(params)"
+        match = re.search(r'S_API\s+[^(]+?\s+(\w+)\s*\(', signature)
+        if match:
+            return match.group(1)
+        return ""
     
     def parse_header_file(self, header_path: str) -> None:
         """Parse the header file and extract function signatures"""
@@ -190,9 +265,6 @@ class FlatAPIGenerator:
         
         with open(header_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        
-        # First, fix the original header file
-        self._fix_original_header_file(header_path, content)
         
         # Remove comments and preprocessor directives for parsing
         content = re.sub(r'//.*$', '', content, flags=re.MULTILINE)
@@ -410,6 +482,9 @@ class FlatAPIGenerator:
         """Generate the complete cpp file"""
         print(f"🚀 Generating implementation file: {output_path}")
         
+        # Parse existing .cpp file to preserve non-conflicting functions
+        self._parse_existing_cpp_file(output_path)
+        
         lines = []
         
         # File header
@@ -428,17 +503,26 @@ class FlatAPIGenerator:
             '#include <steam_gameserver.h>',
             '#include <steam_game_server_stats.h>',
             '',
+            '#include "vaporcore_base.h"',
             '#include "logger.h"',
-            ''
+            '',
         ])
         
-        # Generate implementations in the exact order they appear in the header file
+        # Track statistics
+        functions_generated = 0
+        functions_reused = 0
+        functions_preserved = 0
+        
+        # Generate implementations in header order, with interface headers
+        interfaces_processed = set()
         current_interface = None
+        
+        # Process functions in their original header order
         for func in self.functions:
             # Add interface header when we encounter a new interface
             if func.interface_name != current_interface:
-                if current_interface is not None:
-                    lines.append('')  # Add blank line between interfaces
+                if current_interface is not None:  # Add blank line between interfaces (except first)
+                    lines.append('')
                 
                 lines.extend([
                     '//-----------------------------------------------------------------------------',
@@ -447,17 +531,64 @@ class FlatAPIGenerator:
                     ''
                 ])
                 current_interface = func.interface_name
+                interfaces_processed.add(func.interface_name)
             
-            implementation = self._generate_function_implementation(func)
-            lines.append(implementation)
-            lines.append('')
+            # Check if we have existing implementation for this function
+            existing_impl = None
+            if func.function_name in self.existing_functions:
+                existing_impl = self.existing_functions[func.function_name]
+            
+            if existing_impl:
+                # Reuse existing implementation
+                lines.append(existing_impl)
+                lines.append('')
+                functions_reused += 1
+                print(f"   ♻️  Reusing: {func.function_name}")
+            else:
+                # Generate new implementation
+                implementation = self._generate_function_implementation(func)
+                lines.append(implementation)
+                lines.append('')
+                functions_generated += 1
+                print(f"   🆕 Generating: {func.function_name}")
+        
+        # Add any remaining existing functions that don't have header declarations
+        preserved_function_names = {func.function_name for func in self.functions}
+        remaining_functions = {}
+        
+        for func_name, existing_impl in self.existing_functions.items():
+            if func_name and func_name not in preserved_function_names:
+                remaining_functions[func_name] = existing_impl
+        
+        if remaining_functions:
+            lines.extend([
+                '//-----------------------------------------------------------------------------',
+                '// Preserved existing functions',
+                '//-----------------------------------------------------------------------------',
+                ''
+            ])
+            
+            for func_name, implementation in remaining_functions.items():
+                lines.append(implementation)
+                lines.append('')
+                functions_preserved += 1
+                print(f"   📦 Preserving: {func_name}")
         
         # Write to file
         content = '\n'.join(lines)
+        
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(content)
         
-        print(f"✅ Successfully generated {len(self.functions)} function implementations")
+        # Report statistics
+        total_functions = functions_generated + functions_reused + functions_preserved
+        print(f"")
+        print(f"📊 Generation Summary:")
+        print(f"   🆕 New functions generated: {functions_generated}")
+        print(f"   ♻️  Existing functions reused: {functions_reused}")
+        print(f"   📦 Additional functions preserved: {functions_preserved}")
+        print(f"   📈 Total functions in output: {total_functions}")
+        print()
 
 
 def main():
@@ -467,13 +598,13 @@ def main():
     # Get workspace root directory
     workspace_root = Path(__file__).parent.parent
     
-    # Auto-detect latest SDK and copy header
+    # Auto-detect latest SDK and generate header
     print("🔍 Searching for latest SDK version...")
     sdk_manager = SDKManager(workspace_root)
     header_path = sdk_manager.update_from_latest_sdk()
     
     if not header_path:
-        print("❌ Failed to find or copy header from latest SDK")
+        print("❌ Failed to find SDK or generate header from latest SDK")
         print("💡 Please ensure include/sdk/ directory exists with SDK versions like 132, 133b, 134, etc.")
         return 1
     
