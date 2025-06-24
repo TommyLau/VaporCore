@@ -254,6 +254,13 @@ uint32 Steam_UGC::GetSubscribedItems( PublishedFileId_t* pvecPublishedFileID, ui
 }
 
 // returns true if item is installed
+bool Steam_UGC::GetItemInstallInfo( PublishedFileId_t nPublishedFileID, uint64 *punSizeOnDisk, char *pchFolder, uint32 cchFolderSize, bool *pbLegacyItem )
+{
+    VLOG_DEBUG("GetItemInstallInfo called");
+    return false;
+}
+
+// Changed from Steam SDK v1.31, backward compatibility
 bool Steam_UGC::GetItemInstallInfo( PublishedFileId_t nPublishedFileID, uint64 *punSizeOnDisk, char *pchFolder, uint32 cchFolderSize )
 {
     VLOG_DEBUG("GetItemInstallInfo called");

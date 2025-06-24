@@ -1,11 +1,9 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright � 1996-2008, Valve Corporation, All rights reserved. =======
+//
+// Purpose: Main interface for loading and accessing Steamworks API's from the 
+//			Steam client.
+//			For most uses, this code is wrapped inside of SteamAPI_Init()
+//=============================================================================
 
 #ifndef ISTEAMCLIENT_H
 #define ISTEAMCLIENT_H
@@ -215,7 +213,11 @@ public:
 
 	// Music Player Remote
 	virtual ISteamMusicRemote *GetISteamMusicRemote(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion) = 0;
+
+	// html page display
 	virtual ISteamHTMLSurface *GetISteamHTMLSurface(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion) = 0;
+
+	// Helper functions for internal Steam usage
 	virtual void Set_SteamAPI_CPostAPIResultInProcess( SteamAPI_PostAPIResultInProcess_t func ) = 0;
 	virtual void Remove_SteamAPI_CPostAPIResultInProcess( SteamAPI_PostAPIResultInProcess_t func ) = 0;
 	virtual void Set_SteamAPI_CCheckCallbackRegisteredInProcess( SteamAPI_CheckCallbackRegistered_t func ) = 0;
@@ -421,6 +423,7 @@ struct callbackname : SteamCallback_t { \
 	END_CALLBACK_INTERNAL_SWITCH( 8 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 9 ) \
 	END_CALLBACK_INTERNAL_END()
+
 #define END_DEFINE_CALLBACK_11() \
 	END_CALLBACK_INTERNAL_BEGIN( 11 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 0 ) \
@@ -435,6 +438,7 @@ struct callbackname : SteamCallback_t { \
 	END_CALLBACK_INTERNAL_SWITCH( 9 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 10 ) \
 	END_CALLBACK_INTERNAL_END()
+
 #define END_DEFINE_CALLBACK_12() \
 	END_CALLBACK_INTERNAL_BEGIN( 12 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 0 ) \
@@ -450,6 +454,7 @@ struct callbackname : SteamCallback_t { \
 	END_CALLBACK_INTERNAL_SWITCH( 10 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 11 ) \
 	END_CALLBACK_INTERNAL_END()
+
 #define END_DEFINE_CALLBACK_13() \
 	END_CALLBACK_INTERNAL_BEGIN( 13 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 0 ) \
@@ -466,6 +471,7 @@ struct callbackname : SteamCallback_t { \
 	END_CALLBACK_INTERNAL_SWITCH( 11 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 12 ) \
 	END_CALLBACK_INTERNAL_END()
+
 #define END_DEFINE_CALLBACK_14() \
 	END_CALLBACK_INTERNAL_BEGIN( 14 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 0 ) \
@@ -483,4 +489,5 @@ struct callbackname : SteamCallback_t { \
 	END_CALLBACK_INTERNAL_SWITCH( 12 ) \
 	END_CALLBACK_INTERNAL_SWITCH( 13 ) \
 	END_CALLBACK_INTERNAL_END()
+
 #endif // ISTEAMCLIENT_H

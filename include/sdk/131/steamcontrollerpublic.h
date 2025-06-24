@@ -1,11 +1,8 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//========= Copyright © 1996-2013, Valve LLC, All rights reserved. ============
+//
+// Purpose: Controller related public types/constants
+//
+//=============================================================================
 
 #ifndef STEAMCONTROLLERPUBLIC_H
 #define STEAMCONTROLLERPUBLIC_H

@@ -17,13 +17,15 @@
 #include <isteamremotestorage.h>
 #include <isteamugc.h>
 #include <isteamugc001.h>
+#include <isteamugc002.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Steam UGC support API
 //-----------------------------------------------------------------------------
 class Steam_UGC :
     public ISteamUGC,
-    public ISteamUGC001
+    public ISteamUGC001,
+    public ISteamUGC002
 {
 private:
     // Singleton instance
@@ -93,6 +95,8 @@ public:
 	uint32 GetNumSubscribedItems() override; // number of subscribed items 
 	uint32 GetSubscribedItems( PublishedFileId_t* pvecPublishedFileID, uint32 cMaxEntries ) override; // all subscribed item PublishFileIDs
 
+	bool GetItemInstallInfo( PublishedFileId_t nPublishedFileID, uint64 *punSizeOnDisk, char *pchFolder, uint32 cchFolderSize, bool *pbLegacyItem ) override; // returns true if item is installed
+	// Changed from Steam SDK v1.31, backward compatibility
 	bool GetItemInstallInfo( PublishedFileId_t nPublishedFileID, uint64 *punSizeOnDisk, char *pchFolder, uint32 cchFolderSize ) override; // returns true if item is installed
 	bool GetItemUpdateInfo( PublishedFileId_t nPublishedFileID, bool *pbNeedsUpdate, bool *pbIsDownloading, uint64 *punBytesDownloaded, uint64 *punBytesTotal ) override;
 };

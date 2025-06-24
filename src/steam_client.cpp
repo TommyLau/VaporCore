@@ -352,3 +352,25 @@ ISteamMusicRemote* Steam_Client::GetISteamMusicRemote(HSteamUser hSteamuser, HSt
     VLOG_DEBUG("GetISteamMusicRemote called");
     return nullptr;
 }
+
+ISteamHTMLSurface* Steam_Client::GetISteamHTMLSurface(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+{
+    // TODO: Implement HTML surface interface
+    VLOG_DEBUG("GetISteamHTMLSurface called");
+    return nullptr;
+}
+
+void Steam_Client::Set_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func)
+{
+    VLOG_DEBUG("Set_SteamAPI_CPostAPIResultInProcess called");
+}
+
+void Steam_Client::Remove_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func)
+{
+    VLOG_DEBUG("Remove_SteamAPI_CPostAPIResultInProcess called");
+}
+
+void Steam_Client::Set_SteamAPI_CCheckCallbackRegisteredInProcess(SteamAPI_CheckCallbackRegistered_t func)
+{
+    VLOG_DEBUG("Set_SteamAPI_CCheckCallbackRegisteredInProcess called");
+}
