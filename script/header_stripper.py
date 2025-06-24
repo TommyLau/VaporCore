@@ -50,6 +50,59 @@ def get_class_name(content):
     return None
 
 
+def remove_enums_from_class(class_content):
+    """
+    Remove enum definitions from within the class content.
+    Handles both C-style and C++ scoped enum definitions.
+    """
+    # Remove enum definitions with their complete blocks
+    # Pattern matches: enum [class] [name] { ... };
+    enum_pattern = r'(\s*)enum\s+(?:class\s+)?\w*\s*\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}\s*;'
+    
+    # First, handle nested braces in enum definitions
+    def remove_enum_blocks(content):
+        result = content
+        # Keep removing enum blocks until no more are found
+        while True:
+            # Find enum keyword
+            enum_match = re.search(r'(\s*)enum\s+(?:class\s+)?(\w*\s*)\{', result)
+            if not enum_match:
+                break
+            
+            start_pos = enum_match.start()
+            brace_start = enum_match.end() - 1  # Position of opening brace
+            
+            # Find matching closing brace
+            brace_count = 1
+            pos = brace_start + 1
+            while pos < len(result) and brace_count > 0:
+                if result[pos] == '{':
+                    brace_count += 1
+                elif result[pos] == '}':
+                    brace_count -= 1
+                pos += 1
+            
+            if brace_count == 0:
+                # Find the semicolon after the closing brace
+                semicolon_pos = pos
+                while semicolon_pos < len(result) and result[semicolon_pos] in ' \t\n\r':
+                    semicolon_pos += 1
+                
+                if semicolon_pos < len(result) and result[semicolon_pos] == ';':
+                    # Remove the entire enum definition including semicolon
+                    result = result[:start_pos] + result[semicolon_pos + 1:]
+                else:
+                    # No semicolon found, just remove to closing brace
+                    result = result[:start_pos] + result[pos:]
+            else:
+                # Unmatched braces, skip this enum
+                break
+        
+        return result
+    
+    return remove_enum_blocks(class_content)
+
+
 def extract_comment_block_above_class(content, class_name):
     """
     Extract the complete comment block that appears directly above the class declaration.
@@ -172,6 +225,16 @@ def strip_header_content(content, original_filename, version_num, class_name):
     # Replace class name with versioned one
     class_content = class_content.replace(f'class {class_name}', f'class {versioned_class_name}')
     
+    # Replace constructor and destructor names to match the new class name
+    # Handle constructors: ClassName() -> VersionedClassName()
+    class_content = re.sub(rf'\b{re.escape(class_name)}\s*\(', f'{versioned_class_name}(', class_content)
+    
+    # Handle destructors: ~ClassName() -> ~VersionedClassName()
+    class_content = re.sub(rf'~\s*{re.escape(class_name)}\s*\(', f'~{versioned_class_name}(', class_content)
+    
+    # Remove enum definitions from within the class scope
+    class_content = remove_enums_from_class(class_content)
+    
     # Ensure class ends with semicolon
     if not class_content.rstrip().endswith(';'):
         class_content = class_content.rstrip() + ';'
@@ -235,11 +298,16 @@ def find_related_steam_file(interface_name, source_dir):
     else:
         return None
     
-    # Convert CamelCase to snake_case
+    # Convert CamelCase to snake_case properly handling acronyms
     snake_case = ''
     for i, char in enumerate(steam_name):
         if char.isupper() and i > 0:
-            snake_case += '_'
+            # Add underscore before uppercase letter if:
+            # 1. Previous character was lowercase, or
+            # 2. Next character exists and is lowercase (end of acronym)
+            if (steam_name[i-1].islower() or 
+                (i < len(steam_name) - 1 and steam_name[i+1].islower())):
+                snake_case += '_'
         snake_case += char.lower()
     
     # Try different possible file names
