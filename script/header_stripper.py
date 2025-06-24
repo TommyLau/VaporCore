@@ -222,6 +222,136 @@ def strip_header_content(content, original_filename, version_num, class_name):
     return stripped_content, version_filename
 
 
+def find_related_steam_file(interface_name, source_dir):
+    """
+    Find the related steam implementation file for a given interface.
+    For example, ISteamApps -> steam_apps.h
+    """
+    # Remove the 'I' prefix and convert to snake_case
+    if interface_name.startswith('ISteam'):
+        steam_name = interface_name[6:]  # Remove 'ISteam'
+    elif interface_name.startswith('I'):
+        steam_name = interface_name[1:]   # Remove 'I'
+    else:
+        return None
+    
+    # Convert CamelCase to snake_case
+    snake_case = ''
+    for i, char in enumerate(steam_name):
+        if char.isupper() and i > 0:
+            snake_case += '_'
+        snake_case += char.lower()
+    
+    # Try different possible file names
+    possible_names = [
+        f"steam_{snake_case}.h",
+        f"steam{steam_name.lower()}.h",
+    ]
+    
+    for name in possible_names:
+        file_path = source_dir / name
+        if file_path.exists():
+            return file_path
+    
+    return None
+
+
+def update_steam_implementation_file(steam_file_path, new_include, new_inheritance):
+    """
+    Update the steam implementation file to include the new header and add inheritance.
+    """
+    try:
+        with open(steam_file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except Exception as e:
+        print(f"Error reading steam implementation file: {e}")
+        return False
+    
+    lines = content.split('\n')
+    modified = False
+    
+    # Step 1: Check if include already exists
+    include_line = f"#include <{new_include}>"
+    include_exists = any(include_line in line for line in lines)
+    
+    if not include_exists:
+        # Find the last include line for isteam*.h
+        last_include_idx = -1
+        for i, line in enumerate(lines):
+            if re.match(r'#include\s*<isteam.*\.h>', line.strip()):
+                last_include_idx = i
+        
+        if last_include_idx != -1:
+            # Insert the new include after the last isteam include
+            lines.insert(last_include_idx + 1, include_line)
+            modified = True
+            print(f"Added include: {include_line}")
+        else:
+            print(f"Warning: Could not find where to insert include for {new_include}")
+    
+    # Step 2: Check if inheritance already exists
+    inheritance_exists = any(new_inheritance in line for line in lines)
+    
+    if not inheritance_exists:
+        # Find the class declaration and its inheritance list
+        class_start_idx = -1
+        for i, line in enumerate(lines):
+            if re.search(r'class\s+\w+\s*:', line.strip()):
+                class_start_idx = i
+                break
+        
+        if class_start_idx != -1:
+            # Find the end of the inheritance list
+            inheritance_end_idx = class_start_idx
+            brace_found = False
+            
+            for i in range(class_start_idx, len(lines)):
+                if '{' in lines[i]:
+                    inheritance_end_idx = i
+                    brace_found = True
+                    break
+            
+            if brace_found:
+                # Find the last public inheritance line before the opening brace
+                last_inheritance_line = inheritance_end_idx
+                for i in range(inheritance_end_idx, class_start_idx - 1, -1):
+                    line_content = lines[i].strip()
+                    if line_content.startswith('public ') and 'ISteam' in line_content:
+                        last_inheritance_line = i
+                        break
+                
+                # Add the new inheritance
+                if last_inheritance_line < inheritance_end_idx:
+                    # Add comma to the previous line if it doesn't have one
+                    if not lines[last_inheritance_line].rstrip().endswith(','):
+                        lines[last_inheritance_line] = lines[last_inheritance_line].rstrip() + ','
+                    
+                    # Insert the new inheritance line
+                    lines.insert(last_inheritance_line + 1, f"    {new_inheritance}")
+                    modified = True
+                    print(f"Added inheritance: {new_inheritance}")
+                else:
+                    print(f"Warning: Could not find where to insert inheritance for {new_inheritance}")
+            else:
+                print(f"Warning: Could not find class opening brace")
+        else:
+            print(f"Warning: Could not find class declaration")
+    
+    # Write the modified content back to the file
+    if modified:
+        try:
+            with open(steam_file_path, 'w', encoding='utf-8') as f:
+                f.write('\n'.join(lines))
+            print(f"Successfully updated: {steam_file_path}")
+            return True
+        except Exception as e:
+            print(f"Error writing steam implementation file: {e}")
+            return False
+    else:
+        print(f"No changes needed for: {steam_file_path}")
+        return True
+
+
 def main():
     parser = argparse.ArgumentParser(description='Strip header files to create versioned interface files')
     parser.add_argument('input_file', help='Input header file path')
@@ -282,6 +412,24 @@ def main():
     except Exception as e:
         print(f"Error writing output file: {e}")
         sys.exit(1)
+    
+    # Step 3: Update related steam implementation file
+    source_dir = Path(__file__).parent.parent / "src"  # Assuming script is in script/ and src/ is parallel
+    related_file = find_related_steam_file(class_name, source_dir)
+    
+    if related_file:
+        print(f"Found related steam implementation file: {related_file}")
+        
+        new_include = output_filename
+        new_inheritance = f"public {class_name}{version_num}"
+        
+        success = update_steam_implementation_file(related_file, new_include, new_inheritance)
+        if success:
+            print(f"Successfully updated steam implementation file: {related_file}")
+        else:
+            print(f"Failed to update steam implementation file: {related_file}")
+    else:
+        print(f"No related steam implementation file found for {class_name}")
 
 
 if __name__ == '__main__':
