@@ -22,6 +22,7 @@
 #include <isteamclient009.h>
 #include <isteamclient010.h>
 #include <isteamclient011.h>
+#include <isteamclient012.h>
 
 // Steam pipe state enumeration
 enum Steam_Pipe {
@@ -45,7 +46,8 @@ class Steam_Client :
     public ISteamClient008,
     public ISteamClient009,
     public ISteamClient010,
-    public ISteamClient011
+    public ISteamClient011,
+    public ISteamClient012
 {
 private:
     // Internal state
@@ -185,6 +187,12 @@ public:
 
 	// Exposes the ISteamUGC interface
 	ISteamUGC *GetISteamUGC( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	// returns app list interface, only available on specially registered apps
+	ISteamAppList *GetISteamAppList( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+	
+	// Music Player
+	ISteamMusic *GetISteamMusic( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 };
 
 #endif // VAPORCORE_STEAM_CLIENT_H 

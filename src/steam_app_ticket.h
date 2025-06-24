@@ -13,7 +13,7 @@
 #pragma once
 #endif
 
-#include <steamtypes.h>
+#include <isteamclient.h>
 #include <isteamappticket.h>
 
 //-----------------------------------------------------------------------------
@@ -25,19 +25,19 @@
 class Steam_App_Ticket :
     public ISteamAppTicket
 {
+private:
+    // Singleton instance
+    static Steam_App_Ticket* s_pInstance;
+
 public:
     Steam_App_Ticket();
     ~Steam_App_Ticket();
-
-    uint32 GetAppOwnershipTicketData( uint32 nAppID, void *pvBuffer, uint32 cbBufferLength, uint32 *piAppId, uint32 *piSteamId, uint32 *piSignature, uint32 *pcbSignature ) override;
 
     // Helper methods
     static Steam_App_Ticket* GetInstance();
     static void ReleaseInstance();
 
-private:
-    // Singleton instance
-    static Steam_App_Ticket* s_pInstance;
+    uint32 GetAppOwnershipTicketData( uint32 nAppID, void *pvBuffer, uint32 cbBufferLength, uint32 *piAppId, uint32 *piSteamId, uint32 *piSignature, uint32 *pcbSignature ) override;
 };
 
 #endif // VAPORCORE_STEAM_APP_TICKET_H

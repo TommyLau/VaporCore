@@ -212,6 +212,15 @@ SteamAPICall_t Steam_Utils::CheckFileSignature( const char *szFileName )
 }
 
 // Activates the Big Picture text input dialog which only supports gamepad input
+bool Steam_Utils::ShowGamepadTextInput(EGamepadTextInputMode eInputMode, EGamepadTextInputLineMode eLineInputMode, const char *pchDescription, uint32 unCharMax, const char *pchExistingText)
+{
+    VLOG_DEBUG("ShowGamepadTextInput called - Mode: %d, LineMode: %d, Description: %s, MaxChars: %u, ExistingText: %s",
+               eInputMode, eLineInputMode, pchDescription ? pchDescription : "null", unCharMax,
+               pchExistingText ? pchExistingText : "null");
+    return false;
+}
+
+// Changed from Steam SDK v1.29a, backward compatibility
 bool Steam_Utils::ShowGamepadTextInput(EGamepadTextInputMode eInputMode, EGamepadTextInputLineMode eLineInputMode, const char *pchDescription, uint32 unCharMax)
 {
     VLOG_DEBUG("ShowGamepadTextInput called - Mode: %d, LineMode: %d, Description: %s, MaxChars: %u", 
@@ -241,4 +250,11 @@ const char *Steam_Utils::GetSteamUILanguage()
 {
     VLOG_DEBUG("GetSteamUILanguage called");
     return "english";
+}
+
+// returns true if Steam itself is running in VR mode
+bool Steam_Utils::IsSteamRunningInVR()
+{
+    VLOG_DEBUG("IsSteamRunningInVR called");
+    return false;
 }

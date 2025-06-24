@@ -328,3 +328,19 @@ ISteamUGC* Steam_Client::GetISteamUGC(HSteamUser hSteamUser, HSteamPipe hSteamPi
     VLOG_DEBUG("GetISteamUGC called");
     return nullptr;
 }
+
+// returns app list interface, only available on specially registered apps
+ISteamAppList* Steam_Client::GetISteamAppList(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+{
+    // TODO: Implement app list interface
+    VLOG_DEBUG("GetISteamAppList called");
+    return nullptr;
+}
+
+// Music Player
+ISteamMusic* Steam_Client::GetISteamMusic(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+{
+    // TODO: Implement music interface
+    VLOG_DEBUG("GetISteamMusic called");
+    return nullptr;
+}

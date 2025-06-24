@@ -16,12 +16,14 @@
 #include <isteamclient.h>
 #include <isteamremotestorage.h>
 #include <isteamugc.h>
+#include <isteamugc001.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Steam UGC support API
 //-----------------------------------------------------------------------------
 class Steam_UGC :
-    public ISteamUGC
+    public ISteamUGC,
+    public ISteamUGC001
 {
 private:
     // Singleton instance
@@ -35,10 +37,10 @@ public:
     static Steam_UGC* GetInstance();
     static void ReleaseInstance();
 
-	// Query UGC associated with a user. Creator app id or consumer app id must be valid and be set to the current running app.
+	// Query UGC associated with a user. Creator app id or consumer app id must be valid and be set to the current running app. unPage should start at 1.
 	UGCQueryHandle_t CreateQueryUserUGCRequest( AccountID_t unAccountID, EUserUGCList eListType, EUGCMatchingUGCType eMatchingUGCType, EUserUGCListSortOrder eSortOrder, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage ) override;
 
-	// Query for all matching UGC. Creator app id or consumer app id must be valid and be set to the current running app.
+	// Query for all matching UGC. Creator app id or consumer app id must be valid and be set to the current running app. unPage should start at 1.
 	UGCQueryHandle_t CreateQueryAllUGCRequest( EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage ) override;
 
 	// Send the query to Steam
@@ -55,6 +57,7 @@ public:
 	bool AddExcludedTag( UGCQueryHandle_t handle, const char *pTagName ) override;
 	bool SetReturnLongDescription( UGCQueryHandle_t handle, bool bReturnLongDescription ) override;
 	bool SetReturnTotalOnly( UGCQueryHandle_t handle, bool bReturnTotalOnly ) override;
+	bool SetAllowCachedResponse( UGCQueryHandle_t handle, uint32 unMaxAgeSeconds ) override;
 
 	// Options only for querying user UGC
 	bool SetCloudFileNameFilter( UGCQueryHandle_t handle, const char *pMatchCloudFileName ) override;
@@ -65,6 +68,8 @@ public:
 	bool SetRankedByTrendDays( UGCQueryHandle_t handle, uint32 unDays ) override;
 
 	// Request full details for one piece of UGC
+	SteamAPICall_t RequestUGCDetails( PublishedFileId_t nPublishedFileID, uint32 unMaxAgeSeconds ) override;
+	// Changed from Steam SDK v1.29a, backward compatibility
 	SteamAPICall_t RequestUGCDetails( PublishedFileId_t nPublishedFileID ) override;
 
 };

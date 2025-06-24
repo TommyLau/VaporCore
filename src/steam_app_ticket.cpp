@@ -25,12 +25,6 @@ Steam_App_Ticket::~Steam_App_Ticket()
     VLOG_INFO("Steam_App_Ticket destructor called");
 }
 
-uint32 Steam_App_Ticket::GetAppOwnershipTicketData( uint32 nAppID, void *pvBuffer, uint32 cbBufferLength, uint32 *piAppId, uint32 *piSteamId, uint32 *piSignature, uint32 *pcbSignature )
-{
-    VLOG_DEBUG("GetAppOwnershipTicketData called - AppID: %d, BufferSize: %d", nAppID, cbBufferLength);
-    return 0;
-}
-
 // Helper methods
 Steam_App_Ticket* Steam_App_Ticket::GetInstance()
 {
@@ -48,4 +42,10 @@ void Steam_App_Ticket::ReleaseInstance()
         delete s_pInstance;
         s_pInstance = nullptr;
     }
+}
+
+uint32 Steam_App_Ticket::GetAppOwnershipTicketData( uint32 nAppID, void *pvBuffer, uint32 cbBufferLength, uint32 *piAppId, uint32 *piSteamId, uint32 *piSignature, uint32 *pcbSignature )
+{
+    VLOG_DEBUG("GetAppOwnershipTicketData called - AppID: %d, BufferSize: %d", nAppID, cbBufferLength);
+    return 0;
 }

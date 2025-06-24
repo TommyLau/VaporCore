@@ -95,18 +95,22 @@ void Steam_Game_Server::SetDedicatedServer( bool bDedicated )
 // @see SteamServersConnected_t
 // @see SteamServerConnectFailure_t
 // @see SteamServersDisconnected_t
+void Steam_Game_Server::LogOn( const char *pszToken )
+{
+    VLOG_DEBUG("LogOn called - Token: %s", pszToken ? pszToken : "null");
+}
+
+// Changed from Steam SDK v1.29a, backward compatibility
 void Steam_Game_Server::LogOn( const char *pszAccountName, const char *pszPassword )
 {
     VLOG_DEBUG("LogOn called - Account: %s, Password: %s", pszAccountName ? pszAccountName : "null", pszPassword ? pszPassword : "null");
 }
 
-// connection functions
-// Removed from Steam SDK v1.17, backward compatibility
+// Changed from Steam SDK v1.17, backward compatibility
 void Steam_Game_Server::LogOn()
 {
     VLOG_DEBUG("LogOn called");
 }
-
 
 // Login to a generic, anonymous account.
 //
@@ -226,7 +230,7 @@ void Steam_Game_Server::SetGameTags( const char *pchGameTags )
 
 // Sets a string defining the "gametype" for this server, this is optional, but if it is set
 // it allows users to filter in the matchmaking/server-browser interfaces based on the value
-// Changed from Steam SDK v1.09, backward compatibility
+// Changed from Steam SDK v1.09 to SetGameTags, backward compatibility
 void Steam_Game_Server::SetGameType( const char *pchGameType )
 {
     VLOG_DEBUG("SetGameType called - GameType: %s", pchGameType ? pchGameType : "null");

@@ -33,6 +33,8 @@ static ISteamHTTP* g_pSteamHTTP = nullptr;
 static ISteamUnifiedMessages* g_pSteamUnifiedMessages = nullptr;
 static ISteamController* g_pSteamController = nullptr;
 static ISteamUGC* g_pSteamUGC = nullptr;
+static ISteamAppList* g_pSteamAppList = nullptr;
+static ISteamMusic* g_pSteamMusic = nullptr;
 
 // Global pipe and user handles
 static HSteamPipe g_hSteamPipe = 0;
@@ -76,6 +78,8 @@ S_API void S_CALLTYPE SteamAPI_Shutdown() {
     g_pSteamUnifiedMessages = nullptr;
     g_pSteamController = nullptr;
     g_pSteamUGC = nullptr;
+    g_pSteamAppList = nullptr;
+    g_pSteamMusic = nullptr;
 
     g_hSteamUser = 0;
     g_hSteamPipe = 0;
@@ -269,6 +273,16 @@ S_API ISteamController *S_CALLTYPE SteamController() {
 S_API ISteamUGC *S_CALLTYPE SteamUGC() {
     // TODO: Implement SteamUGC
     return g_pSteamUGC;
+}
+
+S_API ISteamAppList *S_CALLTYPE SteamAppList() {
+    // TODO: Implement SteamAppList
+    return g_pSteamAppList;
+}
+
+S_API ISteamMusic *S_CALLTYPE SteamMusic() {
+    // TODO: Implement SteamMusic
+    return g_pSteamMusic;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
