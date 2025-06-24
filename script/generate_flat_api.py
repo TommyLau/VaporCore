@@ -3,18 +3,83 @@
 VaporCore Flat API Generator
 Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
 
-This script automatically generates steam_api_flat.cpp from steam_api_flat.h
-It parses the header file and creates wrapper implementations for all declared functions.
+This script automatically finds the latest SDK version, copies steam_api_flat.h to the include directory,
+and generates steam_api_flat.cpp from it.
 
-Usage: python generate_flat_api.py <input_header_file>
+Usage: python generate_flat_api.py
 """
 
 import os
 import re
 import sys
-import argparse
+import shutil
 from pathlib import Path
 from typing import List, Dict, Tuple, Optional
+
+
+class SDKManager:
+    def __init__(self, workspace_root: Path):
+        self.workspace_root = workspace_root
+        self.sdk_dir = workspace_root / "include" / "sdk"
+        self.include_dir = workspace_root / "include"
+    
+    def find_latest_sdk_version(self) -> Optional[Path]:
+        """Find the latest SDK version directory"""
+        if not self.sdk_dir.exists():
+            print(f"❌ SDK directory not found: {self.sdk_dir}")
+            print("💡 Please create include/sdk/ directory and place SDK versions there")
+            return None
+        
+        sdk_versions = []
+        print(f"🔍 Searching for SDK versions in: {self.sdk_dir}")
+        
+        # Collect all SDK versions first
+        for item in self.sdk_dir.iterdir():
+            if item.is_dir():
+                # Extract version number from directory name (e.g., "132", "133b", "134a")
+                match = re.match(r'^(\d{3})', item.name)
+                if match:
+                    version_num = int(match.group(1))
+                    sdk_versions.append((version_num, item.name, item))
+        
+        if not sdk_versions:
+            print("❌ No SDK versions found in the SDK directory")
+            print("💡 Expected directory names like: 132, 133b, 134, etc.")
+            return None
+        
+        # Sort by version number (descending) to get the latest first
+        sdk_versions.sort(key=lambda x: x[0], reverse=True)
+        
+        # Get the latest version (first in sorted list)
+        latest_version = sdk_versions[0]
+        print(f"✅ Latest SDK version: {latest_version[1]} (numeric: {latest_version[0]})")
+        return latest_version[2]
+    
+    def copy_flat_api_header(self, sdk_path: Path) -> Optional[Path]:
+        """Copy steam_api_flat.h from SDK to include directory"""
+        source_file = sdk_path / "steam_api_flat.h"
+        target_file = self.include_dir / "steam_api_flat.h"
+        
+        if not source_file.exists():
+            print(f"❌ steam_api_flat.h not found in SDK: {source_file}")
+            return None
+        
+        try:
+            print(f"📋 Copying {source_file} -> {target_file}")
+            shutil.copy2(source_file, target_file)
+            print(f"✅ Successfully copied flat API header")
+            return target_file
+        except Exception as e:
+            print(f"❌ Error copying flat API header: {e}")
+            return None
+    
+    def update_from_latest_sdk(self) -> Optional[Path]:
+        """Find latest SDK and copy the flat API header"""
+        latest_sdk = self.find_latest_sdk_version()
+        if not latest_sdk:
+            return None
+        
+        return self.copy_flat_api_header(latest_sdk)
 
 
 class FunctionSignature:
@@ -60,13 +125,44 @@ class FlatAPIGenerator:
     
     def _fix_original_header_file(self, header_path: str, content: str) -> None:
         """Fix the original header file by removing VR functions and fixing HTML Surface enums"""
-        print(f"Fixing original header file: {header_path}")
+        print(f"🔧 Fixing original header file: {header_path}")
         
         # Split content into lines
         lines = content.split('\n')
         fixed_lines = []
         
-        for line in lines:
+        # Flag to track if we're in the original header comment block
+        in_header_comment = False
+        header_comment_replaced = False
+        
+        for i, line in enumerate(lines):
+            # Detect start of original Valve header comment
+            if line.strip().startswith('//====== Copyright (c) 1996-2014, Valve Corporation'):
+                in_header_comment = True
+                if not header_comment_replaced:
+                    # Replace with VaporCore header
+                    fixed_lines.extend([
+                        '/*',
+                        ' * VaporCore Steam API Implementation',
+                        ' * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>',
+                        ' * ',
+                        ' * This file is part of VaporCore.',
+                        ' * ',
+                        ' * Author: Tommy Lau <tommy.lhg@gmail.com>',
+                        ' */'
+                    ])
+                    header_comment_replaced = True
+                continue
+            
+            # Detect end of original header comment block
+            if in_header_comment and line.strip() == '//=============================================================================':
+                in_header_comment = False
+                continue
+            
+            # Skip lines that are part of the original header comment
+            if in_header_comment:
+                continue
+            
             # Skip VR function declarations
             if line.strip().startswith('S_API') and 'SteamAPI_vr_' in line:
                 continue
@@ -81,28 +177,16 @@ class FlatAPIGenerator:
             
             fixed_lines.append(line)
         
-        # Add missing include if not present
-        include_line = '#include "isteamhtmlsurface.h"'
-        if include_line not in content:
-            # Find the position after existing includes
-            insert_pos = 0
-            for i, line in enumerate(fixed_lines):
-                if line.strip().startswith('#include'):
-                    insert_pos = i + 1
-            
-            if insert_pos > 0:
-                fixed_lines.insert(insert_pos, include_line)
-        
         # Write the fixed content back to the file
         fixed_content = '\n'.join(fixed_lines)
         with open(header_path, 'w', encoding='utf-8') as f:
             f.write(fixed_content)
         
-        print(f"Fixed header file - removed VR functions and fixed HTML Surface enums")
+        print(f"✅ Fixed header file - replaced header comment, removed VR functions and fixed HTML Surface enums")
     
     def parse_header_file(self, header_path: str) -> None:
         """Parse the header file and extract function signatures"""
-        print(f"Parsing header file: {header_path}")
+        print(f"📖 Parsing header file: {header_path}")
         
         with open(header_path, 'r', encoding='utf-8') as f:
             content = f.read()
@@ -151,7 +235,7 @@ class FlatAPIGenerator:
                     self.interface_groups[func_sig.interface_name] = []
                 self.interface_groups[func_sig.interface_name].append(func_sig)
         
-        print(f"Found {len(self.functions)} Steam API functions across {len(self.interface_groups)} interfaces")
+        print(f"✅ Found {len(self.functions)} Steam API functions across {len(self.interface_groups)} interfaces")
     
     def _get_default_return_value(self, return_type: str) -> str:
         """Get appropriate default return value for the given type"""
@@ -311,18 +395,19 @@ class FlatAPIGenerator:
     
     def generate_cpp_file(self, output_path: str) -> None:
         """Generate the complete cpp file"""
-        print(f"Generating implementation file: {output_path}")
+        print(f"🚀 Generating implementation file: {output_path}")
         
         lines = []
         
         # File header
         lines.extend([
             '/*',
-            ' * VaporCore Steam API Implementation - Flat API',
+            ' * VaporCore Steam API Implementation',
             ' * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>',
             ' * ',
             ' * This file is part of VaporCore.',
-            ' * Auto-generated from steam_api_flat.h',
+            ' * ',
+            ' * Author: Tommy Lau <tommy.lhg@gmail.com>',
             ' */',
             '',
             '#include <steam_api.h>',
@@ -359,22 +444,28 @@ class FlatAPIGenerator:
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(content)
         
-        print(f"Successfully generated {len(self.functions)} function implementations")
+        print(f"✅ Successfully generated {len(self.functions)} function implementations")
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Generate Steam API Flat implementation from header file')
-    parser.add_argument('header_file', help='Input header file (steam_api_flat.h)')
+    print("🚀 VaporCore Flat API Generator")
+    print("=" * 50)
     
-    args = parser.parse_args()
+    # Get workspace root directory
+    workspace_root = Path(__file__).parent.parent
     
-    header_path = Path(args.header_file)
-    if not header_path.exists():
-        print(f"Error: Header file not found: {header_path}")
+    # Auto-detect latest SDK and copy header
+    print("🔍 Searching for latest SDK version...")
+    sdk_manager = SDKManager(workspace_root)
+    header_path = sdk_manager.update_from_latest_sdk()
+    
+    if not header_path:
+        print("❌ Failed to find or copy header from latest SDK")
+        print("💡 Please ensure include/sdk/ directory exists with SDK versions like 132, 133b, 134, etc.")
         return 1
     
-    # Always output to src directory like header_stripper.py
-    src_dir = Path(__file__).parent.parent / "src"
+    # Always output to src directory
+    src_dir = workspace_root / "src"
     output_path = src_dir / 'steam_api_flat.cpp'
     
     try:
@@ -382,7 +473,8 @@ def main():
         generator.parse_header_file(str(header_path))
         generator.generate_cpp_file(output_path)
         
-        print(f"\n✅ Successfully generated flat API implementation!")
+        print(f"\n🎉 Successfully generated flat API implementation!")
+        print(f"📁 Header file: {header_path}")
         print(f"📁 Output file: {output_path}")
         print(f"📊 Functions generated: {len(generator.functions)}")
         print(f"🔌 Interfaces covered: {len(generator.interface_groups)}")
@@ -391,6 +483,8 @@ def main():
         
     except Exception as e:
         print(f"❌ Error generating flat API: {e}")
+        import traceback
+        traceback.print_exc()
         return 1
 
 
