@@ -19,6 +19,7 @@
 #include <isteammatchmaking004.h>
 #include <isteammatchmaking006.h>
 #include <isteammatchmaking007.h>
+#include <isteammatchmaking008.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for match making services for clients to get to favorites
@@ -29,7 +30,8 @@ class Steam_Matchmaking :
     public ISteamMatchmaking002,
     public ISteamMatchmaking004,
     public ISteamMatchmaking006,
-    public ISteamMatchmaking007
+    public ISteamMatchmaking007,
+    public ISteamMatchmaking008
 {
 private:
     // Singleton instance
