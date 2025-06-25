@@ -397,7 +397,18 @@ class Steam_Matchmaking_Servers :
 	public ISteamMatchmakingServers,
 	public ISteamMatchmakingServers001
 {
+private:
+    // Singleton instance
+    static Steam_Matchmaking_Servers* s_pInstance;
+
 public:
+    Steam_Matchmaking_Servers();
+    ~Steam_Matchmaking_Servers();
+
+    // Helper methods
+    static Steam_Matchmaking_Servers* GetInstance();
+    static void ReleaseInstance();
+
 	// Request a new list of servers of a particular type.  These calls each correspond to one of the EMatchMakingType values.
 	void RequestInternetServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse ) override;
 	void RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse001 *pRequestServersResponse ) override;

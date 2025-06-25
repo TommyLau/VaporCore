@@ -20,16 +20,26 @@ Steam_Client::Steam_Client()
     , m_unSteamPipeCounter(1)
     , m_pWarningMessageHook(nullptr)
     , m_bUserLoggedIn(false)
-    , m_pSteamUser(nullptr)
-    , m_pSteamFriends(nullptr)
-    , m_pSteamUtils(nullptr)
-    , m_pSteamMatchmaking(nullptr)
-    , m_pSteamMatchmakingServers(nullptr)
-    , m_pSteamUserStats(nullptr)
-    , m_pSteamApps(nullptr)
-    , m_pSteamNetworking(nullptr)
-    , m_pSteamContentServer(nullptr)
-    , m_pSteamMasterServerUpdater(nullptr)
+    , m_pSteamUser(Steam_User::GetInstance())
+    , m_pSteamFriends(Steam_Friends::GetInstance())
+    , m_pSteamUtils(Steam_Utils::GetInstance())
+    , m_pSteamMatchmaking(Steam_Matchmaking::GetInstance())
+    , m_pSteamUserStats(Steam_User_Stats::GetInstance())
+    , m_pSteamApps(Steam_Apps::GetInstance())
+    , m_pSteamMatchmakingServers(Steam_Matchmaking_Servers::GetInstance())
+    , m_pSteamNetworking(Steam_Networking::GetInstance())
+    , m_pSteamRemoteStorage(Steam_Remote_Storage::GetInstance())
+    , m_pSteamScreenshots(Steam_Screenshots::GetInstance())
+    , m_pSteamHTTP(Steam_HTTP::GetInstance())
+    , m_pSteamUnifiedMessages(Steam_Unified_Messages::GetInstance())
+    , m_pSteamController(Steam_Controller::GetInstance())
+    , m_pSteamUGC(Steam_UGC::GetInstance())
+    , m_pSteamAppList(Steam_App_List::GetInstance())
+    , m_pSteamMusic(Steam_Music::GetInstance())
+    , m_pSteamMusicRemote(Steam_Music_Remote::GetInstance())
+    , m_pSteamHTMLSurface(Steam_HTML_Surface::GetInstance())
+    , m_pSteamInventory(Steam_Inventory::GetInstance())
+    , m_pSteamVideo(Steam_Video::GetInstance())
 {
     VLOG_INFO("Steam_Client constructor called");
 }
@@ -150,7 +160,7 @@ void Steam_Client::ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser )
 ISteamUser *Steam_Client::GetISteamUser( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     // TODO: Implement user retrieval logic
-    VLOG_DEBUG("GetISteamUser called");
+    VLOG_DEBUG("GetISteamUser called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
     return nullptr;
 }
 

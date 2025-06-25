@@ -14,6 +14,7 @@
 
 // Static instance
 Steam_Matchmaking* Steam_Matchmaking::s_pInstance = nullptr;
+Steam_Matchmaking_Servers* Steam_Matchmaking_Servers::s_pInstance = nullptr;
 
 Steam_Matchmaking::Steam_Matchmaking()
 {
@@ -36,6 +37,35 @@ Steam_Matchmaking* Steam_Matchmaking::GetInstance()
 }
 
 void Steam_Matchmaking::ReleaseInstance()
+{
+    if (s_pInstance)
+    {
+        delete s_pInstance;
+        s_pInstance = nullptr;
+    }
+}
+
+Steam_Matchmaking_Servers::Steam_Matchmaking_Servers()
+{
+    VLOG_INFO("Steam_Matchmaking_Servers constructor called");
+}
+
+Steam_Matchmaking_Servers::~Steam_Matchmaking_Servers()
+{
+    VLOG_INFO("Steam_Matchmaking_Servers destructor called");
+}
+
+// Helper methods
+Steam_Matchmaking_Servers* Steam_Matchmaking_Servers::GetInstance()
+{
+    if (!s_pInstance)
+    {
+        s_pInstance = new Steam_Matchmaking_Servers();
+    }
+    return s_pInstance;
+}
+
+void Steam_Matchmaking_Servers::ReleaseInstance()
 {
     if (s_pInstance)
     {

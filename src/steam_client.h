@@ -27,6 +27,26 @@
 #include <isteamclient015.h>
 #include <isteamclient016.h>
 
+#include "steam_user.h"
+#include "steam_friends.h"
+#include "steam_utils.h"
+#include "steam_matchmaking.h"
+#include "steam_user_stats.h"
+#include "steam_apps.h"
+#include "steam_networking.h"
+#include "steam_remote_storage.h"
+#include "steam_screenshots.h"
+#include "steam_http.h"
+#include "steam_unified_messages.h"
+#include "steam_controller.h"
+#include "steam_ugc.h"
+#include "steam_app_list.h"
+#include "steam_music.h"
+#include "steam_music_remote.h"
+#include "steam_html_surface.h"
+#include "steam_inventory.h"
+#include "steam_video.h"
+
 // Steam pipe state enumeration
 enum Steam_Pipe {
     STEAM_PIPE_NONE = 0,
@@ -66,17 +86,27 @@ private:
     // Steam pipe management
     std::map<HSteamPipe, Steam_Pipe> m_mapSteamPipes;
     
-    // Interface instances
-    ISteamUser* m_pSteamUser;
-    ISteamFriends* m_pSteamFriends;
-    ISteamUtils* m_pSteamUtils;
-    ISteamMatchmaking* m_pSteamMatchmaking;
-    ISteamMatchmakingServers* m_pSteamMatchmakingServers;
-    ISteamUserStats* m_pSteamUserStats;
-    ISteamApps* m_pSteamApps;
-    ISteamNetworking* m_pSteamNetworking;
-    ISteamContentServer* m_pSteamContentServer;
-    ISteamMasterServerUpdater* m_pSteamMasterServerUpdater;
+    // Implementation class instances
+    Steam_User* m_pSteamUser;
+    Steam_Friends* m_pSteamFriends;
+    Steam_Utils* m_pSteamUtils;
+    Steam_Matchmaking* m_pSteamMatchmaking;
+    Steam_User_Stats* m_pSteamUserStats;
+    Steam_Apps* m_pSteamApps;
+    Steam_Matchmaking_Servers* m_pSteamMatchmakingServers;
+    Steam_Networking* m_pSteamNetworking;
+    Steam_Remote_Storage* m_pSteamRemoteStorage;
+    Steam_Screenshots* m_pSteamScreenshots;
+    Steam_HTTP* m_pSteamHTTP;
+    Steam_Unified_Messages* m_pSteamUnifiedMessages;
+    Steam_Controller* m_pSteamController;
+    Steam_UGC* m_pSteamUGC;
+    Steam_App_List* m_pSteamAppList;
+    Steam_Music* m_pSteamMusic;
+    Steam_Music_Remote* m_pSteamMusicRemote;
+    Steam_HTML_Surface* m_pSteamHTMLSurface;
+    Steam_Inventory* m_pSteamInventory;
+    Steam_Video* m_pSteamVideo;
     
     // Singleton instance
     static Steam_Client* s_pInstance;

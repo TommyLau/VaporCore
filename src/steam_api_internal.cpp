@@ -7,6 +7,8 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
+#include <cstring>
+
 #include <steam_api.h>
 #include <steam_api_internal.h>
 
@@ -30,7 +32,56 @@ S_API bool S_CALLTYPE SteamInternal_Init()
 S_API void * S_CALLTYPE SteamInternal_CreateInterface( const char *ver )
 {
     VLOG_DEBUG("SteamInternal_CreateInterface called - Version: %s", ver);
-    return nullptr;
+
+    if (!ver) {
+        VLOG_ERROR("SteamInternal_CreateInterface: Invalid version string (null)");
+        return nullptr;
+    }
+
+    // Get the Steam client through the public API
+    Steam_Client* pSteamClient = Steam_Client::GetInstance();
+
+    if (!pSteamClient) {
+        VLOG_ERROR("SteamInternal_CreateInterface: Steam client not available");
+        return nullptr;
+    }
+
+    // Return the appropriate interface version based on the version string
+    if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION) == 0) {
+        VLOG_DEBUG("Returning ISteamClient (latest) - %s", STEAMCLIENT_INTERFACE_VERSION);
+        return static_cast<ISteamClient*>(pSteamClient);
+    } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_016) == 0) {
+        VLOG_DEBUG("Returning ISteamClient016");
+        return static_cast<ISteamClient016*>(pSteamClient);
+    } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_015) == 0) {
+        VLOG_DEBUG("Returning ISteamClient015");
+        return static_cast<ISteamClient015*>(pSteamClient);
+    } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_014) == 0) {
+        VLOG_DEBUG("Returning ISteamClient014");
+        return static_cast<ISteamClient014*>(pSteamClient);
+    } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_012) == 0) {
+        VLOG_DEBUG("Returning ISteamClient012");
+        return static_cast<ISteamClient012*>(pSteamClient);
+    } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_011) == 0) {
+        VLOG_DEBUG("Returning ISteamClient011");
+        return static_cast<ISteamClient011*>(pSteamClient);
+    } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_010) == 0) {
+        VLOG_DEBUG("Returning ISteamClient010");
+        return static_cast<ISteamClient010*>(pSteamClient);
+    } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_009) == 0) {
+        VLOG_DEBUG("Returning ISteamClient009");
+        return static_cast<ISteamClient009*>(pSteamClient);
+    } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_008) == 0) {
+        VLOG_DEBUG("Returning ISteamClient008");
+        return static_cast<ISteamClient008*>(pSteamClient);
+    } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_007) == 0) {
+        VLOG_DEBUG("Returning ISteamClient007");
+        return static_cast<ISteamClient007*>(pSteamClient);
+    } else {
+        VLOG_WARNING("SteamInternal_CreateInterface: Unknown interface version '%s', returning " STEAMCLIENT_INTERFACE_VERSION, ver);
+        // Return the latest interface as fallback
+        return static_cast<ISteamClient*>(pSteamClient);
+    }
 }
 
 // this should be called before the game initialized the steam APIs
