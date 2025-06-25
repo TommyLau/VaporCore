@@ -159,9 +159,53 @@ void Steam_Client::ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser )
 // retrieves the ISteamUser interface associated with the handle
 ISteamUser *Steam_Client::GetISteamUser( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
-    // TODO: Implement user retrieval logic
     VLOG_DEBUG("GetISteamUser called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
-    return nullptr;
+
+    if (!pchVersion) {
+        VLOG_ERROR("GetISteamUser: Invalid version string (null)");
+        return nullptr;
+    }
+
+    // Get the Steam user implementation instance
+    if (!m_pSteamUser) {
+        VLOG_ERROR("GetISteamUser: Steam user not available");
+        return nullptr;
+    }
+
+    // Return the appropriate interface version based on the version string
+    // Cast to specific interface first for proper vtable mapping, then to ISteamUser*
+    if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION) == 0) {
+        VLOG_DEBUG("Returning ISteamUser (latest) - %s", STEAMUSER_INTERFACE_VERSION);
+        return m_pSteamUser;
+    } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_018) == 0) {
+        VLOG_DEBUG("Returning ISteamUser018");
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser018*>(m_pSteamUser));
+    } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_017) == 0) {
+        VLOG_DEBUG("Returning ISteamUser017");
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser017*>(m_pSteamUser));
+    } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_016) == 0) {
+        VLOG_DEBUG("Returning ISteamUser016");
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser016*>(m_pSteamUser));
+    } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_014) == 0) {
+        VLOG_DEBUG("Returning ISteamUser014");
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser014*>(m_pSteamUser));
+    } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_013) == 0) {
+        VLOG_DEBUG("Returning ISteamUser013");
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser013*>(m_pSteamUser));
+    } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_012) == 0) {
+        VLOG_DEBUG("Returning ISteamUser012");
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser012*>(m_pSteamUser));
+    } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_010) == 0) {
+        VLOG_DEBUG("Returning ISteamUser010");
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser010*>(m_pSteamUser));
+    } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_009) == 0) {
+        VLOG_DEBUG("Returning ISteamUser009");
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser009*>(m_pSteamUser));
+    } else {
+        VLOG_WARNING("GetISteamUser: Unknown interface version '%s', returning " STEAMUSER_INTERFACE_VERSION, pchVersion);
+        // Return the latest interface as fallback
+        return static_cast<ISteamUser*>(m_pSteamUser);
+    }
 }
 
 // retrieves the ISteamGameServer interface associated with the handle
