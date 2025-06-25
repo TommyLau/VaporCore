@@ -9,8 +9,8 @@
 
 #include <cstring>
 
+#include "vapor_base.h"
 #include "steam_master_server_updater.h"
-#include "logger.h"
 
 // Static instance
 Steam_Master_Server_Updater* Steam_Master_Server_Updater::s_pInstance = nullptr;

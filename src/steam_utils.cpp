@@ -10,8 +10,8 @@
 #include <cstring>
 #include <ctime>
 
+#include "vapor_base.h"
 #include "steam_utils.h"
-#include "logger.h"
 
 // Static instance
 Steam_Utils* Steam_Utils::s_pInstance = nullptr;

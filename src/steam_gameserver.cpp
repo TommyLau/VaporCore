@@ -12,13 +12,13 @@
 
 #include <steam_gameserver.h>
 
+#include "vapor_base.h"
 #include "steam_client.h"
 #include "steam_game_server.h"
 #include "steam_utils.h"
 #include "steam_master_server_updater.h"
 #include "steam_networking.h"
 #include "steam_inventory.h"
-#include "logger.h"
 
 // Global Steam client interface pointer for game server
 static Steam_Client* g_pSteamGameServerClient = nullptr;

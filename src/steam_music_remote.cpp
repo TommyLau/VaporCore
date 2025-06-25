@@ -7,8 +7,8 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
+#include "vapor_base.h"
 #include "steam_music_remote.h"
-#include "logger.h"
 
 // Static instance
 Steam_Music_Remote* Steam_Music_Remote::s_pInstance = nullptr;

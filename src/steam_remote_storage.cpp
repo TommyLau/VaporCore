@@ -9,8 +9,8 @@
 
 #include <cstring>
 
+#include "vapor_base.h"
 #include "steam_remote_storage.h"
-#include "logger.h"
 
 // Static instance
 Steam_Remote_Storage* Steam_Remote_Storage::s_pInstance = nullptr;

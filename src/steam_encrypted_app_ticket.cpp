@@ -7,8 +7,8 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
+#include "vapor_base.h"
 #include <steamencryptedappticket.h>
-#include "logger.h"
 
 S_API bool SteamEncryptedAppTicket_BDecryptTicket( const uint8 *rgubTicketEncrypted, uint32 cubTicketEncrypted,
 						  uint8 *rgubTicketDecrypted, uint32 *pcubTicketDecrypted,

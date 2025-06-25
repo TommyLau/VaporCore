@@ -9,8 +9,8 @@
 
 #include <cstring>
 
+#include "vapor_base.h"
 #include "steam_http.h"
-#include "logger.h"
 
 // Static instance
 Steam_HTTP* Steam_HTTP::s_pInstance = nullptr;

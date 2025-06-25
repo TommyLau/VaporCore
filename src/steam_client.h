@@ -61,6 +61,7 @@ private:
     HSteamUser m_hSteamUser;
     uint32 m_unSteamPipeCounter;
     SteamAPIWarningMessageHook_t m_pWarningMessageHook;
+    bool m_bUserLoggedIn;
     
     // Steam pipe management
     std::map<HSteamPipe, Steam_Pipe> m_mapSteamPipes;

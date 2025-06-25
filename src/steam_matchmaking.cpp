@@ -9,8 +9,8 @@
 
 #include <cstring>
 
+#include "vapor_base.h"
 #include "steam_matchmaking.h"
-#include "logger.h"
 
 // Static instance
 Steam_Matchmaking* Steam_Matchmaking::s_pInstance = nullptr;

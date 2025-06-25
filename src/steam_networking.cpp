@@ -9,8 +9,8 @@
 
 #include <cstring>
 
+#include "vapor_base.h"
 #include "steam_networking.h"
-#include "logger.h"
 
 #define DEFAULT_VIRTUAL_PORT 1
 

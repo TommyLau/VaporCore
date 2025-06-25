@@ -9,8 +9,8 @@
 
 #include <cstring>
 
+#include "vapor_base.h"
 #include "steam_unified_messages.h"
-#include "logger.h"
 
 // Static instance
 Steam_Unified_Messages* Steam_Unified_Messages::s_pInstance = nullptr;

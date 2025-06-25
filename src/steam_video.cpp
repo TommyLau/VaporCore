@@ -9,8 +9,8 @@
 
 #include <cstring>
 
+#include "vapor_base.h"
 #include "steam_video.h"
-#include "logger.h"
 
 // Static instance
 Steam_Video* Steam_Video::s_pInstance = nullptr;

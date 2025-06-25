@@ -10,7 +10,7 @@
 #include <steam_api.h>
 #include <steam_api_internal.h>
 
-#include "logger.h"
+#include "vapor_base.h"
 
 // Global pipe and user handles
 static HSteamUser g_hSteamUser = 0;

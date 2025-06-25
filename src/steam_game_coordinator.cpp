@@ -9,8 +9,8 @@
 
 #include <cstring>
 
+#include "vapor_base.h"
 #include "steam_game_coordinator.h"
-#include "logger.h"
 
 // Static instance
 Steam_Game_Coordinator* Steam_Game_Coordinator::s_pInstance = nullptr;

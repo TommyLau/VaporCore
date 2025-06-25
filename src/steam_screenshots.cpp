@@ -9,8 +9,8 @@
 
 #include <cstring>
 
+#include "vapor_base.h"
 #include "steam_screenshots.h"
-#include "logger.h"
 
 // Static instance
 Steam_Screenshots* Steam_Screenshots::s_pInstance = nullptr;

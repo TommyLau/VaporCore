@@ -45,20 +45,20 @@
 #include "steam_utils.h"
 #include "steam_video.h"
 
-namespace VaporCore {
-    
-    // Global synchronization for thread-safe operations
-    extern std::mutex g_GlobalMutex;
-    
-    // Default Steam user handles
-    const HSteamUser DEFAULT_CLIENT_USER = 1;
-    const HSteamUser DEFAULT_SERVER_USER = 2;
-    
-    // Utility macros for thread-safe operations
-    #define VAPORCORE_LOCK_GUARD() std::lock_guard<std::mutex> lock(VaporCore::g_GlobalMutex)
-    #define VAPORCORE_LOCK() VaporCore::g_GlobalMutex.lock()
-    #define VAPORCORE_UNLOCK() VaporCore::g_GlobalMutex.unlock()
+// VaporCore callback manager
+#include "vapor_logger.h"
+#include "vapor_callback_mgr.h"
 
-} // namespace VaporCore
+// Global synchronization for thread-safe operations
+extern std::recursive_mutex g_GlobalMutex;
+
+// Default Steam user handles
+const HSteamUser DEFAULT_CLIENT_USER = 1;
+const HSteamUser DEFAULT_SERVER_USER = 2;
+
+// Utility macros for thread-safe operations
+#define VAPORCORE_LOCK_GUARD() std::lock_guard<std::recursive_mutex> lock(g_GlobalMutex)
+#define VAPORCORE_LOCK() g_GlobalMutex.lock()
+#define VAPORCORE_UNLOCK() g_GlobalMutex.unlock()
 
 #endif // VAPORCORE_BASE_H 

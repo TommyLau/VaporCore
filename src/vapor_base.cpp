@@ -9,11 +9,7 @@
  * Purpose: Base utilities and global synchronization implementation
  */
 
-#include "vaporcore_base.h"
+#include "vapor_base.h"
 
-namespace VaporCore {
-    
-    // Global synchronization mutex
-    std::mutex g_GlobalMutex;
-    
-} // namespace VaporCore 
+// Global synchronization mutex
+std::recursive_mutex g_GlobalMutex; 

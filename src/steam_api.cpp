@@ -12,8 +12,7 @@
 
 #include <steam_api.h>
 
-#include "logger.h"
-#include "steam_client.h"
+#include "vapor_base.h"
 
 // Global Steam client interface pointer
 static Steam_Client* g_pSteamClient = nullptr;
@@ -61,7 +60,9 @@ S_API bool S_CALLTYPE SteamAPI_Init() {
     // TODO: Implement SteamAPI_Init
 #ifdef VAPORCORE_ENABLE_LOGGING
     // Initialize logger
-    VaporCore::Logger::getInstance().initialize("vaporcore_log.txt");
+    Logger::GetInstance().Initialize("vaporcore_log.txt");
+    // Set log level to DEBUG to show all log messages
+    Logger::GetInstance().SetLogLevel(LogLevel::DEBUG);
 #endif
 
     VLOG_INFO("SteamAPI_Init called");
@@ -73,6 +74,7 @@ S_API bool S_CALLTYPE SteamAPI_Init() {
     
     // Initialize Steam client
     g_pSteamClient = Steam_Client::GetInstance();
+
     if (!g_pSteamClient) {
         VLOG_ERROR("Failed to create Steam client instance");
         return false;
@@ -82,25 +84,6 @@ S_API bool S_CALLTYPE SteamAPI_Init() {
     g_hSteamPipe = g_pSteamClient->CreateSteamPipe();
     g_hSteamUser = g_pSteamClient->ConnectToGlobalUser(g_hSteamPipe);
     g_uSteamAPICallCounter++;
-
-    /*
-    if (g_hSteamPipe == 0 || g_hSteamUser == 0) {
-        VLOG_ERROR("Failed to create Steam pipe or connect to user");
-        return false;
-    }
-    
-    // Get interface pointers
-    g_pSteamUser = g_pSteamClient->GetISteamUser(g_hSteamUser, g_hSteamPipe, STEAMUSER_INTERFACE_VERSION);
-    g_pSteamFriends = g_pSteamClient->GetISteamFriends(g_hSteamUser, g_hSteamPipe, STEAMFRIENDS_INTERFACE_VERSION);
-    g_pSteamUtils = g_pSteamClient->GetISteamUtils(g_hSteamPipe, STEAMUTILS_INTERFACE_VERSION);
-    g_pSteamMatchmaking = g_pSteamClient->GetISteamMatchmaking(g_hSteamUser, g_hSteamPipe, STEAMMATCHMAKING_INTERFACE_VERSION);
-    g_pSteamUserStats = g_pSteamClient->GetISteamUserStats(g_hSteamUser, g_hSteamPipe, STEAMUSERSTATS_INTERFACE_VERSION);
-    g_pSteamApps = g_pSteamClient->GetISteamApps(g_hSteamUser, g_hSteamPipe, STEAMAPPS_INTERFACE_VERSION);
-    g_pSteamNetworking = g_pSteamClient->GetISteamNetworking(g_hSteamUser, g_hSteamPipe, STEAMNETWORKING_INTERFACE_VERSION);
-    g_pSteamMatchmakingServers = g_pSteamClient->GetISteamMatchmakingServers(g_hSteamUser, g_hSteamPipe, STEAMMATCHMAKINGSERVERS_INTERFACE_VERSION);
-
-    VLOG_INFO("SteamAPI_Init completed successfully");
-    */
 
     return true;
 }
@@ -112,8 +95,9 @@ S_API void S_CALLTYPE SteamAPI_Shutdown() {
     
     if (g_pSteamClient && g_hSteamPipe) {
         // Release user and pipe through Steam client
-        //g_pSteamClient->ReleaseUser(g_hSteamPipe, g_hSteamUser);
+        g_pSteamClient->ReleaseUser(g_hSteamPipe, g_hSteamUser);
         g_pSteamClient->BReleaseSteamPipe(g_hSteamPipe);
+        g_pSteamClient->BShutdownIfAllPipesClosed();
     }
 
     // Clean up global interface pointers in the order as in the header
@@ -204,6 +188,7 @@ S_API void S_CALLTYPE SteamAPI_SetMiniDumpComment( const char *pchMsg )
 
 S_API ISteamClient *S_CALLTYPE SteamClient() {
     // TODO: Implement SteamClient
+    VLOG_DEBUG("SteamClient() called");
     return g_pSteamClient;
 }
 
@@ -214,14 +199,14 @@ S_API ISteamUser *S_CALLTYPE SteamUser() {
 }
 
 S_API ISteamFriends *S_CALLTYPE SteamFriends() {
-    VLOG_DEBUG("SteamFriends() called");
     // TODO: Implement SteamFriends
+    VLOG_DEBUG("SteamFriends() called");
     return g_pSteamFriends;
 }
 
 S_API ISteamUtils *S_CALLTYPE SteamUtils() {
-    VLOG_DEBUG("SteamUtils() called");
     // TODO: Implement SteamUtils
+    VLOG_DEBUG("SteamUtils() called");
     return g_pSteamUtils;
 }
 
@@ -356,28 +341,112 @@ S_API ISteamVideo *S_CALLTYPE SteamVideo()
 S_API void S_CALLTYPE SteamAPI_RunCallbacks()
 {
     // TODO: Implement SteamAPI_RunCallbacks
+    VLOG_DEBUG("SteamAPI_RunCallbacks called");
 }
 
 // Internal functions used by the utility CCallback objects to receive callbacks
 S_API void S_CALLTYPE SteamAPI_RegisterCallback( class CCallbackBase *pCallback, int iCallback )
 {
-    // TODO: Implement SteamAPI_RegisterCallback
+    VLOG_DEBUG("SteamAPI_RegisterCallback called with callback=%p and iCallback=%d", pCallback, iCallback);
+    VAPORCORE_LOCK_GUARD();
+
+    if (!pCallback) {
+        VLOG_ERROR("SteamAPI_RegisterCallback: Invalid callback pointer");
+        return;
+    }
+
+    if (CCallbackMgr::isGameServerCallback(pCallback)) {
+        VLOG_DEBUG("SteamAPI_RegisterCallback: Game server callback");
+    } else {
+        VLOG_DEBUG("SteamAPI_RegisterCallback: Client callback");
+    }
+
+    // Determine callback subsystem based on the callback ID ranges
+    const char* callbackSubsystemName = "Unknown";
+    int callbackBaseId = (iCallback / 100) * 100;
+    int callbackOffsetId = iCallback % 100;
+    
+    switch (callbackBaseId) {
+        case k_iSteamUserCallbacks:                     callbackSubsystemName = "SteamUser"; break;
+        case k_iSteamGameServerCallbacks:               callbackSubsystemName = "SteamGameServer"; break;
+        case k_iSteamFriendsCallbacks:                  callbackSubsystemName = "SteamFriends"; break;
+        case k_iSteamBillingCallbacks:                  callbackSubsystemName = "SteamBilling"; break;
+        case k_iSteamMatchmakingCallbacks:              callbackSubsystemName = "SteamMatchmaking"; break;
+        case k_iSteamContentServerCallbacks:            callbackSubsystemName = "SteamContentServer"; break;
+        case k_iSteamUtilsCallbacks:                    callbackSubsystemName = "SteamUtils"; break;
+        case k_iClientFriendsCallbacks:                 callbackSubsystemName = "ClientFriends"; break;
+        case k_iClientUserCallbacks:                    callbackSubsystemName = "ClientUser"; break;
+        case k_iSteamAppsCallbacks:                     callbackSubsystemName = "SteamApps"; break;
+        case k_iSteamUserStatsCallbacks:                callbackSubsystemName = "SteamUserStats"; break;
+        case k_iSteamNetworkingCallbacks:               callbackSubsystemName = "SteamNetworking"; break;
+        case k_iClientRemoteStorageCallbacks:           callbackSubsystemName = "ClientRemoteStorage"; break;
+        case k_iClientDepotBuilderCallbacks:            callbackSubsystemName = "ClientDepotBuilder"; break;
+        case k_iSteamGameServerItemsCallbacks:          callbackSubsystemName = "SteamGameServerItems"; break;
+        case k_iClientUtilsCallbacks:                   callbackSubsystemName = "ClientUtils"; break;
+        case k_iSteamGameCoordinatorCallbacks:          callbackSubsystemName = "SteamGameCoordinator"; break;
+        case k_iSteamGameServerStatsCallbacks:          callbackSubsystemName = "SteamGameServerStats"; break;
+        case k_iSteam2AsyncCallbacks:                   callbackSubsystemName = "Steam2Async"; break;
+        case k_iSteamGameStatsCallbacks:                callbackSubsystemName = "SteamGameStats"; break;
+        case k_iClientHTTPCallbacks:                    callbackSubsystemName = "ClientHTTP"; break;
+        case k_iClientScreenshotsCallbacks:             callbackSubsystemName = "ClientScreenshots"; break;
+        case k_iSteamScreenshotsCallbacks:              callbackSubsystemName = "SteamScreenshots"; break;
+        case k_iClientAudioCallbacks:                   callbackSubsystemName = "ClientAudio"; break;
+        case k_iClientUnifiedMessagesCallbacks:         callbackSubsystemName = "ClientUnifiedMessages"; break;
+        case k_iSteamStreamLauncherCallbacks:           callbackSubsystemName = "SteamStreamLauncher"; break;
+        case k_iClientControllerCallbacks:              callbackSubsystemName = "ClientController"; break;
+        case k_iSteamControllerCallbacks:               callbackSubsystemName = "SteamController"; break;
+        case k_iClientParentalSettingsCallbacks:        callbackSubsystemName = "ClientParentalSettings"; break;
+        case k_iClientDeviceAuthCallbacks:              callbackSubsystemName = "ClientDeviceAuth"; break;
+        case k_iClientNetworkDeviceManagerCallbacks:    callbackSubsystemName = "ClientNetworkDeviceManager"; break;
+        case k_iClientMusicCallbacks:                   callbackSubsystemName = "ClientMusic"; break;
+        case k_iClientRemoteClientManagerCallbacks:     callbackSubsystemName = "ClientRemoteClientManager"; break;
+        case k_iClientUGCCallbacks:                     callbackSubsystemName = "ClientUGC"; break;
+        case k_iSteamStreamClientCallbacks:             callbackSubsystemName = "SteamStreamClient"; break;
+        case k_IClientProductBuilderCallbacks:          callbackSubsystemName = "ClientProductBuilder"; break;
+        case k_iClientShortcutsCallbacks:               callbackSubsystemName = "ClientShortcuts"; break;
+        case k_iClientRemoteControlManagerCallbacks:    callbackSubsystemName = "ClientRemoteControlManager"; break;
+        case k_iSteamAppListCallbacks:                  callbackSubsystemName = "SteamAppList"; break;
+        case k_iSteamMusicCallbacks:                    callbackSubsystemName = "SteamMusic"; break;
+        case k_iSteamMusicRemoteCallbacks:              callbackSubsystemName = "SteamMusicRemote"; break;
+        case k_iClientVRCallbacks:                      callbackSubsystemName = "ClientVR"; break;
+        case k_iClientGameNotificationCallbacks:        callbackSubsystemName = "ClientGameNotification"; break;
+        case k_iSteamGameNotificationCallbacks:         callbackSubsystemName = "SteamGameNotification"; break;
+        case k_iSteamHTMLSurfaceCallbacks:              callbackSubsystemName = "SteamHTMLSurface"; break;
+        case k_iClientVideoCallbacks:                   callbackSubsystemName = "ClientVideo"; break;
+        case k_iClientInventoryCallbacks:               callbackSubsystemName = "ClientInventory"; break;
+        case k_iClientBluetoothManagerCallbacks:        callbackSubsystemName = "ClientBluetoothManager"; break;
+        default:
+            VLOG_WARNING("SteamAPI_RegisterCallback: Unknown callback subsystem for ID %d (baseId=%d)", iCallback, callbackBaseId);
+            break;
+    }
+    
+    VLOG_DEBUG("Registering %s callback: baseId=%d offsetId=%d (fullId=%d)", 
+               callbackSubsystemName, callbackBaseId, callbackOffsetId, iCallback);
+
+    // TODO: Store callback in a registry for proper emulation
+    // Note: In a real Steam implementation, the callback would be registered with Steam client
+    // For emulation purposes, we would maintain our own callback registry here
+    
+    VLOG_DEBUG("Callback registered successfully for %s", callbackSubsystemName);
 }
 
 S_API void S_CALLTYPE SteamAPI_UnregisterCallback( class CCallbackBase *pCallback )
 {
     // TODO: Implement SteamAPI_UnregisterCallback
+    VLOG_DEBUG("SteamAPI_UnregisterCallback called with callback=%p", pCallback);
 }
 
 // Internal functions used by the utility CCallResult objects to receive async call results
 S_API void S_CALLTYPE SteamAPI_RegisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall )
 {
     // TODO: Implement SteamAPI_RegisterCallResult
+    VLOG_DEBUG("SteamAPI_RegisterCallResult called with callback=%p and hAPICall=%d", pCallback, hAPICall);
 }
 
 S_API void S_CALLTYPE SteamAPI_UnregisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall )
 {
     // TODO: Implement SteamAPI_UnregisterCallResult
+    VLOG_DEBUG("SteamAPI_UnregisterCallResult called with callback=%p and hAPICall=%d", pCallback, hAPICall);
 }
 
 
@@ -399,17 +468,20 @@ S_API bool S_CALLTYPE SteamAPI_IsSteamRunning()
 S_API void Steam_RunCallbacks( HSteamPipe hSteamPipe, bool bGameServerCallbacks )
 {
     // TODO: Implement Steam_RunCallbacks
+    VLOG_DEBUG("Steam_RunCallbacks called with hSteamPipe=%d and bGameServerCallbacks=%d", hSteamPipe, bGameServerCallbacks);
 }
 
 // register the callback funcs to use to interact with the steam dll
 S_API void Steam_RegisterInterfaceFuncs( void *hModule )
 {
     // TODO: Implement Steam_RegisterInterfaceFuncs
+    VLOG_DEBUG("Steam_RegisterInterfaceFuncs called with hModule=%p", hModule);
 }
 
 // returns the HSteamUser of the last user to dispatch a callback
 S_API HSteamUser Steam_GetHSteamUserCurrent()
 {
+    VLOG_DEBUG("Steam_GetHSteamUserCurrent called");
     // TODO: Implement Steam_GetHSteamUserCurrent
     return g_hSteamUser;
 }
@@ -418,6 +490,7 @@ S_API HSteamUser Steam_GetHSteamUserCurrent()
 // DEPRECATED - implementation is Windows only, and the path returned is a UTF-8 string which must be converted to UTF-16 for use with Win32 APIs
 S_API const char *SteamAPI_GetSteamInstallPath()
 {
+    VLOG_DEBUG("SteamAPI_GetSteamInstallPath called");
     // TODO: Implement SteamAPI_GetSteamInstallPath
     static const char* steamPath = "C:\\Program Files (x86)\\Steam";
     return steamPath;
@@ -425,26 +498,29 @@ S_API const char *SteamAPI_GetSteamInstallPath()
 
 // returns the pipe we are communicating to Steam with
 S_API HSteamPipe SteamAPI_GetHSteamPipe() {
-    // TODO: Implement SteamAPI_GetHSteamPipe
+    VLOG_DEBUG("SteamAPI_GetHSteamPipe called");
     return g_hSteamPipe;
 }
 
 // sets whether or not Steam_RunCallbacks() should do a try {} catch (...) {} around calls to issuing callbacks
 S_API void SteamAPI_SetTryCatchCallbacks( bool bTryCatchCallbacks ) {
+    VLOG_DEBUG("SteamAPI_SetTryCatchCallbacks called with bTryCatchCallbacks=%d", bTryCatchCallbacks);
     // TODO: Implement SteamAPI_SetTryCatchCallbacks
 }
 
 // backwards compat export, passes through to SteamAPI_ variants
 S_API HSteamPipe GetHSteamPipe() {
+    VLOG_DEBUG("GetHSteamPipe called");
     return g_hSteamPipe;
 }
 
 S_API HSteamUser GetHSteamUser() {
+    VLOG_DEBUG("GetHSteamUser called");
     return g_hSteamUser;
 }
 
 // backwards compat with older SDKs
 S_API bool S_CALLTYPE SteamAPI_InitSafe() {
-    VLOG_INFO("SteamAPI_InitSafe called");
+    VLOG_DEBUG("SteamAPI_InitSafe called");
     return SteamAPI_Init();
 }

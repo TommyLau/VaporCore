@@ -10,8 +10,8 @@
 
 #include <cstring>
 
+#include "vapor_base.h"
 #include "steam_ugc.h"
-#include "logger.h"
 
 // Static instance
 Steam_UGC* Steam_UGC::s_pInstance = nullptr;

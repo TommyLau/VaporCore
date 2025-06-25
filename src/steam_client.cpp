@@ -9,8 +9,7 @@
 
 #include <cstring>
 
-#include "vaporcore_base.h"
-#include "logger.h"
+#include "vapor_base.h"
 #include "steam_client.h"
 
 // Static instance
@@ -18,8 +17,9 @@ Steam_Client* Steam_Client::s_pInstance = nullptr;
 
 Steam_Client::Steam_Client()
     : m_hSteamUser(1) // Start with user ID 1
-    , m_unSteamPipeCounter(0)
+    , m_unSteamPipeCounter(1)
     , m_pWarningMessageHook(nullptr)
+    , m_bUserLoggedIn(false)
     , m_pSteamUser(nullptr)
     , m_pSteamFriends(nullptr)
     , m_pSteamUtils(nullptr)
@@ -41,6 +41,8 @@ Steam_Client::~Steam_Client()
 
 Steam_Client* Steam_Client::GetInstance()
 {
+    VLOG_DEBUG("Steam_Client::GetInstance called");
+
     VAPORCORE_LOCK_GUARD();
 
     if (!s_pInstance) {
@@ -52,6 +54,8 @@ Steam_Client* Steam_Client::GetInstance()
 
 void Steam_Client::ReleaseInstance()
 {
+    VLOG_DEBUG("Steam_Client::ReleaseInstance called");
+
     VAPORCORE_LOCK_GUARD();
     
     if (s_pInstance) {
@@ -63,6 +67,8 @@ void Steam_Client::ReleaseInstance()
 
 const char* Steam_Client::GetInterfaceVersion(const char* pchVersion, const char* pchDefaultVersion)
 {
+    VLOG_DEBUG("GetInterfaceVersion called with pchVersion=%s and pchDefaultVersion=%s", pchVersion, pchDefaultVersion);
+
     return pchVersion ? pchVersion : pchDefaultVersion;
 }
 
@@ -103,11 +109,13 @@ HSteamUser Steam_Client::ConnectToGlobalUser( HSteamPipe hSteamPipe )
         return 0;
     }
 
-    // TODO: User Login
+    // Mark user as logged in when connecting to global user
+    m_bUserLoggedIn = true;
+    VLOG_INFO("User logged in through ConnectToGlobalUser");
 
     m_mapSteamPipes[hSteamPipe] = Steam_Pipe::STEAM_PIPE_CLIENT;
 
-    return VaporCore::DEFAULT_CLIENT_USER;
+    return DEFAULT_CLIENT_USER;
 }
 
 // used by game servers, create a steam user that won't be shared with anyone else
@@ -116,7 +124,7 @@ HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType 
 {
     // TODO: Implement local user creation
     VLOG_DEBUG("CreateLocalUser called with phSteamPipe=%u and eAccountType=%d", phSteamPipe, eAccountType);
-    return VaporCore::DEFAULT_SERVER_USER;
+    return DEFAULT_SERVER_USER;
 }
 
 // Changed from Steam SDK v1.04, backward compatibility
@@ -124,15 +132,18 @@ HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe )
 {
     // TODO: Implement local user creation
     VLOG_DEBUG("CreateLocalUser called with phSteamPipe=%u", phSteamPipe);
-    return VaporCore::DEFAULT_SERVER_USER;
+    return DEFAULT_SERVER_USER;
 }
 
 // removes an allocated user
 // NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
 void Steam_Client::ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser )
 {
-    // TODO: Implement user release logic
-    VLOG_DEBUG("ReleaseUser called");
+    VLOG_DEBUG("ReleaseUser called with hSteamPipe=%u, hUser=%u", hSteamPipe, hUser);
+    
+    // Mark user as logged out when releasing user
+    m_bUserLoggedIn = false;
+    VLOG_INFO("User logged out through ReleaseUser");
 }
 
 // retrieves the ISteamUser interface associated with the handle
@@ -296,8 +307,14 @@ void Steam_Client::SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction
 // Trigger global shutdown for the DLL
 bool Steam_Client::BShutdownIfAllPipesClosed()
 {
-    // TODO: Implement shutdown logic
     VLOG_DEBUG("BShutdownIfAllPipesClosed called");
+
+    if (m_mapSteamPipes.size() == 0) {
+        VLOG_DEBUG("BShutdownIfAllPipesClosed called but no pipes are open");
+    }
+    
+    // TODO: Implement shutdown logic
+
     return true;
 }
 

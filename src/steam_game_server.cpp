@@ -9,7 +9,7 @@
 
 #include <cstring>
 
-#include "logger.h"
+#include "vapor_base.h"
 #include "steam_game_server.h"
 
 // Static instance

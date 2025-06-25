@@ -12,8 +12,7 @@
 #include <steam_gameserver.h>
 #include <steam_game_server_stats.h>
 
-#include "vaporcore_base.h"
-#include "logger.h"
+#include "vapor_base.h"
 
 //-----------------------------------------------------------------------------
 // ISteamClient flat API implementations
