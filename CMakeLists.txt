@@ -66,13 +66,14 @@ endif()
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/vapor
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/steam
 )
 
-# Collect all source files from src directory
+# Collect all source files from src directory and subdirectories
 file(GLOB_RECURSE VAPORCORE_SOURCES
-    "src/*.cpp"
-    "src/*.cxx"
-    "src/*.cc"
+    "src/vapor/*.cpp"
+    "src/steam/*.cpp"
 )
 
 # Add Windows resource file
@@ -148,6 +149,8 @@ target_include_directories(steam_api
         $<INSTALL_INTERFACE:include/vaporcore>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vapor
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/steam
 )
 
 # Compiler-specific optimizations
