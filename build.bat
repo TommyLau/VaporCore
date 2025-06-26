@@ -169,7 +169,7 @@ echo Updating Version Information
 echo ====================================================================
 
 :: Read base version from version.h (VAPORCORE_VERSION_STRING_SHORT)
-set VERSION_FILE=src\version.h
+set VERSION_FILE=include\version.h
 if not exist "%VERSION_FILE%" (
     echo Error: Version file not found: %VERSION_FILE%
     exit /b 1

@@ -68,24 +68,98 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-# Add subdirectories
-add_subdirectory(src)
-
-install(TARGETS steam_api
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+# Collect all source files from src directory
+file(GLOB_RECURSE VAPORCORE_SOURCES
+    "src/*.cpp"
+    "src/*.cxx"
+    "src/*.cc"
 )
 
-install(DIRECTORY include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vaporcore
-    FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+# Add Windows resource file
+if(WIN32)
+    set(VAPORCORE_RESOURCES
+        resources/version.rc
+    )
+endif()
+
+# Define the main library target
+add_library(steam_api SHARED
+    ${VAPORCORE_SOURCES}
+    ${VAPORCORE_RESOURCES}
 )
 
-# Package configuration
-set(CPACK_PACKAGE_NAME "VaporCore")
-set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
-set(CPACK_PACKAGE_VENDOR "VaporCore Project")
+# Set target properties
+set_target_properties(steam_api PROPERTIES
+    OUTPUT_NAME "steam_api${VAPORCORE_ARCH}"
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    VERSION ${PROJECT_VERSION}
+)
 
-include(CPack) 
+# Platform-specific configurations
+if(WIN32)
+    # Enable resource compiler
+    enable_language(RC)
+    
+    # Windows-specific settings
+    set_target_properties(steam_api PROPERTIES
+        SUFFIX ".dll"
+    )
+    
+    # Export definitions
+    target_compile_definitions(steam_api PRIVATE
+        STEAM_API_EXPORTS
+        WIN32_LEAN_AND_MEAN
+        NOMINMAX
+    )
+    
+    # Link against Windows libraries
+    target_link_libraries(steam_api PRIVATE
+        kernel32
+        user32
+        advapi32
+        shell32
+        ws2_32
+        winmm
+    )
+    
+elseif(UNIX)
+    # Unix-specific settings
+    set_target_properties(steam_api PROPERTIES
+        PREFIX "lib"
+        SUFFIX ".so"
+    )
+    
+    target_compile_definitions(steam_api PRIVATE
+        VAPORCORE_EXPORTS
+    )
+    
+    # Link against system libraries
+    target_link_libraries(steam_api PRIVATE
+        dl
+        pthread
+    )
+endif()
+
+# Include directories
+target_include_directories(steam_api
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/steam>
+        $<INSTALL_INTERFACE:include/vaporcore>
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+# Compiler-specific optimizations
+if(MSVC)
+    target_compile_options(steam_api PRIVATE
+        $<$<CONFIG:Release>:/O2 /Ob2 /DNDEBUG>
+        $<$<CONFIG:Debug>:/Od /Zi>
+    )
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(steam_api PRIVATE
+        $<$<CONFIG:Release>:-O3 -DNDEBUG>
+        $<$<CONFIG:Debug>:-O0 -g>
+    )
+endif()
+ 
