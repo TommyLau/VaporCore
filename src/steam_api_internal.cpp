@@ -39,7 +39,7 @@ S_API void * S_CALLTYPE SteamInternal_CreateInterface( const char *ver )
     }
 
     // Get the Steam client through the public API
-    Steam_Client* pSteamClient = Steam_Client::GetInstance();
+    CSteamClient* pSteamClient = CSteamClient::GetInstance();
 
     if (!pSteamClient) {
         VLOG_ERROR("SteamInternal_CreateInterface: Steam client not available");

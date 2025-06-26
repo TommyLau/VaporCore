@@ -28,7 +28,7 @@
 // Purpose: Functions for accessing, reading and writing files stored remotely 
 //			and cached locally
 //-----------------------------------------------------------------------------
-class Steam_Remote_Storage :
+class CSteamRemoteStorage :
     public ISteamRemoteStorage,
     public ISteamRemoteStorage002,
     public ISteamRemoteStorage004,
@@ -41,14 +41,14 @@ class Steam_Remote_Storage :
 {
 private:
     // Singleton instance
-    static Steam_Remote_Storage* s_pInstance;
+    static CSteamRemoteStorage* s_pInstance;
 
 public:
-    Steam_Remote_Storage();
-    ~Steam_Remote_Storage();
+    CSteamRemoteStorage();
+    ~CSteamRemoteStorage();
 
     // Helper methods
-    static Steam_Remote_Storage* GetInstance();
+    static CSteamRemoteStorage* GetInstance();
     static void ReleaseInstance();
 
 	// NOTE

@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 // Purpose: Steam UGC support API
 //-----------------------------------------------------------------------------
-class Steam_UGC :
+class CSteamUGC :
     public ISteamUGC,
     public ISteamUGC001,
     public ISteamUGC002,
@@ -35,14 +35,14 @@ class Steam_UGC :
 {
 private:
     // Singleton instance
-    static Steam_UGC* s_pInstance;
+    static CSteamUGC* s_pInstance;
 
 public:
-    Steam_UGC();
-    ~Steam_UGC();
+    CSteamUGC();
+    ~CSteamUGC();
 
     // Helper methods
-    static Steam_UGC* GetInstance();
+    static CSteamUGC* GetInstance();
     static void ReleaseInstance();
 
 	// Query UGC associated with a user. Creator app id or consumer app id must be valid and be set to the current running app. unPage should start at 1.

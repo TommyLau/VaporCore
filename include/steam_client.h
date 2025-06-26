@@ -48,10 +48,10 @@
 #include "steam_video.h"
 
 // Steam pipe state enumeration
-enum Steam_Pipe {
-    STEAM_PIPE_NONE = 0,
-    STEAM_PIPE_CLIENT = 1,
-    STEAM_PIPE_SERVER = 2
+enum ESteamPipe {
+    k_ESteamPipeNone = 0,
+    k_ESteamPipeClient = 1,
+    k_ESteamPipeServer = 2
 };
 
 //-----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ enum Steam_Pipe {
 //			or if you want to implement a multiplexed gameserver where a single process
 //			is handling multiple games at once with independent gameserver SteamIDs.
 //-----------------------------------------------------------------------------
-class Steam_Client :
+class CSteamClient :
 	public ISteamClient,
     public ISteamClient007,
     public ISteamClient008,
@@ -84,42 +84,42 @@ private:
     bool m_bUserLoggedIn;
     
     // Steam pipe management
-    std::map<HSteamPipe, Steam_Pipe> m_mapSteamPipes;
+    std::map<HSteamPipe, ESteamPipe> m_mapSteamPipes;
     
     // Implementation class instances
-    Steam_User* m_pSteamUser;
-    Steam_Friends* m_pSteamFriends;
-    Steam_Utils* m_pSteamUtils;
-    Steam_Matchmaking* m_pSteamMatchmaking;
-    Steam_User_Stats* m_pSteamUserStats;
-    Steam_Apps* m_pSteamApps;
-    Steam_Matchmaking_Servers* m_pSteamMatchmakingServers;
-    Steam_Networking* m_pSteamNetworking;
-    Steam_Remote_Storage* m_pSteamRemoteStorage;
-    Steam_Screenshots* m_pSteamScreenshots;
-    Steam_HTTP* m_pSteamHTTP;
-    Steam_Unified_Messages* m_pSteamUnifiedMessages;
-    Steam_Controller* m_pSteamController;
-    Steam_UGC* m_pSteamUGC;
-    Steam_App_List* m_pSteamAppList;
-    Steam_Music* m_pSteamMusic;
-    Steam_Music_Remote* m_pSteamMusicRemote;
-    Steam_HTML_Surface* m_pSteamHTMLSurface;
-    Steam_Inventory* m_pSteamInventory;
-    Steam_Video* m_pSteamVideo;
+    CSteamUser* m_pSteamUser;
+    CSteamFriends* m_pSteamFriends;
+    CSteamUtils* m_pSteamUtils;
+    CSteamMatchmaking* m_pSteamMatchmaking;
+    CSteamUserStats* m_pSteamUserStats;
+    CSteamApps* m_pSteamApps;
+    CSteamMatchmakingServers* m_pSteamMatchmakingServers;
+    CSteamNetworking* m_pSteamNetworking;
+    CSteamRemoteStorage* m_pSteamRemoteStorage;
+    CSteamScreenshots* m_pSteamScreenshots;
+    CSteamHTTP* m_pSteamHTTP;
+    CSteamUnifiedMessages* m_pSteamUnifiedMessages;
+    CSteamController* m_pSteamController;
+    CSteamUGC* m_pSteamUGC;
+    CSteamAppList* m_pSteamAppList;
+    CSteamMusic* m_pSteamMusic;
+    CSteamMusicRemote* m_pSteamMusicRemote;
+    CSteamHTMLSurface* m_pSteamHTMLSurface;
+    CSteamInventory* m_pSteamInventory;
+    CSteamVideo* m_pSteamVideo;
     
     // Singleton instance
-    static Steam_Client* s_pInstance;
+    static CSteamClient* s_pInstance;
     
     // Helper methods
     const char* GetInterfaceVersion(const char* pchVersion, const char* pchDefaultVersion);
 
 public:
-    Steam_Client();
-    ~Steam_Client();
+    CSteamClient();
+    ~CSteamClient();
 
     // Helper methods
-    static Steam_Client* GetInstance();
+    static CSteamClient* GetInstance();
     static void ReleaseInstance();
 
 	// Creates a communication pipe to the Steam client.

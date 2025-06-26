@@ -11,29 +11,29 @@
 #include "steam_music_remote.h"
 
 // Static instance
-Steam_Music_Remote* Steam_Music_Remote::s_pInstance = nullptr;
+CSteamMusicRemote* CSteamMusicRemote::s_pInstance = nullptr;
 
-Steam_Music_Remote::Steam_Music_Remote()
+CSteamMusicRemote::CSteamMusicRemote()
 {
-    VLOG_INFO("Steam_Music_Remote constructor called");
+    VLOG_INFO("CSteamMusicRemote constructor called");
 }
 
-Steam_Music_Remote::~Steam_Music_Remote()
+CSteamMusicRemote::~CSteamMusicRemote()
 {
-    VLOG_INFO("Steam_Music_Remote destructor called");
+    VLOG_INFO("CSteamMusicRemote destructor called");
 }
 
 // Helper methods
-Steam_Music_Remote* Steam_Music_Remote::GetInstance()
+CSteamMusicRemote* CSteamMusicRemote::GetInstance()
 {
     if (!s_pInstance)
     {
-        s_pInstance = new Steam_Music_Remote();
+        s_pInstance = new CSteamMusicRemote();
     }
     return s_pInstance;
 }
 
-void Steam_Music_Remote::ReleaseInstance()
+void CSteamMusicRemote::ReleaseInstance()
 {
     if (s_pInstance)
     {
@@ -43,199 +43,199 @@ void Steam_Music_Remote::ReleaseInstance()
 }
 
 // Service Definition
-bool Steam_Music_Remote::RegisterSteamMusicRemote(const char *pchName)
+bool CSteamMusicRemote::RegisterSteamMusicRemote(const char *pchName)
 {
     VLOG_DEBUG("RegisterSteamMusicRemote called");
     return false;
 }
 
-bool Steam_Music_Remote::DeregisterSteamMusicRemote()
+bool CSteamMusicRemote::DeregisterSteamMusicRemote()
 {
     VLOG_DEBUG("DeregisterSteamMusicRemote called");
     return false;
 }
 
-bool Steam_Music_Remote::BIsCurrentMusicRemote()
+bool CSteamMusicRemote::BIsCurrentMusicRemote()
 {
     VLOG_DEBUG("BIsCurrentMusicRemote called");
     return false;
 }
 
-bool Steam_Music_Remote::BActivationSuccess(bool bValue)
+bool CSteamMusicRemote::BActivationSuccess(bool bValue)
 {
     VLOG_DEBUG("BActivationSuccess called");
     return false;
 }
 
-bool Steam_Music_Remote::SetDisplayName(const char *pchDisplayName)
+bool CSteamMusicRemote::SetDisplayName(const char *pchDisplayName)
 {
     VLOG_DEBUG("SetDisplayName called");
     return false;
 }
 
-bool Steam_Music_Remote::SetPNGIcon_64x64(void *pvBuffer, uint32 cbBufferLength)
+bool CSteamMusicRemote::SetPNGIcon_64x64(void *pvBuffer, uint32 cbBufferLength)
 {
     VLOG_DEBUG("SetPNGIcon_64x64 called");
     return false;
 }
 
 // Abilities for the user interface
-bool Steam_Music_Remote::EnablePlayPrevious(bool bValue)
+bool CSteamMusicRemote::EnablePlayPrevious(bool bValue)
 {
     VLOG_DEBUG("EnablePlayPrevious called");
     return false;
 }
 
-bool Steam_Music_Remote::EnablePlayNext(bool bValue)
+bool CSteamMusicRemote::EnablePlayNext(bool bValue)
 {
     VLOG_DEBUG("EnablePlayNext called");
     return false;
 }
 
-bool Steam_Music_Remote::EnableShuffled(bool bValue)
+bool CSteamMusicRemote::EnableShuffled(bool bValue)
 {
     VLOG_DEBUG("EnableShuffled called");
     return false;
 }
 
-bool Steam_Music_Remote::EnableLooped(bool bValue)
+bool CSteamMusicRemote::EnableLooped(bool bValue)
 {
     VLOG_DEBUG("EnableLooped called");
     return false;
 }
 
-bool Steam_Music_Remote::EnableQueue(bool bValue)
+bool CSteamMusicRemote::EnableQueue(bool bValue)
 {
     VLOG_DEBUG("EnableQueue called");
     return false;
 }
 
-bool Steam_Music_Remote::EnablePlaylists(bool bValue)
+bool CSteamMusicRemote::EnablePlaylists(bool bValue)
 {
     VLOG_DEBUG("EnablePlaylists called");
     return false;
 }
 
 // Status
-bool Steam_Music_Remote::UpdatePlaybackStatus(AudioPlayback_Status nStatus)
+bool CSteamMusicRemote::UpdatePlaybackStatus(AudioPlayback_Status nStatus)
 {
     VLOG_DEBUG("UpdatePlaybackStatus called");
     return false;
 }
 
-bool Steam_Music_Remote::UpdateShuffled(bool bValue)
+bool CSteamMusicRemote::UpdateShuffled(bool bValue)
 {
     VLOG_DEBUG("UpdateShuffled called");
     return false;
 }
 
-bool Steam_Music_Remote::UpdateLooped(bool bValue)
+bool CSteamMusicRemote::UpdateLooped(bool bValue)
 {
     VLOG_DEBUG("UpdateLooped called");
     return false;
 }
 
 // volume is between 0.0 and 1.0
-bool Steam_Music_Remote::UpdateVolume(float flValue)
+bool CSteamMusicRemote::UpdateVolume(float flValue)
 {
     VLOG_DEBUG("UpdateVolume called");
     return false;
 }
 
 // Current Entry
-bool Steam_Music_Remote::CurrentEntryWillChange()
+bool CSteamMusicRemote::CurrentEntryWillChange()
 {
     VLOG_DEBUG("CurrentEntryWillChange called");
     return false;
 }
 
-bool Steam_Music_Remote::CurrentEntryIsAvailable(bool bAvailable)
+bool CSteamMusicRemote::CurrentEntryIsAvailable(bool bAvailable)
 {
     VLOG_DEBUG("CurrentEntryIsAvailable called");
     return false;
 }
 
-bool Steam_Music_Remote::UpdateCurrentEntryText(const char *pchText)
+bool CSteamMusicRemote::UpdateCurrentEntryText(const char *pchText)
 {
     VLOG_DEBUG("UpdateCurrentEntryText called");
     return false;
 }
 
-bool Steam_Music_Remote::UpdateCurrentEntryElapsedSeconds(int nValue)
+bool CSteamMusicRemote::UpdateCurrentEntryElapsedSeconds(int nValue)
 {
     VLOG_DEBUG("UpdateCurrentEntryElapsedSeconds called");
     return false;
 }
 
-bool Steam_Music_Remote::UpdateCurrentEntryCoverArt(void *pvBuffer, uint32 cbBufferLength)
+bool CSteamMusicRemote::UpdateCurrentEntryCoverArt(void *pvBuffer, uint32 cbBufferLength)
 {
     VLOG_DEBUG("UpdateCurrentEntryCoverArt called");
     return false;
 }
 
-bool Steam_Music_Remote::CurrentEntryDidChange()
+bool CSteamMusicRemote::CurrentEntryDidChange()
 {
     VLOG_DEBUG("CurrentEntryDidChange called");
     return false;
 }
 
 // Queue
-bool Steam_Music_Remote::QueueWillChange()
+bool CSteamMusicRemote::QueueWillChange()
 {
     VLOG_DEBUG("QueueWillChange called");
     return false;
 }
 
-bool Steam_Music_Remote::ResetQueueEntries()
+bool CSteamMusicRemote::ResetQueueEntries()
 {
     VLOG_DEBUG("ResetQueueEntries called");
     return false;
 }
 
-bool Steam_Music_Remote::SetQueueEntry(int nID, int nPosition, const char *pchEntryText)
+bool CSteamMusicRemote::SetQueueEntry(int nID, int nPosition, const char *pchEntryText)
 {
     VLOG_DEBUG("SetQueueEntry called");
     return false;
 }
 
-bool Steam_Music_Remote::SetCurrentQueueEntry(int nID)
+bool CSteamMusicRemote::SetCurrentQueueEntry(int nID)
 {
     VLOG_DEBUG("SetCurrentQueueEntry called");
     return false;
 }
 
-bool Steam_Music_Remote::QueueDidChange()
+bool CSteamMusicRemote::QueueDidChange()
 {
     VLOG_DEBUG("QueueDidChange called");
     return false;
 }
 
 // Playlist
-bool Steam_Music_Remote::PlaylistWillChange()
+bool CSteamMusicRemote::PlaylistWillChange()
 {
     VLOG_DEBUG("PlaylistWillChange called");
     return false;
 }
 
-bool Steam_Music_Remote::ResetPlaylistEntries()
+bool CSteamMusicRemote::ResetPlaylistEntries()
 {
     VLOG_DEBUG("ResetPlaylistEntries called");
     return false;
 }
 
-bool Steam_Music_Remote::SetPlaylistEntry(int nID, int nPosition, const char *pchEntryText)
+bool CSteamMusicRemote::SetPlaylistEntry(int nID, int nPosition, const char *pchEntryText)
 {
     VLOG_DEBUG("SetPlaylistEntry called");
     return false;
 }
 
-bool Steam_Music_Remote::SetCurrentPlaylistEntry(int nID)
+bool CSteamMusicRemote::SetCurrentPlaylistEntry(int nID)
 {
     VLOG_DEBUG("SetCurrentPlaylistEntry called");
     return false;
 }
 
-bool Steam_Music_Remote::PlaylistDidChange()
+bool CSteamMusicRemote::PlaylistDidChange()
 {
     VLOG_DEBUG("PlaylistDidChange called");
     return false;

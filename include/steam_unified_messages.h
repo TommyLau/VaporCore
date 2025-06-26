@@ -16,19 +16,19 @@
 #include <isteamclient.h>
 #include <isteamunifiedmessages.h>
 
-class Steam_Unified_Messages :
+class CSteamUnifiedMessages :
     public ISteamUnifiedMessages
 {
 private:
     // Singleton instance
-    static Steam_Unified_Messages* s_pInstance;
+    static CSteamUnifiedMessages* s_pInstance;
 
 public:
-    Steam_Unified_Messages();
-    ~Steam_Unified_Messages();
+    CSteamUnifiedMessages();
+    ~CSteamUnifiedMessages();
 
     // Helper methods
-    static Steam_Unified_Messages* GetInstance();
+    static CSteamUnifiedMessages* GetInstance();
     static void ReleaseInstance();
 
 	static const ClientUnifiedMessageHandle k_InvalidUnifiedMessageHandle = 0;

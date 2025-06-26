@@ -13,29 +13,29 @@
 #include "steam_controller.h"
 
 // Static instance
-Steam_Controller* Steam_Controller::s_pInstance = nullptr;
+CSteamController* CSteamController::s_pInstance = nullptr;
 
-Steam_Controller::Steam_Controller()
+CSteamController::CSteamController()
 {
-    VLOG_INFO("Steam_Controller constructor called");
+    VLOG_INFO("CSteamController constructor called");
 }
 
-Steam_Controller::~Steam_Controller()
+CSteamController::~CSteamController()
 {
-    VLOG_INFO("Steam_Controller destructor called");
+    VLOG_INFO("CSteamController destructor called");
 }
 
 // Helper methods
-Steam_Controller* Steam_Controller::GetInstance()
+CSteamController* CSteamController::GetInstance()
 {
     if (!s_pInstance)
     {
-        s_pInstance = new Steam_Controller();
+        s_pInstance = new CSteamController();
     }
     return s_pInstance;
 }
 
-void Steam_Controller::ReleaseInstance()
+void CSteamController::ReleaseInstance()
 {
     if (s_pInstance)
     {
@@ -45,38 +45,38 @@ void Steam_Controller::ReleaseInstance()
 }
 
 // Init and Shutdown must be called when starting/ending use of this interface
-bool Steam_Controller::Init()
+bool CSteamController::Init()
 {
-    VLOG_DEBUG("Steam_Controller::Init called");
+    VLOG_DEBUG("CSteamController::Init called");
     return true;
 }
 
 // Must call init and shutdown when starting/ending use of the interface
 // Changed from Steam SDK v1.35a, backward compatibility
-bool Steam_Controller::Init(const char *pchAbsolutePathToControllerConfigVDF)
+bool CSteamController::Init(const char *pchAbsolutePathToControllerConfigVDF)
 {
-    VLOG_DEBUG("Steam_Controller::Init called with config path: %s", pchAbsolutePathToControllerConfigVDF);
+    VLOG_DEBUG("CSteamController::Init called with config path: %s", pchAbsolutePathToControllerConfigVDF);
     return true;
 }
 
-bool Steam_Controller::Shutdown()
+bool CSteamController::Shutdown()
 {
-    VLOG_DEBUG("Steam_Controller::Shutdown called");
+    VLOG_DEBUG("CSteamController::Shutdown called");
     return true;
 }
 
 // Pump callback/callresult events
 // Note: SteamAPI_RunCallbacks will do this for you, so you should never need to call this directly.
-void Steam_Controller::RunFrame()
+void CSteamController::RunFrame()
 {
     // No implementation needed since SteamAPI_RunCallbacks handles this
 }
 
 // Get the state of the specified controller, returns false if that controller is not connected
 // Removed from Steam SDK v1.35a, backward compatibility
-bool Steam_Controller::GetControllerState(uint32 unControllerIndex, SteamControllerState_t *pState)
+bool CSteamController::GetControllerState(uint32 unControllerIndex, SteamControllerState_t *pState)
 {
-    VLOG_DEBUG("Steam_Controller::GetControllerState called for controller %u", unControllerIndex);
+    VLOG_DEBUG("CSteamController::GetControllerState called for controller %u", unControllerIndex);
     if (!pState) {
         return false;
     }
@@ -88,55 +88,55 @@ bool Steam_Controller::GetControllerState(uint32 unControllerIndex, SteamControl
 // Enumerate currently connected controllers
 // handlesOut should point to a STEAM_CONTROLLER_MAX_COUNT sized array of ControllerHandle_t handles
 // Returns the number of handles written to handlesOut
-int Steam_Controller::GetConnectedControllers(ControllerHandle_t *handlesOut)
+int CSteamController::GetConnectedControllers(ControllerHandle_t *handlesOut)
 {
-    VLOG_DEBUG("Steam_Controller::GetConnectedControllers called");
+    VLOG_DEBUG("CSteamController::GetConnectedControllers called");
     return 0; // Return 0 since no controllers are connected
 }
 
 // Invokes the Steam overlay and brings up the binding screen
 // Returns false is overlay is disabled / unavailable, or the user is not in Big Picture mode
-bool Steam_Controller::ShowBindingPanel(ControllerHandle_t controllerHandle)
+bool CSteamController::ShowBindingPanel(ControllerHandle_t controllerHandle)
 {
-    VLOG_DEBUG("Steam_Controller::ShowBindingPanel called for controller %llu", controllerHandle);
+    VLOG_DEBUG("CSteamController::ShowBindingPanel called for controller %llu", controllerHandle);
     return false; // Return false since overlay is not available
 }
 
 // ACTION SETS
 // Lookup the handle for an Action Set. Best to do this once on startup, and store the handles for all future API calls.
-ControllerActionSetHandle_t Steam_Controller::GetActionSetHandle(const char *pszActionSetName)
+ControllerActionSetHandle_t CSteamController::GetActionSetHandle(const char *pszActionSetName)
 {
-    VLOG_DEBUG("Steam_Controller::GetActionSetHandle called for action set: %s", pszActionSetName);
+    VLOG_DEBUG("CSteamController::GetActionSetHandle called for action set: %s", pszActionSetName);
     return 0; // Return invalid handle
 }
 
 // Reconfigure the controller to use the specified action set (ie 'Menu', 'Walk' or 'Drive')
 // This is cheap, and can be safely called repeatedly. It's often easier to repeatedly call it in
 // your state loops, instead of trying to place it in all of your state transitions.
-void Steam_Controller::ActivateActionSet(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle)
+void CSteamController::ActivateActionSet(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle)
 {
-    VLOG_DEBUG("Steam_Controller::ActivateActionSet called for controller %llu with action set %llu", 
+    VLOG_DEBUG("CSteamController::ActivateActionSet called for controller %llu with action set %llu", 
                controllerHandle, actionSetHandle);
 }
 
-ControllerActionSetHandle_t Steam_Controller::GetCurrentActionSet(ControllerHandle_t controllerHandle)
+ControllerActionSetHandle_t CSteamController::GetCurrentActionSet(ControllerHandle_t controllerHandle)
 {
-    VLOG_DEBUG("Steam_Controller::GetCurrentActionSet called for controller %llu", controllerHandle);
+    VLOG_DEBUG("CSteamController::GetCurrentActionSet called for controller %llu", controllerHandle);
     return 0; // Return invalid handle
 }
 
 // ACTIONS
 // Lookup the handle for a digital action. Best to do this once on startup, and store the handles for all future API calls.
-ControllerDigitalActionHandle_t Steam_Controller::GetDigitalActionHandle(const char *pszActionName)
+ControllerDigitalActionHandle_t CSteamController::GetDigitalActionHandle(const char *pszActionName)
 {
-    VLOG_DEBUG("Steam_Controller::GetDigitalActionHandle called for action: %s", pszActionName);
+    VLOG_DEBUG("CSteamController::GetDigitalActionHandle called for action: %s", pszActionName);
     return 0; // Return invalid handle
 }
 
 // Returns the current state of the supplied digital game action
-ControllerDigitalActionData_t Steam_Controller::GetDigitalActionData(ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle)
+ControllerDigitalActionData_t CSteamController::GetDigitalActionData(ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle)
 {
-    VLOG_DEBUG("Steam_Controller::GetDigitalActionData called for controller %llu and action %llu",
+    VLOG_DEBUG("CSteamController::GetDigitalActionData called for controller %llu and action %llu",
                controllerHandle, digitalActionHandle);
     ControllerDigitalActionData_t data = {};
     data.bState = false;
@@ -146,24 +146,24 @@ ControllerDigitalActionData_t Steam_Controller::GetDigitalActionData(ControllerH
 
 // Get the origin(s) for a digital action within an action set. Returns the number of origins supplied in originsOut. Use this to display the appropriate on-screen prompt for the action.
 // originsOut should point to a STEAM_CONTROLLER_MAX_ORIGINS sized array of EControllerActionOrigin handles
-int Steam_Controller::GetDigitalActionOrigins(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerDigitalActionHandle_t digitalActionHandle, EControllerActionOrigin *originsOut)
+int CSteamController::GetDigitalActionOrigins(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerDigitalActionHandle_t digitalActionHandle, EControllerActionOrigin *originsOut)
 {
-    VLOG_DEBUG("Steam_Controller::GetDigitalActionOrigins called for controller %llu", controllerHandle);
+    VLOG_DEBUG("CSteamController::GetDigitalActionOrigins called for controller %llu", controllerHandle);
     return 0; // Return 0 since no origins are available
 }
 
 // Lookup the handle for an analog action. Best to do this once on startup, and store the handles for all future API calls.
-ControllerAnalogActionHandle_t Steam_Controller::GetAnalogActionHandle(const char *pszActionName)
+ControllerAnalogActionHandle_t CSteamController::GetAnalogActionHandle(const char *pszActionName)
 {
-    VLOG_DEBUG("Steam_Controller::GetAnalogActionHandle called for action: %s", pszActionName);
+    VLOG_DEBUG("CSteamController::GetAnalogActionHandle called for action: %s", pszActionName);
     ControllerAnalogActionHandle_t handle = {}; // Init empty struct
     return handle;
 }
 
 // Returns the current state of these supplied analog game action
-ControllerAnalogActionData_t Steam_Controller::GetAnalogActionData(ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle)
+ControllerAnalogActionData_t CSteamController::GetAnalogActionData(ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle)
 {
-    VLOG_DEBUG("Steam_Controller::GetAnalogActionData called for controller %llu and action %llu",
+    VLOG_DEBUG("CSteamController::GetAnalogActionData called for controller %llu and action %llu",
                controllerHandle, analogActionHandle);
     ControllerAnalogActionData_t data = {};
     data.eMode = k_EControllerSourceMode_None;
@@ -175,41 +175,41 @@ ControllerAnalogActionData_t Steam_Controller::GetAnalogActionData(ControllerHan
 
 // Get the origin(s) for an analog action within an action set. Returns the number of origins supplied in originsOut. Use this to display the appropriate on-screen prompt for the action.
 // originsOut should point to a STEAM_CONTROLLER_MAX_ORIGINS sized array of EControllerActionOrigin handles
-int Steam_Controller::GetAnalogActionOrigins(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerAnalogActionHandle_t analogActionHandle, EControllerActionOrigin *originsOut)
+int CSteamController::GetAnalogActionOrigins(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerAnalogActionHandle_t analogActionHandle, EControllerActionOrigin *originsOut)
 {
-    VLOG_DEBUG("Steam_Controller::GetAnalogActionOrigins called for controller %llu", controllerHandle);
+    VLOG_DEBUG("CSteamController::GetAnalogActionOrigins called for controller %llu", controllerHandle);
     return 0; // Return 0 since no origins are available
 }
 
-void Steam_Controller::StopAnalogActionMomentum(ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t eAction)
+void CSteamController::StopAnalogActionMomentum(ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t eAction)
 {
-    VLOG_DEBUG("Steam_Controller::StopAnalogActionMomentum called for controller %llu and action %llu",
+    VLOG_DEBUG("CSteamController::StopAnalogActionMomentum called for controller %llu and action %llu",
                controllerHandle, eAction);
 }
 
 // Trigger a haptic pulse on a controller
-void Steam_Controller::TriggerHapticPulse(ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec)
+void CSteamController::TriggerHapticPulse(ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec)
 {
-    VLOG_DEBUG("Steam_Controller::TriggerHapticPulse called for controller %llu, pad %d, duration %u",
+    VLOG_DEBUG("CSteamController::TriggerHapticPulse called for controller %llu, pad %d, duration %u",
                controllerHandle, eTargetPad, usDurationMicroSec);
 }
 
 // Trigger a haptic pulse on the controller
 // Changed from Steam SDK v1.35a, backward compatibility
-void Steam_Controller::TriggerHapticPulse(uint32 unControllerIndex, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec)
+void CSteamController::TriggerHapticPulse(uint32 unControllerIndex, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec)
 {
-    VLOG_DEBUG("Steam_Controller::TriggerHapticPulse called - Controller: %u, Pad: %d, Duration: %u", 
+    VLOG_DEBUG("CSteamController::TriggerHapticPulse called - Controller: %u, Pad: %d, Duration: %u", 
                unControllerIndex, eTargetPad, usDurationMicroSec);
 }
 
-void Steam_Controller::TriggerRepeatedHapticPulse(ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec, unsigned short usOffMicroSec, unsigned short unRepeat, unsigned int nFlags)
+void CSteamController::TriggerRepeatedHapticPulse(ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec, unsigned short usOffMicroSec, unsigned short unRepeat, unsigned int nFlags)
 {
-    VLOG_DEBUG("Steam_Controller::TriggerRepeatedHapticPulse called for controller %llu, pad %d, duration %u, off duration %u, repeat %u, flags %u",
+    VLOG_DEBUG("CSteamController::TriggerRepeatedHapticPulse called for controller %llu, pad %d, duration %u, off duration %u, repeat %u, flags %u",
                controllerHandle, eTargetPad, usDurationMicroSec, usOffMicroSec, unRepeat, nFlags);
 }
 
 // Set the override mode which is used to choose to use different base/legacy bindings from your config file
-void Steam_Controller::SetOverrideMode(const char *pchMode)
+void CSteamController::SetOverrideMode(const char *pchMode)
 {
-    VLOG_DEBUG("Steam_Controller::SetOverrideMode called with mode: %s", pchMode);
+    VLOG_DEBUG("CSteamController::SetOverrideMode called with mode: %s", pchMode);
 }

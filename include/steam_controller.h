@@ -20,20 +20,20 @@
 //-----------------------------------------------------------------------------
 // Purpose: Native Steam controller support API
 //-----------------------------------------------------------------------------
-class Steam_Controller :
+class CSteamController :
     public ISteamController,
     public ISteamController001
 {
 private:
     // Singleton instance
-    static Steam_Controller* s_pInstance;
+    static CSteamController* s_pInstance;
 
 public:
-    Steam_Controller();
-    ~Steam_Controller();
+    CSteamController();
+    ~CSteamController();
 
     // Helper methods
-    static Steam_Controller* GetInstance();
+    static CSteamController* GetInstance();
     static void ReleaseInstance();
 
 	// Init and Shutdown must be called when starting/ending use of this interface

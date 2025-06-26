@@ -20,20 +20,20 @@
 //-----------------------------------------------------------------------------
 // Purpose: interface to http client
 //-----------------------------------------------------------------------------
-class Steam_HTTP :
+class CSteamHTTP :
     public ISteamHTTP,
     public ISteamHTTP001
 {
 private:
     // Singleton instance
-    static Steam_HTTP* s_pInstance;
+    static CSteamHTTP* s_pInstance;
 
 public:
-    Steam_HTTP();
-    ~Steam_HTTP();
+    CSteamHTTP();
+    ~CSteamHTTP();
 
     // Helper methods
-    static Steam_HTTP* GetInstance();
+    static CSteamHTTP* GetInstance();
     static void ReleaseInstance();
 
 	// Initializes a new HTTP request, returning a handle to use in further operations on it.  Requires

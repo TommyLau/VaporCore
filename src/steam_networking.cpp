@@ -15,16 +15,16 @@
 #define DEFAULT_VIRTUAL_PORT 1
 
 // Static instance
-Steam_Networking* Steam_Networking::s_pInstance = nullptr;
+CSteamNetworking* CSteamNetworking::s_pInstance = nullptr;
 
-Steam_Networking::Steam_Networking()
+CSteamNetworking::CSteamNetworking()
 {
-    VLOG_INFO("Steam_Networking constructor called");
+    VLOG_INFO("CSteamNetworking constructor called");
 }
 
-Steam_Networking::~Steam_Networking()
+CSteamNetworking::~CSteamNetworking()
 {
-    VLOG_INFO("Steam_Networking destructor called");
+    VLOG_INFO("CSteamNetworking destructor called");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +37,7 @@ Steam_Networking::~Steam_Networking()
 // if we can't get through to the user, an error will be posted via the callback P2PSessionConnectFail_t
 // see EP2PSend enum above for the descriptions of the different ways of sending packets
 // Changed from Steam SDK v1.11, backward compatibility
-bool Steam_Networking::SendP2PPacket( CSteamID steamIDRemote, const void *pubData, uint32 cubData, EP2PSend eP2PSendType )
+bool CSteamNetworking::SendP2PPacket( CSteamID steamIDRemote, const void *pubData, uint32 cubData, EP2PSend eP2PSendType )
 {
     return SendP2PPacket(steamIDRemote, pubData, cubData, eP2PSendType, DEFAULT_VIRTUAL_PORT);
 }
@@ -45,7 +45,7 @@ bool Steam_Networking::SendP2PPacket( CSteamID steamIDRemote, const void *pubDat
 // nChannel is a routing number you can use to help route message to different systems 	- you'll have to call ReadP2PPacket() 
 // with the same channel number in order to retrieve the data on the other end
 // using different channels to talk to the same user will still use the same underlying p2p connection, saving on resources
-bool Steam_Networking::SendP2PPacket( CSteamID steamIDRemote, const void *pubData, uint32 cubData, EP2PSend eP2PSendType, int nChannel )
+bool CSteamNetworking::SendP2PPacket( CSteamID steamIDRemote, const void *pubData, uint32 cubData, EP2PSend eP2PSendType, int nChannel )
 {
     VLOG_DEBUG("SendP2PPacket called - Remote: %llu, DataSize: %u, SendType: %d, Channel: %d", 
                steamIDRemote.GetAccountID(), cubData, eP2PSendType, nChannel);
@@ -54,12 +54,12 @@ bool Steam_Networking::SendP2PPacket( CSteamID steamIDRemote, const void *pubDat
 
 // returns true if any data is available for read, and the amount of data that will need to be read
 // Changed from Steam SDK v1.11, backward compatibility
-bool Steam_Networking::IsP2PPacketAvailable( uint32 *pcubMsgSize )
+bool CSteamNetworking::IsP2PPacketAvailable( uint32 *pcubMsgSize )
 {
     return IsP2PPacketAvailable(pcubMsgSize, DEFAULT_VIRTUAL_PORT);
 }
 
-bool Steam_Networking::IsP2PPacketAvailable( uint32 *pcubMsgSize, int nChannel )
+bool CSteamNetworking::IsP2PPacketAvailable( uint32 *pcubMsgSize, int nChannel )
 {
     VLOG_DEBUG("IsP2PPacketAvailable called - DataSize: %u, Channel: %d", *pcubMsgSize, nChannel);
     return false;
@@ -70,12 +70,12 @@ bool Steam_Networking::IsP2PPacketAvailable( uint32 *pcubMsgSize, int nChannel )
 // if the buffer passed in is too small, the message will be truncated
 // this call is not blocking, and will return false if no data is available
 // Changed from Steam SDK v1.11, backward compatibility
-bool Steam_Networking::ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, CSteamID *psteamIDRemote )
+bool CSteamNetworking::ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, CSteamID *psteamIDRemote )
 {
     return ReadP2PPacket(pubDest, cubDest, pcubMsgSize, psteamIDRemote, DEFAULT_VIRTUAL_PORT);
 }
 
-bool Steam_Networking::ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, CSteamID *psteamIDRemote, int nChannel )
+bool CSteamNetworking::ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, CSteamID *psteamIDRemote, int nChannel )
 {
     VLOG_DEBUG("ReadP2PPacket called - DestSize: %u, DataSize: %u, Channel: %d", cubDest, *pcubMsgSize, nChannel);
     return false;
@@ -87,7 +87,7 @@ bool Steam_Networking::ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcu
 // if the user continues to send you packets, another P2PSessionRequest_t will be posted periodically
 // this may be called multiple times for a single user
 // (if you've called SendP2PPacket() on the other user, this implicitly accepts the session request)
-bool Steam_Networking::AcceptP2PSessionWithUser( CSteamID steamIDRemote )
+bool CSteamNetworking::AcceptP2PSessionWithUser( CSteamID steamIDRemote )
 {
     VLOG_DEBUG("AcceptP2PSessionWithUser called - Remote: %llu", steamIDRemote.GetAccountID());
     return false;
@@ -95,7 +95,7 @@ bool Steam_Networking::AcceptP2PSessionWithUser( CSteamID steamIDRemote )
 
 // call CloseP2PSessionWithUser() when you're done talking to a user, will free up resources under-the-hood
 // if the remote user tries to send data to you again, another P2PSessionRequest_t callback will be posted
-bool Steam_Networking::CloseP2PSessionWithUser( CSteamID steamIDRemote )
+bool CSteamNetworking::CloseP2PSessionWithUser( CSteamID steamIDRemote )
 {
     VLOG_DEBUG("CloseP2PSessionWithUser called - Remote: %llu", steamIDRemote.GetAccountID());
     return false;
@@ -104,7 +104,7 @@ bool Steam_Networking::CloseP2PSessionWithUser( CSteamID steamIDRemote )
 // call CloseP2PChannelWithUser() when you're done talking to a user on a specific channel. Once all channels
 // open channels to a user have been closed, the open session to the user will be closed and new data from this
 // user will trigger a P2PSessionRequest_t callback
-bool Steam_Networking::CloseP2PChannelWithUser( CSteamID steamIDRemote, int nChannel )
+bool CSteamNetworking::CloseP2PChannelWithUser( CSteamID steamIDRemote, int nChannel )
 {
     VLOG_DEBUG("CloseP2PChannelWithUser called - Remote: %llu, Channel: %d", steamIDRemote.GetAccountID(), nChannel);
     return false;
@@ -113,7 +113,7 @@ bool Steam_Networking::CloseP2PChannelWithUser( CSteamID steamIDRemote, int nCha
 // fills out P2PSessionState_t structure with details about the underlying connection to the user
 // should only needed for debugging purposes
 // returns false if no connection exists to the specified user
-bool Steam_Networking::GetP2PSessionState( CSteamID steamIDRemote, P2PSessionState_t *pConnectionState )
+bool CSteamNetworking::GetP2PSessionState( CSteamID steamIDRemote, P2PSessionState_t *pConnectionState )
 {
     VLOG_DEBUG("GetP2PSessionState called - Remote: %llu", steamIDRemote.GetAccountID());
     return false;
@@ -124,7 +124,7 @@ bool Steam_Networking::GetP2PSessionState( CSteamID steamIDRemote, P2PSessionSta
 // or to existing connections that need to automatically reconnect after this value is set.
 //
 // P2P packet relay is allowed by default
-bool Steam_Networking::AllowP2PPacketRelay( bool bAllow )
+bool CSteamNetworking::AllowP2PPacketRelay( bool bAllow )
 {
     VLOG_DEBUG("AllowP2PPacketRelay called - Allow: %s", bAllow ? "true" : "false");
     return false;
@@ -149,13 +149,13 @@ bool Steam_Networking::AllowP2PPacketRelay( bool bAllow )
 // unPort is the port to use
 //		pass in 0 if you don't want users to be able to connect via IP/Port, but expect to be always peer-to-peer connections only
 // Removed from Steam SDK v1.03, backward compatibility
-SNetListenSocket_t Steam_Networking::CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort )
+SNetListenSocket_t CSteamNetworking::CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort )
 {
     VLOG_DEBUG("CreateListenSocket called - VirtualPort: %d, IP: %u, Port: %u", nVirtualP2PPort, nIP, nPort);
     return 0;
 }
 
-SNetListenSocket_t Steam_Networking::CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort, bool bAllowUseOfPacketRelay )
+SNetListenSocket_t CSteamNetworking::CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort, bool bAllowUseOfPacketRelay )
 {
     VLOG_DEBUG("CreateListenSocket called - VirtualPort: %d, IP: %u, Port: %u, AllowPacketRelay: %s", nVirtualP2PPort, nIP, nPort, bAllowUseOfPacketRelay ? "true" : "false");
     return 0;
@@ -166,21 +166,21 @@ SNetListenSocket_t Steam_Networking::CreateListenSocket( int nVirtualP2PPort, ui
 // on success will trigger a SocketConnectCallback_t callback
 // on failure or timeout will trigger a SocketConnectionFailureCallback_t callback
 // Removed from Steam SDK v1.03, backward compatibility
-SNetSocket_t Steam_Networking::CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec )
+SNetSocket_t CSteamNetworking::CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec )
 {
     VLOG_DEBUG("CreateP2PConnectionSocket called - Target: %llu, VirtualPort: %d, Timeout: %d", 
                steamIDTarget.ConvertToUint64(), nVirtualPort, nTimeoutSec);
     return 0;
 }
 
-SNetSocket_t Steam_Networking::CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec, bool bAllowUseOfPacketRelay )
+SNetSocket_t CSteamNetworking::CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec, bool bAllowUseOfPacketRelay )
 {
     VLOG_DEBUG("CreateP2PConnectionSocket called - Target: %llu, VirtualPort: %d, Timeout: %d, AllowPacketRelay: %s", 
                steamIDTarget.ConvertToUint64(), nVirtualPort, nTimeoutSec, bAllowUseOfPacketRelay ? "true" : "false");
     return 0;
 }
 
-SNetSocket_t Steam_Networking::CreateConnectionSocket( uint32 nIP, uint16 nPort, int nTimeoutSec )
+SNetSocket_t CSteamNetworking::CreateConnectionSocket( uint32 nIP, uint16 nPort, int nTimeoutSec )
 {
     VLOG_DEBUG("CreateConnectionSocket called - IP: %u, Port: %u, Timeout: %d", nIP, nPort, nTimeoutSec);
     return 0;
@@ -189,14 +189,14 @@ SNetSocket_t Steam_Networking::CreateConnectionSocket( uint32 nIP, uint16 nPort,
 // disconnects the connection to the socket, if any, and invalidates the handle
 // any unread data on the socket will be thrown away
 // if bNotifyRemoteEnd is set, socket will not be completely destroyed until the remote end acknowledges the disconnect
-bool Steam_Networking::DestroySocket( SNetSocket_t hSocket, bool bNotifyRemoteEnd )
+bool CSteamNetworking::DestroySocket( SNetSocket_t hSocket, bool bNotifyRemoteEnd )
 {
     VLOG_DEBUG("DestroySocket called - Socket: %u, NotifyRemote: %s", hSocket, bNotifyRemoteEnd ? "true" : "false");
     return true;
 }
 
 // destroying a listen socket will automatically kill all the regular sockets generated from it
-bool Steam_Networking::DestroyListenSocket( SNetListenSocket_t hSocket, bool bNotifyRemoteEnd )
+bool CSteamNetworking::DestroyListenSocket( SNetListenSocket_t hSocket, bool bNotifyRemoteEnd )
 {
     VLOG_DEBUG("DestroyListenSocket called - Socket: %u, NotifyRemote: %s", hSocket, bNotifyRemoteEnd ? "true" : "false");
     return true;
@@ -208,7 +208,7 @@ bool Steam_Networking::DestroyListenSocket( SNetListenSocket_t hSocket, bool bNo
 // it's recommended packets be no larger than 1300 bytes
 // use the reliable flag with caution; although the resend rate is pretty aggressive,
 // it can still cause stalls in receiving data (like TCP)
-bool Steam_Networking::SendDataOnSocket( SNetSocket_t hSocket, void *pubData, uint32 cubData, bool bReliable )
+bool CSteamNetworking::SendDataOnSocket( SNetSocket_t hSocket, void *pubData, uint32 cubData, bool bReliable )
 {
     VLOG_DEBUG("SendDataOnSocket called - Socket: %u, DataSize: %u, Reliable: %s", 
                hSocket, cubData, bReliable ? "true" : "false");
@@ -218,7 +218,7 @@ bool Steam_Networking::SendDataOnSocket( SNetSocket_t hSocket, void *pubData, ui
 // receiving data
 // returns false if there is no data remaining
 // fills out *pcubMsgSize with the size of the next message, in bytes
-bool Steam_Networking::IsDataAvailableOnSocket( SNetSocket_t hSocket, uint32 *pcubMsgSize )
+bool CSteamNetworking::IsDataAvailableOnSocket( SNetSocket_t hSocket, uint32 *pcubMsgSize )
 {
     VLOG_DEBUG("IsDataAvailableOnSocket called - Socket: %u", hSocket);
     if (pcubMsgSize) *pcubMsgSize = 0;
@@ -229,7 +229,7 @@ bool Steam_Networking::IsDataAvailableOnSocket( SNetSocket_t hSocket, uint32 *pc
 // messages are always complete, of the same size as was sent (i.e. packetized, not streaming)
 // if *pcubMsgSize < cubDest, only partial data is written
 // returns false if no data is available
-bool Steam_Networking::RetrieveDataFromSocket( SNetSocket_t hSocket, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize )
+bool CSteamNetworking::RetrieveDataFromSocket( SNetSocket_t hSocket, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize )
 {
     VLOG_DEBUG("RetrieveDataFromSocket called - Socket: %u, DestSize: %u", hSocket, cubDest);
     if (pcubMsgSize) *pcubMsgSize = 0;
@@ -240,7 +240,7 @@ bool Steam_Networking::RetrieveDataFromSocket( SNetSocket_t hSocket, void *pubDe
 // returns false if there is no data remaining
 // fills out *pcubMsgSize with the size of the next message, in bytes
 // fills out *phSocket with the socket that data is available on
-bool Steam_Networking::IsDataAvailable( SNetListenSocket_t hListenSocket, uint32 *pcubMsgSize, SNetSocket_t *phSocket )
+bool CSteamNetworking::IsDataAvailable( SNetListenSocket_t hListenSocket, uint32 *pcubMsgSize, SNetSocket_t *phSocket )
 {
     VLOG_DEBUG("IsDataAvailable called - ListenSocket: %u", hListenSocket);
     if (pcubMsgSize) *pcubMsgSize = 0;
@@ -254,7 +254,7 @@ bool Steam_Networking::IsDataAvailable( SNetListenSocket_t hListenSocket, uint32
 // if *pcubMsgSize < cubDest, only partial data is written
 // returns false if no data is available
 // fills out *phSocket with the socket that data is available on
-bool Steam_Networking::RetrieveData( SNetListenSocket_t hListenSocket, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, SNetSocket_t *phSocket )
+bool CSteamNetworking::RetrieveData( SNetListenSocket_t hListenSocket, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, SNetSocket_t *phSocket )
 {
     VLOG_DEBUG("RetrieveData called - ListenSocket: %u, DestSize: %u", hListenSocket, cubDest);
     if (pcubMsgSize) *pcubMsgSize = 0;
@@ -263,7 +263,7 @@ bool Steam_Networking::RetrieveData( SNetListenSocket_t hListenSocket, void *pub
 }
 
 // returns information about the specified socket, filling out the contents of the pointers
-bool Steam_Networking::GetSocketInfo( SNetSocket_t hSocket, CSteamID *pSteamIDRemote, int *peSocketStatus, uint32 *punIPRemote, uint16 *punPortRemote )
+bool CSteamNetworking::GetSocketInfo( SNetSocket_t hSocket, CSteamID *pSteamIDRemote, int *peSocketStatus, uint32 *punIPRemote, uint16 *punPortRemote )
 {
     VLOG_DEBUG("GetSocketInfo called - Socket: %u", hSocket);
     if (pSteamIDRemote) *pSteamIDRemote = CSteamID();
@@ -275,7 +275,7 @@ bool Steam_Networking::GetSocketInfo( SNetSocket_t hSocket, CSteamID *pSteamIDRe
 
 // returns which local port the listen socket is bound to
 // *pnIP and *pnPort will be 0 if the socket is set to listen for P2P connections only
-bool Steam_Networking::GetListenSocketInfo( SNetListenSocket_t hListenSocket, uint32 *pnIP, uint16 *pnPort )
+bool CSteamNetworking::GetListenSocketInfo( SNetListenSocket_t hListenSocket, uint32 *pnIP, uint16 *pnPort )
 {
     VLOG_DEBUG("GetListenSocketInfo called - ListenSocket: %u", hListenSocket);
     if (pnIP) *pnIP = 0;
@@ -284,30 +284,30 @@ bool Steam_Networking::GetListenSocketInfo( SNetListenSocket_t hListenSocket, ui
 }
 
 // returns true to describe how the socket ended up connecting
-ESNetSocketConnectionType Steam_Networking::GetSocketConnectionType( SNetSocket_t hSocket )
+ESNetSocketConnectionType CSteamNetworking::GetSocketConnectionType( SNetSocket_t hSocket )
 {
     VLOG_DEBUG("GetSocketConnectionType called - Socket: %u", hSocket);
     return k_ESNetSocketConnectionTypeNotConnected;
 }
 
 // max packet size, in bytes
-int Steam_Networking::GetMaxPacketSize( SNetSocket_t hSocket )
+int CSteamNetworking::GetMaxPacketSize( SNetSocket_t hSocket )
 {
     VLOG_DEBUG("GetMaxPacketSize called - Socket: %u", hSocket);
     return 0;
 }
 
 // Helper methods
-Steam_Networking* Steam_Networking::GetInstance()
+CSteamNetworking* CSteamNetworking::GetInstance()
 {
     if (!s_pInstance)
     {
-        s_pInstance = new Steam_Networking();
+        s_pInstance = new CSteamNetworking();
     }
     return s_pInstance;
 }
 
-void Steam_Networking::ReleaseInstance()
+void CSteamNetworking::ReleaseInstance()
 {
     if (s_pInstance)
     {

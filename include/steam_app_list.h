@@ -22,19 +22,19 @@
 //	This interface lets you detect installed apps for the local Steam client, useful for debugging tools
 //	to offer lists of apps to debug via Steam.
 //-----------------------------------------------------------------------------
-class Steam_App_List :
+class CSteamAppList :
     public ISteamAppList
 {
 private:
     // Singleton instance
-    static Steam_App_List* s_pInstance;
+    static CSteamAppList* s_pInstance;
 
 public:
-    Steam_App_List();
-    ~Steam_App_List();
+    CSteamAppList();
+    ~CSteamAppList();
 
     // Helper methods
-    static Steam_App_List* GetInstance();
+    static CSteamAppList* GetInstance();
     static void ReleaseInstance();
 
     uint32 GetNumInstalledApps() override;

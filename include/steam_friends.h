@@ -29,7 +29,7 @@
 // Purpose: interface to accessing information about individual users,
 //			that can be a friend, in a group, on a game server or in a lobby with the local user
 //-----------------------------------------------------------------------------
-class Steam_Friends :
+class CSteamFriends :
 	public ISteamFriends,
 	public ISteamFriends003,
 	public ISteamFriends004,
@@ -43,14 +43,14 @@ class Steam_Friends :
 {
 private:
     // Singleton instance
-    static Steam_Friends* s_pInstance;
+    static CSteamFriends* s_pInstance;
 
 public:
-    Steam_Friends();
-    ~Steam_Friends();
+    CSteamFriends();
+    ~CSteamFriends();
 
     // Helper methods
-    static Steam_Friends* GetInstance();
+    static CSteamFriends* GetInstance();
     static void ReleaseInstance();
 
 	// returns the local players name - guaranteed to not be NULL.

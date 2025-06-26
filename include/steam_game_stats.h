@@ -19,12 +19,12 @@
 //-----------------------------------------------------------------------------
 // Purpose: Functions for recording game play sessions and details thereof
 //-----------------------------------------------------------------------------
-class Steam_Game_Stats :
+class CSteamGameStats :
     public ISteamGameStats
 {
 public:
-    Steam_Game_Stats();
-    ~Steam_Game_Stats();
+    CSteamGameStats();
+    ~CSteamGameStats();
 
 	SteamAPICall_t GetNewSession( int8 nAccountType, uint64 ulAccountID, int32 nAppID, RTime32 rtTimeStarted ) override;
 	SteamAPICall_t EndSession( uint64 ulSessionID, RTime32 rtTimeEnded, int nReasonCode ) override;
@@ -43,12 +43,12 @@ public:
 	EResult AddRowAttributeInt64( uint64 ulRowID, const char *pstrName, int64 llData ) override;
 
     // Helper methods
-    static Steam_Game_Stats* GetInstance();
+    static CSteamGameStats* GetInstance();
     static void ReleaseInstance();
 
 private:
     // Singleton instance
-    static Steam_Game_Stats* s_pInstance;
+    static CSteamGameStats* s_pInstance;
 };
 
 #endif // VAPORCORE_STEAM_GAME_STATS_H

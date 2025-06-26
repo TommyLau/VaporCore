@@ -13,29 +13,29 @@
 #include "steam_apps.h"
 
 // Static instance
-Steam_Apps* Steam_Apps::s_pInstance = nullptr;
+CSteamApps* CSteamApps::s_pInstance = nullptr;
 
-Steam_Apps::Steam_Apps()
+CSteamApps::CSteamApps()
 {
-    VLOG_INFO("Steam_Apps constructor called");
+    VLOG_INFO("CSteamApps constructor called");
 }
 
-Steam_Apps::~Steam_Apps()
+CSteamApps::~CSteamApps()
 {
-    VLOG_INFO("Steam_Apps destructor called");
+    VLOG_INFO("CSteamApps destructor called");
 }
 
 // Helper methods
-Steam_Apps* Steam_Apps::GetInstance()
+CSteamApps* CSteamApps::GetInstance()
 {
     if (!s_pInstance)
     {
-        s_pInstance = new Steam_Apps();
+        s_pInstance = new CSteamApps();
     }
     return s_pInstance;
 }
 
-void Steam_Apps::ReleaseInstance()
+void CSteamApps::ReleaseInstance()
 {
     if (s_pInstance)
     {
@@ -48,7 +48,7 @@ void Steam_Apps::ReleaseInstance()
 // this may be true on first call, since the app data may not be cached locally yet
 // If you expect it to exists wait for the AppDataChanged_t after the first failure and ask again
 // Removed from Steam SDK v1.01, backward compatibility
-int Steam_Apps::GetAppData( AppId_t nAppID, const char *pchKey, char *pchValue, int cchValueMax )
+int CSteamApps::GetAppData( AppId_t nAppID, const char *pchKey, char *pchValue, int cchValueMax )
 {
     VLOG_DEBUG("GetAppData called - AppID: %u, Key: %s", nAppID, pchKey ? pchKey : "null");
     
@@ -62,52 +62,52 @@ int Steam_Apps::GetAppData( AppId_t nAppID, const char *pchKey, char *pchValue, 
     return 0;
 }
 
-bool Steam_Apps::BIsSubscribed()
+bool CSteamApps::BIsSubscribed()
 {
     return false;
 }
 
-bool Steam_Apps::BIsLowViolence()
+bool CSteamApps::BIsLowViolence()
 {
     return false;
 }
 
-bool Steam_Apps::BIsCybercafe()
+bool CSteamApps::BIsCybercafe()
 {
     return false;
 }
 
-bool Steam_Apps::BIsVACBanned()
+bool CSteamApps::BIsVACBanned()
 {
     return false;
 }
 
-const char *Steam_Apps::GetCurrentGameLanguage()
+const char *CSteamApps::GetCurrentGameLanguage()
 {
     return nullptr;
 }
 
-const char *Steam_Apps::GetAvailableGameLanguages()
+const char *CSteamApps::GetAvailableGameLanguages()
 {
     return nullptr;
 }
 
 // only use this member if you need to check ownership of another game related to yours, a demo for example
-bool Steam_Apps::BIsSubscribedApp( AppId_t appID )
+bool CSteamApps::BIsSubscribedApp( AppId_t appID )
 {
     VLOG_DEBUG("BIsSubscribedApp called - AppID: %u", appID);
     return false;
 }
 
 // Takes AppID of DLC and checks if the user owns the DLC & if the DLC is installed
-bool Steam_Apps::BIsDlcInstalled( AppId_t appID )
+bool CSteamApps::BIsDlcInstalled( AppId_t appID )
 {
     VLOG_DEBUG("BIsDlcInstalled called - AppID: %u", appID);
     return false;
 }
 
 // returns the Unix time of the purchase of the app
-uint32 Steam_Apps::GetEarliestPurchaseUnixTime( AppId_t nAppID )
+uint32 CSteamApps::GetEarliestPurchaseUnixTime( AppId_t nAppID )
 {
     VLOG_DEBUG("GetEarliestPurchaseUnixTime called - AppID: %u", nAppID);
     return 0;
@@ -116,19 +116,19 @@ uint32 Steam_Apps::GetEarliestPurchaseUnixTime( AppId_t nAppID )
 // Checks if the user is subscribed to the current app through a free weekend
 // This function will return false for users who have a retail or other type of license
 // Before using, please ask your Valve technical contact how to package and secure your free weekened
-bool Steam_Apps::BIsSubscribedFromFreeWeekend()
+bool CSteamApps::BIsSubscribedFromFreeWeekend()
 {
     return false;
 }
 
 // Returns the number of DLC pieces for the running app
-int Steam_Apps::GetDLCCount()
+int CSteamApps::GetDLCCount()
 {
     return 0;
 }
 
 // Returns metadata for DLC by index, of range [0, GetDLCCount()]
-bool Steam_Apps::BGetDLCDataByIndex( int iDLC, AppId_t *pAppID, bool *pbAvailable, char *pchName, int cchNameBufferSize )
+bool CSteamApps::BGetDLCDataByIndex( int iDLC, AppId_t *pAppID, bool *pbAvailable, char *pchName, int cchNameBufferSize )
 {
     VLOG_DEBUG("BGetDLCDataByIndex called - DLC Index: %d, AppID: %p, Available: %p, Name: %p, NameBufferSize: %d", 
                iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize);
@@ -136,12 +136,12 @@ bool Steam_Apps::BGetDLCDataByIndex( int iDLC, AppId_t *pAppID, bool *pbAvailabl
 }
 
 // Install/Uninstall control for optional DLC
-void Steam_Apps::InstallDLC( AppId_t nAppID )
+void CSteamApps::InstallDLC( AppId_t nAppID )
 {
     VLOG_DEBUG("InstallDLC called - AppID: %u", nAppID);
 }
 
-void Steam_Apps::UninstallDLC( AppId_t nAppID )
+void CSteamApps::UninstallDLC( AppId_t nAppID )
 {
     VLOG_DEBUG("UninstallDLC called - AppID: %u", nAppID);
 }
@@ -151,12 +151,12 @@ void Steam_Apps::UninstallDLC( AppId_t nAppID )
 // to users when they purchase the game, before the game ships.
 // You'll receive an AppProofOfPurchaseKeyResponse_t callback when
 // the key is available (which may be immediately).
-void Steam_Apps::RequestAppProofOfPurchaseKey( AppId_t nAppID )
+void CSteamApps::RequestAppProofOfPurchaseKey( AppId_t nAppID )
 {
     VLOG_DEBUG("RequestAppProofOfPurchaseKey called - AppID: %u", nAppID);
 }
 
-bool Steam_Apps::GetCurrentBetaName( char *pchName, int cchNameBufferSize ) // returns current beta branch name, 'public' is the default branch
+bool CSteamApps::GetCurrentBetaName( char *pchName, int cchNameBufferSize ) // returns current beta branch name, 'public' is the default branch
 {
     VLOG_DEBUG("GetCurrentBetaName called - Name: %p, NameBufferSize: %d", pchName, cchNameBufferSize);
     if (pchName && cchNameBufferSize > 0)
@@ -167,42 +167,42 @@ bool Steam_Apps::GetCurrentBetaName( char *pchName, int cchNameBufferSize ) // r
     return false;
 }
 
-bool Steam_Apps::MarkContentCorrupt( bool bMissingFilesOnly ) // signal Steam that game files seems corrupt or missing
+bool CSteamApps::MarkContentCorrupt( bool bMissingFilesOnly ) // signal Steam that game files seems corrupt or missing
 {
     VLOG_DEBUG("MarkContentCorrupt called - MissingFilesOnly: %d", bMissingFilesOnly);
     return false;
 }
 	
 // return installed depots in mount order
-uint32 Steam_Apps::GetInstalledDepots( AppId_t appID, DepotId_t *pvecDepots, uint32 cMaxDepots )
+uint32 CSteamApps::GetInstalledDepots( AppId_t appID, DepotId_t *pvecDepots, uint32 cMaxDepots )
 {
     VLOG_DEBUG("GetInstalledDepots called - AppID: %u, Depots: %p, MaxDepots: %u", appID, pvecDepots, cMaxDepots);
     return 0;
 }
 
 // Changed from Steam SDK v1.26, backward compatibility
-uint32 Steam_Apps::GetInstalledDepots( DepotId_t *pvecDepots, uint32 cMaxDepots )
+uint32 CSteamApps::GetInstalledDepots( DepotId_t *pvecDepots, uint32 cMaxDepots )
 {
     VLOG_DEBUG("GetInstalledDepots called - Depots: %p, MaxDepots: %u", pvecDepots, cMaxDepots);
     return 0;
 }
 
 // returns current app install folder for AppID, returns folder name length
-uint32 Steam_Apps::GetAppInstallDir( AppId_t appID, char *pchFolder, uint32 cchFolderBufferSize )
+uint32 CSteamApps::GetAppInstallDir( AppId_t appID, char *pchFolder, uint32 cchFolderBufferSize )
 {
     VLOG_DEBUG("GetAppInstallDir called - AppID: %u, Folder: %p, FolderBufferSize: %u", 
                appID, pchFolder, cchFolderBufferSize);
     return 0;
 }
 
-bool Steam_Apps::BIsAppInstalled( AppId_t appID )
+bool CSteamApps::BIsAppInstalled( AppId_t appID )
 {
     VLOG_DEBUG("BIsAppInstalled called - AppID: %u", appID);
     return false;
 }
 
 // returns the SteamID of the original owner. If different from current user, it's borrowed
-CSteamID Steam_Apps::GetAppOwner()
+CSteamID CSteamApps::GetAppOwner()
 {
     VLOG_DEBUG("GetAppOwner called");
     return CSteamID();
@@ -212,14 +212,14 @@ CSteamID Steam_Apps::GetAppOwner()
 // Parameter names starting with the character '@' are reserved for internal use and will always return and empty string.
 // Parameter names starting with an underscore '_' are reserved for steam features -- they can be queried by the game,
 // but it is advised that you not param names beginning with an underscore for your own features.
-const char *Steam_Apps::GetLaunchQueryParam( const char *pchKey )
+const char *CSteamApps::GetLaunchQueryParam( const char *pchKey )
 {
     VLOG_DEBUG("GetLaunchQueryParam called - Key: %s", pchKey);
     return "";
 }
 
 // get download progress for optional DLC
-bool Steam_Apps::GetDlcDownloadProgress( AppId_t nAppID, uint64 *punBytesDownloaded, uint64 *punBytesTotal )
+bool CSteamApps::GetDlcDownloadProgress( AppId_t nAppID, uint64 *punBytesDownloaded, uint64 *punBytesTotal )
 {
     VLOG_DEBUG("GetDlcDownloadProgress called - AppID: %u, BytesDownloaded: %p, BytesTotal: %p",
                nAppID, punBytesDownloaded, punBytesTotal);
@@ -227,7 +227,7 @@ bool Steam_Apps::GetDlcDownloadProgress( AppId_t nAppID, uint64 *punBytesDownloa
 }
 
 // return the buildid of this app, may change at any time based on backend updates to the game
-int Steam_Apps::GetAppBuildId()
+int CSteamApps::GetAppBuildId()
 {
     VLOG_DEBUG("GetAppBuildId called");
     return 0;
@@ -237,7 +237,7 @@ int Steam_Apps::GetAppBuildId()
 // A series of AppProofOfPurchaseKeyResponse_t callbacks will be sent with
 // appropriate appid values, ending with a final callback where the m_nAppId
 // member is k_uAppIdInvalid (zero).
-void Steam_Apps::RequestAllProofOfPurchaseKeys()
+void CSteamApps::RequestAllProofOfPurchaseKeys()
 {
     VLOG_DEBUG("RequestAllProofOfPurchaseKeys called");
 }

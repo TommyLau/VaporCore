@@ -13,29 +13,29 @@
 #include "steam_app_list.h"
 
 // Static instance
-Steam_App_List* Steam_App_List::s_pInstance = nullptr;
+CSteamAppList* CSteamAppList::s_pInstance = nullptr;
 
-Steam_App_List::Steam_App_List()
+CSteamAppList::CSteamAppList()
 {
-    VLOG_INFO("Steam_App_List constructor called");
+    VLOG_INFO("CSteamAppList constructor called");
 }
 
-Steam_App_List::~Steam_App_List()
+CSteamAppList::~CSteamAppList()
 {
-    VLOG_INFO("Steam_App_List destructor called");
+    VLOG_INFO("CSteamAppList destructor called");
 }
 
 // Helper methods
-Steam_App_List* Steam_App_List::GetInstance()
+CSteamAppList* CSteamAppList::GetInstance()
 {
     if (!s_pInstance)
     {
-        s_pInstance = new Steam_App_List();
+        s_pInstance = new CSteamAppList();
     }
     return s_pInstance;
 }
 
-void Steam_App_List::ReleaseInstance()
+void CSteamAppList::ReleaseInstance()
 {
     if (s_pInstance)
     {
@@ -44,34 +44,34 @@ void Steam_App_List::ReleaseInstance()
     }
 }
 
-uint32 Steam_App_List::GetNumInstalledApps()
+uint32 CSteamAppList::GetNumInstalledApps()
 {
     VLOG_DEBUG("GetNumInstalledApps called");
     return 0;
 }
 
-uint32 Steam_App_List::GetInstalledApps(AppId_t* pvecAppID, uint32 unMaxAppIDs)
+uint32 CSteamAppList::GetInstalledApps(AppId_t* pvecAppID, uint32 unMaxAppIDs)
 {
     VLOG_DEBUG("GetInstalledApps called - MaxAppIDs: %d", unMaxAppIDs);
     return 0;
 }
 
 // returns -1 if no name was found
-int Steam_App_List::GetAppName(AppId_t nAppID, char* pchName, int cchNameMax)
+int CSteamAppList::GetAppName(AppId_t nAppID, char* pchName, int cchNameMax)
 {
     VLOG_DEBUG("GetAppName called - AppID: %d, MaxNameLength: %d", nAppID, cchNameMax);
     return -1;
 }
 
 // returns -1 if no dir was found
-int Steam_App_List::GetAppInstallDir(AppId_t nAppID, char* pchDirectory, int cchNameMax)
+int CSteamAppList::GetAppInstallDir(AppId_t nAppID, char* pchDirectory, int cchNameMax)
 {
     VLOG_DEBUG("GetAppInstallDir called - AppID: %d, MaxDirLength: %d", nAppID, cchNameMax);
     return -1;
 }
 
 // return the buildid of this app, may change at any time based on backend updates to the game
-int Steam_App_List::GetAppBuildId(AppId_t nAppID)
+int CSteamAppList::GetAppBuildId(AppId_t nAppID)
 {
     VLOG_DEBUG("GetAppBuildId called - AppID: %d", nAppID);
     return 0;

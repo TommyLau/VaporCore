@@ -21,7 +21,7 @@
 #include "steam_inventory.h"
 
 // Global Steam client interface pointer for game server
-static Steam_Client* g_pSteamGameServerClient = nullptr;
+static CSteamClient* g_pSteamGameServerClient = nullptr;
 
 // Global game server interface pointers
 static ISteamGameServer* g_pSteamGameServer = nullptr;

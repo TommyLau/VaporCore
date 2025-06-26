@@ -19,19 +19,19 @@
 //-----------------------------------------------------------------------------
 // Purpose: Steam Video API
 //-----------------------------------------------------------------------------
-class Steam_Video :
+class CSteamVideo :
 	public ISteamVideo
 {
 private:
     // Singleton instance
-    static Steam_Video* s_pInstance;
+    static CSteamVideo* s_pInstance;
 
 public:
-    Steam_Video();
-    ~Steam_Video();
+    CSteamVideo();
+    ~CSteamVideo();
 
     // Helper methods
-    static Steam_Video* GetInstance();
+    static CSteamVideo* GetInstance();
     static void ReleaseInstance();
 
 	// Get a URL suitable for streaming the given Video app ID's video

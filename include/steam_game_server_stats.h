@@ -19,12 +19,12 @@
 //-----------------------------------------------------------------------------
 // Purpose: Functions for authenticating users via Steam to play on a game server
 //-----------------------------------------------------------------------------
-class Steam_Game_Server_Stats :
+class CSteamGameServerStats :
     public ISteamGameServerStats
 {
 public:
-    Steam_Game_Server_Stats();
-    ~Steam_Game_Server_Stats();
+    CSteamGameServerStats();
+    ~CSteamGameServerStats();
 
 	// downloads stats for the user
 	// returns a GSStatsReceived_t callback when completed
@@ -60,12 +60,12 @@ public:
 	SteamAPICall_t StoreUserStats( CSteamID steamIDUser ) override;
 
     // Helper methods
-    static Steam_Game_Server_Stats* GetInstance();
+    static CSteamGameServerStats* GetInstance();
     static void ReleaseInstance();
 
 private:
     // Singleton instance
-    static Steam_Game_Server_Stats* s_pInstance;
+    static CSteamGameServerStats* s_pInstance;
 };
 
 #endif // VAPORCORE_STEAM_GAME_SERVER_STATS_H

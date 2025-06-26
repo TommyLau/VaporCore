@@ -22,19 +22,19 @@
 // steamid are located.  the sizes of the appid and steamid are implicit in 
 // (each version of) the interface - currently uin32 appid and uint64 steamid
 //-----------------------------------------------------------------------------
-class Steam_App_Ticket :
+class CSteamAppTicket :
     public ISteamAppTicket
 {
 private:
     // Singleton instance
-    static Steam_App_Ticket* s_pInstance;
+    static CSteamAppTicket* s_pInstance;
 
 public:
-    Steam_App_Ticket();
-    ~Steam_App_Ticket();
+    CSteamAppTicket();
+    ~CSteamAppTicket();
 
     // Helper methods
-    static Steam_App_Ticket* GetInstance();
+    static CSteamAppTicket* GetInstance();
     static void ReleaseInstance();
 
     uint32 GetAppOwnershipTicketData( uint32 nAppID, void *pvBuffer, uint32 cbBufferLength, uint32 *piAppId, uint32 *piSteamId, uint32 *piSignature, uint32 *pcbSignature ) override;

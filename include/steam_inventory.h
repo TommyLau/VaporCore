@@ -19,19 +19,19 @@
 //-----------------------------------------------------------------------------
 // Purpose: Steam Inventory query and manipulation API
 //-----------------------------------------------------------------------------
-class Steam_Inventory :
+class CSteamInventory :
 	public ISteamInventory
 {
 private:
     // Singleton instance
-    static Steam_Inventory* s_pInstance;
+    static CSteamInventory* s_pInstance;
 
 public:
-    Steam_Inventory();
-    ~Steam_Inventory();
+    CSteamInventory();
+    ~CSteamInventory();
 
     // Helper methods
-    static Steam_Inventory* GetInstance();
+    static CSteamInventory* GetInstance();
     static void ReleaseInstance();
 
 

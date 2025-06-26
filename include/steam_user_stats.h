@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing stats, achievements, and leaderboard information
 //-----------------------------------------------------------------------------
-class Steam_User_Stats :
+class CSteamUserStats :
 	public ISteamUserStats,
 	public ISteamUserStats003,
 	public ISteamUserStats004,
@@ -38,14 +38,14 @@ class Steam_User_Stats :
 {
 private:
     // Singleton instance
-    static Steam_User_Stats* s_pInstance;
+    static CSteamUserStats* s_pInstance;
 
 public:
-    Steam_User_Stats();
-    ~Steam_User_Stats();
+    CSteamUserStats();
+    ~CSteamUserStats();
 
     // Helper methods
-    static Steam_User_Stats* GetInstance();
+    static CSteamUserStats* GetInstance();
     static void ReleaseInstance();
 
 	// Ask the server to send down this user's data and achievements for this game

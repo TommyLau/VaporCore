@@ -15,7 +15,7 @@
 #include "vapor_base.h"
 
 // Global Steam client interface pointer
-static Steam_Client* g_pSteamClient = nullptr;
+static CSteamClient* g_pSteamClient = nullptr;
 
 // Global interface pointers
 static ISteamUser* g_pSteamUser = nullptr;
@@ -73,7 +73,7 @@ S_API bool S_CALLTYPE SteamAPI_Init() {
     }
     
     // Initialize Steam client
-    g_pSteamClient = Steam_Client::GetInstance();
+    g_pSteamClient = CSteamClient::GetInstance();
 
     if (!g_pSteamClient) {
         VLOG_ERROR("Failed to create Steam client instance");
@@ -128,7 +128,7 @@ S_API void S_CALLTYPE SteamAPI_Shutdown() {
     g_hSteamPipe = 0;
 
     if (g_uSteamAPICallCounter == 0) {
-        Steam_Client::ReleaseInstance();
+        CSteamClient::ReleaseInstance();
         g_pSteamClient = nullptr;
     }
     

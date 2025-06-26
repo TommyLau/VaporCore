@@ -25,7 +25,7 @@
 // Purpose: Functions for match making services for clients to get to favorites
 //			and to operate on game lobbies.
 //-----------------------------------------------------------------------------
-class Steam_Matchmaking :
+class CSteamMatchmaking :
 	public ISteamMatchmaking,
     public ISteamMatchmaking002,
     public ISteamMatchmaking004,
@@ -35,14 +35,14 @@ class Steam_Matchmaking :
 {
 private:
     // Singleton instance
-    static Steam_Matchmaking* s_pInstance;
+    static CSteamMatchmaking* s_pInstance;
 
 public:
-    Steam_Matchmaking();
-    ~Steam_Matchmaking();
+    CSteamMatchmaking();
+    ~CSteamMatchmaking();
 
     // Helper methods
-    static Steam_Matchmaking* GetInstance();
+    static CSteamMatchmaking* GetInstance();
     static void ReleaseInstance();
 
 	// game server favorites storage
@@ -290,7 +290,7 @@ public:
 // to cancel any in-progress queries so you don't get a callback into the destructed
 // object and crash.
 //-----------------------------------------------------------------------------
-class Steam_Matchmaking_Server_List_Response :
+class CSteamMatchmakingServerListResponse :
 	public ISteamMatchmakingServerListResponse,
 	public ISteamMatchmakingServerListResponse001
 {
@@ -328,7 +328,7 @@ public:
 // which is in progress.  Failure to cancel in progress queries when destructing
 // a callback handler may result in a crash when a callback later occurs.
 //-----------------------------------------------------------------------------
-class Steam_MatchmakingPingResponse : public ISteamMatchmakingPingResponse
+class CSteamMatchmakingPingResponse : public ISteamMatchmakingPingResponse
 {
 public:
 	// Server has responded successfully and has updated data
@@ -350,7 +350,7 @@ public:
 // which is in progress.  Failure to cancel in progress queries when destructing
 // a callback handler may result in a crash when a callback later occurs.
 //-----------------------------------------------------------------------------
-class Steam_Matchmaking_Players_Response : public ISteamMatchmakingPlayersResponse
+class CSteamMatchmakingPlayersResponse : public ISteamMatchmakingPlayersResponse
 {
 public:
 	// Got data on a new player on the server -- you'll get this callback once per player
@@ -377,7 +377,7 @@ public:
 // which is in progress.  Failure to cancel in progress queries when destructing
 // a callback handler may result in a crash when a callback later occurs.
 //-----------------------------------------------------------------------------
-class Steam_Matchmaking_Rules_Response : public ISteamMatchmakingRulesResponse
+class CSteamMatchmakingRulesResponse : public ISteamMatchmakingRulesResponse
 {
 public:
 	// Got data on a rule on the server -- you'll get one of these per rule defined on
@@ -395,20 +395,20 @@ public:
 //-----------------------------------------------------------------------------
 // Purpose: Functions for match making services for clients to get to game lists and details
 //-----------------------------------------------------------------------------
-class Steam_Matchmaking_Servers :
+class CSteamMatchmakingServers :
 	public ISteamMatchmakingServers,
 	public ISteamMatchmakingServers001
 {
 private:
     // Singleton instance
-    static Steam_Matchmaking_Servers* s_pInstance;
+    static CSteamMatchmakingServers* s_pInstance;
 
 public:
-    Steam_Matchmaking_Servers();
-    ~Steam_Matchmaking_Servers();
+    CSteamMatchmakingServers();
+    ~CSteamMatchmakingServers();
 
     // Helper methods
-    static Steam_Matchmaking_Servers* GetInstance();
+    static CSteamMatchmakingServers* GetInstance();
     static void ReleaseInstance();
 
 	// Request a new list of servers of a particular type.  These calls each correspond to one of the EMatchMakingType values.

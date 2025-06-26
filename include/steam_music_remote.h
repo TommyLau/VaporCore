@@ -16,19 +16,19 @@
 #include <isteamclient.h>
 #include <isteammusicremote.h>
 
-class Steam_Music_Remote :
+class CSteamMusicRemote :
     public ISteamMusicRemote
 {
 private:
     // Singleton instance
-    static Steam_Music_Remote* s_pInstance;
+    static CSteamMusicRemote* s_pInstance;
 
 public:
-    Steam_Music_Remote();
-    ~Steam_Music_Remote();
+    CSteamMusicRemote();
+    ~CSteamMusicRemote();
 
     // Helper methods
-    static Steam_Music_Remote* GetInstance();
+    static CSteamMusicRemote* GetInstance();
     static void ReleaseInstance();
 
 	// Service Definition

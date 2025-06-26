@@ -19,19 +19,19 @@
 //-----------------------------------------------------------------------------
 // Purpose: Functions to control music playback in the steam client
 //-----------------------------------------------------------------------------
-class Steam_Music :
+class CSteamMusic :
 	public ISteamMusic
 {
 private:
     // Singleton instance
-    static Steam_Music* s_pInstance;
+    static CSteamMusic* s_pInstance;
 
 public:
-    Steam_Music();
-    ~Steam_Music();
+    CSteamMusic();
+    ~CSteamMusic();
 
     // Helper methods
-    static Steam_Music* GetInstance();
+    static CSteamMusic* GetInstance();
     static void ReleaseInstance();
 
 	bool BIsEnabled() override;

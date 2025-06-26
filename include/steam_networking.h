@@ -24,7 +24,7 @@
 // Purpose: Functions for making connections and sending data between clients,
 //			traversing NAT's where possible
 //-----------------------------------------------------------------------------
-class Steam_Networking :
+class CSteamNetworking :
 	public ISteamNetworking,
 	public ISteamNetworking001,
 	public ISteamNetworking002,
@@ -32,8 +32,8 @@ class Steam_Networking :
 	public ISteamNetworking004
 {
 public:
-    Steam_Networking();
-    ~Steam_Networking();
+    CSteamNetworking();
+    ~CSteamNetworking();
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Session-less connection functions
@@ -180,12 +180,12 @@ public:
 	int GetMaxPacketSize( SNetSocket_t hSocket ) override;
 
     // Helper methods
-    static Steam_Networking* GetInstance();
+    static CSteamNetworking* GetInstance();
     static void ReleaseInstance();
 
 private:
     // Singleton instance
-    static Steam_Networking* s_pInstance;
+    static CSteamNetworking* s_pInstance;
 };
 
 #endif // VAPORCORE_STEAM_NETWORKING_H

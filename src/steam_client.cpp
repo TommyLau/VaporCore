@@ -13,69 +13,69 @@
 #include "steam_client.h"
 
 // Static instance
-Steam_Client* Steam_Client::s_pInstance = nullptr;
+CSteamClient* CSteamClient::s_pInstance = nullptr;
 
-Steam_Client::Steam_Client()
+CSteamClient::CSteamClient()
     : m_hSteamUser(1) // Start with user ID 1
     , m_unSteamPipeCounter(1)
     , m_pWarningMessageHook(nullptr)
     , m_bUserLoggedIn(false)
-    , m_pSteamUser(Steam_User::GetInstance())
-    , m_pSteamFriends(Steam_Friends::GetInstance())
-    , m_pSteamUtils(Steam_Utils::GetInstance())
-    , m_pSteamMatchmaking(Steam_Matchmaking::GetInstance())
-    , m_pSteamUserStats(Steam_User_Stats::GetInstance())
-    , m_pSteamApps(Steam_Apps::GetInstance())
-    , m_pSteamMatchmakingServers(Steam_Matchmaking_Servers::GetInstance())
-    , m_pSteamNetworking(Steam_Networking::GetInstance())
-    , m_pSteamRemoteStorage(Steam_Remote_Storage::GetInstance())
-    , m_pSteamScreenshots(Steam_Screenshots::GetInstance())
-    , m_pSteamHTTP(Steam_HTTP::GetInstance())
-    , m_pSteamUnifiedMessages(Steam_Unified_Messages::GetInstance())
-    , m_pSteamController(Steam_Controller::GetInstance())
-    , m_pSteamUGC(Steam_UGC::GetInstance())
-    , m_pSteamAppList(Steam_App_List::GetInstance())
-    , m_pSteamMusic(Steam_Music::GetInstance())
-    , m_pSteamMusicRemote(Steam_Music_Remote::GetInstance())
-    , m_pSteamHTMLSurface(Steam_HTML_Surface::GetInstance())
-    , m_pSteamInventory(Steam_Inventory::GetInstance())
-    , m_pSteamVideo(Steam_Video::GetInstance())
+    , m_pSteamUser(CSteamUser::GetInstance())
+    , m_pSteamFriends(CSteamFriends::GetInstance())
+    , m_pSteamUtils(CSteamUtils::GetInstance())
+    , m_pSteamMatchmaking(CSteamMatchmaking::GetInstance())
+    , m_pSteamUserStats(CSteamUserStats::GetInstance())
+    , m_pSteamApps(CSteamApps::GetInstance())
+    , m_pSteamMatchmakingServers(CSteamMatchmakingServers::GetInstance())
+    , m_pSteamNetworking(CSteamNetworking::GetInstance())
+    , m_pSteamRemoteStorage(CSteamRemoteStorage::GetInstance())
+    , m_pSteamScreenshots(CSteamScreenshots::GetInstance())
+    , m_pSteamHTTP(CSteamHTTP::GetInstance())
+    , m_pSteamUnifiedMessages(CSteamUnifiedMessages::GetInstance())
+    , m_pSteamController(CSteamController::GetInstance())
+    , m_pSteamUGC(CSteamUGC::GetInstance())
+    , m_pSteamAppList(CSteamAppList::GetInstance())
+    , m_pSteamMusic(CSteamMusic::GetInstance())
+    , m_pSteamMusicRemote(CSteamMusicRemote::GetInstance())
+    , m_pSteamHTMLSurface(CSteamHTMLSurface::GetInstance())
+    , m_pSteamInventory(CSteamInventory::GetInstance())
+    , m_pSteamVideo(CSteamVideo::GetInstance())
 {
-    VLOG_INFO("Steam_Client constructor called");
+    VLOG_INFO("CSteamClient constructor called");
 }
 
-Steam_Client::~Steam_Client()
+CSteamClient::~CSteamClient()
 {
-    VLOG_INFO("Steam_Client destructor called");
+    VLOG_INFO("CSteamClient destructor called");
 }
 
-Steam_Client* Steam_Client::GetInstance()
+CSteamClient* CSteamClient::GetInstance()
 {
-    VLOG_DEBUG("Steam_Client::GetInstance called");
+    VLOG_DEBUG("CSteamClient::GetInstance called");
 
     VAPORCORE_LOCK_GUARD();
 
     if (!s_pInstance) {
-        s_pInstance = new Steam_Client();
+        s_pInstance = new CSteamClient();
     }
 
     return s_pInstance;
 }
 
-void Steam_Client::ReleaseInstance()
+void CSteamClient::ReleaseInstance()
 {
-    VLOG_DEBUG("Steam_Client::ReleaseInstance called");
+    VLOG_DEBUG("CSteamClient::ReleaseInstance called");
 
     VAPORCORE_LOCK_GUARD();
     
     if (s_pInstance) {
-        VLOG_INFO("Releasing Steam_Client singleton instance");
+        VLOG_INFO("Releasing CSteamClient singleton instance");
         delete s_pInstance;
         s_pInstance = nullptr;
     }
 }
 
-const char* Steam_Client::GetInterfaceVersion(const char* pchVersion, const char* pchDefaultVersion)
+const char* CSteamClient::GetInterfaceVersion(const char* pchVersion, const char* pchDefaultVersion)
 {
     VLOG_DEBUG("GetInterfaceVersion called with pchVersion=%s and pchDefaultVersion=%s", pchVersion, pchDefaultVersion);
 
@@ -84,11 +84,11 @@ const char* Steam_Client::GetInterfaceVersion(const char* pchVersion, const char
 
 // Creates a communication pipe to the Steam client
 // NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
-HSteamPipe Steam_Client::CreateSteamPipe()
+HSteamPipe CSteamClient::CreateSteamPipe()
 {
     VLOG_DEBUG("CreateSteamPipe called");
     HSteamPipe hSteamPipe = m_unSteamPipeCounter++;
-    m_mapSteamPipes[hSteamPipe] = Steam_Pipe::STEAM_PIPE_NONE;
+    m_mapSteamPipes[hSteamPipe] = ESteamPipe::k_ESteamPipeNone;
     VLOG_DEBUG("CreateSteamPipe completed with hSteamPipe=%u", hSteamPipe);
 
     return hSteamPipe;
@@ -96,7 +96,7 @@ HSteamPipe Steam_Client::CreateSteamPipe()
 
 // Releases a previously created communications pipe
 // NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
-bool Steam_Client::BReleaseSteamPipe( HSteamPipe hSteamPipe )
+bool CSteamClient::BReleaseSteamPipe( HSteamPipe hSteamPipe )
 {
     VLOG_DEBUG("BReleaseSteamPipe called with hSteamPipe=%u", hSteamPipe);
 
@@ -111,7 +111,7 @@ bool Steam_Client::BReleaseSteamPipe( HSteamPipe hSteamPipe )
 // connects to an existing global user, failing if none exists
 // used by the game to coordinate with the steamUI
 // NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
-HSteamUser Steam_Client::ConnectToGlobalUser( HSteamPipe hSteamPipe )
+HSteamUser CSteamClient::ConnectToGlobalUser( HSteamPipe hSteamPipe )
 {
     VLOG_DEBUG("ConnectToGlobalUser called with hSteamPipe=%u", hSteamPipe);
 
@@ -123,14 +123,14 @@ HSteamUser Steam_Client::ConnectToGlobalUser( HSteamPipe hSteamPipe )
     m_bUserLoggedIn = true;
     VLOG_INFO("User logged in through ConnectToGlobalUser");
 
-    m_mapSteamPipes[hSteamPipe] = Steam_Pipe::STEAM_PIPE_CLIENT;
+    m_mapSteamPipes[hSteamPipe] = ESteamPipe::k_ESteamPipeClient;
 
     return DEFAULT_CLIENT_USER;
 }
 
 // used by game servers, create a steam user that won't be shared with anyone else
 // NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
-HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType eAccountType )
+HSteamUser CSteamClient::CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType eAccountType )
 {
     // TODO: Implement local user creation
     VLOG_DEBUG("CreateLocalUser called with phSteamPipe=%u and eAccountType=%d", phSteamPipe, eAccountType);
@@ -138,7 +138,7 @@ HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType 
 }
 
 // Changed from Steam SDK v1.04, backward compatibility
-HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe )
+HSteamUser CSteamClient::CreateLocalUser( HSteamPipe *phSteamPipe )
 {
     // TODO: Implement local user creation
     VLOG_DEBUG("CreateLocalUser called with phSteamPipe=%u", phSteamPipe);
@@ -147,7 +147,7 @@ HSteamUser Steam_Client::CreateLocalUser( HSteamPipe *phSteamPipe )
 
 // removes an allocated user
 // NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
-void Steam_Client::ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser )
+void CSteamClient::ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser )
 {
     VLOG_DEBUG("ReleaseUser called with hSteamPipe=%u, hUser=%u", hSteamPipe, hUser);
     
@@ -157,7 +157,7 @@ void Steam_Client::ReleaseUser( HSteamPipe hSteamPipe, HSteamUser hUser )
 }
 
 // retrieves the ISteamUser interface associated with the handle
-ISteamUser *Steam_Client::GetISteamUser( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamUser *CSteamClient::GetISteamUser( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_DEBUG("GetISteamUser called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -209,7 +209,7 @@ ISteamUser *Steam_Client::GetISteamUser( HSteamUser hSteamUser, HSteamPipe hStea
 }
 
 // retrieves the ISteamGameServer interface associated with the handle
-ISteamGameServer *Steam_Client::GetISteamGameServer( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamGameServer *CSteamClient::GetISteamGameServer( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     // TODO: Implement game server interface
     VLOG_DEBUG("GetISteamGameServer called");
@@ -218,14 +218,14 @@ ISteamGameServer *Steam_Client::GetISteamGameServer( HSteamUser hSteamUser, HSte
 
 // set the local IP and Port to bind to
 // this must be set before CreateLocalUser()
-void Steam_Client::SetLocalIPBinding( uint32 unIP, uint16 usPort )
+void CSteamClient::SetLocalIPBinding( uint32 unIP, uint16 usPort )
 {
     // TODO: Implement IP binding
     VLOG_DEBUG("SetLocalIPBinding called");
 }
 
 // returns the ISteamFriends interface
-ISteamFriends *Steam_Client::GetISteamFriends( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamFriends *CSteamClient::GetISteamFriends( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_DEBUG("GetISteamFriends called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -280,7 +280,7 @@ ISteamFriends *Steam_Client::GetISteamFriends( HSteamUser hSteamUser, HSteamPipe
 }
 
 // returns the ISteamUtils interface
-ISteamUtils *Steam_Client::GetISteamUtils(HSteamPipe hSteamPipe, const char *pchVersion)
+ISteamUtils *CSteamClient::GetISteamUtils(HSteamPipe hSteamPipe, const char *pchVersion)
 {
     VLOG_DEBUG("GetISteamUtils called - hSteamPipe=%u, pchVersion=%s", hSteamPipe, pchVersion);
 
@@ -317,7 +317,7 @@ ISteamUtils *Steam_Client::GetISteamUtils(HSteamPipe hSteamPipe, const char *pch
 }
 
 // returns the ISteamMatchmaking interface
-ISteamMatchmaking *Steam_Client::GetISteamMatchmaking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamMatchmaking *CSteamClient::GetISteamMatchmaking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_DEBUG("GetISteamMatchmaking called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -360,7 +360,7 @@ ISteamMatchmaking *Steam_Client::GetISteamMatchmaking( HSteamUser hSteamUser, HS
 
 // returns the ISteamContentServer interface
 // Removed from Steam SDK v1.04, backward compatibility
-ISteamContentServer *Steam_Client::GetISteamContentServer( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamContentServer *CSteamClient::GetISteamContentServer( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_DEBUG("GetISteamContentServer called - DEPRECATED INTERFACE");
     return nullptr;
@@ -368,14 +368,14 @@ ISteamContentServer *Steam_Client::GetISteamContentServer( HSteamUser hSteamUser
 
 // returns the ISteamMasterServerUpdater interface
 // Removed from Steam SDK v1.17, backward compatibility
-ISteamMasterServerUpdater *Steam_Client::GetISteamMasterServerUpdater( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamMasterServerUpdater *CSteamClient::GetISteamMasterServerUpdater( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_DEBUG("GetISteamMasterServerUpdater called - DEPRECATED INTERFACE");
     return nullptr;
 }
 
 // returns the ISteamMatchmakingServers interface
-ISteamMatchmakingServers *Steam_Client::GetISteamMatchmakingServers( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamMatchmakingServers *CSteamClient::GetISteamMatchmakingServers( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_DEBUG("GetISteamMatchmakingServers called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -405,7 +405,7 @@ ISteamMatchmakingServers *Steam_Client::GetISteamMatchmakingServers( HSteamUser 
 }
 
 // returns the a generic interface
-void *Steam_Client::GetISteamGenericInterface( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+void *CSteamClient::GetISteamGenericInterface( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     // TODO: Implement generic interface lookup
     VLOG_DEBUG("GetISteamGenericInterface called");
@@ -413,7 +413,7 @@ void *Steam_Client::GetISteamGenericInterface( HSteamUser hSteamUser, HSteamPipe
 }
 
 // returns the ISteamUserStats interface
-ISteamUserStats *Steam_Client::GetISteamUserStats( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamUserStats *CSteamClient::GetISteamUserStats( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_DEBUG("GetISteamUserStats called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -461,7 +461,7 @@ ISteamUserStats *Steam_Client::GetISteamUserStats( HSteamUser hSteamUser, HSteam
 }
 
 // returns the ISteamGameServerStats interface
-ISteamGameServerStats *Steam_Client::GetISteamGameServerStats( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamGameServerStats *CSteamClient::GetISteamGameServerStats( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_DEBUG("GetISteamGameServerStats called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamuser, hSteamPipe, pchVersion);
     // Game server stats interface - typically used by dedicated servers
@@ -469,7 +469,7 @@ ISteamGameServerStats *Steam_Client::GetISteamGameServerStats( HSteamUser hSteam
 }
 
 // returns apps interface
-ISteamApps *Steam_Client::GetISteamApps( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamApps *CSteamClient::GetISteamApps( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_DEBUG("GetISteamApps called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -515,7 +515,7 @@ ISteamApps *Steam_Client::GetISteamApps( HSteamUser hSteamUser, HSteamPipe hStea
 }
 
 // networking
-ISteamNetworking *Steam_Client::GetISteamNetworking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion)
+ISteamNetworking *CSteamClient::GetISteamNetworking( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion)
 {
     VLOG_DEBUG("GetISteamNetworking called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -554,7 +554,7 @@ ISteamNetworking *Steam_Client::GetISteamNetworking( HSteamUser hSteamUser, HSte
 }
 
 // remote storage
-ISteamRemoteStorage *Steam_Client::GetISteamRemoteStorage( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamRemoteStorage *CSteamClient::GetISteamRemoteStorage( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_DEBUG("GetISteamRemoteStorage called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -605,7 +605,7 @@ ISteamRemoteStorage *Steam_Client::GetISteamRemoteStorage( HSteamUser hSteamuser
 }
 
 // user screenshots
-ISteamScreenshots *Steam_Client::GetISteamScreenshots( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamScreenshots *CSteamClient::GetISteamScreenshots( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_DEBUG("GetISteamScreenshots called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -636,7 +636,7 @@ ISteamScreenshots *Steam_Client::GetISteamScreenshots( HSteamUser hSteamuser, HS
 
 // Deprecated. Applications should use SteamAPI_RunCallbacks() or SteamGameServer_RunCallbacks() instead.
 // Changed from Steam SDK v1.36, backward compatibility
-void Steam_Client::RunFrame()
+void CSteamClient::RunFrame()
 {
     // TODO: Implement frame processing
 }
@@ -645,7 +645,7 @@ void Steam_Client::RunFrame()
 // Used for perf debugging so you can understand how many IPC calls your game makes per frame
 // Every IPC call is at minimum a thread context switch if not a process one so you want to rate
 // control how often you do them.
-uint32 Steam_Client::GetIPCCallCount()
+uint32 CSteamClient::GetIPCCallCount()
 {
     // TODO: Implement IPC call count
     return 1;
@@ -656,14 +656,14 @@ uint32 Steam_Client::GetIPCCallCount()
 // 'int' is the severity; 0 for msg, 1 for warning
 // 'const char *' is the text of the message
 // callbacks will occur directly after the API function is called that generated the warning or message
-void Steam_Client::SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction )
+void CSteamClient::SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction )
 {
     // TODO: Implement warning message hook
     VLOG_DEBUG("SetWarningMessageHook called");
 } 
 
 // Trigger global shutdown for the DLL
-bool Steam_Client::BShutdownIfAllPipesClosed()
+bool CSteamClient::BShutdownIfAllPipesClosed()
 {
     VLOG_DEBUG("BShutdownIfAllPipesClosed called");
 
@@ -677,7 +677,7 @@ bool Steam_Client::BShutdownIfAllPipesClosed()
 }
 
 // Expose HTTP interface
-ISteamHTTP *Steam_Client::GetISteamHTTP( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
+ISteamHTTP *CSteamClient::GetISteamHTTP( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_DEBUG("GetISteamHTTP called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -707,7 +707,7 @@ ISteamHTTP *Steam_Client::GetISteamHTTP( HSteamUser hSteamuser, HSteamPipe hStea
 }
 
 // Exposes the ISteamUnifiedMessages interface
-ISteamUnifiedMessages* Steam_Client::GetISteamUnifiedMessages(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamUnifiedMessages* CSteamClient::GetISteamUnifiedMessages(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
 {
     VLOG_DEBUG("GetISteamUnifiedMessages called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -735,7 +735,7 @@ ISteamUnifiedMessages* Steam_Client::GetISteamUnifiedMessages(HSteamUser hSteamu
 
 
 // Exposes the ISteamController interface
-ISteamController* Steam_Client::GetISteamController(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamController* CSteamClient::GetISteamController(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
 {
     VLOG_DEBUG("GetISteamController called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -765,7 +765,7 @@ ISteamController* Steam_Client::GetISteamController(HSteamUser hSteamUser, HStea
 }
 
 // Exposes the ISteamUGC interface 
-ISteamUGC* Steam_Client::GetISteamUGC(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamUGC* CSteamClient::GetISteamUGC(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
 {
     VLOG_DEBUG("GetISteamUGC called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -807,7 +807,7 @@ ISteamUGC* Steam_Client::GetISteamUGC(HSteamUser hSteamUser, HSteamPipe hSteamPi
 }
 
 // returns app list interface, only available on specially registered apps
-ISteamAppList* Steam_Client::GetISteamAppList(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamAppList* CSteamClient::GetISteamAppList(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
 {
     VLOG_DEBUG("GetISteamAppList called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -834,7 +834,7 @@ ISteamAppList* Steam_Client::GetISteamAppList(HSteamUser hSteamUser, HSteamPipe 
 }
 
 // Music Player
-ISteamMusic* Steam_Client::GetISteamMusic(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamMusic* CSteamClient::GetISteamMusic(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
 {
     VLOG_DEBUG("GetISteamMusic called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -861,7 +861,7 @@ ISteamMusic* Steam_Client::GetISteamMusic(HSteamUser hSteamuser, HSteamPipe hSte
 }
 
 // Music Player Remote
-ISteamMusicRemote* Steam_Client::GetISteamMusicRemote(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamMusicRemote* CSteamClient::GetISteamMusicRemote(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
 {
     VLOG_DEBUG("GetISteamMusicRemote called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -888,7 +888,7 @@ ISteamMusicRemote* Steam_Client::GetISteamMusicRemote(HSteamUser hSteamuser, HSt
 }
 
 // html page display
-ISteamHTMLSurface* Steam_Client::GetISteamHTMLSurface(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamHTMLSurface* CSteamClient::GetISteamHTMLSurface(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
 {
     VLOG_DEBUG("GetISteamHTMLSurface called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -919,25 +919,25 @@ ISteamHTMLSurface* Steam_Client::GetISteamHTMLSurface(HSteamUser hSteamuser, HSt
 
 // Helper functions for internal Steam usage
 // Changed from Steam SDK v1.36, backward compatibility
-void Steam_Client::Set_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func)
+void CSteamClient::Set_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func)
 {
     VLOG_DEBUG("Set_SteamAPI_CPostAPIResultInProcess called");
 }
 
 // Changed from Steam SDK v1.36, backward compatibility
-void Steam_Client::Remove_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func)
+void CSteamClient::Remove_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func)
 {
     VLOG_DEBUG("Remove_SteamAPI_CPostAPIResultInProcess called");
 }
 
 // Changed from Steam SDK v1.36, backward compatibility
-void Steam_Client::Set_SteamAPI_CCheckCallbackRegisteredInProcess(SteamAPI_CheckCallbackRegistered_t func)
+void CSteamClient::Set_SteamAPI_CCheckCallbackRegisteredInProcess(SteamAPI_CheckCallbackRegistered_t func)
 {
     VLOG_DEBUG("Set_SteamAPI_CCheckCallbackRegisteredInProcess called");
 }
 
 // inventory
-ISteamInventory* Steam_Client::GetISteamInventory(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamInventory* CSteamClient::GetISteamInventory(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
 {
     VLOG_DEBUG("GetISteamInventory called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -964,7 +964,7 @@ ISteamInventory* Steam_Client::GetISteamInventory(HSteamUser hSteamuser, HSteamP
 }
 
 // Video
-ISteamVideo* Steam_Client::GetISteamVideo(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamVideo* CSteamClient::GetISteamVideo(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
 {
     VLOG_DEBUG("GetISteamVideo called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamuser, hSteamPipe, pchVersion);
 

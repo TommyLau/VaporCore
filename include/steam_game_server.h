@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 // Purpose: Functions for authenticating users via Steam to play on a game server
 //-----------------------------------------------------------------------------
-class Steam_Game_Server :
+class CSteamGameServer :
     public ISteamGameServer,
 	public ISteamGameServer004,
 	public ISteamGameServer005,
@@ -36,14 +36,14 @@ class Steam_Game_Server :
 {
 private:
     // Singleton instance
-    static Steam_Game_Server* s_pInstance;
+    static CSteamGameServer* s_pInstance;
 
 public:
-    Steam_Game_Server();
-    ~Steam_Game_Server();
+    CSteamGameServer();
+    ~CSteamGameServer();
 
     // Helper methods
-    static Steam_Game_Server* GetInstance();
+    static CSteamGameServer* GetInstance();
     static void ReleaseInstance();
 
 //

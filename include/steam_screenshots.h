@@ -20,20 +20,20 @@
 //-----------------------------------------------------------------------------
 // Purpose: Functions for adding screenshots to the user's screenshot library
 //-----------------------------------------------------------------------------
-class Steam_Screenshots :
+class CSteamScreenshots :
     public ISteamScreenshots,
     public ISteamScreenshots001
 {
 private:
     // Singleton instance
-    static Steam_Screenshots* s_pInstance;
+    static CSteamScreenshots* s_pInstance;
 
 public:
-    Steam_Screenshots();
-    ~Steam_Screenshots();
+    CSteamScreenshots();
+    ~CSteamScreenshots();
 
     // Helper methods
-    static Steam_Screenshots* GetInstance();
+    static CSteamScreenshots* GetInstance();
     static void ReleaseInstance();
 
 	// Writes a screenshot to the user's screenshot library given the raw image data, which must be in RGB format.

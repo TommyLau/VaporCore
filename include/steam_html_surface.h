@@ -20,20 +20,20 @@
 //-----------------------------------------------------------------------------
 // Purpose: Functions for displaying HTML pages and interacting with them
 //-----------------------------------------------------------------------------
-class Steam_HTML_Surface :
+class CSteamHTMLSurface :
 	public ISteamHTMLSurface,
     public ISteamHTMLSurface002
 {
 private:
     // Singleton instance
-    static Steam_HTML_Surface* s_pInstance;
+    static CSteamHTMLSurface* s_pInstance;
 
 public:
-    Steam_HTML_Surface();
-    ~Steam_HTML_Surface();
+    CSteamHTMLSurface();
+    ~CSteamHTMLSurface();
 
     // Helper methods
-    static Steam_HTML_Surface* GetInstance();
+    static CSteamHTMLSurface* GetInstance();
     static void ReleaseInstance();
 
 public:

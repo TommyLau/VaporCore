@@ -20,12 +20,12 @@
 // Purpose: Functions for sending and receiving messages from the Game Coordinator
 //			for this application
 //-----------------------------------------------------------------------------
-class Steam_Game_Coordinator :
+class CSteamGameCoordinator :
     public ISteamGameCoordinator
 {
 public:
-    Steam_Game_Coordinator();
-    ~Steam_Game_Coordinator();
+    CSteamGameCoordinator();
+    ~CSteamGameCoordinator();
 
     // sends a message to the Game Coordinator
     EGCResults SendMessage( uint32 unMsgType, const void *pubData, uint32 cubData ) override;
@@ -40,12 +40,12 @@ public:
     EGCResults RetrieveMessage( uint32 *punMsgType, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize ) override; 
 
     // Helper methods
-    static Steam_Game_Coordinator* GetInstance();
+    static CSteamGameCoordinator* GetInstance();
     static void ReleaseInstance();
 
 private:
     // Singleton instance
-    static Steam_Game_Coordinator* s_pInstance;
+    static CSteamGameCoordinator* s_pInstance;
 };
 
 #endif // VAPORCORE_STEAM_GAME_COORDINATOR_H

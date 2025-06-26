@@ -29,7 +29,7 @@
 // Purpose: Functions for accessing and manipulating a steam account
 //			associated with one client instance
 //-----------------------------------------------------------------------------
-class Steam_User :
+class CSteamUser :
     public ISteamUser,
     public ISteamUser009,
     public ISteamUser010,
@@ -43,14 +43,14 @@ class Steam_User :
 {
 private:
     // Singleton instance
-    static Steam_User* s_pInstance;
+    static CSteamUser* s_pInstance;
 	
 public:
-    Steam_User();
-    ~Steam_User();
+    CSteamUser();
+    ~CSteamUser();
 
     // Helper methods
-    static Steam_User* GetInstance();
+    static CSteamUser* GetInstance();
     static void ReleaseInstance();
 
 	// returns the HSteamUser this interface represents

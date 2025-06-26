@@ -13,29 +13,29 @@
 #include "steam_music.h"
 
 // Static instance
-Steam_Music* Steam_Music::s_pInstance = nullptr;
+CSteamMusic* CSteamMusic::s_pInstance = nullptr;
 
-Steam_Music::Steam_Music()
+CSteamMusic::CSteamMusic()
 {
-    VLOG_INFO("Steam_Music constructor called");
+    VLOG_INFO("CSteamMusic constructor called");
 }
 
-Steam_Music::~Steam_Music()
+CSteamMusic::~CSteamMusic()
 {
-    VLOG_INFO("Steam_Music destructor called");
+    VLOG_INFO("CSteamMusic destructor called");
 }
 
 // Helper methods
-Steam_Music* Steam_Music::GetInstance()
+CSteamMusic* CSteamMusic::GetInstance()
 {
     if (!s_pInstance)
     {
-        s_pInstance = new Steam_Music();
+        s_pInstance = new CSteamMusic();
     }
     return s_pInstance;
 }
 
-void Steam_Music::ReleaseInstance()
+void CSteamMusic::ReleaseInstance()
 {
     if (s_pInstance)
     {
@@ -44,51 +44,51 @@ void Steam_Music::ReleaseInstance()
     }
 }
 
-bool Steam_Music::BIsEnabled()
+bool CSteamMusic::BIsEnabled()
 {
     VLOG_DEBUG("BIsEnabled called");
     return false;
 }
 
-bool Steam_Music::BIsPlaying()
+bool CSteamMusic::BIsPlaying()
 {
     VLOG_DEBUG("BIsPlaying called");
     return false;
 }
 
-AudioPlayback_Status Steam_Music::GetPlaybackStatus()
+AudioPlayback_Status CSteamMusic::GetPlaybackStatus()
 {
     VLOG_DEBUG("GetPlaybackStatus called");
     return AudioPlayback_Undefined;
 }
 
-void Steam_Music::Play()
+void CSteamMusic::Play()
 {
     VLOG_DEBUG("Play called");
 }
 
-void Steam_Music::Pause()
+void CSteamMusic::Pause()
 {
     VLOG_DEBUG("Pause called");
 }
 
-void Steam_Music::PlayPrevious()
+void CSteamMusic::PlayPrevious()
 {
     VLOG_DEBUG("PlayPrevious called");
 }
 
-void Steam_Music::PlayNext()
+void CSteamMusic::PlayNext()
 {
     VLOG_DEBUG("PlayNext called");
 }
 
 // volume is between 0.0 and 1.0
-void Steam_Music::SetVolume(float flVolume)
+void CSteamMusic::SetVolume(float flVolume)
 {
     VLOG_DEBUG("SetVolume called with volume: %f", flVolume);
 }
 
-float Steam_Music::GetVolume()
+float CSteamMusic::GetVolume()
 {
     VLOG_DEBUG("GetVolume called");
     return 0.0f;

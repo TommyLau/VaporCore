@@ -13,29 +13,29 @@
 #include "steam_app_ticket.h"
 
 // Static instance
-Steam_App_Ticket* Steam_App_Ticket::s_pInstance = nullptr;
+CSteamAppTicket* CSteamAppTicket::s_pInstance = nullptr;
 
-Steam_App_Ticket::Steam_App_Ticket()
+CSteamAppTicket::CSteamAppTicket()
 {
-    VLOG_INFO("Steam_App_Ticket constructor called");
+    VLOG_INFO("CSteamAppTicket constructor called");
 }
 
-Steam_App_Ticket::~Steam_App_Ticket()
+CSteamAppTicket::~CSteamAppTicket()
 {
-    VLOG_INFO("Steam_App_Ticket destructor called");
+    VLOG_INFO("CSteamAppTicket destructor called");
 }
 
 // Helper methods
-Steam_App_Ticket* Steam_App_Ticket::GetInstance()
+CSteamAppTicket* CSteamAppTicket::GetInstance()
 {
     if (!s_pInstance)
     {
-        s_pInstance = new Steam_App_Ticket();
+        s_pInstance = new CSteamAppTicket();
     }
     return s_pInstance;
 }
 
-void Steam_App_Ticket::ReleaseInstance()
+void CSteamAppTicket::ReleaseInstance()
 {
     if (s_pInstance)
     {
@@ -44,7 +44,7 @@ void Steam_App_Ticket::ReleaseInstance()
     }
 }
 
-uint32 Steam_App_Ticket::GetAppOwnershipTicketData( uint32 nAppID, void *pvBuffer, uint32 cbBufferLength, uint32 *piAppId, uint32 *piSteamId, uint32 *piSignature, uint32 *pcbSignature )
+uint32 CSteamAppTicket::GetAppOwnershipTicketData( uint32 nAppID, void *pvBuffer, uint32 cbBufferLength, uint32 *piAppId, uint32 *piSteamId, uint32 *piSignature, uint32 *pcbSignature )
 {
     VLOG_DEBUG("GetAppOwnershipTicketData called - AppID: %d, BufferSize: %d", nAppID, cbBufferLength);
     return 0;

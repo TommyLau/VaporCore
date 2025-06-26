@@ -13,16 +13,16 @@
 #include "steam_game_server_stats.h"
 
 // Static instance
-Steam_Game_Server_Stats* Steam_Game_Server_Stats::s_pInstance = nullptr;
+CSteamGameServerStats* CSteamGameServerStats::s_pInstance = nullptr;
 
-Steam_Game_Server_Stats::Steam_Game_Server_Stats()
+CSteamGameServerStats::CSteamGameServerStats()
 {
-    VLOG_INFO("Steam_Game_Server_Stats constructor called");
+    VLOG_INFO("CSteamGameServerStats constructor called");
 }
 
-Steam_Game_Server_Stats::~Steam_Game_Server_Stats()
+CSteamGameServerStats::~CSteamGameServerStats()
 {
-    VLOG_INFO("Steam_Game_Server_Stats destructor called");
+    VLOG_INFO("CSteamGameServerStats destructor called");
 }
 
 // downloads stats for the user
@@ -30,26 +30,26 @@ Steam_Game_Server_Stats::~Steam_Game_Server_Stats()
 // if the user has no stats, GSStatsReceived_t.m_eResult will be set to k_EResultFail
 // these stats will only be auto-updated for clients playing on the server. For other
 // users you'll need to call RequestUserStats() again to refresh any data
-SteamAPICall_t Steam_Game_Server_Stats::RequestUserStats( CSteamID steamIDUser )
+SteamAPICall_t CSteamGameServerStats::RequestUserStats( CSteamID steamIDUser )
 {
     VLOG_DEBUG("RequestUserStats called - SteamID: %llu", steamIDUser.ConvertToUint64());
     return 0;
 }
 
 // requests stat information for a user, usable after a successful call to RequestUserStats()
-bool Steam_Game_Server_Stats::GetUserStat( CSteamID steamIDUser, const char *pchName, int32 *pData )
+bool CSteamGameServerStats::GetUserStat( CSteamID steamIDUser, const char *pchName, int32 *pData )
 {
     VLOG_DEBUG("GetUserStat called - SteamID: %llu, Name: %s", steamIDUser.ConvertToUint64(), pchName);
     return false;
 }
 
-bool Steam_Game_Server_Stats::GetUserStat( CSteamID steamIDUser, const char *pchName, float *pData )
+bool CSteamGameServerStats::GetUserStat( CSteamID steamIDUser, const char *pchName, float *pData )
 {
     VLOG_DEBUG("GetUserStat called - SteamID: %llu, Name: %s", steamIDUser.ConvertToUint64(), pchName);
     return false;
 }
 
-bool Steam_Game_Server_Stats::GetUserAchievement( CSteamID steamIDUser, const char *pchName, bool *pbAchieved )
+bool CSteamGameServerStats::GetUserAchievement( CSteamID steamIDUser, const char *pchName, bool *pbAchieved )
 {
     VLOG_DEBUG("GetUserAchievement called - SteamID: %llu, Name: %s", steamIDUser.ConvertToUint64(), pchName);
     return false;
@@ -59,32 +59,32 @@ bool Steam_Game_Server_Stats::GetUserAchievement( CSteamID steamIDUser, const ch
 // Note: These updates will work only on stats game servers are allowed to edit and only for 
 // game servers that have been declared as officially controlled by the game creators. 
 // Set the IP range of your official servers on the Steamworks page
-bool Steam_Game_Server_Stats::SetUserStat( CSteamID steamIDUser, const char *pchName, int32 nData )
+bool CSteamGameServerStats::SetUserStat( CSteamID steamIDUser, const char *pchName, int32 nData )
 {
     VLOG_DEBUG("SetUserStat called - SteamID: %llu, Name: %s, Data: %d", steamIDUser.ConvertToUint64(), pchName, nData);
     return false;
 }
 
-bool Steam_Game_Server_Stats::SetUserStat( CSteamID steamIDUser, const char *pchName, float fData )
+bool CSteamGameServerStats::SetUserStat( CSteamID steamIDUser, const char *pchName, float fData )
 {
     VLOG_DEBUG("SetUserStat called - SteamID: %llu, Name: %s, Data: %f", steamIDUser.ConvertToUint64(), pchName, fData);
     return false;
 }
 
-bool Steam_Game_Server_Stats::UpdateUserAvgRateStat( CSteamID steamIDUser, const char *pchName, float flCountThisSession, double dSessionLength )
+bool CSteamGameServerStats::UpdateUserAvgRateStat( CSteamID steamIDUser, const char *pchName, float flCountThisSession, double dSessionLength )
 {
     VLOG_DEBUG("UpdateUserAvgRateStat called - SteamID: %llu, Name: %s, Count: %f, Length: %f", steamIDUser.ConvertToUint64(), pchName, flCountThisSession, dSessionLength);
     return false;
 }
 
 
-bool Steam_Game_Server_Stats::SetUserAchievement( CSteamID steamIDUser, const char *pchName )
+bool CSteamGameServerStats::SetUserAchievement( CSteamID steamIDUser, const char *pchName )
 {
     VLOG_DEBUG("SetUserAchievement called - SteamID: %llu, Name: %s", steamIDUser.ConvertToUint64(), pchName);
     return false;
 }
 
-bool Steam_Game_Server_Stats::ClearUserAchievement( CSteamID steamIDUser, const char *pchName )
+bool CSteamGameServerStats::ClearUserAchievement( CSteamID steamIDUser, const char *pchName )
 {
     VLOG_DEBUG("ClearUserAchievement called - SteamID: %llu, Name: %s", steamIDUser.ConvertToUint64(), pchName);
 
@@ -97,23 +97,23 @@ bool Steam_Game_Server_Stats::ClearUserAchievement( CSteamID steamIDUser, const 
 // uploaded has been rejected, either because they broke constraints
 // or were out of date. In this case the server sends back updated values.
 // The stats should be re-iterated to keep in sync.
-SteamAPICall_t Steam_Game_Server_Stats::StoreUserStats( CSteamID steamIDUser )
+SteamAPICall_t CSteamGameServerStats::StoreUserStats( CSteamID steamIDUser )
 {
     VLOG_DEBUG("StoreUserStats called - SteamID: %llu", steamIDUser.ConvertToUint64());
     return 0;
 }
 
 // Helper methods
-Steam_Game_Server_Stats* Steam_Game_Server_Stats::GetInstance()
+CSteamGameServerStats* CSteamGameServerStats::GetInstance()
 {
     if (!s_pInstance)
     {
-        s_pInstance = new Steam_Game_Server_Stats();
+        s_pInstance = new CSteamGameServerStats();
     }
     return s_pInstance;
 }
 
-void Steam_Game_Server_Stats::ReleaseInstance()
+void CSteamGameServerStats::ReleaseInstance()
 {
     if (s_pInstance)
     {

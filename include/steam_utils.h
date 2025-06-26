@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 // Purpose: interface to user independent utility functions
 //-----------------------------------------------------------------------------
-class Steam_Utils :
+class CSteamUtils :
 	public ISteamUtils,
 	public ISteamUtils002,
 	public ISteamUtils004,
@@ -32,14 +32,14 @@ class Steam_Utils :
 {
 private:
     // Singleton instance
-    static Steam_Utils* s_pInstance;
+    static CSteamUtils* s_pInstance;
 
 public:
-    Steam_Utils();
-    ~Steam_Utils();
+    CSteamUtils();
+    ~CSteamUtils();
 
     // Helper methods
-    static Steam_Utils* GetInstance();
+    static CSteamUtils* GetInstance();
     static void ReleaseInstance();
 
 	// return the number of seconds since the user 

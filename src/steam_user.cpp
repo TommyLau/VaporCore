@@ -13,29 +13,29 @@
 #include "steam_user.h"
 
 // Static instance
-Steam_User* Steam_User::s_pInstance = nullptr;
+CSteamUser* CSteamUser::s_pInstance = nullptr;
 
-Steam_User::Steam_User()
+CSteamUser::CSteamUser()
 {
-    VLOG_INFO("Steam_User constructor called");
+    VLOG_INFO("CSteamUser constructor called");
 }
 
-Steam_User::~Steam_User()
+CSteamUser::~CSteamUser()
 {
-    VLOG_INFO("Steam_User destructor called");
+    VLOG_INFO("CSteamUser destructor called");
 }
 
 // Helper methods
-Steam_User* Steam_User::GetInstance()
+CSteamUser* CSteamUser::GetInstance()
 {
     if (!s_pInstance)
     {
-        s_pInstance = new Steam_User();
+        s_pInstance = new CSteamUser();
     }
     return s_pInstance;
 }
 
-void Steam_User::ReleaseInstance()
+void CSteamUser::ReleaseInstance()
 {
     if (s_pInstance)
     {
@@ -46,7 +46,7 @@ void Steam_User::ReleaseInstance()
 
 // returns the HSteamUser this interface represents
 // this is only used internally by the API, and by a few select interfaces that support multi-user
-HSteamUser Steam_User::GetHSteamUser()
+HSteamUser CSteamUser::GetHSteamUser()
 {
     VLOG_DEBUG("GetHSteamUser called");
     return 1;
@@ -55,7 +55,7 @@ HSteamUser Steam_User::GetHSteamUser()
 // returns true if the Steam client current has a live connection to the Steam servers. 
 // If false, it means there is no active connection due to either a networking issue on the local machine, or the Steam server is down/busy.
 // The Steam client will automatically be trying to recreate the connection as often as possible.
-bool Steam_User::BLoggedOn()
+bool CSteamUser::BLoggedOn()
 {
     VLOG_DEBUG("BLoggedOn called");
     return true;
@@ -63,7 +63,7 @@ bool Steam_User::BLoggedOn()
 
 // returns the CSteamID of the account currently logged into the Steam client
 // a CSteamID is a unique identifier for an account, and used to differentiate users in all parts of the Steamworks API
-CSteamID Steam_User::GetSteamID()
+CSteamID CSteamUser::GetSteamID()
 {
     VLOG_DEBUG("GetSteamID called");
     return CSteamID();
@@ -84,7 +84,7 @@ CSteamID Steam_User::GetSteamID()
 //
 // return value - returns the number of bytes written to pBlob. If the return is 0, then the buffer passed in was too small, and the call has failed
 // The contents of pBlob should then be sent to the game server, for it to use to complete the authentication process.
-int Steam_User::InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer, bool bSecure )
+int CSteamUser::InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer, bool bSecure )
 {
     VLOG_DEBUG("InitiateGameConnection called - GameServer: %llu, Server: %u:%u, Secure: %s", 
                steamIDGameServer.GetAccountID(), unIPServer, usPortServer, bSecure ? "true" : "false");
@@ -99,7 +99,7 @@ int Steam_User::InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSte
 }
 
 // Changed from Steam SDK v1.01, backward compatibility
-int Steam_User::InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, CGameID gameID, uint32 unIPServer, uint16 usPortServer, bool bSecure )
+int CSteamUser::InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, CGameID gameID, uint32 unIPServer, uint16 usPortServer, bool bSecure )
 {
     VLOG_DEBUG("InitiateGameConnection called - GameServer: %llu, GameID: %llu, Server: %u:%u, Secure: %s", 
                steamIDGameServer.ConvertToUint64(), gameID.ToUint64(), unIPServer, usPortServer, bSecure ? "true" : "false");
@@ -116,7 +116,7 @@ int Steam_User::InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSte
 
 // notify of disconnect
 // needs to occur when the game client leaves the specified game server, needs to match with the InitiateGameConnection() call
-void Steam_User::TerminateGameConnection( uint32 unIPServer, uint16 usPortServer )
+void CSteamUser::TerminateGameConnection( uint32 unIPServer, uint16 usPortServer )
 {
     VLOG_DEBUG("TerminateGameConnection called - Server: %u:%u", unIPServer, usPortServer);
 }
@@ -124,7 +124,7 @@ void Steam_User::TerminateGameConnection( uint32 unIPServer, uint16 usPortServer
 // Legacy functions
 
 // used by only a few games to track usage events
-void Steam_User::TrackAppUsageEvent( CGameID gameID, int eAppUsageEvent, const char *pchExtraInfo )
+void CSteamUser::TrackAppUsageEvent( CGameID gameID, int eAppUsageEvent, const char *pchExtraInfo )
 {
     VLOG_DEBUG("TrackAppUsageEvent called - GameID: %llu, Event: %d, ExtraInfo: %s", 
                gameID.ToUint64(), eAppUsageEvent, pchExtraInfo ? pchExtraInfo : "null");
@@ -133,14 +133,14 @@ void Steam_User::TrackAppUsageEvent( CGameID gameID, int eAppUsageEvent, const c
 // legacy authentication support - need to be called if the game server rejects the user with a 'bad ticket' error
 // this is only needed under very specific circumstances
 // Removed from Steam SDK v1.01, backward compatibility
-void Steam_User::RefreshSteam2Login()
+void CSteamUser::RefreshSteam2Login()
 {
     VLOG_DEBUG("RefreshSteam2Login called");
 }
 
 // get the local storage folder for current Steam account to write application data, e.g. save games, configs etc.
 // this will usually be something like "C:\Progam Files\Steam\userdata\<SteamID>\<AppID>\local"
-bool Steam_User::GetUserDataFolder( char *pchBuffer, int cubBuffer )
+bool CSteamUser::GetUserDataFolder( char *pchBuffer, int cubBuffer )
 {
     VLOG_DEBUG("GetUserDataFolder called - Buffer: %s, Size: %d", pchBuffer, cubBuffer);
     strcpy(pchBuffer, "C:\\Progam Files\\Steam\\userdata\\1234567890\\1234567890\\local");
@@ -148,7 +148,7 @@ bool Steam_User::GetUserDataFolder( char *pchBuffer, int cubBuffer )
 }
 
 // Starts voice recording. Once started, use GetVoice() to get the data
-void Steam_User::StartVoiceRecording( )
+void CSteamUser::StartVoiceRecording( )
 {
     VLOG_DEBUG("StartVoiceRecording called");
 }
@@ -156,7 +156,7 @@ void Steam_User::StartVoiceRecording( )
 // Stops voice recording. Because people often release push-to-talk keys early, the system will keep recording for
 // a little bit after this function is called. GetVoice() should continue to be called until it returns
 // k_eVoiceResultNotRecording
-void Steam_User::StopVoiceRecording( )
+void CSteamUser::StopVoiceRecording( )
 {
     VLOG_DEBUG("StopVoiceRecording called");
 }
@@ -167,14 +167,14 @@ void Steam_User::StopVoiceRecording( )
 // levels of speech are detected.
 // nUncompressedVoiceDesiredSampleRate is necessary to know the number of bytes to return in pcbUncompressed - can be set to 0 if you don't need uncompressed (the usual case)
 // If you're upgrading from an older Steamworks API, you'll want to pass in 11025 to nUncompressedVoiceDesiredSampleRate
-EVoiceResult Steam_User::GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate )
+EVoiceResult CSteamUser::GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate )
 {
     VLOG_DEBUG("GetAvailableVoice called - Compressed: %d, Uncompressed: %d, DesiredSampleRate: %d", pcbCompressed, pcbUncompressed, nUncompressedVoiceDesiredSampleRate);
     return EVoiceResult::k_EVoiceResultOK;
 }
 
 // Changed from Steam SDK v1.13, backward compatibility
-EVoiceResult Steam_User::GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed )
+EVoiceResult CSteamUser::GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed )
 {
     VLOG_DEBUG("GetAvailableVoice called - Compressed: %d, Uncompressed: %d", pcbCompressed, pcbUncompressed);
     return EVoiceResult::k_EVoiceResultOK;
@@ -183,7 +183,7 @@ EVoiceResult Steam_User::GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUn
 // Gets the latest voice data. It should be called as often as possible once recording has started.
 // nBytesWritten is set to the number of bytes written to pDestBuffer. 
 // Removed from Steam SDK v1.06, backward compatibility
-EVoiceResult Steam_User::GetCompressedVoice( void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
+EVoiceResult CSteamUser::GetCompressedVoice( void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
 {
     VLOG_DEBUG("GetCompressedVoice called - Buffer: %s, Size: %d, nBytesWritten: %d", pDestBuffer, cbDestBufferSize, nBytesWritten);
     return EVoiceResult::k_EVoiceResultOK;
@@ -200,7 +200,7 @@ EVoiceResult Steam_User::GetCompressedVoice( void *pDestBuffer, uint32 cbDestBuf
 // Matching data that is not read during this call will be thrown away.
 // GetAvailableVoice() can be used to determine how much data is actually available.
 // If you're upgrading from an older Steamworks API, you'll want to pass in 11025 to nUncompressedVoiceDesiredSampleRate
-EVoiceResult Steam_User::GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten, uint32 nUncompressedVoiceDesiredSampleRate )
+EVoiceResult CSteamUser::GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten, uint32 nUncompressedVoiceDesiredSampleRate )
 {
     VLOG_DEBUG("GetVoice called - WantCompressed: %s, DestBuffer: %s, DestBufferSize: %d, nBytesWritten: %d, WantUncompressed: %s, UncompressedDestBuffer: %s, UncompressedDestBufferSize: %d, UncompressBytesWritten: %d, UncompressedVoiceDesiredSampleRate: %d", bWantCompressed ? "true" : "false", pDestBuffer, cbDestBufferSize, nBytesWritten, bWantUncompressed ? "true" : "false", pUncompressedDestBuffer, cbUncompressedDestBufferSize, nUncompressBytesWritten, nUncompressedVoiceDesiredSampleRate);
 
@@ -208,7 +208,7 @@ EVoiceResult Steam_User::GetVoice( bool bWantCompressed, void *pDestBuffer, uint
 }
 
 // Changed from Steam SDK v1.13, backward compatibility
-EVoiceResult Steam_User::GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten )
+EVoiceResult CSteamUser::GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten )
 {
     VLOG_DEBUG("GetVoice called - WantCompressed: %s, DestBuffer: %s, DestBufferSize: %d, nBytesWritten: %d, WantUncompressed: %s, UncompressedDestBuffer: %s, UncompressedDestBufferSize: %d, UncompressBytesWritten: %d", bWantCompressed ? "true" : "false", pDestBuffer, cbDestBufferSize, nBytesWritten, bWantUncompressed ? "true" : "false", pUncompressedDestBuffer, cbUncompressedDestBufferSize, nUncompressBytesWritten);
 
@@ -221,7 +221,7 @@ EVoiceResult Steam_User::GetVoice( bool bWantCompressed, void *pDestBuffer, uint
 // data. The suggested buffer size for the destination buffer is 22 kilobytes.
 // The output format of the data is 16-bit signed at the requested samples per second.
 // If you're upgrading from an older Steamworks API, you'll want to pass in 11025 to nDesiredSampleRate
-EVoiceResult Steam_User::DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, uint32 nDesiredSampleRate )
+EVoiceResult CSteamUser::DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, uint32 nDesiredSampleRate )
 {
     VLOG_DEBUG("DecompressVoice called - Compressed: %s, Size: %d, DestBuffer: %s, DestBufferSize: %d, nBytesWritten: %d, DesiredSampleRate: %d", pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize, nBytesWritten, nDesiredSampleRate);
     return EVoiceResult::k_EVoiceResultOK;
@@ -229,20 +229,20 @@ EVoiceResult Steam_User::DecompressVoice( const void *pCompressed, uint32 cbComp
 
 // The output format of the data is 16-bit signed at 11025 samples per second.
 // Changed from Steam SDK v1.13, backward compatibility
-EVoiceResult Steam_User::DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
+EVoiceResult CSteamUser::DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
 {
     VLOG_DEBUG("DecompressVoice called - Compressed: %s, Size: %d, DestBuffer: %s, DestBufferSize: %d, nBytesWritten: %d", pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize, nBytesWritten);
     return EVoiceResult::k_EVoiceResultOK;
 }
     
 // Changed from Steam SDK v1.08, backward compatibility
-EVoiceResult Steam_User::DecompressVoice( void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
+EVoiceResult CSteamUser::DecompressVoice( void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
 {
     return DecompressVoice((const void *)pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize, nBytesWritten);
 }
 
 // This returns the frequency of the voice data as it's stored internally; calling DecompressVoice() with this size will yield the best results
-uint32 Steam_User::GetVoiceOptimalSampleRate()
+uint32 CSteamUser::GetVoiceOptimalSampleRate()
 {
     VLOG_DEBUG("GetVoiceOptimalSampleRate called");
     return 11025;
@@ -250,7 +250,7 @@ uint32 Steam_User::GetVoiceOptimalSampleRate()
 
 // Retrieve ticket to be sent to the entity who wishes to authenticate you. 
 // pcbTicket retrieves the length of the actual ticket.
-HAuthTicket Steam_User::GetAuthSessionTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket )
+HAuthTicket CSteamUser::GetAuthSessionTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket )
 {
     VLOG_DEBUG("GetAuthSessionTicket called - Ticket: %s, MaxTicket: %d, pcbTicket: %d", pTicket, cbMaxTicket, pcbTicket);
     return 0;
@@ -258,27 +258,27 @@ HAuthTicket Steam_User::GetAuthSessionTicket( void *pTicket, int cbMaxTicket, ui
 
 // Authenticate ticket from entity steamID to be sure it is valid and isnt reused
 // Registers for callbacks if the entity goes offline or cancels the ticket ( see ValidateAuthTicketResponse_t callback and EAuthSessionResponse )
-EBeginAuthSessionResult Steam_User::BeginAuthSession( const void *pAuthTicket, int cbAuthTicket, CSteamID steamID )
+EBeginAuthSessionResult CSteamUser::BeginAuthSession( const void *pAuthTicket, int cbAuthTicket, CSteamID steamID )
 {
     VLOG_DEBUG("BeginAuthSession called - Ticket: %s, cbAuthTicket: %d, steamID: %llu", pAuthTicket, cbAuthTicket, steamID.GetAccountID());
     return EBeginAuthSessionResult::k_EBeginAuthSessionResultOK;
 }
 
 // Stop tracking started by BeginAuthSession - called when no longer playing game with this entity
-void Steam_User::EndAuthSession( CSteamID steamID )
+void CSteamUser::EndAuthSession( CSteamID steamID )
 {
     VLOG_DEBUG("EndAuthSession called - steamID: %llu", steamID.GetAccountID());
 }
 
 // Cancel auth ticket from GetAuthSessionTicket, called when no longer playing game with the entity you gave the ticket to
-void Steam_User::CancelAuthTicket( HAuthTicket hAuthTicket )
+void CSteamUser::CancelAuthTicket( HAuthTicket hAuthTicket )
 {
     VLOG_DEBUG("CancelAuthTicket called - hAuthTicket: %d", hAuthTicket);
 }
 
 // After receiving a user's authentication data, and passing it to BeginAuthSession, use this function
 // to determine if the user owns downloadable content specified by the provided AppID.
-EUserHasLicenseForAppResult Steam_User::UserHasLicenseForApp( CSteamID steamID, AppId_t appID )
+EUserHasLicenseForAppResult CSteamUser::UserHasLicenseForApp( CSteamID steamID, AppId_t appID )
 {
     VLOG_DEBUG("UserHasLicenseForApp called - steamID: %llu, appID: %d", steamID.GetAccountID(), appID);
     return EUserHasLicenseForAppResult::k_EUserHasLicenseResultHasLicense;
@@ -286,7 +286,7 @@ EUserHasLicenseForAppResult Steam_User::UserHasLicenseForApp( CSteamID steamID, 
 
 // returns true if this users looks like they are behind a NAT device. Only valid once the user has connected to steam 
 // (i.e a SteamServersConnected_t has been issued) and may not catch all forms of NAT.
-bool Steam_User::BIsBehindNAT()
+bool CSteamUser::BIsBehindNAT()
 {
     VLOG_DEBUG("BIsBehindNAT called");
     return false;
@@ -295,7 +295,7 @@ bool Steam_User::BIsBehindNAT()
 // set data to be replicated to friends so that they can join your game
 // CSteamID steamIDGameServer - the steamID of the game server, received from the game server by the client
 // uint32 unIPServer, uint16 usPortServer - the IP address of the game server
-void Steam_User::AdvertiseGame( CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer )
+void CSteamUser::AdvertiseGame( CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer )
 {
     VLOG_DEBUG("AdvertiseGame called - GameServer: %llu, Server: %u:%u", steamIDGameServer.GetAccountID(), unIPServer, usPortServer);
 }
@@ -303,14 +303,14 @@ void Steam_User::AdvertiseGame( CSteamID steamIDGameServer, uint32 unIPServer, u
 // Requests a ticket encrypted with an app specific shared key
 // pDataToInclude, cbDataToInclude will be encrypted into the ticket
 // ( This is asynchronous, you must wait for the ticket to be completed by the server )
-SteamAPICall_t Steam_User::RequestEncryptedAppTicket( void *pDataToInclude, int cbDataToInclude )
+SteamAPICall_t CSteamUser::RequestEncryptedAppTicket( void *pDataToInclude, int cbDataToInclude )
 {
     VLOG_DEBUG("RequestEncryptedAppTicket called - Data: %s, Size: %d", pDataToInclude, cbDataToInclude);
     return 0;
 }
 
 // retrieve a finished ticket
-bool Steam_User::GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket )
+bool CSteamUser::GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket )
 {
     VLOG_DEBUG("GetEncryptedAppTicket called - Ticket: %s, MaxTicket: %d, pcbTicket: %d", pTicket, cbMaxTicket, pcbTicket);
     return false;
@@ -319,14 +319,14 @@ bool Steam_User::GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *
 // Trading Card badges data access
 // if you only have one set of cards, the series will be 1
 // the user has can have two different badges for a series; the regular (max level 5) and the foil (max level 1)
-int Steam_User::GetGameBadgeLevel( int nSeries, bool bFoil )
+int CSteamUser::GetGameBadgeLevel( int nSeries, bool bFoil )
 {
     VLOG_DEBUG("GetGameBadgeLevel called - Series: %d, Foil: %d", nSeries, bFoil);
     return 0;
 }
 
 // gets the Steam Level of the user, as shown on their profile
-int Steam_User::GetPlayerSteamLevel()
+int CSteamUser::GetPlayerSteamLevel()
 {
     VLOG_DEBUG("GetPlayerSteamLevel called");
     return 0;
@@ -342,21 +342,21 @@ int Steam_User::GetPlayerSteamLevel()
 // or else immediately navigate to the result URL using a hidden browser window.
 // NOTE 2: The resulting authorization cookie has an expiration time of one day,
 // so it would be a good idea to request and visit a new auth URL every 12 hours.
-SteamAPICall_t Steam_User::RequestStoreAuthURL( const char *pchRedirectURL )
+SteamAPICall_t CSteamUser::RequestStoreAuthURL( const char *pchRedirectURL )
 {
     VLOG_DEBUG("RequestStoreAuthURL called - RedirectURL: %s", pchRedirectURL);
     return 0;
 }
 
 // gets whether the users phone number is verified 
-bool Steam_User::BIsPhoneVerified()
+bool CSteamUser::BIsPhoneVerified()
 {
     VLOG_DEBUG("BIsPhoneVerified called");
     return false;
 }
 
 // gets whether the user has two factor enabled on their account
-bool Steam_User::BIsTwoFactorEnabled()
+bool CSteamUser::BIsTwoFactorEnabled()
 {
     VLOG_DEBUG("BIsTwoFactorEnabled called");
     return false;

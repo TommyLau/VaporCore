@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 // Purpose: interface to app data
 //-----------------------------------------------------------------------------
-class Steam_Apps :
+class CSteamApps :
     public ISteamApps,
     public ISteamApps001,
     public ISteamApps002,
@@ -38,14 +38,14 @@ class Steam_Apps :
 {
 private:
     // Singleton instance
-    static Steam_Apps* s_pInstance;
+    static CSteamApps* s_pInstance;
 
 public:
-    Steam_Apps();
-    ~Steam_Apps();
+    CSteamApps();
+    ~CSteamApps();
 
     // Helper methods
-    static Steam_Apps* GetInstance();
+    static CSteamApps* GetInstance();
     static void ReleaseInstance();
 
 	// returns 0 if the key does not exist

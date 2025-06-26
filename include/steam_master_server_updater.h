@@ -19,11 +19,11 @@
 // Purpose: Game engines use this to tell the Steam master servers
 // about their games so their games can show up in the server browser.
 //-----------------------------------------------------------------------------
-class Steam_Master_Server_Updater : public ISteamMasterServerUpdater
+class CSteamMasterServerUpdater : public ISteamMasterServerUpdater
 {
 public:
-    Steam_Master_Server_Updater();
-    ~Steam_Master_Server_Updater();
+    CSteamMasterServerUpdater();
+    ~CSteamMasterServerUpdater();
 
 	// Call this as often as you like to tell the master server updater whether or not
 	// you want it to be active (default: off).
@@ -88,12 +88,12 @@ public:
 	int GetMasterServerAddress( int iServer, char *pOut, int outBufferSize ) override;
 
     // Helper methods
-    static Steam_Master_Server_Updater* GetInstance();
+    static CSteamMasterServerUpdater* GetInstance();
     static void ReleaseInstance();
 
 private:
     // Singleton instance
-    static Steam_Master_Server_Updater* s_pInstance;
+    static CSteamMasterServerUpdater* s_pInstance;
 };
 
 #endif // VAPORCORE_STEAM_MASTER_SERVER_UPDATER_H

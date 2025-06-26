@@ -13,29 +13,29 @@
 #include "steam_video.h"
 
 // Static instance
-Steam_Video* Steam_Video::s_pInstance = nullptr;
+CSteamVideo* CSteamVideo::s_pInstance = nullptr;
 
-Steam_Video::Steam_Video()
+CSteamVideo::CSteamVideo()
 {
-    VLOG_INFO("Steam_Video constructor called");
+    VLOG_INFO("CSteamVideo constructor called");
 }
 
-Steam_Video::~Steam_Video()
+CSteamVideo::~CSteamVideo()
 {
-    VLOG_INFO("Steam_Video destructor called");
+    VLOG_INFO("CSteamVideo destructor called");
 }
 
 // Helper methods
-Steam_Video* Steam_Video::GetInstance()
+CSteamVideo* CSteamVideo::GetInstance()
 {
     if (!s_pInstance)
     {
-        s_pInstance = new Steam_Video();
+        s_pInstance = new CSteamVideo();
     }
     return s_pInstance;
 }
 
-void Steam_Video::ReleaseInstance()
+void CSteamVideo::ReleaseInstance()
 {
     if (s_pInstance)
     {
@@ -45,13 +45,13 @@ void Steam_Video::ReleaseInstance()
 }
 
 // Get a URL suitable for streaming the given Video app ID's video
-void Steam_Video::GetVideoURL( AppId_t unVideoAppID )
+void CSteamVideo::GetVideoURL( AppId_t unVideoAppID )
 {
 	VLOG_DEBUG("GetVideoURL called - %d", unVideoAppID);
 }
 
 // returns true if user is uploading a live broadcast
-bool Steam_Video::IsBroadcasting( int *pnNumViewers )
+bool CSteamVideo::IsBroadcasting( int *pnNumViewers )
 {
     VLOG_DEBUG("IsBroadcasting called");
     return false;

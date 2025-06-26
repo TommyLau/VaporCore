@@ -13,27 +13,27 @@
 #include "steam_game_coordinator.h"
 
 // Static instance
-Steam_Game_Coordinator* Steam_Game_Coordinator::s_pInstance = nullptr;
+CSteamGameCoordinator* CSteamGameCoordinator::s_pInstance = nullptr;
 
-Steam_Game_Coordinator::Steam_Game_Coordinator()
+CSteamGameCoordinator::CSteamGameCoordinator()
 {
-    VLOG_INFO("Steam_Game_Coordinator constructor called");
+    VLOG_INFO("CSteamGameCoordinator constructor called");
 }
 
-Steam_Game_Coordinator::~Steam_Game_Coordinator()
+CSteamGameCoordinator::~CSteamGameCoordinator()
 {
-    VLOG_INFO("Steam_Game_Coordinator destructor called");
+    VLOG_INFO("CSteamGameCoordinator destructor called");
 }
 
 // sends a message to the Game Coordinator
-EGCResults Steam_Game_Coordinator::SendMessage( uint32 unMsgType, const void *pubData, uint32 cubData )
+EGCResults CSteamGameCoordinator::SendMessage( uint32 unMsgType, const void *pubData, uint32 cubData )
 {
     VLOG_DEBUG("SendMessage called - MsgType: %d, DataSize: %d", unMsgType, cubData);
     return EGCResults::k_EGCResultOK;
 }
 
 // returns true if there is a message waiting from the game coordinator
-bool Steam_Game_Coordinator::IsMessageAvailable( uint32 *pcubMsgSize )
+bool CSteamGameCoordinator::IsMessageAvailable( uint32 *pcubMsgSize )
 {
     VLOG_DEBUG("IsMessageAvailable called - MsgSize: %d", *pcubMsgSize);
     return false;
@@ -43,23 +43,23 @@ bool Steam_Game_Coordinator::IsMessageAvailable( uint32 *pcubMsgSize )
 // returns k_EGCResultNoMessage if there is no message waiting. pcubMsgSize is filled with the message size.
 // If the provided buffer is not large enough to fit the entire message, k_EGCResultBufferTooSmall is returned
 // and the message remains at the head of the queue.
-EGCResults Steam_Game_Coordinator::RetrieveMessage( uint32 *punMsgType, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize )
+EGCResults CSteamGameCoordinator::RetrieveMessage( uint32 *punMsgType, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize )
 {
     VLOG_DEBUG("RetrieveMessage called - MsgType: %d, DataSize: %d", *punMsgType, *pcubMsgSize);
     return EGCResults::k_EGCResultOK;
 }
 
 // Helper methods
-Steam_Game_Coordinator* Steam_Game_Coordinator::GetInstance()
+CSteamGameCoordinator* CSteamGameCoordinator::GetInstance()
 {
     if (!s_pInstance)
     {
-        s_pInstance = new Steam_Game_Coordinator();
+        s_pInstance = new CSteamGameCoordinator();
     }
     return s_pInstance;
 }
 
-void Steam_Game_Coordinator::ReleaseInstance()
+void CSteamGameCoordinator::ReleaseInstance()
 {
     if (s_pInstance)
     {
