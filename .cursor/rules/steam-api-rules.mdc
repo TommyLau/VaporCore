@@ -361,6 +361,9 @@ public:
 ## Absolute Requirements
 - **MUST** use `std::` for standard library types (e.g., `std::string`, not `string`).
 - **MUST** ensure `extern "C"` for flat API functions.
+- **MUST** have one new line at the end of the source files (header and implementation)
+- **MUST NOT** have trailing spaces at the end of header guard #endif comments
 - **MUST NOT** use actual Steamworks SDK libraries in emulator code.
 - **MUST NOT** generate Python, Java, or other non-C++ code for emulator logic.
+
 
