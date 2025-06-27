@@ -24,6 +24,8 @@
 #include <isteamremotestorage011.h>
 #include <isteamremotestorage012.h>
 
+#include "vapor_file_storage.h"
+
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing, reading and writing files stored remotely 
 //			and cached locally
@@ -42,6 +44,13 @@ class CSteamRemoteStorage :
 private:
     // Singleton instance
     static CSteamRemoteStorage* s_pInstance;
+    
+    // Cloud configuration
+    bool m_bCloudEnabledForAccount;
+    bool m_bCloudEnabledForApp;
+    
+    // File storage backend
+    VaporCore::FileStorage m_fileStorage;
 
 public:
     CSteamRemoteStorage();
