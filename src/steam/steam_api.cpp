@@ -17,9 +17,6 @@
 // Global Steam client interface pointer
 static CSteamClient* g_pSteamClient = nullptr;
 
-// Global callback manager
-static CCallbackMgr* g_pCallbackManager = nullptr;
-
 // Global VaporCore config instance pointer
 static VaporCore::Config* g_pVaporConfig = nullptr;
 
@@ -70,9 +67,6 @@ S_API bool S_CALLTYPE SteamAPI_Init() {
     // Initialize Steam client
     g_pSteamClient = CSteamClient::GetInstance();
 
-    // Initialize callback manager
-    g_pCallbackManager = CCallbackMgr::GetInstance();
-
     if (!g_pSteamClient) {
         VLOG_ERROR(__FUNCTION__ " - Failed to create Steam client instance");
         return false;
@@ -95,12 +89,6 @@ S_API void S_CALLTYPE SteamAPI_Shutdown() {
         g_pSteamClient->ReleaseUser(g_hSteamPipe, g_hSteamUser);
         g_pSteamClient->BReleaseSteamPipe(g_hSteamPipe);
         g_pSteamClient->BShutdownIfAllPipesClosed();
-    }
-
-    // Release callback manager
-    if (g_pCallbackManager) {
-        CCallbackMgr::ReleaseInstance();
-        g_pCallbackManager = nullptr;
     }
 
     // Release VaporCore configuration instance
@@ -348,7 +336,7 @@ S_API ISteamVideo *S_CALLTYPE SteamVideo()
 S_API void S_CALLTYPE SteamAPI_RunCallbacks()
 {
     // Run all pending Steam callbacks and call results
-    g_pCallbackManager->RunCallbacks();
+    CCallbackMgr::GetInstance().DispatchCallbacks();
 }
 
 // Internal functions used by the utility CCallback objects to receive callbacks
@@ -426,7 +414,7 @@ S_API void S_CALLTYPE SteamAPI_RegisterCallback( class CCallbackBase *pCallback,
 
     // Note: In a real Steam implementation, the callback would be registered with Steam client
     // For emulation purposes, we would maintain our own callback registry here
-    g_pCallbackManager->RegisterCallback(pCallback, iCallback);
+    CCallbackMgr::GetInstance().RegisterCallback(pCallback, iCallback);
 }
 
 S_API void S_CALLTYPE SteamAPI_UnregisterCallback( class CCallbackBase *pCallback )
@@ -439,7 +427,7 @@ S_API void S_CALLTYPE SteamAPI_UnregisterCallback( class CCallbackBase *pCallbac
     }
     
     // Unregister the callback from our callback manager
-    g_pCallbackManager->UnregisterCallback(pCallback);
+    CCallbackMgr::GetInstance().UnregisterCallback(pCallback);
 }
 
 // Internal functions used by the utility CCallResult objects to receive async call results
@@ -453,7 +441,7 @@ S_API void S_CALLTYPE SteamAPI_RegisterCallResult( class CCallbackBase *pCallbac
     }
     
     // Register the callback with our callback manager to handle the async call result
-    g_pCallbackManager->RegisterCallResult(pCallback, hAPICall);
+    CCallbackMgr::GetInstance().RegisterCallResult(pCallback, hAPICall);
 }
 
 S_API void S_CALLTYPE SteamAPI_UnregisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall )
@@ -466,7 +454,7 @@ S_API void S_CALLTYPE SteamAPI_UnregisterCallResult( class CCallbackBase *pCallb
     }
     
     // Unregister the callback from our callback manager to stop receiving async call results
-    g_pCallbackManager->UnregisterCallResult(pCallback, hAPICall);
+    CCallbackMgr::GetInstance().UnregisterCallResult(pCallback, hAPICall);
 }
 
 
