@@ -17,6 +17,9 @@
 // Global Steam client interface pointer
 static CSteamClient* g_pSteamClient = nullptr;
 
+// Global VaporCore config instance pointer
+static VaporCore::Config* g_pVaporConfig = nullptr;
+
 // Global interface pointers
 static ISteamUser* g_pSteamUser = nullptr;
 static ISteamFriends* g_pSteamFriends = nullptr;
@@ -57,18 +60,31 @@ static uintp g_uSteamAPICallCounter = 0;
 // SteamAPI_Init must be called before using any other API functions. If it fails, an
 // error message will be output to the debugger (or stderr) with further information.
 S_API bool S_CALLTYPE SteamAPI_Init() {
-    // TODO: Implement SteamAPI_Init
+    VLOG_INFO(__FUNCTION__);
+
 #ifdef VAPORCORE_ENABLE_LOGGING
     // Set log level to DEBUG to show all log messages
     VLOG_SET_DEBUG();
 #endif
 
-    VLOG_INFO("SteamAPI_Init called");
-
     if(g_hSteamPipe) {
-        VLOG_INFO("SteamAPI_Init already initialized");
         return true;
     }
+    
+    // Initialize VaporCore configuration
+    g_pVaporConfig = VaporCore::Config::GetInstance();
+    if (!g_pVaporConfig) {
+        VLOG_ERROR("Failed to create VaporCore config instance");
+        return false;
+    }
+    
+    // Load configuration file (will use defaults if file doesn't exist)
+    g_pVaporConfig->LoadConfig();
+    VLOG_DEBUG("VaporCore configuration loaded - AppId: %u, SteamId: %llu, Username: %s, Language: %s",
+               g_pVaporConfig->GetGameId().AppID(),
+               g_pVaporConfig->GetSteamId().ConvertToUint64(),
+               g_pVaporConfig->GetUsername().c_str(),
+               g_pVaporConfig->GetLanguage().c_str());
     
     // Initialize Steam client
     g_pSteamClient = CSteamClient::GetInstance();
@@ -88,14 +104,19 @@ S_API bool S_CALLTYPE SteamAPI_Init() {
 
 // SteamAPI_Shutdown should be called during process shutdown if possible.
 S_API void S_CALLTYPE SteamAPI_Shutdown() {
-    // TODO: Implement SteamAPI_Shutdown
-    VLOG_INFO("SteamAPI_Shutdown called");
+    VLOG_INFO(__FUNCTION__);
     
     if (g_pSteamClient && g_hSteamPipe) {
         // Release user and pipe through Steam client
         g_pSteamClient->ReleaseUser(g_hSteamPipe, g_hSteamUser);
         g_pSteamClient->BReleaseSteamPipe(g_hSteamPipe);
         g_pSteamClient->BShutdownIfAllPipesClosed();
+    }
+
+    // Release VaporCore configuration instance
+    if (g_pVaporConfig) {
+        VaporCore::Config::ReleaseInstance();
+        g_pVaporConfig = nullptr;
     }
 
     // Clean up global interface pointers in the order as in the header
@@ -129,15 +150,13 @@ S_API void S_CALLTYPE SteamAPI_Shutdown() {
         CSteamClient::ReleaseInstance();
         g_pSteamClient = nullptr;
     }
-    
-    VLOG_INFO("SteamAPI_Shutdown completed");
 }
 
 // restart your app through Steam to enable required Steamworks features
 // Removed from Steam SDK v1.07, backward compatibility
 S_API bool S_CALLTYPE SteamAPI_RestartApp( uint32 unOwnAppID )
 {
-    VLOG_DEBUG("SteamAPI_RestartApp called - AppID: %d", unOwnAppID);
+    VLOG_INFO(__FUNCTION__ " - AppID: %d", unOwnAppID);
     return true;
 }
 
@@ -153,7 +172,7 @@ S_API bool S_CALLTYPE SteamAPI_RestartApp( uint32 unOwnAppID )
 // since the DRM wrapper will ensure that your application was launched properly through Steam.
 S_API bool S_CALLTYPE SteamAPI_RestartAppIfNecessary( uint32 unOwnAppID )
 {
-    VLOG_DEBUG("SteamAPI_RestartAppIfNecessary called - AppID: %d", unOwnAppID);
+    VLOG_INFO(__FUNCTION__ " - AppID: %d", unOwnAppID);
     return true;
 }
 
@@ -163,19 +182,19 @@ S_API bool S_CALLTYPE SteamAPI_RestartAppIfNecessary( uint32 unOwnAppID )
 // program never needs to explicitly call this function.
 S_API void S_CALLTYPE SteamAPI_ReleaseCurrentThreadMemory()
 {
-    VLOG_DEBUG("SteamAPI_ReleaseCurrentThreadMemory called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 
 // crash dump recording functions
 S_API void S_CALLTYPE SteamAPI_WriteMiniDump( uint32 uStructuredExceptionCode, void* pvExceptionInfo, uint32 uBuildID )
 {
-    VLOG_DEBUG("SteamAPI_WriteMiniDump called - Structured Exception Code: %d, Exception Info: %p, Build ID: %d", uStructuredExceptionCode, pvExceptionInfo, uBuildID);
+    VLOG_INFO(__FUNCTION__ " - Structured Exception Code: %d, Exception Info: %p, Build ID: %d", uStructuredExceptionCode, pvExceptionInfo, uBuildID);
 }
 
 S_API void S_CALLTYPE SteamAPI_SetMiniDumpComment( const char *pchMsg )
 {
-    VLOG_DEBUG("SteamAPI_SetMiniDumpComment called - Comment: %s", pchMsg);
+    VLOG_INFO(__FUNCTION__ " - Comment: %s", pchMsg);
 }
 
 
@@ -186,127 +205,127 @@ S_API void S_CALLTYPE SteamAPI_SetMiniDumpComment( const char *pchMsg )
 
 S_API ISteamClient *S_CALLTYPE SteamClient() {
     // TODO: Implement SteamClient
-    VLOG_DEBUG("SteamClient() called");
+    VLOG_INFO(__FUNCTION__);
     return g_pSteamClient;
 }
 
 S_API ISteamUser *S_CALLTYPE SteamUser() {
     // TODO: Implement SteamUser
-    VLOG_DEBUG("SteamUser() called");
+    VLOG_INFO(__FUNCTION__);
     return g_pSteamUser;
 }
 
 S_API ISteamFriends *S_CALLTYPE SteamFriends() {
     // TODO: Implement SteamFriends
-    VLOG_DEBUG("SteamFriends() called");
+    VLOG_INFO(__FUNCTION__);
     return g_pSteamFriends;
 }
 
 S_API ISteamUtils *S_CALLTYPE SteamUtils() {
     // TODO: Implement SteamUtils
-    VLOG_DEBUG("SteamUtils() called");
+    VLOG_INFO(__FUNCTION__);
     return g_pSteamUtils;
 }
 
 S_API ISteamMatchmaking *S_CALLTYPE SteamMatchmaking() {
-    VLOG_DEBUG("SteamMatchmaking() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamMatchmaking
     return g_pSteamMatchmaking;
 }
 
 S_API ISteamUserStats *S_CALLTYPE SteamUserStats() {
-    VLOG_DEBUG("SteamUserStats() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamUserStats
     return g_pSteamUserStats;
 }
 
 S_API ISteamApps *S_CALLTYPE SteamApps() {
-    VLOG_DEBUG("SteamApps() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamApps
     return g_pSteamApps;
 }
 
 S_API ISteamNetworking *S_CALLTYPE SteamNetworking() {
-    VLOG_DEBUG("SteamNetworking() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamNetworking
     return g_pSteamNetworking;
 }
 
 S_API ISteamMatchmakingServers *S_CALLTYPE SteamMatchmakingServers() {
-    VLOG_DEBUG("SteamMatchmakingServers() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamMatchmakingServers
     return g_pSteamMatchmakingServers;
 }
 
 S_API ISteamRemoteStorage *S_CALLTYPE SteamRemoteStorage() {
-    VLOG_DEBUG("SteamRemoteStorage() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamRemoteStorage
     return g_pSteamRemoteStorage;
 }
 
 S_API ISteamScreenshots *S_CALLTYPE SteamScreenshots() {
-    VLOG_DEBUG("SteamScreenshots() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamScreenshots
     return g_pSteamScreenshots;
 }
 
 S_API ISteamHTTP *S_CALLTYPE SteamHTTP() {
-    VLOG_DEBUG("SteamHTTP() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamHTTP
     return g_pSteamHTTP;
 }
 
 S_API ISteamUnifiedMessages *S_CALLTYPE SteamUnifiedMessages() {
-    VLOG_DEBUG("SteamUnifiedMessages() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamUnifiedMessages
     return g_pSteamUnifiedMessages;
 }
 
 S_API ISteamController *S_CALLTYPE SteamController() {
-    VLOG_DEBUG("SteamController() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamController
     return g_pSteamController;
 }
 
 S_API ISteamUGC *S_CALLTYPE SteamUGC() {
-    VLOG_DEBUG("SteamUGC() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamUGC
     return g_pSteamUGC;
 }
 
 S_API ISteamAppList *S_CALLTYPE SteamAppList() {
-    VLOG_DEBUG("SteamAppList() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamAppList
     return g_pSteamAppList;
 }
 
 S_API ISteamMusic *S_CALLTYPE SteamMusic() {
-    VLOG_DEBUG("SteamMusic() called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamMusic
     return g_pSteamMusic;
 }
 
 S_API ISteamMusicRemote *S_CALLTYPE SteamMusicRemote()
 {
-    VLOG_DEBUG("SteamMusicRemote() called");
+    VLOG_INFO(__FUNCTION__);
     return g_pSteamMusicRemote;
 }
 
 S_API ISteamHTMLSurface *S_CALLTYPE SteamHTMLSurface()
 {
-    VLOG_DEBUG("SteamHTMLSurface() called");
+    VLOG_INFO(__FUNCTION__);
     return g_pSteamHTMLSurface;
 }
 
 S_API ISteamInventory *S_CALLTYPE SteamInventory()
 {
-    VLOG_DEBUG("SteamInventory() called");
+    VLOG_INFO(__FUNCTION__);
     return g_pSteamInventory;
 }
 
 S_API ISteamVideo *S_CALLTYPE SteamVideo()
 {
-    VLOG_DEBUG("SteamVideo() called");
+    VLOG_INFO(__FUNCTION__);
     return g_pSteamVideo;
 }
 
@@ -339,13 +358,13 @@ S_API ISteamVideo *S_CALLTYPE SteamVideo()
 S_API void S_CALLTYPE SteamAPI_RunCallbacks()
 {
     // TODO: Implement SteamAPI_RunCallbacks
-    VLOG_DEBUG("SteamAPI_RunCallbacks called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Internal functions used by the utility CCallback objects to receive callbacks
 S_API void S_CALLTYPE SteamAPI_RegisterCallback( class CCallbackBase *pCallback, int iCallback )
 {
-    VLOG_DEBUG("SteamAPI_RegisterCallback called with callback=%p and iCallback=%d", pCallback, iCallback);
+    VLOG_INFO(__FUNCTION__ " - Callback: %p, Callback ID: %d", pCallback, iCallback);
     VAPORCORE_LOCK_GUARD();
 
     if (!pCallback) {
@@ -424,27 +443,25 @@ S_API void S_CALLTYPE SteamAPI_RegisterCallback( class CCallbackBase *pCallback,
     // TODO: Store callback in a registry for proper emulation
     // Note: In a real Steam implementation, the callback would be registered with Steam client
     // For emulation purposes, we would maintain our own callback registry here
-    
-    VLOG_DEBUG("Callback registered successfully for %s", callbackSubsystemName);
 }
 
 S_API void S_CALLTYPE SteamAPI_UnregisterCallback( class CCallbackBase *pCallback )
 {
     // TODO: Implement SteamAPI_UnregisterCallback
-    VLOG_DEBUG("SteamAPI_UnregisterCallback called with callback=%p", pCallback);
+    VLOG_INFO(__FUNCTION__ " - Callback: %p", pCallback);
 }
 
 // Internal functions used by the utility CCallResult objects to receive async call results
 S_API void S_CALLTYPE SteamAPI_RegisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall )
 {
     // TODO: Implement SteamAPI_RegisterCallResult
-    VLOG_DEBUG("SteamAPI_RegisterCallResult called with callback=%p and hAPICall=%d", pCallback, hAPICall);
+    VLOG_INFO(__FUNCTION__ " - Callback: %p, API Call: %d", pCallback, hAPICall);
 }
 
 S_API void S_CALLTYPE SteamAPI_UnregisterCallResult( class CCallbackBase *pCallback, SteamAPICall_t hAPICall )
 {
     // TODO: Implement SteamAPI_UnregisterCallResult
-    VLOG_DEBUG("SteamAPI_UnregisterCallResult called with callback=%p and hAPICall=%d", pCallback, hAPICall);
+    VLOG_INFO(__FUNCTION__ " - Callback: %p, API Call: %d", pCallback, hAPICall);
 }
 
 
@@ -457,7 +474,7 @@ S_API void S_CALLTYPE SteamAPI_UnregisterCallResult( class CCallbackBase *pCallb
 // SteamAPI_IsSteamRunning() returns true if Steam is currently running
 S_API bool S_CALLTYPE SteamAPI_IsSteamRunning()
 {
-    VLOG_DEBUG("SteamAPI_IsSteamRunning called");
+    VLOG_INFO(__FUNCTION__);
     return true;
 }
 
@@ -466,20 +483,20 @@ S_API bool S_CALLTYPE SteamAPI_IsSteamRunning()
 S_API void Steam_RunCallbacks( HSteamPipe hSteamPipe, bool bGameServerCallbacks )
 {
     // TODO: Implement Steam_RunCallbacks
-    VLOG_DEBUG("Steam_RunCallbacks called with hSteamPipe=%d and bGameServerCallbacks=%d", hSteamPipe, bGameServerCallbacks);
+    VLOG_INFO(__FUNCTION__ " - Steam Pipe: %d, Game Server Callbacks: %d", hSteamPipe, bGameServerCallbacks);
 }
 
 // register the callback funcs to use to interact with the steam dll
 S_API void Steam_RegisterInterfaceFuncs( void *hModule )
 {
     // TODO: Implement Steam_RegisterInterfaceFuncs
-    VLOG_DEBUG("Steam_RegisterInterfaceFuncs called with hModule=%p", hModule);
+    VLOG_INFO(__FUNCTION__ " - Module: %p", hModule);
 }
 
 // returns the HSteamUser of the last user to dispatch a callback
 S_API HSteamUser Steam_GetHSteamUserCurrent()
 {
-    VLOG_DEBUG("Steam_GetHSteamUserCurrent called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement Steam_GetHSteamUserCurrent
     return g_hSteamUser;
 }
@@ -488,7 +505,7 @@ S_API HSteamUser Steam_GetHSteamUserCurrent()
 // DEPRECATED - implementation is Windows only, and the path returned is a UTF-8 string which must be converted to UTF-16 for use with Win32 APIs
 S_API const char *SteamAPI_GetSteamInstallPath()
 {
-    VLOG_DEBUG("SteamAPI_GetSteamInstallPath called");
+    VLOG_INFO(__FUNCTION__);
     // TODO: Implement SteamAPI_GetSteamInstallPath
     static const char* steamPath = "C:\\Program Files (x86)\\Steam";
     return steamPath;
@@ -496,29 +513,29 @@ S_API const char *SteamAPI_GetSteamInstallPath()
 
 // returns the pipe we are communicating to Steam with
 S_API HSteamPipe SteamAPI_GetHSteamPipe() {
-    VLOG_DEBUG("SteamAPI_GetHSteamPipe called");
+    VLOG_INFO(__FUNCTION__);
     return g_hSteamPipe;
 }
 
 // sets whether or not Steam_RunCallbacks() should do a try {} catch (...) {} around calls to issuing callbacks
 S_API void SteamAPI_SetTryCatchCallbacks( bool bTryCatchCallbacks ) {
-    VLOG_DEBUG("SteamAPI_SetTryCatchCallbacks called with bTryCatchCallbacks=%d", bTryCatchCallbacks);
+    VLOG_INFO(__FUNCTION__ " - Try Catch Callbacks: %d", bTryCatchCallbacks);
     // TODO: Implement SteamAPI_SetTryCatchCallbacks
 }
 
 // backwards compat export, passes through to SteamAPI_ variants
 S_API HSteamPipe GetHSteamPipe() {
-    VLOG_DEBUG("GetHSteamPipe called");
+    VLOG_INFO(__FUNCTION__);
     return g_hSteamPipe;
 }
 
 S_API HSteamUser GetHSteamUser() {
-    VLOG_DEBUG("GetHSteamUser called");
+    VLOG_INFO(__FUNCTION__);
     return g_hSteamUser;
 }
 
 // backwards compat with older SDKs
 S_API bool S_CALLTYPE SteamAPI_InitSafe() {
-    VLOG_DEBUG("SteamAPI_InitSafe called");
+    VLOG_INFO(__FUNCTION__);
     return SteamAPI_Init();
 }
