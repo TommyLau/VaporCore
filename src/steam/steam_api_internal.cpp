@@ -14,13 +14,11 @@
 
 #include "vapor_base.h"
 
-// Global pipe and user handles
-static HSteamUser g_hSteamUser = 0;
-
 S_API HSteamUser SteamAPI_GetHSteamUser()
 {
-    // TODO: Implement SteamAPI_GetHSteamUser
-    return g_hSteamUser;
+    VLOG_INFO(__FUNCTION__);
+    // Use the public API to get the current user handle
+    return Steam_GetHSteamUserCurrent();
 }
 
 S_API bool S_CALLTYPE SteamInternal_Init()
