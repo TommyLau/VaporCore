@@ -16,7 +16,7 @@
 
 S_API HSteamUser SteamAPI_GetHSteamUser()
 {
-    VLOG_INFO(__FUNCTION__);
+    VLOG_INFO(__FUNCTION__ " HSteamUser: %d", Steam_GetHSteamUserCurrent());
     // Use the public API to get the current user handle
     return Steam_GetHSteamUserCurrent();
 }

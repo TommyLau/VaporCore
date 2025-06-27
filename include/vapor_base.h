@@ -21,6 +21,7 @@
 #include "steam_apps.h"
 #include "steam_app_list.h"
 #include "steam_app_ticket.h"
+#include "steam_callback_mgr.h"
 #include "steam_client.h"
 #include "steam_controller.h"
 #include "steam_friends.h"
@@ -47,7 +48,6 @@
 
 // VaporCore callback manager
 #include "vapor_logger.h"
-#include "vapor_callback_mgr.h"
 #include "vapor_config.h"
 
 // Global synchronization for thread-safe operations
