@@ -24,7 +24,7 @@ CSteamClient::CSteamClient()
     , m_pSteamFriends(CSteamFriends::GetInstance())
     , m_pSteamUtils(CSteamUtils::GetInstance())
     , m_pSteamMatchmaking(CSteamMatchmaking::GetInstance())
-    , m_pSteamUserStats(CSteamUserStats::GetInstance())
+    , m_steamUserStats(CSteamUserStats::GetInstance())
     , m_pSteamApps(CSteamApps::GetInstance())
     , m_pSteamMatchmakingServers(CSteamMatchmakingServers::GetInstance())
     , m_pSteamNetworking(CSteamNetworking::GetInstance())
@@ -415,15 +415,10 @@ void *CSteamClient::GetISteamGenericInterface( HSteamUser hSteamUser, HSteamPipe
 // returns the ISteamUserStats interface
 ISteamUserStats *CSteamClient::GetISteamUserStats( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
-    VLOG_DEBUG("GetISteamUserStats called - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
+    VLOG_INFO(__FUNCTION__ " - hSteamUser=%u, hSteamPipe=%u, pchVersion=%s", hSteamUser, hSteamPipe, pchVersion);
 
     if (!pchVersion) {
-        VLOG_ERROR("GetISteamUserStats: Invalid version string (null)");
-        return nullptr;
-    }
-
-    if (!m_pSteamUserStats) {
-        VLOG_ERROR("GetISteamUserStats: Steam user stats not available");
+        VLOG_ERROR(__FUNCTION__ " - Invalid version string (null)");
         return nullptr;
     }
 
@@ -431,32 +426,32 @@ ISteamUserStats *CSteamClient::GetISteamUserStats( HSteamUser hSteamUser, HSteam
     // Cast to specific interface first for proper vtable mapping, then to ISteamUserStats*
     if (strcmp(pchVersion, STEAMUSERSTATS_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamUserStats (latest) - %s", STEAMUSERSTATS_INTERFACE_VERSION);
-        return static_cast<ISteamUserStats*>(m_pSteamUserStats);
+        return static_cast<ISteamUserStats*>(&m_steamUserStats);
     } else if (strcmp(pchVersion, STEAMUSERSTATS_INTERFACE_VERSION_010) == 0) {
         VLOG_DEBUG("Returning ISteamUserStats010");
-        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats010*>(m_pSteamUserStats));
+        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats010*>(&m_steamUserStats));
     } else if (strcmp(pchVersion, STEAMUSERSTATS_INTERFACE_VERSION_009) == 0) {
         VLOG_DEBUG("Returning ISteamUserStats009");
-        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats009*>(m_pSteamUserStats));
+        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats009*>(&m_steamUserStats));
     } else if (strcmp(pchVersion, STEAMUSERSTATS_INTERFACE_VERSION_007) == 0) {
         VLOG_DEBUG("Returning ISteamUserStats007");
-        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats007*>(m_pSteamUserStats));
+        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats007*>(&m_steamUserStats));
     } else if (strcmp(pchVersion, STEAMUSERSTATS_INTERFACE_VERSION_006) == 0) {
         VLOG_DEBUG("Returning ISteamUserStats006");
-        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats006*>(m_pSteamUserStats));
+        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats006*>(&m_steamUserStats));
     } else if (strcmp(pchVersion, STEAMUSERSTATS_INTERFACE_VERSION_005) == 0) {
         VLOG_DEBUG("Returning ISteamUserStats005");
-        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats005*>(m_pSteamUserStats));
+        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats005*>(&m_steamUserStats));
     } else if (strcmp(pchVersion, STEAMUSERSTATS_INTERFACE_VERSION_004) == 0) {
         VLOG_DEBUG("Returning ISteamUserStats004");
-        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats004*>(m_pSteamUserStats));
+        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats004*>(&m_steamUserStats));
     } else if (strcmp(pchVersion, STEAMUSERSTATS_INTERFACE_VERSION_003) == 0) {
         VLOG_DEBUG("Returning ISteamUserStats003");
-        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats003*>(m_pSteamUserStats));
+        return reinterpret_cast<ISteamUserStats*>(static_cast<ISteamUserStats003*>(&m_steamUserStats));
     } else {
         VLOG_WARNING("GetISteamUserStats: Unknown interface version '%s', returning " STEAMUSERSTATS_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
-        return static_cast<ISteamUserStats*>(m_pSteamUserStats);
+        return static_cast<ISteamUserStats*>(&m_steamUserStats);
     }
 }
 

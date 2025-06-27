@@ -91,7 +91,7 @@ private:
     CSteamFriends* m_pSteamFriends;
     CSteamUtils* m_pSteamUtils;
     CSteamMatchmaking* m_pSteamMatchmaking;
-    CSteamUserStats* m_pSteamUserStats;
+    CSteamUserStats& m_steamUserStats;
     CSteamApps* m_pSteamApps;
     CSteamMatchmakingServers* m_pSteamMatchmakingServers;
     CSteamNetworking* m_pSteamNetworking;

@@ -36,18 +36,15 @@ class CSteamUserStats :
 	public ISteamUserStats009,
 	public ISteamUserStats010
 {
-private:
-    // Singleton instance
-    static CSteamUserStats* s_pInstance;
+public:
+    // Singleton accessor
+    static CSteamUserStats& GetInstance()
+	{
+		static CSteamUserStats instance;
+		return instance;
+	}
 
 public:
-    CSteamUserStats();
-    ~CSteamUserStats();
-
-    // Helper methods
-    static CSteamUserStats* GetInstance();
-    static void ReleaseInstance();
-
 	// Ask the server to send down this user's data and achievements for this game
 	CALL_BACK( UserStatsReceived_t )
 	bool RequestCurrentStats( ) override;
@@ -258,6 +255,14 @@ public:
 	bool GetUserStatsData( void *pvData, uint32 cubData, uint32 *pcubWritten ) override;
 #endif
 
+private:
+    // Private constructor and destructor for singleton
+    CSteamUserStats();
+    ~CSteamUserStats();
+
+    // Delete copy constructor and assignment operator
+    CSteamUserStats(const CSteamUserStats&) = delete;
+    CSteamUserStats& operator=(const CSteamUserStats&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_USER_STATS_H
