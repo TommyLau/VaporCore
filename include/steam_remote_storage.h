@@ -41,25 +41,15 @@ class CSteamRemoteStorage :
     public ISteamRemoteStorage011,
     public ISteamRemoteStorage012
 {
-private:
-    // Singleton instance
-    static CSteamRemoteStorage* s_pInstance;
-    
-    // Cloud configuration
-    bool m_bCloudEnabledForAccount;
-    bool m_bCloudEnabledForApp;
-    
-    // File storage backend
-    VaporCore::FileStorage m_fileStorage;
-
 public:
-    CSteamRemoteStorage();
-    ~CSteamRemoteStorage();
-
-    // Helper methods
-    static CSteamRemoteStorage* GetInstance();
-    static void ReleaseInstance();
-
+    // Singleton accessor
+    static CSteamRemoteStorage& GetInstance()
+    {
+        static CSteamRemoteStorage instance;
+        return instance;
+    }
+    
+public:
 	// NOTE
 	//
 	// Filenames are case-insensitive, and will be converted to lowercase automatically.
@@ -216,6 +206,23 @@ public:
 
 	CALL_RESULT( RemoteStorageDownloadUGCResult_t )
 	SteamAPICall_t UGCDownloadToLocation( UGCHandle_t hContent, const char *pchLocation, uint32 unPriority ) override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamRemoteStorage();
+    ~CSteamRemoteStorage();
+
+    // Delete copy constructor and assignment operator
+    CSteamRemoteStorage(const CSteamRemoteStorage&) = delete;
+    CSteamRemoteStorage& operator=(const CSteamRemoteStorage&) = delete;
+
+private:
+    // Cloud configuration
+    bool m_bCloudEnabledForAccount;
+    bool m_bCloudEnabledForApp;
+    
+    // File storage backend
+    VaporCore::FileStorage m_fileStorage;
 };
 
 #endif // VAPORCORE_STEAM_REMOTE_STORAGE_H

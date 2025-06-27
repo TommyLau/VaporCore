@@ -28,7 +28,7 @@ CSteamClient::CSteamClient()
     , m_pSteamApps(CSteamApps::GetInstance())
     , m_pSteamMatchmakingServers(CSteamMatchmakingServers::GetInstance())
     , m_pSteamNetworking(CSteamNetworking::GetInstance())
-    , m_pSteamRemoteStorage(CSteamRemoteStorage::GetInstance())
+    , m_steamRemoteStorage(CSteamRemoteStorage::GetInstance())
     , m_pSteamScreenshots(CSteamScreenshots::GetInstance())
     , m_pSteamHTTP(CSteamHTTP::GetInstance())
     , m_pSteamUnifiedMessages(CSteamUnifiedMessages::GetInstance())
@@ -563,44 +563,39 @@ ISteamRemoteStorage *CSteamClient::GetISteamRemoteStorage( HSteamUser hSteamuser
         return nullptr;
     }
 
-    if (!m_pSteamRemoteStorage) {
-        VLOG_ERROR("GetISteamRemoteStorage: Steam remote storage not available");
-        return nullptr;
-    }
-
     // Return the appropriate interface version based on the version string
     // Cast to specific interface first for proper vtable mapping, then to ISteamRemoteStorage*
     if (strcmp(pchVersion, STEAMREMOTESTORAGE_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamRemoteStorage (latest) - %s", STEAMREMOTESTORAGE_INTERFACE_VERSION);
-        return static_cast<ISteamRemoteStorage*>(m_pSteamRemoteStorage);
+        return static_cast<ISteamRemoteStorage*>(&m_steamRemoteStorage);
     } else if (strcmp(pchVersion, STEAMREMOTESTORAGE_INTERFACE_VERSION_012) == 0) {
         VLOG_DEBUG("Returning ISteamRemoteStorage012");
-        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage012*>(m_pSteamRemoteStorage));
+        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage012*>(&m_steamRemoteStorage));
     } else if (strcmp(pchVersion, STEAMREMOTESTORAGE_INTERFACE_VERSION_011) == 0) {
         VLOG_DEBUG("Returning ISteamRemoteStorage011");
-        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage011*>(m_pSteamRemoteStorage));
+        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage011*>(&m_steamRemoteStorage));
     } else if (strcmp(pchVersion, STEAMREMOTESTORAGE_INTERFACE_VERSION_010) == 0) {
         VLOG_DEBUG("Returning ISteamRemoteStorage010");
-        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage010*>(m_pSteamRemoteStorage));
+        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage010*>(&m_steamRemoteStorage));
     } else if (strcmp(pchVersion, STEAMREMOTESTORAGE_INTERFACE_VERSION_008) == 0) {
         VLOG_DEBUG("Returning ISteamRemoteStorage008");
-        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage008*>(m_pSteamRemoteStorage));
+        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage008*>(&m_steamRemoteStorage));
     } else if (strcmp(pchVersion, STEAMREMOTESTORAGE_INTERFACE_VERSION_006) == 0) {
         VLOG_DEBUG("Returning ISteamRemoteStorage006");
-        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage006*>(m_pSteamRemoteStorage));
+        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage006*>(&m_steamRemoteStorage));
     } else if (strcmp(pchVersion, STEAMREMOTESTORAGE_INTERFACE_VERSION_005) == 0) {
         VLOG_DEBUG("Returning ISteamRemoteStorage005");
-        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage005*>(m_pSteamRemoteStorage));
+        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage005*>(&m_steamRemoteStorage));
     } else if (strcmp(pchVersion, STEAMREMOTESTORAGE_INTERFACE_VERSION_004) == 0) {
         VLOG_DEBUG("Returning ISteamRemoteStorage004");
-        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage004*>(m_pSteamRemoteStorage));
+        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage004*>(&m_steamRemoteStorage));
     } else if (strcmp(pchVersion, STEAMREMOTESTORAGE_INTERFACE_VERSION_002) == 0) {
         VLOG_DEBUG("Returning ISteamRemoteStorage002");
-        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage002*>(m_pSteamRemoteStorage));
+        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage002*>(&m_steamRemoteStorage));
     } else {
         VLOG_WARNING("GetISteamRemoteStorage: Unknown interface version '%s', returning " STEAMREMOTESTORAGE_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
-        return static_cast<ISteamRemoteStorage*>(m_pSteamRemoteStorage);
+        return static_cast<ISteamRemoteStorage*>(&m_steamRemoteStorage);
     }
 }
 
