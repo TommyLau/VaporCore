@@ -23,21 +23,11 @@
 namespace VaporCore {
 
 class FileStorage {
-private:
-    // Storage configuration
-    std::string m_storageDirectory;
-    
-    // File indexing for GetFileNameAndSize() - populated by GetFileCount()
-    std::vector<std::string> m_indexToFile;
-    
-    // Internal helper methods
-    std::string GetFullPath(const std::string& filename) const;
-    std::string NormalizeFilename(const std::string& filename) const;
-    void CacheFileList();
-    
 public:
     FileStorage(const std::string& storageDir = "./vaporcore_save");
     ~FileStorage();
+
+public:
     
     // File operations
     bool WriteFile(const std::string& filename, const void* data, size_t size);
@@ -51,13 +41,24 @@ public:
     int32 GetFileCount();
     std::string GetFileNameAndSize(int index, int32* pSize = nullptr);
     
-    // Utility
-    bool EnsureDirectoryExists();
-    bool IsValidFilename(const std::string& filename) const;
-    
     // Storage statistics
     size_t GetTotalStorageUsed();
     bool GetQuota(int32* pnTotalBytes, int32* pnAvailableBytes);
+
+private:
+    // Utility
+    bool EnsureDirectoryExists();
+    bool IsValidFilename(const std::string& filename) const;
+    std::string NormalizeFilename(const std::string& filename) const;
+    std::string GetFullPath(const std::string& filename) const;
+    void CacheFileList();
+
+private:
+    // Storage configuration
+    std::string m_storageDirectory;
+    
+    // File indexing for GetFileNameAndSize() - populated by GetFileCount()
+    std::vector<std::string> m_indexToFile;
 };
 
 } // namespace VaporCore

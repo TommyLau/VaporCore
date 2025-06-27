@@ -28,7 +28,7 @@ FileStorage::FileStorage(const std::string& storageDir)
 {
     // Ensure the storage directory exists
     if (!EnsureDirectoryExists()) {
-        VLOG_ERROR(__FUNCTION__ " - Failed to create storage directory: %s", storageDir.c_str());
+        VLOG_DEBUG(__FUNCTION__ " - Failed to create storage directory: %s", storageDir.c_str());
     }
     
     // Initialize file index from existing files
@@ -37,51 +37,6 @@ FileStorage::FileStorage(const std::string& storageDir)
 
 FileStorage::~FileStorage()
 {
-}
-
-std::string FileStorage::GetFullPath(const std::string& filename) const
-{
-    std::string normalized = NormalizeFilename(filename);
-    return m_storageDirectory + "/" + normalized;
-}
-
-std::string FileStorage::NormalizeFilename(const std::string& filename) const
-{
-    std::string normalized = filename;
-    
-    // Convert to lowercase (Steam requirement)
-    std::transform(normalized.begin(), normalized.end(), normalized.begin(),
-                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
-    
-    // Replace backslashes with forward slashes
-    std::replace(normalized.begin(), normalized.end(), '\\', '/');
-    
-    // Remove leading slashes
-    while (!normalized.empty() && normalized[0] == '/') {
-        normalized.erase(0, 1);
-    }
-    
-    return normalized;
-}
-
-void FileStorage::CacheFileList()
-{
-    m_indexToFile.clear();
-    
-    try {
-        if (std::filesystem::exists(m_storageDirectory)) {
-            for (const auto& entry : std::filesystem::directory_iterator(m_storageDirectory)) {
-                if (entry.is_regular_file()) {
-                    std::string filename = entry.path().filename().string();
-                    std::string normalized = NormalizeFilename(filename);
-                    m_indexToFile.push_back(normalized);
-                }
-            }
-        }
-        VLOG_DEBUG(__FUNCTION__ " - Cached file list, found %zu files", m_indexToFile.size());
-    } catch (const std::exception& e) {
-        VLOG_ERROR(__FUNCTION__ " - Error caching file list: %s", e.what());
-    }
 }
 
 bool FileStorage::WriteFile(const std::string& filename, const void* data, size_t size)
@@ -276,6 +231,43 @@ std::string FileStorage::GetFileNameAndSize(int index, int32* pSize)
     return filename;
 }
 
+size_t FileStorage::GetTotalStorageUsed()
+{
+    size_t totalSize = 0;
+    
+    try {
+        if (std::filesystem::exists(m_storageDirectory)) {
+            for (const auto& entry : std::filesystem::directory_iterator(m_storageDirectory)) {
+                if (entry.is_regular_file()) {
+                    totalSize += static_cast<size_t>(entry.file_size());
+                }
+            }
+        }
+    } catch (const std::exception& e) {
+        VLOG_ERROR(__FUNCTION__ " - Error calculating storage usage: %s", e.what());
+    }
+    
+    VLOG_DEBUG(__FUNCTION__ " - Total storage used: %zu bytes", totalSize);
+    return totalSize;
+}
+
+bool FileStorage::GetQuota(int32* pnTotalBytes, int32* pnAvailableBytes)
+{
+    if (!pnTotalBytes || !pnAvailableBytes) {
+        return false;
+    }
+    
+    size_t usedBytes = GetTotalStorageUsed();
+    
+    *pnTotalBytes = DEFAULT_TOTAL_QUOTA;
+    *pnAvailableBytes = std::max(0, static_cast<int32>(DEFAULT_TOTAL_QUOTA - usedBytes));
+    
+    VLOG_DEBUG(__FUNCTION__ " - Quota: Total=%d, Available=%d, Used=%zu", 
+               *pnTotalBytes, *pnAvailableBytes, usedBytes);
+    
+    return true;
+}
+
 bool FileStorage::EnsureDirectoryExists()
 {
     try {
@@ -324,41 +316,49 @@ bool FileStorage::IsValidFilename(const std::string& filename) const
     return true;
 }
 
-size_t FileStorage::GetTotalStorageUsed()
+std::string FileStorage::NormalizeFilename(const std::string& filename) const
 {
-    size_t totalSize = 0;
+    std::string normalized = filename;
+    
+    // Convert to lowercase (Steam requirement)
+    std::transform(normalized.begin(), normalized.end(), normalized.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    
+    // Replace backslashes with forward slashes
+    std::replace(normalized.begin(), normalized.end(), '\\', '/');
+    
+    // Remove leading slashes
+    while (!normalized.empty() && normalized[0] == '/') {
+        normalized.erase(0, 1);
+    }
+    
+    return normalized;
+}
+
+std::string FileStorage::GetFullPath(const std::string& filename) const
+{
+    std::string normalized = NormalizeFilename(filename);
+    return m_storageDirectory + "/" + normalized;
+}
+
+void FileStorage::CacheFileList()
+{
+    m_indexToFile.clear();
     
     try {
         if (std::filesystem::exists(m_storageDirectory)) {
             for (const auto& entry : std::filesystem::directory_iterator(m_storageDirectory)) {
                 if (entry.is_regular_file()) {
-                    totalSize += static_cast<size_t>(entry.file_size());
+                    std::string filename = entry.path().filename().string();
+                    std::string normalized = NormalizeFilename(filename);
+                    m_indexToFile.push_back(normalized);
                 }
             }
         }
+        VLOG_DEBUG(__FUNCTION__ " - Cached file list, found %zu files", m_indexToFile.size());
     } catch (const std::exception& e) {
-        VLOG_ERROR(__FUNCTION__ " - Error calculating storage usage: %s", e.what());
+        VLOG_ERROR(__FUNCTION__ " - Error caching file list: %s", e.what());
     }
-    
-    VLOG_DEBUG(__FUNCTION__ " - Total storage used: %zu bytes", totalSize);
-    return totalSize;
-}
-
-bool FileStorage::GetQuota(int32* pnTotalBytes, int32* pnAvailableBytes)
-{
-    if (!pnTotalBytes || !pnAvailableBytes) {
-        return false;
-    }
-    
-    size_t usedBytes = GetTotalStorageUsed();
-    
-    *pnTotalBytes = DEFAULT_TOTAL_QUOTA;
-    *pnAvailableBytes = std::max(0, static_cast<int32>(DEFAULT_TOTAL_QUOTA - usedBytes));
-    
-    VLOG_DEBUG(__FUNCTION__ " - Quota: Total=%d, Available=%d, Used=%zu", 
-               *pnTotalBytes, *pnAvailableBytes, usedBytes);
-    
-    return true;
 }
 
 } // namespace VaporCore
