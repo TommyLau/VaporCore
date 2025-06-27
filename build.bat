@@ -168,23 +168,21 @@ echo ====================================================================
 echo Updating Version Information
 echo ====================================================================
 
-:: Read base version from version.h (VAPORCORE_VERSION_STRING_SHORT)
+:: Read base version from version.h.in template (VAPORCORE_VERSION_STRING_SHORT)
+set VERSION_TEMPLATE=include\version.h.in
 set VERSION_FILE=include\version.h
-if not exist "%VERSION_FILE%" (
-    echo Error: Version file not found: %VERSION_FILE%
+if not exist "%VERSION_TEMPLATE%" (
+    echo Error: Version template file not found: %VERSION_TEMPLATE%
     exit /b 1
 )
 
-echo Reading base version from %VERSION_FILE%...
+echo Reading base version from %VERSION_TEMPLATE%...
 
-:: Extract base version from VAPORCORE_VERSION_STRING_SHORT
+:: Extract base version from template (@BASE_VERSION@ = x.x.x pattern)
 set BASE_VERSION=
-for /f "usebackq tokens=3 delims= " %%i in (`findstr "VAPORCORE_VERSION_STRING_SHORT" "%VERSION_FILE%"`) do (
+for /f "usebackq tokens=4 delims= " %%i in (`findstr "@BASE_VERSION@" "%VERSION_TEMPLATE%"`) do (
     set BASE_VERSION=%%i
 )
-
-:: Remove quotes from version string
-set BASE_VERSION=!BASE_VERSION:"=!
 
 if "!BASE_VERSION!"=="" (
     echo Error: Could not read base version from %VERSION_FILE%
@@ -218,35 +216,23 @@ set VERSION_STRING_SHORT=!VERSION_MAJOR!.!VERSION_MINOR!.!VERSION_PATCH!
 echo Version: !VERSION_STRING!
 echo Short Version: !VERSION_STRING_SHORT!
 
-echo Updating %VERSION_FILE%...
+echo Generating %VERSION_FILE% from template...
 
 :: Create temporary file with updated content
 set TEMP_FILE=%TEMP%\version_temp.h
 if exist "%TEMP_FILE%" del "%TEMP_FILE%"
 
-:: Create temporary PowerShell script for version processing
-set PS_SCRIPT=%TEMP%\update_version.ps1
-echo $lines = Get-Content '%VERSION_FILE%' > "%PS_SCRIPT%"
-echo $output = @() >> "%PS_SCRIPT%"
-echo foreach ($line in $lines) { >> "%PS_SCRIPT%"
-echo     $trimmed = $line.TrimEnd(' ') >> "%PS_SCRIPT%"
-echo     if ($line -match 'VAPORCORE_VERSION_MAJOR') { >> "%PS_SCRIPT%"
-echo         $output += '#define VAPORCORE_VERSION_MAJOR     %VERSION_MAJOR%' >> "%PS_SCRIPT%"
-echo     } elseif ($line -match 'VAPORCORE_VERSION_MINOR') { >> "%PS_SCRIPT%"
-echo         $output += '#define VAPORCORE_VERSION_MINOR     %VERSION_MINOR%' >> "%PS_SCRIPT%"
-echo     } elseif ($line -match 'VAPORCORE_VERSION_PATCH') { >> "%PS_SCRIPT%"
-echo         $output += '#define VAPORCORE_VERSION_PATCH     %VERSION_PATCH%' >> "%PS_SCRIPT%"
-echo     } elseif ($line -match 'VAPORCORE_VERSION_BUILD') { >> "%PS_SCRIPT%"
-echo         $output += '#define VAPORCORE_VERSION_BUILD     %VERSION_BUILD%' >> "%PS_SCRIPT%"
-echo     } elseif ($line -match 'VAPORCORE_VERSION_STRING ') { >> "%PS_SCRIPT%"
-echo         $output += '#define VAPORCORE_VERSION_STRING    "%VERSION_STRING%"' >> "%PS_SCRIPT%"
-echo     } elseif ($line -match 'VAPORCORE_VERSION_STRING_SHORT') { >> "%PS_SCRIPT%"
-echo         $output += '#define VAPORCORE_VERSION_STRING_SHORT "%VERSION_STRING_SHORT%"' >> "%PS_SCRIPT%"
-echo     } else { >> "%PS_SCRIPT%"
-echo         $output += $trimmed >> "%PS_SCRIPT%"
-echo     } >> "%PS_SCRIPT%"
-echo } >> "%PS_SCRIPT%"
-echo $output ^| Out-File -FilePath '%TEMP_FILE%' -Encoding ASCII >> "%PS_SCRIPT%"
+:: Create temporary PowerShell script for template processing
+set PS_SCRIPT=%TEMP%\generate_version.ps1
+echo $template = Get-Content '%VERSION_TEMPLATE%' -Raw > "%PS_SCRIPT%"
+echo $output = $template >> "%PS_SCRIPT%"
+echo $output = $output -replace '@VERSION_MAJOR@', '%VERSION_MAJOR%' >> "%PS_SCRIPT%"
+echo $output = $output -replace '@VERSION_MINOR@', '%VERSION_MINOR%' >> "%PS_SCRIPT%"
+echo $output = $output -replace '@VERSION_PATCH@', '%VERSION_PATCH%' >> "%PS_SCRIPT%"
+echo $output = $output -replace '@VERSION_BUILD@', '%VERSION_BUILD%' >> "%PS_SCRIPT%"
+echo $output = $output -replace '@VERSION_STRING@', '%VERSION_STRING%' >> "%PS_SCRIPT%"
+echo $output = $output -replace '@VERSION_STRING_SHORT@', '%VERSION_STRING_SHORT%' >> "%PS_SCRIPT%"
+echo $output ^| Out-File -FilePath '%TEMP_FILE%' -Encoding ASCII -NoNewline >> "%PS_SCRIPT%"
 
 :: Run the PowerShell script
 powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_SCRIPT%"
@@ -254,10 +240,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_SCRIPT%"
 :: Clean up temporary script
 del "%PS_SCRIPT%"
 
-:: Replace original file with updated content
+:: Replace original file with generated content
 move "%TEMP_FILE%" "%VERSION_FILE%" >nul
 if !errorlevel! neq 0 (
-    echo Error: Failed to update version file
+    echo Error: Failed to generate version file
     exit /b 1
 )
 

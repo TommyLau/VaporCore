@@ -91,6 +91,9 @@ _CPack_Packages/
 # VaporCore log files
 vaporcore_log.txt
 
+# Generated version file (generated from version.h.in template)
+include/version.h
+
 # OS generated files
 .DS_Store
 .DS_Store?
