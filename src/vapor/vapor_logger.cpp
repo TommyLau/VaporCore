@@ -18,6 +18,8 @@
 #include "vapor_base.h"
 #include "vapor_logger.h"
 
+namespace VaporCore {
+
 Logger& Logger::GetInstance() {
     static Logger instance;
     return instance;
@@ -106,5 +108,7 @@ std::string Logger::LevelToString(LogLevel level) {
         default:                return "UNKNOWN";
     }
 }
+
+} // namespace VaporCore
 
 #endif // VAPORCORE_ENABLE_LOGGING 

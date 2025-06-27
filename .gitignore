@@ -125,6 +125,7 @@ test_results/
 # Local configuration
 local_config.json
 vaporcore_local.ini
+vaporcore.ini
 *.local
 
 # Archives

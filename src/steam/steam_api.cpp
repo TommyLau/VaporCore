@@ -59,10 +59,8 @@ static uintp g_uSteamAPICallCounter = 0;
 S_API bool S_CALLTYPE SteamAPI_Init() {
     // TODO: Implement SteamAPI_Init
 #ifdef VAPORCORE_ENABLE_LOGGING
-    // Initialize logger
-    Logger::GetInstance().Initialize("vaporcore_log.txt");
     // Set log level to DEBUG to show all log messages
-    Logger::GetInstance().SetLogLevel(LogLevel::DEBUG);
+    VLOG_SET_DEBUG();
 #endif
 
     VLOG_INFO("SteamAPI_Init called");

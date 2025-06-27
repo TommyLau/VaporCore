@@ -20,6 +20,8 @@
 #include <memory>
 #include <sstream>
 
+namespace VaporCore {
+
 enum class LogLevel {
     DEBUG = 0,
     INFO = 1,
@@ -92,18 +94,20 @@ private:
     bool m_initialized = false;
 };
 
+} // namespace VaporCore
+
 // Convenience macros with variadic arguments support
-#define VLOG_DEBUG(...) Logger::GetInstance().Debug(__VA_ARGS__)
-#define VLOG_INFO(...) Logger::GetInstance().Info(__VA_ARGS__)
-#define VLOG_WARNING(...) Logger::GetInstance().Warning(__VA_ARGS__)
-#define VLOG_ERROR(...) Logger::GetInstance().Error(__VA_ARGS__)
+#define VLOG_DEBUG(...) VaporCore::Logger::GetInstance().Debug(__VA_ARGS__)
+#define VLOG_INFO(...) VaporCore::Logger::GetInstance().Info(__VA_ARGS__)
+#define VLOG_WARNING(...) VaporCore::Logger::GetInstance().Warning(__VA_ARGS__)
+#define VLOG_ERROR(...) VaporCore::Logger::GetInstance().Error(__VA_ARGS__)
 
 // Convenience macros for log level control
-#define VLOG_SET_LEVEL(level) Logger::GetInstance().SetLogLevel(level)
-#define VLOG_SET_DEBUG() Logger::GetInstance().SetLogLevel(LogLevel::DEBUG)
-#define VLOG_SET_INFO() Logger::GetInstance().SetLogLevel(LogLevel::INFO)
-#define VLOG_SET_WARNING() Logger::GetInstance().SetLogLevel(LogLevel::WARNING)
-#define VLOG_SET_ERROR() Logger::GetInstance().SetLogLevel(LogLevel::ERROR)
+#define VLOG_SET_LEVEL(level) VaporCore::Logger::GetInstance().SetLogLevel(level)
+#define VLOG_SET_DEBUG() VaporCore::Logger::GetInstance().SetLogLevel(VaporCore::LogLevel::DEBUG)
+#define VLOG_SET_INFO() VaporCore::Logger::GetInstance().SetLogLevel(VaporCore::LogLevel::INFO)
+#define VLOG_SET_WARNING() VaporCore::Logger::GetInstance().SetLogLevel(VaporCore::LogLevel::WARNING)
+#define VLOG_SET_ERROR() VaporCore::Logger::GetInstance().SetLogLevel(VaporCore::LogLevel::ERROR)
 
 #else
 

@@ -125,7 +125,7 @@ HSteamUser CSteamClient::ConnectToGlobalUser( HSteamPipe hSteamPipe )
 
     m_mapSteamPipes[hSteamPipe] = ESteamPipe::k_ESteamPipeClient;
 
-    return DEFAULT_CLIENT_USER;
+    return VaporCore::DEFAULT_CLIENT_USER;
 }
 
 // used by game servers, create a steam user that won't be shared with anyone else
@@ -134,7 +134,7 @@ HSteamUser CSteamClient::CreateLocalUser( HSteamPipe *phSteamPipe, EAccountType 
 {
     // TODO: Implement local user creation
     VLOG_DEBUG("CreateLocalUser called with phSteamPipe=%u and eAccountType=%d", phSteamPipe, eAccountType);
-    return DEFAULT_SERVER_USER;
+    return VaporCore::DEFAULT_SERVER_USER;
 }
 
 // Changed from Steam SDK v1.04, backward compatibility
@@ -142,7 +142,7 @@ HSteamUser CSteamClient::CreateLocalUser( HSteamPipe *phSteamPipe )
 {
     // TODO: Implement local user creation
     VLOG_DEBUG("CreateLocalUser called with phSteamPipe=%u", phSteamPipe);
-    return DEFAULT_SERVER_USER;
+    return VaporCore::DEFAULT_SERVER_USER;
 }
 
 // removes an allocated user
