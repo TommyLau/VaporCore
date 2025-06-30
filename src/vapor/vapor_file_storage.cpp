@@ -20,7 +20,7 @@
 namespace VaporCore {
 
 // Default quota limits (matching Steam's typical limits)
-static const int32 DEFAULT_TOTAL_QUOTA = 100 * 1024 * 1024;  // 100MB
+static const uint64 DEFAULT_TOTAL_QUOTA = 100ULL * 1024 * 1024;  // 100MB
 static const int32 DEFAULT_FILE_LIMIT = 1000;                // Max files
 
 FileStorage::FileStorage(const std::string& storageDir)
@@ -251,7 +251,7 @@ size_t FileStorage::GetTotalStorageUsed()
     return totalSize;
 }
 
-bool FileStorage::GetQuota(int32* pnTotalBytes, int32* pnAvailableBytes)
+bool FileStorage::GetQuota(uint64* pnTotalBytes, uint64* pnAvailableBytes)
 {
     if (!pnTotalBytes || !pnAvailableBytes) {
         return false;
@@ -260,9 +260,9 @@ bool FileStorage::GetQuota(int32* pnTotalBytes, int32* pnAvailableBytes)
     size_t usedBytes = GetTotalStorageUsed();
     
     *pnTotalBytes = DEFAULT_TOTAL_QUOTA;
-    *pnAvailableBytes = std::max(0, static_cast<int32>(DEFAULT_TOTAL_QUOTA - usedBytes));
+    *pnAvailableBytes = (usedBytes > DEFAULT_TOTAL_QUOTA) ? 0 : (DEFAULT_TOTAL_QUOTA - usedBytes);
     
-    VLOG_DEBUG(__FUNCTION__ " - Quota: Total=%d, Available=%d, Used=%zu", 
+    VLOG_DEBUG(__FUNCTION__ " - Quota: Total = %llu, Available = %llu, Used = %zu", 
                *pnTotalBytes, *pnAvailableBytes, usedBytes);
     
     return true;

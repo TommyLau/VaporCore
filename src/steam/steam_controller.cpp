@@ -12,42 +12,20 @@
 #include "vapor_base.h"
 #include "steam_controller.h"
 
-// Static instance
-CSteamController* CSteamController::s_pInstance = nullptr;
-
 CSteamController::CSteamController()
 {
-    VLOG_INFO("CSteamController constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamController::~CSteamController()
 {
-    VLOG_INFO("CSteamController destructor called");
-}
-
-// Helper methods
-CSteamController* CSteamController::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamController();
-    }
-    return s_pInstance;
-}
-
-void CSteamController::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Init and Shutdown must be called when starting/ending use of this interface
 bool CSteamController::Init()
 {
-    VLOG_DEBUG("CSteamController::Init called");
+    VLOG_INFO(__FUNCTION__);
     return true;
 }
 
@@ -55,18 +33,19 @@ bool CSteamController::Init()
 // Changed from Steam SDK v1.35a, backward compatibility
 bool CSteamController::Init(const char *pchAbsolutePathToControllerConfigVDF)
 {
-    VLOG_DEBUG("CSteamController::Init called with config path: %s", pchAbsolutePathToControllerConfigVDF);
+    VLOG_INFO(__FUNCTION__ " - config path: %s", pchAbsolutePathToControllerConfigVDF);
     return true;
 }
 
 bool CSteamController::Shutdown()
 {
-    VLOG_DEBUG("CSteamController::Shutdown called");
+    VLOG_INFO(__FUNCTION__);
     return true;
 }
 
-// Pump callback/callresult events
-// Note: SteamAPI_RunCallbacks will do this for you, so you should never need to call this directly.
+// Synchronize API state with the latest Steam Controller inputs available. This
+// is performed automatically by SteamAPI_RunCallbacks, but for the absolute lowest
+// possible latency, you call this directly before reading controller state.
 void CSteamController::RunFrame()
 {
     // No implementation needed since SteamAPI_RunCallbacks handles this
@@ -76,7 +55,7 @@ void CSteamController::RunFrame()
 // Removed from Steam SDK v1.35a, backward compatibility
 bool CSteamController::GetControllerState(uint32 unControllerIndex, SteamControllerState_t *pState)
 {
-    VLOG_DEBUG("CSteamController::GetControllerState called for controller %u", unControllerIndex);
+    VLOG_INFO(__FUNCTION__ " - controller %u", unControllerIndex);
     if (!pState) {
         return false;
     }
@@ -90,7 +69,7 @@ bool CSteamController::GetControllerState(uint32 unControllerIndex, SteamControl
 // Returns the number of handles written to handlesOut
 int CSteamController::GetConnectedControllers(ControllerHandle_t *handlesOut)
 {
-    VLOG_DEBUG("CSteamController::GetConnectedControllers called");
+    VLOG_INFO(__FUNCTION__);
     return 0; // Return 0 since no controllers are connected
 }
 
@@ -98,7 +77,7 @@ int CSteamController::GetConnectedControllers(ControllerHandle_t *handlesOut)
 // Returns false is overlay is disabled / unavailable, or the user is not in Big Picture mode
 bool CSteamController::ShowBindingPanel(ControllerHandle_t controllerHandle)
 {
-    VLOG_DEBUG("CSteamController::ShowBindingPanel called for controller %llu", controllerHandle);
+    VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
     return false; // Return false since overlay is not available
 }
 
@@ -106,7 +85,7 @@ bool CSteamController::ShowBindingPanel(ControllerHandle_t controllerHandle)
 // Lookup the handle for an Action Set. Best to do this once on startup, and store the handles for all future API calls.
 ControllerActionSetHandle_t CSteamController::GetActionSetHandle(const char *pszActionSetName)
 {
-    VLOG_DEBUG("CSteamController::GetActionSetHandle called for action set: %s", pszActionSetName);
+    VLOG_INFO(__FUNCTION__ " - action set: %s", pszActionSetName);
     return 0; // Return invalid handle
 }
 
@@ -115,13 +94,12 @@ ControllerActionSetHandle_t CSteamController::GetActionSetHandle(const char *psz
 // your state loops, instead of trying to place it in all of your state transitions.
 void CSteamController::ActivateActionSet(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle)
 {
-    VLOG_DEBUG("CSteamController::ActivateActionSet called for controller %llu with action set %llu", 
-               controllerHandle, actionSetHandle);
+    VLOG_INFO(__FUNCTION__ " - controller %llu, action set %llu", controllerHandle, actionSetHandle);
 }
 
 ControllerActionSetHandle_t CSteamController::GetCurrentActionSet(ControllerHandle_t controllerHandle)
 {
-    VLOG_DEBUG("CSteamController::GetCurrentActionSet called for controller %llu", controllerHandle);
+    VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
     return 0; // Return invalid handle
 }
 
@@ -129,15 +107,14 @@ ControllerActionSetHandle_t CSteamController::GetCurrentActionSet(ControllerHand
 // Lookup the handle for a digital action. Best to do this once on startup, and store the handles for all future API calls.
 ControllerDigitalActionHandle_t CSteamController::GetDigitalActionHandle(const char *pszActionName)
 {
-    VLOG_DEBUG("CSteamController::GetDigitalActionHandle called for action: %s", pszActionName);
+    VLOG_INFO(__FUNCTION__ " - action: %s", pszActionName);
     return 0; // Return invalid handle
 }
 
 // Returns the current state of the supplied digital game action
 ControllerDigitalActionData_t CSteamController::GetDigitalActionData(ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle)
 {
-    VLOG_DEBUG("CSteamController::GetDigitalActionData called for controller %llu and action %llu",
-               controllerHandle, digitalActionHandle);
+    VLOG_INFO(__FUNCTION__ " - controller %llu, action %llu", controllerHandle, digitalActionHandle);
     ControllerDigitalActionData_t data = {};
     data.bState = false;
     data.bActive = false;
@@ -148,14 +125,14 @@ ControllerDigitalActionData_t CSteamController::GetDigitalActionData(ControllerH
 // originsOut should point to a STEAM_CONTROLLER_MAX_ORIGINS sized array of EControllerActionOrigin handles
 int CSteamController::GetDigitalActionOrigins(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerDigitalActionHandle_t digitalActionHandle, EControllerActionOrigin *originsOut)
 {
-    VLOG_DEBUG("CSteamController::GetDigitalActionOrigins called for controller %llu", controllerHandle);
+    VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
     return 0; // Return 0 since no origins are available
 }
 
 // Lookup the handle for an analog action. Best to do this once on startup, and store the handles for all future API calls.
 ControllerAnalogActionHandle_t CSteamController::GetAnalogActionHandle(const char *pszActionName)
 {
-    VLOG_DEBUG("CSteamController::GetAnalogActionHandle called for action: %s", pszActionName);
+    VLOG_INFO(__FUNCTION__ " - action: %s", pszActionName);
     ControllerAnalogActionHandle_t handle = {}; // Init empty struct
     return handle;
 }
@@ -163,8 +140,7 @@ ControllerAnalogActionHandle_t CSteamController::GetAnalogActionHandle(const cha
 // Returns the current state of these supplied analog game action
 ControllerAnalogActionData_t CSteamController::GetAnalogActionData(ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle)
 {
-    VLOG_DEBUG("CSteamController::GetAnalogActionData called for controller %llu and action %llu",
-               controllerHandle, analogActionHandle);
+    VLOG_INFO(__FUNCTION__ " - controller %llu, action %llu", controllerHandle, analogActionHandle);
     ControllerAnalogActionData_t data = {};
     data.eMode = k_EControllerSourceMode_None;
     data.x = 0.0f;
@@ -177,39 +153,72 @@ ControllerAnalogActionData_t CSteamController::GetAnalogActionData(ControllerHan
 // originsOut should point to a STEAM_CONTROLLER_MAX_ORIGINS sized array of EControllerActionOrigin handles
 int CSteamController::GetAnalogActionOrigins(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerAnalogActionHandle_t analogActionHandle, EControllerActionOrigin *originsOut)
 {
-    VLOG_DEBUG("CSteamController::GetAnalogActionOrigins called for controller %llu", controllerHandle);
+    VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
     return 0; // Return 0 since no origins are available
 }
 
 void CSteamController::StopAnalogActionMomentum(ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t eAction)
 {
-    VLOG_DEBUG("CSteamController::StopAnalogActionMomentum called for controller %llu and action %llu",
-               controllerHandle, eAction);
+    VLOG_INFO(__FUNCTION__ " - controller %llu, action %llu", controllerHandle, eAction);
 }
 
 // Trigger a haptic pulse on a controller
 void CSteamController::TriggerHapticPulse(ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec)
 {
-    VLOG_DEBUG("CSteamController::TriggerHapticPulse called for controller %llu, pad %d, duration %u",
-               controllerHandle, eTargetPad, usDurationMicroSec);
+    VLOG_INFO(__FUNCTION__ " - controller %llu, pad %d, duration %u", controllerHandle, eTargetPad, usDurationMicroSec);
 }
 
 // Trigger a haptic pulse on the controller
 // Changed from Steam SDK v1.35a, backward compatibility
 void CSteamController::TriggerHapticPulse(uint32 unControllerIndex, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec)
 {
-    VLOG_DEBUG("CSteamController::TriggerHapticPulse called - Controller: %u, Pad: %d, Duration: %u", 
-               unControllerIndex, eTargetPad, usDurationMicroSec);
+    VLOG_INFO(__FUNCTION__ " - controller %u, pad %d, duration %u", unControllerIndex, eTargetPad, usDurationMicroSec);
 }
 
 void CSteamController::TriggerRepeatedHapticPulse(ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec, unsigned short usOffMicroSec, unsigned short unRepeat, unsigned int nFlags)
 {
-    VLOG_DEBUG("CSteamController::TriggerRepeatedHapticPulse called for controller %llu, pad %d, duration %u, off duration %u, repeat %u, flags %u",
+    VLOG_INFO(__FUNCTION__ " - controller %llu, pad %d, duration %u, off duration %u, repeat %u, flags %u",
                controllerHandle, eTargetPad, usDurationMicroSec, usOffMicroSec, unRepeat, nFlags);
 }
 
 // Set the override mode which is used to choose to use different base/legacy bindings from your config file
 void CSteamController::SetOverrideMode(const char *pchMode)
 {
-    VLOG_DEBUG("CSteamController::SetOverrideMode called with mode: %s", pchMode);
+    VLOG_INFO(__FUNCTION__ " - mode: %s", pchMode);
+}
+	
+// Returns the associated gamepad index for the specified controller, if emulating a gamepad
+int CSteamController::GetGamepadIndexForController(ControllerHandle_t ulControllerHandle)
+{
+    VLOG_INFO(__FUNCTION__ " - controller %llu", ulControllerHandle);
+    return -1; // Return -1 to indicate no gamepad emulation
+}
+
+// Returns the associated controller handle for the specified emulated gamepad
+ControllerHandle_t CSteamController::GetControllerForGamepadIndex(int nIndex)
+{
+    VLOG_INFO(__FUNCTION__ " - index %d", nIndex);
+    return 0; // Return 0 to indicate no controller found
+}
+
+// Returns raw motion data from the specified controller
+ControllerMotionData_t CSteamController::GetMotionData(ControllerHandle_t controllerHandle)
+{
+    VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
+    ControllerMotionData_t data = {};
+    return data;
+}
+
+// Attempt to display origins of given action in the controller HUD, for the currently active action set
+// Returns false is overlay is disabled / unavailable, or the user is not in Big Picture mode
+bool CSteamController::ShowDigitalActionOrigins(ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle, float flScale, float flXPosition, float flYPosition)
+{
+    VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
+    return false; // Return false since overlay functionality is not implemented
+}
+
+bool CSteamController::ShowAnalogActionOrigins(ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle, float flScale, float flXPosition, float flYPosition)
+{
+    VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
+    return false; // Return false since overlay functionality is not implemented
 }

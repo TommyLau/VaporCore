@@ -21,6 +21,7 @@
 #include <isteamugc003.h>
 #include <isteamugc005.h>
 #include <isteamugc007.h>
+#include <isteamugc008.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Steam UGC support API
@@ -31,20 +32,18 @@ class CSteamUGC :
     public ISteamUGC002,
     public ISteamUGC003,
     public ISteamUGC005,
-    public ISteamUGC007
+    public ISteamUGC007,
+    public ISteamUGC008
 {
-private:
-    // Singleton instance
-    static CSteamUGC* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamUGC& GetInstance()
+	{
+		static CSteamUGC instance;
+		return instance;
+	}
 
 public:
-    CSteamUGC();
-    ~CSteamUGC();
-
-    // Helper methods
-    static CSteamUGC* GetInstance();
-    static void ReleaseInstance();
-
 	// Query UGC associated with a user. Creator app id or consumer app id must be valid and be set to the current running app. unPage should start at 1.
 	UGCQueryHandle_t CreateQueryUserUGCRequest( AccountID_t unAccountID, EUserUGCList eListType, EUGCMatchingUGCType eMatchingUGCType, EUserUGCListSortOrder eSortOrder, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage ) override;
 
@@ -63,6 +62,8 @@ public:
 	bool GetQueryUGCPreviewURL( UGCQueryHandle_t handle, uint32 index, OUT_STRING_COUNT(cchURLSize) char *pchURL, uint32 cchURLSize ) override;
 	bool GetQueryUGCMetadata( UGCQueryHandle_t handle, uint32 index, OUT_STRING_COUNT(cchMetadatasize) char *pchMetadata, uint32 cchMetadatasize ) override;
 	bool GetQueryUGCChildren( UGCQueryHandle_t handle, uint32 index, PublishedFileId_t* pvecPublishedFileID, uint32 cMaxEntries ) override;
+	bool GetQueryUGCStatistic( UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint64 *pStatValue ) override;
+	// Changed from Steam SDK v1.38a, backward compatibility
 	bool GetQueryUGCStatistic( UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint32 *pStatValue ) override;
 	uint32 GetQueryUGCNumAdditionalPreviews( UGCQueryHandle_t handle, uint32 index ) override;
 	bool GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, OUT_STRING_COUNT(cchURLSize) char *pchURLOrVideoID, uint32 cchURLSize, OUT_STRING_COUNT(cchURLSize) char *pchOriginalFileName, uint32 cchOriginalFileNameSize, EItemPreviewType *pPreviewType ) override;
@@ -77,6 +78,7 @@ public:
 	// Options to set for querying UGC
 	bool AddRequiredTag( UGCQueryHandle_t handle, const char *pTagName ) override;
 	bool AddExcludedTag( UGCQueryHandle_t handle, const char *pTagName ) override;
+	bool SetReturnOnlyIDs( UGCQueryHandle_t handle, bool bReturnOnlyIDs ) override;
 	bool SetReturnKeyValueTags( UGCQueryHandle_t handle, bool bReturnKeyValueTags ) override;
 	bool SetReturnLongDescription( UGCQueryHandle_t handle, bool bReturnLongDescription ) override;
 	bool SetReturnMetadata( UGCQueryHandle_t handle, bool bReturnMetadata ) override;
@@ -173,6 +175,23 @@ public:
 
 	// SuspendDownloads( true ) will suspend all workshop downloads until SuspendDownloads( false ) is called or the game ends
 	void SuspendDownloads( bool bSuspend ) override;
+
+	// usage tracking
+	CALL_RESULT( StartPlaytimeTrackingResult_t )
+	SteamAPICall_t StartPlaytimeTracking( PublishedFileId_t *pvecPublishedFileID, uint32 unNumPublishedFileIDs ) override;
+	CALL_RESULT( StopPlaytimeTrackingResult_t )
+	SteamAPICall_t StopPlaytimeTracking( PublishedFileId_t *pvecPublishedFileID, uint32 unNumPublishedFileIDs ) override;
+	CALL_RESULT( StopPlaytimeTrackingResult_t )
+	SteamAPICall_t StopPlaytimeTrackingForAllItems() override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamUGC();
+    ~CSteamUGC();
+
+    // Delete copy constructor and assignment operator
+    CSteamUGC(const CSteamUGC&) = delete;
+    CSteamUGC& operator=(const CSteamUGC&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_UGC_H

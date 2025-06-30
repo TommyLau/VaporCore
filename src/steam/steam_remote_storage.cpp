@@ -223,13 +223,34 @@ const char *CSteamRemoteStorage::GetFileNameAndSize( int iFile, int32 *pnFileSiz
 }
 
 // configuration management
-bool CSteamRemoteStorage::GetQuota( int32 *pnTotalBytes, int32 *puAvailableBytes )
+bool CSteamRemoteStorage::GetQuota( uint64 *pnTotalBytes, uint64 *puAvailableBytes )
 {
     VLOG_INFO(__FUNCTION__);
 
     VAPORCORE_LOCK_GUARD();
 
+    if (!pnTotalBytes || !puAvailableBytes) {
+        return false;
+    }
+
     return m_fileStorage.GetQuota(pnTotalBytes, puAvailableBytes);
+}
+
+// Changed from Steam SDK v1.38a, backward compatibility
+bool CSteamRemoteStorage::GetQuota( int32 *pnTotalBytes, int32 *puAvailableBytes )
+{
+    VLOG_INFO(__FUNCTION__);
+
+    uint64 totalBytes64 = 0;
+    uint64 availableBytes64 = 0;
+    
+    bool result = GetQuota(&totalBytes64, &availableBytes64);
+    
+    // Convert uint64 values to int32, clamping to int32 max if necessary
+    *pnTotalBytes = (totalBytes64 > INT32_MAX) ? INT32_MAX : static_cast<int32>(totalBytes64);
+    *puAvailableBytes = (availableBytes64 > INT32_MAX) ? INT32_MAX : static_cast<int32>(availableBytes64);
+    
+    return result;
 }
 
 bool CSteamRemoteStorage::IsCloudEnabledForAccount()

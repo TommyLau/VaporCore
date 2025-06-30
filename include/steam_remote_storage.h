@@ -23,6 +23,7 @@
 #include <isteamremotestorage010.h>
 #include <isteamremotestorage011.h>
 #include <isteamremotestorage012.h>
+#include <isteamremotestorage013.h>
 
 #include "vapor_file_storage.h"
 
@@ -39,7 +40,8 @@ class CSteamRemoteStorage :
     public ISteamRemoteStorage008,
     public ISteamRemoteStorage010,
     public ISteamRemoteStorage011,
-    public ISteamRemoteStorage012
+    public ISteamRemoteStorage012,
+    public ISteamRemoteStorage013
 {
 public:
     // Singleton accessor
@@ -92,6 +94,8 @@ public:
     const char *GetFileNameAndSize( int iFile, int32 *pnFileSizeInBytes ) override;
 
 	// configuration management
+	bool GetQuota( uint64 *pnTotalBytes, uint64 *puAvailableBytes ) override;
+    // Changed from Steam SDK v1.38a, backward compatibility
     bool GetQuota( int32 *pnTotalBytes, int32 *puAvailableBytes ) override;
     bool IsCloudEnabledForAccount() override;
     bool IsCloudEnabledForApp() override;
@@ -196,8 +200,11 @@ public:
 	SteamAPICall_t PublishVideo( EWorkshopVideoProvider eVideoProvider, const char *pchVideoAccount, const char *pchVideoIdentifier, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags ) override;
     // Changed from Steam SDK v1.20, backward compatibility
     SteamAPICall_t PublishVideo( const char *pchVideoURL, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags ) override;
-	CALL_RESULT( RemoteStorageEnumeratePublishedFilesByUserActionResult_t )
+	CALL_RESULT( RemoteStorageSetUserPublishedFileActionResult_t )
     SteamAPICall_t SetUserPublishedFileAction( PublishedFileId_t unPublishedFileId, EWorkshopFileAction eAction ) override;
+    // Changed from Steam SDK v1.38a, return type changed and comment out
+	// CALL_RESULT( RemoteStorageEnumeratePublishedFilesByUserActionResult_t )
+    // SteamAPICall_t SetUserPublishedFileAction( PublishedFileId_t unPublishedFileId, EWorkshopFileAction eAction ) override;
 	CALL_RESULT( RemoteStorageEnumeratePublishedFilesByUserActionResult_t )
     SteamAPICall_t EnumeratePublishedFilesByUserAction( EWorkshopFileAction eAction, uint32 unStartIndex ) override;
 	// this method enumerates the public view of workshop files

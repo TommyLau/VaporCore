@@ -436,6 +436,20 @@ S_API bool SteamAPI_ISteamUser_BIsTwoFactorEnabled(intptr_t instancePtr)
     return reinterpret_cast<ISteamUser*>(instancePtr)->BIsTwoFactorEnabled();
 }
 
+S_API bool SteamAPI_ISteamUser_BIsPhoneIdentifying(intptr_t instancePtr)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUser_BIsPhoneIdentifying called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUser*>(instancePtr)->BIsPhoneIdentifying();
+}
+
+S_API bool SteamAPI_ISteamUser_BIsPhoneRequiringVerification(intptr_t instancePtr)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUser_BIsPhoneRequiringVerification called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUser*>(instancePtr)->BIsPhoneRequiringVerification();
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamFriends flat API implementations
@@ -1762,7 +1776,7 @@ S_API const char * SteamAPI_ISteamRemoteStorage_GetFileNameAndSize(intptr_t inst
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetFileNameAndSize(iFile, pnFileSizeInBytes);
 }
 
-S_API bool SteamAPI_ISteamRemoteStorage_GetQuota(intptr_t instancePtr, int32 * pnTotalBytes, int32 * puAvailableBytes)
+S_API bool SteamAPI_ISteamRemoteStorage_GetQuota(intptr_t instancePtr, uint64 * pnTotalBytes, uint64 * puAvailableBytes)
 {
     VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetQuota called");
     if (!instancePtr) return false;
@@ -2493,6 +2507,13 @@ S_API void SteamAPI_ISteamApps_RequestAllProofOfPurchaseKeys(intptr_t instancePt
     reinterpret_cast<ISteamApps*>(instancePtr)->RequestAllProofOfPurchaseKeys();
 }
 
+S_API SteamAPICall_t SteamAPI_ISteamApps_GetFileDetails(intptr_t instancePtr, const char * pszFileName)
+{
+    VLOG_DEBUG("SteamAPI_ISteamApps_GetFileDetails called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamApps*>(instancePtr)->GetFileDetails(pszFileName);
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamNetworking flat API implementations
@@ -2704,6 +2725,20 @@ S_API bool SteamAPI_ISteamScreenshots_TagPublishedFile(intptr_t instancePtr, Scr
     VLOG_DEBUG("SteamAPI_ISteamScreenshots_TagPublishedFile called");
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamScreenshots*>(instancePtr)->TagPublishedFile(hScreenshot, unPublishedFileID);
+}
+
+S_API bool SteamAPI_ISteamScreenshots_IsScreenshotsHooked(intptr_t instancePtr)
+{
+    VLOG_DEBUG("SteamAPI_ISteamScreenshots_IsScreenshotsHooked called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamScreenshots*>(instancePtr)->IsScreenshotsHooked();
+}
+
+S_API ScreenshotHandle SteamAPI_ISteamScreenshots_AddVRScreenshotToLibrary(intptr_t instancePtr, EVRScreenshotType eType, const char * pchFilename, const char * pchVRFilename)
+{
+    VLOG_DEBUG("SteamAPI_ISteamScreenshots_AddVRScreenshotToLibrary called");
+    if (!instancePtr) return INVALID_SCREENSHOT_HANDLE;
+    return reinterpret_cast<ISteamScreenshots*>(instancePtr)->AddVRScreenshotToLibrary(eType, pchFilename, pchVRFilename);
 }
 
 
@@ -3347,6 +3382,41 @@ S_API void SteamAPI_ISteamController_TriggerRepeatedHapticPulse(intptr_t instanc
     reinterpret_cast<ISteamController*>(instancePtr)->TriggerRepeatedHapticPulse(controllerHandle, eTargetPad, usDurationMicroSec, usOffMicroSec, unRepeat, nFlags);
 }
 
+S_API int SteamAPI_ISteamController_GetGamepadIndexForController(intptr_t instancePtr, ControllerHandle_t ulControllerHandle)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetGamepadIndexForController called");
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetGamepadIndexForController(ulControllerHandle);
+}
+
+S_API ControllerHandle_t SteamAPI_ISteamController_GetControllerForGamepadIndex(intptr_t instancePtr, int nIndex)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetControllerForGamepadIndex called");
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetControllerForGamepadIndex(nIndex);
+}
+
+S_API struct ControllerMotionData_t SteamAPI_ISteamController_GetMotionData(intptr_t instancePtr, ControllerHandle_t controllerHandle)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetMotionData called");
+    if (!instancePtr) return {};
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetMotionData(controllerHandle);
+}
+
+S_API bool SteamAPI_ISteamController_ShowDigitalActionOrigins(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle, float flScale, float flXPosition, float flYPosition)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_ShowDigitalActionOrigins called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamController*>(instancePtr)->ShowDigitalActionOrigins(controllerHandle, digitalActionHandle, flScale, flXPosition, flYPosition);
+}
+
+S_API bool SteamAPI_ISteamController_ShowAnalogActionOrigins(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle, float flScale, float flXPosition, float flYPosition)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_ShowAnalogActionOrigins called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamController*>(instancePtr)->ShowAnalogActionOrigins(controllerHandle, analogActionHandle, flScale, flXPosition, flYPosition);
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamUGC flat API implementations
@@ -3408,7 +3478,7 @@ S_API bool SteamAPI_ISteamUGC_GetQueryUGCChildren(intptr_t instancePtr, UGCQuery
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCChildren(handle, index, pvecPublishedFileID, cMaxEntries);
 }
 
-S_API bool SteamAPI_ISteamUGC_GetQueryUGCStatistic(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint32 * pStatValue)
+S_API bool SteamAPI_ISteamUGC_GetQueryUGCStatistic(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint64 * pStatValue)
 {
     VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCStatistic called");
     if (!instancePtr) return false;
@@ -3462,6 +3532,13 @@ S_API bool SteamAPI_ISteamUGC_AddExcludedTag(intptr_t instancePtr, UGCQueryHandl
     VLOG_DEBUG("SteamAPI_ISteamUGC_AddExcludedTag called");
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->AddExcludedTag(handle, pTagName);
+}
+
+S_API bool SteamAPI_ISteamUGC_SetReturnOnlyIDs(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnOnlyIDs)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnOnlyIDs called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnOnlyIDs(handle, bReturnOnlyIDs);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetReturnKeyValueTags(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnKeyValueTags)
@@ -3791,6 +3868,27 @@ S_API void SteamAPI_ISteamUGC_SuspendDownloads(intptr_t instancePtr, bool bSuspe
     VLOG_DEBUG("SteamAPI_ISteamUGC_SuspendDownloads called");
     if (!instancePtr) return;
     reinterpret_cast<ISteamUGC*>(instancePtr)->SuspendDownloads(bSuspend);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUGC_StartPlaytimeTracking(intptr_t instancePtr, PublishedFileId_t * pvecPublishedFileID, uint32 unNumPublishedFileIDs)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_StartPlaytimeTracking called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->StartPlaytimeTracking(pvecPublishedFileID, unNumPublishedFileIDs);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUGC_StopPlaytimeTracking(intptr_t instancePtr, PublishedFileId_t * pvecPublishedFileID, uint32 unNumPublishedFileIDs)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_StopPlaytimeTracking called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->StopPlaytimeTracking(pvecPublishedFileID, unNumPublishedFileIDs);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUGC_StopPlaytimeTrackingForAllItems(intptr_t instancePtr)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_StopPlaytimeTrackingForAllItems called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->StopPlaytimeTrackingForAllItems();
 }
 
 

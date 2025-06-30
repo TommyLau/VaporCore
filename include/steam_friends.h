@@ -41,17 +41,15 @@ class CSteamFriends :
 	public ISteamFriends013,
     public ISteamFriends014
 {
-private:
-    // Singleton instance
-    static CSteamFriends* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamFriends& GetInstance()
+    {
+		static CSteamFriends instance;
+		return instance;
+    }
 
 public:
-    CSteamFriends();
-    ~CSteamFriends();
-
-    // Helper methods
-    static CSteamFriends* GetInstance();
-    static void ReleaseInstance();
 
 	// returns the local players name - guaranteed to not be NULL.
 	// this is the same name as on the users community profile page
@@ -230,7 +228,7 @@ public:
 
 	// Rich Presence data is automatically shared between friends who are in the same game
 	// Each user has a set of Key/Value pairs
-	// Up to 20 different keys can be set
+	// Note the following limits: k_cchMaxRichPresenceKeys, k_cchMaxRichPresenceKeyLength, k_cchMaxRichPresenceValueLength
 	// There are two magic keys:
 	//		"status"  - a UTF-8 string that will show up in the 'view game info' dialog in the Steam friends list
 	//		"connect" - a UTF-8 string that contains the command-line for how a friend can connect to a game
@@ -291,6 +289,15 @@ public:
 	SteamAPICall_t IsFollowing( CSteamID steamID ) override;
 	CALL_RESULT( FriendsEnumerateFollowingList_t )
 	SteamAPICall_t EnumerateFollowingList( uint32 unStartIndex ) override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamFriends();
+    ~CSteamFriends();
+
+    // Delete copy constructor and assignment operator
+    CSteamFriends(const CSteamFriends&) = delete;
+    CSteamFriends& operator=(const CSteamFriends&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_FRIENDS_H

@@ -20,25 +20,25 @@ CSteamClient::CSteamClient()
     , m_unSteamPipeCounter(1)
     , m_pWarningMessageHook(nullptr)
     , m_bUserLoggedIn(false)
-    , m_pSteamUser(CSteamUser::GetInstance())
-    , m_pSteamFriends(CSteamFriends::GetInstance())
+    , m_steamUser(CSteamUser::GetInstance())
+    , m_steamFriends(CSteamFriends::GetInstance())
     , m_pSteamUtils(CSteamUtils::GetInstance())
     , m_pSteamMatchmaking(CSteamMatchmaking::GetInstance())
     , m_steamUserStats(CSteamUserStats::GetInstance())
-    , m_pSteamApps(CSteamApps::GetInstance())
+    , m_steamApps(CSteamApps::GetInstance())
     , m_pSteamMatchmakingServers(CSteamMatchmakingServers::GetInstance())
     , m_pSteamNetworking(CSteamNetworking::GetInstance())
     , m_steamRemoteStorage(CSteamRemoteStorage::GetInstance())
     , m_steamScreenshots(CSteamScreenshots::GetInstance())
     , m_pSteamHTTP(CSteamHTTP::GetInstance())
     , m_pSteamUnifiedMessages(CSteamUnifiedMessages::GetInstance())
-    , m_pSteamController(CSteamController::GetInstance())
-    , m_pSteamUGC(CSteamUGC::GetInstance())
+    , m_steamController(CSteamController::GetInstance())
+    , m_steamUGC(CSteamUGC::GetInstance())
     , m_pSteamAppList(CSteamAppList::GetInstance())
     , m_pSteamMusic(CSteamMusic::GetInstance())
     , m_pSteamMusicRemote(CSteamMusicRemote::GetInstance())
     , m_pSteamHTMLSurface(CSteamHTMLSurface::GetInstance())
-    , m_pSteamInventory(CSteamInventory::GetInstance())
+    , m_steamInventory(CSteamInventory::GetInstance())
     , m_pSteamVideo(CSteamVideo::GetInstance())
 {
     VLOG_INFO("CSteamClient constructor called");
@@ -166,45 +166,39 @@ ISteamUser *CSteamClient::GetISteamUser( HSteamUser hSteamUser, HSteamPipe hStea
         return nullptr;
     }
 
-    // Get the Steam user implementation instance
-    if (!m_pSteamUser) {
-        VLOG_ERROR("GetISteamUser: Steam user not available");
-        return nullptr;
-    }
-
     // Return the appropriate interface version based on the version string
     // Cast to specific interface first for proper vtable mapping, then to ISteamUser*
     if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamUser (latest) - %s", STEAMUSER_INTERFACE_VERSION);
-        return m_pSteamUser;
+        return &m_steamUser;
     } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_018) == 0) {
         VLOG_DEBUG("Returning ISteamUser018");
-        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser018*>(m_pSteamUser));
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser018*>(&m_steamUser));
     } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_017) == 0) {
         VLOG_DEBUG("Returning ISteamUser017");
-        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser017*>(m_pSteamUser));
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser017*>(&m_steamUser));
     } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_016) == 0) {
         VLOG_DEBUG("Returning ISteamUser016");
-        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser016*>(m_pSteamUser));
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser016*>(&m_steamUser));
     } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_014) == 0) {
         VLOG_DEBUG("Returning ISteamUser014");
-        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser014*>(m_pSteamUser));
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser014*>(&m_steamUser));
     } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_013) == 0) {
         VLOG_DEBUG("Returning ISteamUser013");
-        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser013*>(m_pSteamUser));
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser013*>(&m_steamUser));
     } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_012) == 0) {
         VLOG_DEBUG("Returning ISteamUser012");
-        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser012*>(m_pSteamUser));
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser012*>(&m_steamUser));
     } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_010) == 0) {
         VLOG_DEBUG("Returning ISteamUser010");
-        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser010*>(m_pSteamUser));
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser010*>(&m_steamUser));
     } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_009) == 0) {
         VLOG_DEBUG("Returning ISteamUser009");
-        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser009*>(m_pSteamUser));
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser009*>(&m_steamUser));
     } else {
         VLOG_WARNING("GetISteamUser: Unknown interface version '%s', returning " STEAMUSER_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
-        return static_cast<ISteamUser*>(m_pSteamUser);
+        return static_cast<ISteamUser*>(&m_steamUser);
     }
 }
 
@@ -234,48 +228,39 @@ ISteamFriends *CSteamClient::GetISteamFriends( HSteamUser hSteamUser, HSteamPipe
         return nullptr;
     }
 
-    // Get the Steam friends implementation instance
-    if (!m_pSteamFriends) {
-        VLOG_ERROR("GetISteamFriends: Steam friends not available");
-        return nullptr;
-    }
-
     // Return the appropriate interface version based on the version string
     // Cast to specific interface first for proper vtable mapping, then to ISteamFriends*
     if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamFriends (latest) - %s", STEAMFRIENDS_INTERFACE_VERSION);
-        return static_cast<ISteamFriends*>(m_pSteamFriends);
+        return static_cast<ISteamFriends*>(&m_steamFriends);
     } else if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION_014) == 0) {
         VLOG_DEBUG("Returning ISteamFriends014");
-        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends014*>(m_pSteamFriends));
+        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends014*>(&m_steamFriends));
     } else if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION_013) == 0) {
         VLOG_DEBUG("Returning ISteamFriends013");
-        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends013*>(m_pSteamFriends));
+        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends013*>(&m_steamFriends));
     } else if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION_011) == 0) {
         VLOG_DEBUG("Returning ISteamFriends011");
-        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends011*>(m_pSteamFriends));
+        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends011*>(&m_steamFriends));
     } else if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION_009) == 0) {
         VLOG_DEBUG("Returning ISteamFriends009");
-        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends009*>(m_pSteamFriends));
+        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends009*>(&m_steamFriends));
     } else if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION_007) == 0) {
         VLOG_DEBUG("Returning ISteamFriends007");
-        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends007*>(m_pSteamFriends));
-    } else if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION_006) == 0) {
-        VLOG_DEBUG("Returning ISteamFriends006");
-        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends006*>(m_pSteamFriends));
+        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends007*>(&m_steamFriends));
     } else if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION_005) == 0) {
         VLOG_DEBUG("Returning ISteamFriends005");
-        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends005*>(m_pSteamFriends));
+        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends005*>(&m_steamFriends));
     } else if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION_004) == 0) {
         VLOG_DEBUG("Returning ISteamFriends004");
-        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends004*>(m_pSteamFriends));
+        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends004*>(&m_steamFriends));
     } else if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION_003) == 0) {
         VLOG_DEBUG("Returning ISteamFriends003");
-        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends003*>(m_pSteamFriends));
+        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends003*>(&m_steamFriends));
     } else {
         VLOG_WARNING("GetISteamFriends: Unknown interface version '%s', returning " STEAMFRIENDS_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
-        return static_cast<ISteamFriends*>(m_pSteamFriends);
+        return static_cast<ISteamFriends*>(&m_steamFriends);
     }
 }
 
@@ -473,39 +458,34 @@ ISteamApps *CSteamClient::GetISteamApps( HSteamUser hSteamUser, HSteamPipe hStea
         return nullptr;
     }
 
-    if (!m_pSteamApps) {
-        VLOG_ERROR("GetISteamApps: Steam apps not available");
-        return nullptr;
-    }
-
     // Return the appropriate interface version
     if (strcmp(pchVersion, STEAMAPPS_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamApps (latest) - %s", STEAMAPPS_INTERFACE_VERSION);
-        return static_cast<ISteamApps*>(m_pSteamApps);
+        return static_cast<ISteamApps*>(&m_steamApps);
     } else if (strcmp(pchVersion, STEAMAPPS_INTERFACE_VERSION_007) == 0) {
         VLOG_DEBUG("Returning ISteamApps007");
-        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps007*>(m_pSteamApps));
+        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps007*>(&m_steamApps));
     } else if (strcmp(pchVersion, STEAMAPPS_INTERFACE_VERSION_006) == 0) {
         VLOG_DEBUG("Returning ISteamApps006");
-        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps006*>(m_pSteamApps));
+        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps006*>(&m_steamApps));
     } else if (strcmp(pchVersion, STEAMAPPS_INTERFACE_VERSION_005) == 0) {
         VLOG_DEBUG("Returning ISteamApps005");
-        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps005*>(m_pSteamApps));
+        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps005*>(&m_steamApps));
     } else if (strcmp(pchVersion, STEAMAPPS_INTERFACE_VERSION_004) == 0) {
         VLOG_DEBUG("Returning ISteamApps004");
-        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps004*>(m_pSteamApps));
+        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps004*>(&m_steamApps));
     } else if (strcmp(pchVersion, STEAMAPPS_INTERFACE_VERSION_003) == 0) {
         VLOG_DEBUG("Returning ISteamApps003");
-        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps003*>(m_pSteamApps));
+        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps003*>(&m_steamApps));
     } else if (strcmp(pchVersion, STEAMAPPS_INTERFACE_VERSION_002) == 0) {
         VLOG_DEBUG("Returning ISteamApps002");
-        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps002*>(m_pSteamApps));
+        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps002*>(&m_steamApps));
     } else if (strcmp(pchVersion, STEAMAPPS_INTERFACE_VERSION_001) == 0) {
         VLOG_DEBUG("Returning ISteamApps001");
-        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps001*>(m_pSteamApps));
+        return reinterpret_cast<ISteamApps*>(static_cast<ISteamApps001*>(&m_steamApps));
     } else {
         VLOG_WARNING("GetISteamApps: Unknown interface version '%s', returning " STEAMAPPS_INTERFACE_VERSION, pchVersion);
-        return static_cast<ISteamApps*>(m_pSteamApps);
+        return static_cast<ISteamApps*>(&m_steamApps);
     }
 }
 
@@ -563,6 +543,9 @@ ISteamRemoteStorage *CSteamClient::GetISteamRemoteStorage( HSteamUser hSteamuser
     if (strcmp(pchVersion, STEAMREMOTESTORAGE_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamRemoteStorage (latest) - %s", STEAMREMOTESTORAGE_INTERFACE_VERSION);
         return static_cast<ISteamRemoteStorage*>(&m_steamRemoteStorage);
+    } else if (strcmp(pchVersion, STEAMREMOTESTORAGE_INTERFACE_VERSION_013) == 0) {
+        VLOG_DEBUG("Returning ISteamRemoteStorage013");
+        return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage013*>(&m_steamRemoteStorage));
     } else if (strcmp(pchVersion, STEAMREMOTESTORAGE_INTERFACE_VERSION_012) == 0) {
         VLOG_DEBUG("Returning ISteamRemoteStorage012");
         return reinterpret_cast<ISteamRemoteStorage*>(static_cast<ISteamRemoteStorage012*>(&m_steamRemoteStorage));
@@ -609,6 +592,9 @@ ISteamScreenshots *CSteamClient::GetISteamScreenshots( HSteamUser hSteamuser, HS
     if (strcmp(pchVersion, STEAMSCREENSHOTS_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamScreenshots (latest) - %s", STEAMSCREENSHOTS_INTERFACE_VERSION);
         return static_cast<ISteamScreenshots*>(&m_steamScreenshots);
+    } else if (strcmp(pchVersion, STEAMSCREENSHOTS_INTERFACE_VERSION_002) == 0) {
+        VLOG_DEBUG("Returning ISteamScreenshots002");
+        return reinterpret_cast<ISteamScreenshots*>(static_cast<ISteamScreenshots002*>(&m_steamScreenshots));
     } else if (strcmp(pchVersion, STEAMSCREENSHOTS_INTERFACE_VERSION_001) == 0) {
         VLOG_DEBUG("Returning ISteamScreenshots001");
         return reinterpret_cast<ISteamScreenshots*>(static_cast<ISteamScreenshots001*>(&m_steamScreenshots));
@@ -729,23 +715,21 @@ ISteamController* CSteamClient::GetISteamController(HSteamUser hSteamUser, HStea
         return nullptr;
     }
 
-    if (!m_pSteamController) {
-        VLOG_ERROR("GetISteamController: Steam controller not available");
-        return nullptr;
-    }
-
     // Return the appropriate interface version based on the version string
     // Cast to specific interface first for proper vtable mapping, then to ISteamController*
     if (strcmp(pchVersion, STEAMCONTROLLER_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamController (latest) - %s", STEAMCONTROLLER_INTERFACE_VERSION);
-        return static_cast<ISteamController*>(m_pSteamController);
+        return static_cast<ISteamController*>(&m_steamController);
+    } else if (strcmp(pchVersion, STEAMCONTROLLER_INTERFACE_VERSION_003) == 0) {
+        VLOG_DEBUG("Returning ISteamController003");
+        return reinterpret_cast<ISteamController*>(static_cast<ISteamController003*>(&m_steamController));
     } else if (strcmp(pchVersion, STEAMCONTROLLER_INTERFACE_VERSION_001) == 0) {
         VLOG_DEBUG("Returning ISteamController001");
-        return reinterpret_cast<ISteamController*>(static_cast<ISteamController001*>(m_pSteamController));
+        return reinterpret_cast<ISteamController*>(static_cast<ISteamController001*>(&m_steamController));
     } else {
         VLOG_WARNING("GetISteamController: Unknown interface version '%s', returning " STEAMCONTROLLER_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
-        return static_cast<ISteamController*>(m_pSteamController);
+        return static_cast<ISteamController*>(&m_steamController);
     }
 }
 
@@ -759,35 +743,33 @@ ISteamUGC* CSteamClient::GetISteamUGC(HSteamUser hSteamUser, HSteamPipe hSteamPi
         return nullptr;
     }
 
-    if (!m_pSteamUGC) {
-        VLOG_ERROR("GetISteamUGC: Steam UGC not available");
-        return nullptr;
-    }
-
     // Return the appropriate interface version based on the version string
     // Cast to specific interface first for proper vtable mapping, then to ISteamUGC*
     if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamUGC (latest) - %s", STEAMUGC_INTERFACE_VERSION);
-        return static_cast<ISteamUGC*>(m_pSteamUGC);
+        return static_cast<ISteamUGC*>(&m_steamUGC);
+    } else if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION_008) == 0) {
+        VLOG_DEBUG("Returning ISteamUGC008");
+        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC008*>(&m_steamUGC));
     } else if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION_007) == 0) {
         VLOG_DEBUG("Returning ISteamUGC007");
-        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC007*>(m_pSteamUGC));
+        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC007*>(&m_steamUGC));
     } else if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION_005) == 0) {
         VLOG_DEBUG("Returning ISteamUGC005");
-        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC005*>(m_pSteamUGC));
+        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC005*>(&m_steamUGC));
     } else if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION_003) == 0) {
         VLOG_DEBUG("Returning ISteamUGC003");
-        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC003*>(m_pSteamUGC));
+        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC003*>(&m_steamUGC));
     } else if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION_002) == 0) {
         VLOG_DEBUG("Returning ISteamUGC002");
-        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC002*>(m_pSteamUGC));
+        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC002*>(&m_steamUGC));
     } else if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION_001) == 0) {
         VLOG_DEBUG("Returning ISteamUGC001");
-        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC001*>(m_pSteamUGC));
+        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC001*>(&m_steamUGC));
     } else {
         VLOG_WARNING("GetISteamUGC: Unknown interface version '%s', returning " STEAMUGC_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
-        return static_cast<ISteamUGC*>(m_pSteamUGC);
+        return static_cast<ISteamUGC*>(&m_steamUGC);
     }
 }
 
@@ -931,20 +913,15 @@ ISteamInventory* CSteamClient::GetISteamInventory(HSteamUser hSteamuser, HSteamP
         return nullptr;
     }
 
-    if (!m_pSteamInventory) {
-        VLOG_ERROR("GetISteamInventory: Steam inventory not available");
-        return nullptr;
-    }
-
     // Return the appropriate interface version based on the version string
     // This interface only has one version (V001)
     if (strcmp(pchVersion, STEAMINVENTORY_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamInventory (latest) - %s", STEAMINVENTORY_INTERFACE_VERSION);
-        return static_cast<ISteamInventory*>(m_pSteamInventory);
+        return static_cast<ISteamInventory*>(&m_steamInventory);
     } else {
         VLOG_WARNING("GetISteamInventory: Unknown interface version '%s', returning " STEAMINVENTORY_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
-        return static_cast<ISteamInventory*>(m_pSteamInventory);
+        return static_cast<ISteamInventory*>(&m_steamInventory);
     }
 }
 

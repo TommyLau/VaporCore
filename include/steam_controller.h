@@ -16,35 +16,35 @@
 #include <isteamclient.h>
 #include <isteamcontroller.h>
 #include <isteamcontroller001.h>
+#include <isteamcontroller003.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Native Steam controller support API
 //-----------------------------------------------------------------------------
 class CSteamController :
     public ISteamController,
-    public ISteamController001
+    public ISteamController001,
+    public ISteamController003
 {
-private:
-    // Singleton instance
-    static CSteamController* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamController& GetInstance()
+    {
+		static CSteamController instance;
+		return instance;
+    }
 
 public:
-    CSteamController();
-    ~CSteamController();
-
-    // Helper methods
-    static CSteamController* GetInstance();
-    static void ReleaseInstance();
-
 	// Init and Shutdown must be called when starting/ending use of this interface
 	bool Init() override;
 	// Must call init and shutdown when starting/ending use of the interface
 	// Changed from Steam SDK v1.35a, backward compatibility
 	bool Init(const char *pchAbsolutePathToControllerConfigVDF) override;
 	bool Shutdown() override;
-
-	// Pump callback/callresult events
-	// Note: SteamAPI_RunCallbacks will do this for you, so you should never need to call this directly.
+	
+	// Synchronize API state with the latest Steam Controller inputs available. This
+	// is performed automatically by SteamAPI_RunCallbacks, but for the absolute lowest
+	// possible latency, you call this directly before reading controller state.
 	void RunFrame() override;
 
 	// Get the state of the specified controller, returns false if that controller is not connected
@@ -99,11 +99,36 @@ public:
 	// Changed from Steam SDK v1.35a, backward compatibility
 	void TriggerHapticPulse(uint32 unControllerIndex, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec) override;
 
+	// Trigger a pulse with a duty cycle of usDurationMicroSec / usOffMicroSec, unRepeat times.
+	// nFlags is currently unused and reserved for future use.
 	void TriggerRepeatedHapticPulse( ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec, unsigned short usOffMicroSec, unsigned short unRepeat, unsigned int nFlags ) override;
 
 	// Set the override mode which is used to choose to use different base/legacy bindings from your config file
 	// Removed from Steam SDK v1.35a, backward compatibility
 	void SetOverrideMode(const char *pchMode) override;
+	
+	// Returns the associated gamepad index for the specified controller, if emulating a gamepad
+	int GetGamepadIndexForController( ControllerHandle_t ulControllerHandle ) override;
+	
+	// Returns the associated controller handle for the specified emulated gamepad
+	ControllerHandle_t GetControllerForGamepadIndex( int nIndex ) override;
+	
+	// Returns raw motion data from the specified controller
+	ControllerMotionData_t GetMotionData( ControllerHandle_t controllerHandle ) override;
+	
+	// Attempt to display origins of given action in the controller HUD, for the currently active action set
+	// Returns false is overlay is disabled / unavailable, or the user is not in Big Picture mode
+	bool ShowDigitalActionOrigins( ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle, float flScale, float flXPosition, float flYPosition ) override;
+	bool ShowAnalogActionOrigins( ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle, float flScale, float flXPosition, float flYPosition ) override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamController();
+    ~CSteamController();
+
+    // Delete copy constructor and assignment operator
+    CSteamController(const CSteamController&) = delete;
+    CSteamController& operator=(const CSteamController&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_CONTROLLER_H

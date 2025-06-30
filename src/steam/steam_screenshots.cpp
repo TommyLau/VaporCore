@@ -95,3 +95,24 @@ bool CSteamScreenshots::TagPublishedFile( ScreenshotHandle hScreenshot, Publishe
     VLOG_INFO(__FUNCTION__ " - hScreenshot: %d, unPublishedFileID: %d", hScreenshot, unPublishedFileID);
     return true;
 }
+
+// Returns true if the app has hooked the screenshot
+bool CSteamScreenshots::IsScreenshotsHooked()
+{
+    VAPORCORE_LOCK_GUARD();
+
+    VLOG_INFO(__FUNCTION__ " - Returning: %s", m_bHook ? "true" : "false");
+
+    return m_bHook;
+}
+
+// Adds a VR screenshot to the user's screenshot library from disk in the supported type.
+// pchFilename should be the normal 2D image used in the library view
+// pchVRFilename should contain the image that matches the correct type
+// The return value is a handle that is valid for the duration of the game process and can be used to apply tags.
+// JPEG, TGA, and PNG formats are supported.
+ScreenshotHandle CSteamScreenshots::AddVRScreenshotToLibrary( EVRScreenshotType eType, const char *pchFilename, const char *pchVRFilename )
+{
+    VLOG_INFO(__FUNCTION__ " - eType: %d, pchFilename: %s, pchVRFilename: %s", eType, pchFilename, pchVRFilename);
+    return INVALID_SCREENSHOT_HANDLE;
+}

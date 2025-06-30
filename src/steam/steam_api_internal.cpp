@@ -21,18 +21,48 @@ S_API HSteamUser SteamAPI_GetHSteamUser()
     return Steam_GetHSteamUserCurrent();
 }
 
+// Removed from Steam SDK v1.38, backward compatibility
 S_API bool S_CALLTYPE SteamInternal_Init()
 {
-    VLOG_DEBUG("SteamInternal_Init called");
+    VLOG_INFO(__FUNCTION__);
     return true;
 }
 
+struct ContextInitData {
+    void (*pfnInit)(void*);  // SteamInternal_OnContextInit function pointer
+    uintp counter;           // Global init counter
+    CSteamAPIContext ctx;    // The context instance
+};
+
+S_API void * S_CALLTYPE SteamInternal_ContextInit( void *pContextInitData )
+{
+    if (!pContextInitData) {
+        VLOG_ERROR(__FUNCTION__);
+        return nullptr;
+    }
+
+    ContextInitData *pData = (ContextInitData*)pContextInitData;
+
+    VLOG_INFO(__FUNCTION__ " - data: %p, init fn: %p, counter: %lu, ctx: %p", 
+              pData, pData->pfnInit, pData->counter, &pData->ctx);
+
+    // TODO: Update global counter?
+    //pData->counter++;
+
+    // Call the context init function 
+    if (pData->pfnInit)
+        pData->pfnInit(&pData->ctx);
+
+    return &pData->ctx;
+}
+
+// Steam SDK v1.10
 S_API void * S_CALLTYPE SteamInternal_CreateInterface( const char *ver )
 {
-    VLOG_DEBUG("SteamInternal_CreateInterface called - Version: %s", ver);
+    VLOG_INFO(__FUNCTION__ " - Version: %s", ver);
 
     if (!ver) {
-        VLOG_ERROR("SteamInternal_CreateInterface: Invalid version string (null)");
+        VLOG_ERROR(__FUNCTION__ " - Invalid version string (null)");
         return nullptr;
     }
 
@@ -40,7 +70,7 @@ S_API void * S_CALLTYPE SteamInternal_CreateInterface( const char *ver )
     CSteamClient* pSteamClient = CSteamClient::GetInstance();
 
     if (!pSteamClient) {
-        VLOG_ERROR("SteamInternal_CreateInterface: Steam client not available");
+        VLOG_ERROR(__FUNCTION__ " - Steam client not available");
         return nullptr;
     }
 
@@ -76,7 +106,7 @@ S_API void * S_CALLTYPE SteamInternal_CreateInterface( const char *ver )
         VLOG_DEBUG("Returning ISteamClient007");
         return static_cast<ISteamClient007*>(pSteamClient);
     } else {
-        VLOG_WARNING("SteamInternal_CreateInterface: Unknown interface version '%s', returning " STEAMCLIENT_INTERFACE_VERSION, ver);
+        VLOG_WARNING(__FUNCTION__ " - Unknown interface version '%s', returning " STEAMCLIENT_INTERFACE_VERSION, ver);
         // Return the latest interface as fallback
         return static_cast<ISteamClient*>(pSteamClient);
     }
@@ -93,10 +123,10 @@ S_API void * S_CALLTYPE SteamInternal_CreateInterface( const char *ver )
 // Steam SDK v1.10
 S_API void S_CALLTYPE SteamAPI_UseBreakpadCrashHandler( char const *pchVersion, char const *pchDate, char const *pchTime, bool bFullMemoryDumps, void *pvContext, PFNPreMinidumpCallback m_pfnPreMinidumpCallback )
 {
-    VLOG_DEBUG("SteamAPI_UseBreakpadCrashHandler called - Version: %s, Date: %s, Time: %s", pchVersion, pchDate, pchTime);
+    VLOG_INFO(__FUNCTION__ " - Version: %s, Date: %s, Time: %s", pchVersion, pchDate, pchTime);
 }
 
 S_API void S_CALLTYPE SteamAPI_SetBreakpadAppID( uint32 unAppID )
 {
-    VLOG_DEBUG("SteamAPI_SetBreakpadAppID called - AppID: %u", unAppID);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u", unAppID);
 }

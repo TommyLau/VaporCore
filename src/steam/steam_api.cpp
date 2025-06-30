@@ -133,7 +133,7 @@ S_API bool S_CALLTYPE SteamAPI_RestartAppIfNecessary( uint32 unOwnAppID )
     return true;
 }
 
-// Most Steam API functions allocate some amount of thread-local memory for parameter storage.
+// Many Steam API functions allocate a small amount of thread-local memory for parameter storage.
 // SteamAPI_ReleaseCurrentThreadMemory() will free API memory associated with the calling thread.
 // This function is also called automatically by SteamAPI_RunCallbacks(), so a single-threaded
 // program never needs to explicitly call this function.
@@ -155,11 +155,13 @@ S_API void S_CALLTYPE SteamAPI_SetMiniDumpComment( const char *pchMsg )
 }
 
 
-// If your application contains modules or libraries which could be built against different SDK
-// versions, then you should define VERSION_SAFE_STEAM_API_INTERFACES to enforce that you cannot
-// use the un-versioned global accessors. Instead, always create and use CSteamAPIContext objects
-// to retrieve interface pointers which match the Steamworks SDK headers which match your build.
-
+//----------------------------------------------------------------------------------------------------------------------------------------------------------//
+// Global accessors for Steamworks C++ APIs. See individual isteam*.h files for details.
+// You should not cache the results of these accessors or pass the result pointers across
+// modules! Different modules may be compiled against different SDK header versions, and
+// the interface pointers could therefore be different across modules. Every line of code
+// which calls into a Steamworks API should retrieve the interface from a global accessor.
+//----------------------------------------------------------------------------------------------------------------------------------------------------------//
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamClient *S_CALLTYPE SteamClient() {
     VLOG_INFO(__FUNCTION__);
@@ -223,15 +225,13 @@ S_API ISteamMatchmakingServers *S_CALLTYPE SteamMatchmakingServers() {
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamRemoteStorage *S_CALLTYPE SteamRemoteStorage() {
     VLOG_INFO(__FUNCTION__);
-    // TODO: SteamRemoteStorage013 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamRemoteStorage(g_hSteamPipe, g_hSteamUser, STEAMREMOTESTORAGE_INTERFACE_VERSION);
+    return g_pSteamClient->GetISteamRemoteStorage(g_hSteamPipe, g_hSteamUser, STEAMREMOTESTORAGE_INTERFACE_VERSION_013);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamScreenshots *S_CALLTYPE SteamScreenshots() {
     VLOG_INFO(__FUNCTION__);
-    // TODO: SteamScreenshots002 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamScreenshots(g_hSteamPipe, g_hSteamUser, STEAMSCREENSHOTS_INTERFACE_VERSION);
+    return g_pSteamClient->GetISteamScreenshots(g_hSteamPipe, g_hSteamUser, STEAMSCREENSHOTS_INTERFACE_VERSION_002);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
@@ -251,8 +251,7 @@ S_API ISteamUnifiedMessages *S_CALLTYPE SteamUnifiedMessages() {
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamController *S_CALLTYPE SteamController() {
     VLOG_INFO(__FUNCTION__);
-    // TODO: SteamController003 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamController(g_hSteamPipe, g_hSteamUser, STEAMCONTROLLER_INTERFACE_VERSION);
+    return g_pSteamClient->GetISteamController(g_hSteamPipe, g_hSteamUser, STEAMCONTROLLER_INTERFACE_VERSION_003);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
@@ -527,7 +526,7 @@ S_API HSteamUser GetHSteamUser() {
     return g_hSteamUser;
 }
 
-// backwards compat with older SDKs
+// exists only for backwards compat with code written against older SDKs
 S_API bool S_CALLTYPE SteamAPI_InitSafe() {
     VLOG_INFO(__FUNCTION__);
     return SteamAPI_Init();

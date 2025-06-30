@@ -26,7 +26,7 @@ CCallbackMgr::~CCallbackMgr()
 
 void CCallbackMgr::RegisterCallback(class CCallbackBase* pCallback, int iCallback)
 {
-    VLOG_INFO(__FUNCTION__ " - Registering callback %p for iCallback = %d", pCallback, iCallback);
+    VLOG_INFO(__FUNCTION__ " - Registering callback %p for iCallback: %d", pCallback, iCallback);
 
     if (!pCallback) {
         VLOG_ERROR(__FUNCTION__ " - Null callback pointer");
@@ -48,14 +48,14 @@ void CCallbackMgr::RegisterCallback(class CCallbackBase* pCallback, int iCallbac
     // Check if callback is already registered
     auto& callbackVector = callbacks[iCallback];
     if (std::find(callbackVector.begin(), callbackVector.end(), pCallback) != callbackVector.end()) {
-        VLOG_WARNING(__FUNCTION__ " - Callback %p already registered for iCallback = %d", pCallback, iCallback);
+        VLOG_WARNING(__FUNCTION__ " - Callback %p already registered for iCallback: %d", pCallback, iCallback);
         return;
     }
 
     // Add callback to the list
     callbackVector.push_back(pCallback);
     SetRegisterFlag(pCallback);
-    VLOG_DEBUG(__FUNCTION__ " - Successfully registered callback %p for iCallback = %d", pCallback, iCallback);
+    VLOG_DEBUG(__FUNCTION__ " - Successfully registered callback %p for iCallback: %d", pCallback, iCallback);
 }
 
 void CCallbackMgr::UnregisterCallback(class CCallbackBase* pCallback)
@@ -82,7 +82,7 @@ void CCallbackMgr::UnregisterCallback(class CCallbackBase* pCallback)
     // Find and remove the callback
     auto callbackIt = callbacks.find(iCallback);
     if (callbackIt == callbacks.end()) {
-        VLOG_WARNING(__FUNCTION__ " - No callbacks registered for iCallback = %d", iCallback);
+        VLOG_WARNING(__FUNCTION__ " - No callbacks registered for iCallback: %d", iCallback);
         return;
     }
 
@@ -92,20 +92,20 @@ void CCallbackMgr::UnregisterCallback(class CCallbackBase* pCallback)
     if (it != callbackVector.end()) {
         callbackVector.erase(it);
         ClearRegisterFlag(pCallback);
-        VLOG_DEBUG(__FUNCTION__ " - Successfully unregistered callback %p for iCallback = %d", pCallback, iCallback);
+        VLOG_DEBUG(__FUNCTION__ " - Successfully unregistered callback %p for iCallback: %d", pCallback, iCallback);
         
         // Clean up empty vector to save memory
         if (callbackVector.empty()) {
             callbacks.erase(callbackIt);
         }
     } else {
-        VLOG_WARNING(__FUNCTION__ " - Callback %p not found for iCallback = %d", pCallback, iCallback);
+        VLOG_WARNING(__FUNCTION__ " - Callback %p not found for iCallback: %d", pCallback, iCallback);
     }
 }
 
 void CCallbackMgr::RegisterCallResult(class CCallbackBase* pCallback, SteamAPICall_t hAPICall)
 {
-    VLOG_INFO(__FUNCTION__ " - Registering call result %p for hAPICall = %llu", pCallback, hAPICall);
+    VLOG_INFO(__FUNCTION__ " - Registering call result %p for hAPICall: %llu", pCallback, hAPICall);
     
     if (!pCallback) {
         VLOG_ERROR(__FUNCTION__ " - Null callback pointer");
@@ -127,12 +127,12 @@ void CCallbackMgr::RegisterCallResult(class CCallbackBase* pCallback, SteamAPICa
     }
     
     m_callResults[hAPICall] = pCallback;
-    VLOG_DEBUG(__FUNCTION__ " - Successfully registered call result %p for hAPICall = %llu", pCallback, hAPICall);
+    VLOG_DEBUG(__FUNCTION__ " - Successfully registered call result %p for hAPICall: %llu", pCallback, hAPICall);
 }
 
 void CCallbackMgr::UnregisterCallResult(class CCallbackBase* pCallback, SteamAPICall_t hAPICall)
 {
-    VLOG_INFO(__FUNCTION__ " - Unregistering call result %p for hAPICall = %llu", pCallback, hAPICall);
+    VLOG_INFO(__FUNCTION__ " - Unregistering call result %p for hAPICall: %llu", pCallback, hAPICall);
 
     if (!pCallback) {
         VLOG_ERROR(__FUNCTION__ " - Null callback pointer");
@@ -150,13 +150,13 @@ void CCallbackMgr::UnregisterCallResult(class CCallbackBase* pCallback, SteamAPI
     if (it != m_callResults.end()) {
         if (it->second == pCallback) {
             m_callResults.erase(it);
-            VLOG_DEBUG(__FUNCTION__ " - Successfully unregistered call result %p for hAPICall = %llu", pCallback, hAPICall);
+            VLOG_DEBUG(__FUNCTION__ " - Successfully unregistered call result %p for hAPICall: %llu", pCallback, hAPICall);
         } else {
-            VLOG_WARNING(__FUNCTION__ " - Call result for hAPICall = %llu belongs to different callback (%p vs %p)", 
+            VLOG_WARNING(__FUNCTION__ " - Call result for hAPICall: %llu belongs to different callback (%p vs %p)", 
                          hAPICall, it->second, pCallback);
         }
     } else {
-        VLOG_WARNING(__FUNCTION__ " - No call result registered for hAPICall = %llu", hAPICall);
+        VLOG_WARNING(__FUNCTION__ " - No call result registered for hAPICall: %llu", hAPICall);
     }
 }
 
@@ -172,7 +172,7 @@ void CCallbackMgr::DispatchCallbacks()
     while (!eventQueue.empty()) {
         CallbackEvent_t event = std::move(eventQueue.front());
         eventQueue.pop();
-        VLOG_DEBUG(__FUNCTION__ " - iCallback = %d, hAPICall = %llu", event.m_iCallback, event.m_hAPICall);
+        VLOG_DEBUG(__FUNCTION__ " - iCallback: %d, hAPICall: %llu", event.m_iCallback, event.m_hAPICall);
 
         if (event.m_callbackType == CallbackEvent_t::CallbackType::CallResult) {
             // Find the callback handler while holding the lock
@@ -187,10 +187,10 @@ void CCallbackMgr::DispatchCallbacks()
 
             // Execute callback WITHOUT holding the lock to prevent deadlocks
             if (pCallbackHandler) {
-                VLOG_DEBUG(__FUNCTION__ " - Executing CallResult for hAPICall = %llu", event.m_hAPICall);
+                VLOG_DEBUG(__FUNCTION__ " - Executing CallResult for hAPICall: %llu", event.m_hAPICall);
                 pCallbackHandler->Run(event.m_pCallbackData.get(), event.m_bIOFailure, event.m_hAPICall);
             } else {
-                VLOG_ERROR(__FUNCTION__ " - CallResult not found for hAPICall = %llu", event.m_hAPICall);
+                VLOG_ERROR(__FUNCTION__ " - CallResult not found for hAPICall: %llu", event.m_hAPICall);
             }
         } else {
             // Copy callback list while holding the lock
@@ -211,13 +211,13 @@ void CCallbackMgr::DispatchCallbacks()
             // Execute callbacks WITHOUT holding the lock to prevent deadlocks
             if (!callbackList.empty()) {
                 for (auto* callback : callbackList) {
-                    VLOG_DEBUG(__FUNCTION__ " - Executing %s callback for iCallback = %d", 
+                    VLOG_DEBUG(__FUNCTION__ " - Executing %s callback for iCallback: %d", 
                                (event.m_callbackType == CallbackEvent_t::CallbackType::ServerCallback) ? "server" : "client",
                                event.m_iCallback);
                     callback->Run(event.m_pCallbackData.get());
                 }
             } else {
-                VLOG_ERROR(__FUNCTION__ " - %s callback not found for iCallback = %d", 
+                VLOG_ERROR(__FUNCTION__ " - %s callback not found for iCallback: %d", 
                            (event.m_callbackType == CallbackEvent_t::CallbackType::ServerCallback) ? "Server" : "Client",
                            event.m_iCallback);
             }
@@ -273,14 +273,14 @@ bool CCallbackMgr::PostCallbackEvent(CallbackEvent_t::CallbackType callbackType,
 
 bool CCallbackMgr::PostCallback(int iCallback, void *pvCallbackData, size_t cubCallbackData)
 {
-    VLOG_INFO(__FUNCTION__ " - iCallback = %d, cubCallbackData = %zu", iCallback, cubCallbackData);
+    VLOG_INFO(__FUNCTION__ " - iCallback: %d, cubCallbackData: %zu", iCallback, cubCallbackData);
     return PostCallbackEvent(CallbackEvent_t::CallbackType::ClientCallback, iCallback, k_uAPICallInvalid, 
                             pvCallbackData, cubCallbackData, false);
 }
 
 bool CCallbackMgr::PostCallback(int iCallback, void *pvCallbackData, size_t cubCallbackData, CallbackEvent_t::CallbackType callbackType)
 {
-    VLOG_INFO(__FUNCTION__ " - iCallback = %d, cubCallbackData = %zu, callbackType = %d", 
+    VLOG_INFO(__FUNCTION__ " - iCallback: %d, cubCallbackData: %zu, callbackType: %d", 
                iCallback, cubCallbackData, static_cast<int>(callbackType));
     return PostCallbackEvent(callbackType, iCallback, k_uAPICallInvalid, 
                             pvCallbackData, cubCallbackData, false);
@@ -288,7 +288,7 @@ bool CCallbackMgr::PostCallback(int iCallback, void *pvCallbackData, size_t cubC
 
 SteamAPICall_t CCallbackMgr::PostCallResult(void *pvCallbackData, size_t cubCallbackData, bool bIOFailure)
 {
-    VLOG_INFO(__FUNCTION__ " - cubCallbackData = %zu, bIOFailure = %d", cubCallbackData, bIOFailure);
+    VLOG_INFO(__FUNCTION__ " - cubCallbackData: %zu, bIOFailure: %d", cubCallbackData, bIOFailure);
     
     // Generate unique API call handle for this call result
     static std::atomic<SteamAPICall_t> s_hNextAPICall(k_uAPICallInvalid + 1);
@@ -301,7 +301,7 @@ SteamAPICall_t CCallbackMgr::PostCallResult(void *pvCallbackData, size_t cubCall
 
 void CCallbackMgr::DispatchCallbackImmediate(int iCallback, void *pvCallbackData, size_t cubCallbackData)
 {
-    VLOG_INFO(__FUNCTION__ " - iCallback = %d, cubCallbackData = %zu", iCallback, cubCallbackData);
+    VLOG_INFO(__FUNCTION__ " - iCallback: %d, cubCallbackData: %zu", iCallback, cubCallbackData);
 
     if (!pvCallbackData || cubCallbackData == 0) {
         VLOG_ERROR(__FUNCTION__ " - Invalid callback data");
@@ -332,11 +332,11 @@ void CCallbackMgr::DispatchCallbackImmediate(int iCallback, void *pvCallbackData
     // Execute callbacks immediately WITHOUT holding the lock
     if (!callbackList.empty()) {
         for (auto* callback : callbackList) {
-            VLOG_DEBUG(__FUNCTION__ " - Executing immediate callback for iCallback = %d", iCallback);
+            VLOG_DEBUG(__FUNCTION__ " - Executing immediate callback for iCallback: %d", iCallback);
             callback->Run(copiedData.get());
         }
-        VLOG_DEBUG(__FUNCTION__ " - Executed %zu callbacks for iCallback = %d", callbackList.size(), iCallback);
+        VLOG_DEBUG(__FUNCTION__ " - Executed %zu callbacks for iCallback: %d", callbackList.size(), iCallback);
     } else {
-        VLOG_WARNING(__FUNCTION__ " - No callbacks registered for iCallback = %d", iCallback);
+        VLOG_WARNING(__FUNCTION__ " - No callbacks registered for iCallback: %d", iCallback);
     }
 }

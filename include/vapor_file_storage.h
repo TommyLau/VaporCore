@@ -43,7 +43,7 @@ public:
     
     // Storage statistics
     size_t GetTotalStorageUsed();
-    bool GetQuota(int32* pnTotalBytes, int32* pnAvailableBytes);
+    bool GetQuota(uint64* pnTotalBytes, uint64* pnAvailableBytes);
 
 private:
     // Utility

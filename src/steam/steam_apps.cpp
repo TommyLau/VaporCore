@@ -12,9 +12,6 @@
 #include "vapor_base.h"
 #include "steam_apps.h"
 
-// Static instance
-CSteamApps* CSteamApps::s_pInstance = nullptr;
-
 CSteamApps::CSteamApps()
 {
     VLOG_INFO(__FUNCTION__);
@@ -23,25 +20,6 @@ CSteamApps::CSteamApps()
 CSteamApps::~CSteamApps()
 {
     VLOG_INFO(__FUNCTION__);
-}
-
-// Helper methods
-CSteamApps* CSteamApps::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamApps();
-    }
-    return s_pInstance;
-}
-
-void CSteamApps::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
 }
 
 // returns 0 if the key does not exist
@@ -245,4 +223,10 @@ int CSteamApps::GetAppBuildId()
 void CSteamApps::RequestAllProofOfPurchaseKeys()
 {
     VLOG_INFO(__FUNCTION__);
+}
+
+SteamAPICall_t CSteamApps::GetFileDetails( const char* pszFileName )
+{
+    VLOG_INFO(__FUNCTION__ " - FileName: %s", pszFileName ? pszFileName : "null");
+    return k_uAPICallInvalid;
 }

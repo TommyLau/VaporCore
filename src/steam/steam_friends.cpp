@@ -22,36 +22,14 @@ enum EAvatarSize
 	k_EAvatarSize64x64 = 1,
 };
 
-// Static instance
-CSteamFriends* CSteamFriends::s_pInstance = nullptr;
-
 CSteamFriends::CSteamFriends()
 {
-    VLOG_INFO("CSteamFriends constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamFriends::~CSteamFriends()
 {
-    VLOG_INFO("CSteamFriends destructor called");
-}
-
-// Helper methods
-CSteamFriends* CSteamFriends::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamFriends();
-    }
-    return s_pInstance;
-}
-
-void CSteamFriends::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 // returns the local players name - guaranteed to not be NULL.
@@ -61,8 +39,8 @@ void CSteamFriends::ReleaseInstance()
 // off; it will eventually be free'd or re-allocated
 const char *CSteamFriends::GetPersonaName()
 {
-    VLOG_DEBUG("GetPersonaName called");
-    return "VaporCore User";
+    VLOG_INFO(__FUNCTION__);
+    return VaporCore::Config::GetInstance()->GetUsername().c_str();
 }
 
 // Sets the player name, stores it on the server and publishes the changes to all friends who are online.
@@ -74,20 +52,20 @@ const char *CSteamFriends::GetPersonaName()
 // to change the name back, in addition to the SetPersonaNameResponse_t callback.
 SteamAPICall_t CSteamFriends::SetPersonaName( const char *pchPersonaName )
 {
-    VLOG_DEBUG("SetPersonaName called - Name: %s", pchPersonaName ? pchPersonaName : "null");
+    VLOG_INFO(__FUNCTION__ " - Name: %s", pchPersonaName ? pchPersonaName : "NULL");
     return 0;
 }
 
 // Changed from Steam SDK v1.20, backward compatibility
 void CSteamFriends::DEPRECATED_SetPersonaName( const char *pchPersonaName )
 {
-    VLOG_DEBUG("SetPersonaName called - Name: %s", pchPersonaName ? pchPersonaName : "null");
+    VLOG_INFO(__FUNCTION__ " - Name: %s", pchPersonaName ? pchPersonaName : "NULL");
 }
 
 // gets the status of the current user
 EPersonaState CSteamFriends::GetPersonaState()
 {
-    VLOG_DEBUG("GetPersonaState called");
+    VLOG_INFO(__FUNCTION__);
     return k_EPersonaStateOnline;
 }
 
@@ -96,7 +74,7 @@ EPersonaState CSteamFriends::GetPersonaState()
 // then GetFriendByIndex() can then be used to return the id's of each of those users
 int CSteamFriends::GetFriendCount( int iFriendFlags )
 {
-    VLOG_DEBUG("GetFriendCount called - Flags: %d", iFriendFlags);
+    VLOG_INFO(__FUNCTION__ " - Flags: %d", iFriendFlags);
     return 0;
 }
 
@@ -106,14 +84,14 @@ int CSteamFriends::GetFriendCount( int iFriendFlags )
 // the returned CSteamID can then be used by all the functions below to access details about the user
 CSteamID CSteamFriends::GetFriendByIndex( int iFriend, int iFriendFlags )
 {
-    VLOG_DEBUG("GetFriendByIndex called - Friend: %d, Flags: %d", iFriend, iFriendFlags);
+    VLOG_INFO(__FUNCTION__ " - Friend: %d, Flags: %d", iFriend, iFriendFlags);
     return CSteamID();
 }
 
 // returns a relationship to a user
 EFriendRelationship CSteamFriends::GetFriendRelationship( CSteamID steamIDFriend )
 {
-    VLOG_DEBUG("GetFriendRelationship called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
     return k_EFriendRelationshipNone;
 }
 
@@ -121,7 +99,7 @@ EFriendRelationship CSteamFriends::GetFriendRelationship( CSteamID steamIDFriend
 // this will only be known by the local user if steamIDFriend is in their friends list; on the same game server; in a chat room or lobby; or in a small group with the local user
 EPersonaState CSteamFriends::GetFriendPersonaState( CSteamID steamIDFriend )
 {
-    VLOG_DEBUG("GetFriendPersonaState called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
     return k_EPersonaStateOffline;
 }
 
@@ -131,7 +109,7 @@ EPersonaState CSteamFriends::GetFriendPersonaState( CSteamID steamIDFriend )
 // 
 const char *CSteamFriends::GetFriendPersonaName( CSteamID steamIDFriend )
 {
-    VLOG_DEBUG("GetFriendPersonaName called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
     return "";
 }
 
@@ -139,49 +117,49 @@ const char *CSteamFriends::GetFriendPersonaName( CSteamID steamIDFriend )
 // Removed from Steam SDK v1.11, backward compatibility
 int CSteamFriends::GetFriendAvatar( CSteamID steamIDFriend, int eAvatarSize )
 {
-    VLOG_DEBUG("GetFriendAvatar called - Avatar Size: %d", eAvatarSize);
+    VLOG_INFO(__FUNCTION__ " - Avatar Size: %d", eAvatarSize);
     return 0;
 }
 
 // Changed from Steam SDK v1.02, backward compatibility
 int CSteamFriends::GetFriendAvatar( CSteamID steamIDFriend )
 {
-    VLOG_DEBUG("GetFriendAvatar called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
     return 0;
 }
 
 // returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
 bool CSteamFriends::GetFriendGamePlayed( CSteamID steamIDFriend, OUT_STRUCT() FriendGameInfo_t *pFriendGameInfo )
 {
-    VLOG_DEBUG("GetFriendGamePlayed called - SteamID: %s, GameID: %llu", steamIDFriend.GetAccountID(), pFriendGameInfo->m_gameID);
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, GameID: %llu", steamIDFriend.ConvertToUint64(), pFriendGameInfo->m_gameID);
     return false;
 }
 
 // Changed from Steam SDK v1.04, backward compatibility
 bool CSteamFriends::GetFriendGamePlayed( CSteamID steamIDFriend, uint64 *pulGameID, uint32 *punGameIP, uint16 *pusGamePort, uint16 *pusQueryPort )
 {
-    VLOG_DEBUG("GetFriendGamePlayed called - SteamID: %s, GameID: %llu, GameIP: %u, GamePort: %u, QueryPort: %u", steamIDFriend.GetAccountID(), *pulGameID, *punGameIP, *pusGamePort, *pusQueryPort);
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, GameID: %llu, GameIP: %u, GamePort: %u, QueryPort: %u", steamIDFriend.ConvertToUint64(), *pulGameID, *punGameIP, *pusGamePort, *pusQueryPort);
     return false;
 }
 
 // accesses old friends names - returns an empty string when their are no more items in the history
 const char *CSteamFriends::GetFriendPersonaNameHistory( CSteamID steamIDFriend, int iPersonaName )
 {
-    VLOG_DEBUG("GetFriendPersonaNameHistory called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, PersonaName: %d", steamIDFriend.ConvertToUint64(), iPersonaName);
     return "";
 }
 
 // friends steam level
 int CSteamFriends::GetFriendSteamLevel( CSteamID steamIDFriend )
 {
-    VLOG_DEBUG("GetFriendSteamLevel called - SteamID: %s", steamIDFriend.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
     return 0;
 }
 
 // Returns nickname the current user has set for the specified player. Returns NULL if the no nickname has been set for that player.
 const char *CSteamFriends::GetPlayerNickname( CSteamID steamIDPlayer )
 {
-    VLOG_DEBUG("GetPlayerNickname called - SteamID: %s", steamIDPlayer.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDPlayer.ConvertToUint64());
     return "";
 }
 
@@ -189,81 +167,80 @@ const char *CSteamFriends::GetPlayerNickname( CSteamID steamIDPlayer )
 // returns the number of friends groups
 int CSteamFriends::GetFriendsGroupCount()
 {
-    VLOG_DEBUG("GetFriendsGroupCount called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
 // returns the friends group ID for the given index (invalid indices return k_FriendsGroupID_Invalid)
 FriendsGroupID_t CSteamFriends::GetFriendsGroupIDByIndex( int iFG )
 {
-    VLOG_DEBUG("GetFriendsGroupIDByIndex called - Index: %d", iFG);
+    VLOG_INFO(__FUNCTION__ " - Index: %d", iFG);
     return k_FriendsGroupID_Invalid;
 }
 
 // returns the name for the given friends group (NULL in the case of invalid friends group IDs)
 const char *CSteamFriends::GetFriendsGroupName( FriendsGroupID_t friendsGroupID )
 {
-    VLOG_DEBUG("GetFriendsGroupName called - GroupID: %d", friendsGroupID);
+    VLOG_INFO(__FUNCTION__ " - GroupID: %d", friendsGroupID);
     return nullptr;
 }
 
 // returns the number of members in a given friends group
 int CSteamFriends::GetFriendsGroupMembersCount( FriendsGroupID_t friendsGroupID )
 {
-    VLOG_DEBUG("GetFriendsGroupMembersCount called - GroupID: %d", friendsGroupID);
+    VLOG_INFO(__FUNCTION__ " - GroupID: %d", friendsGroupID);
     return 0;
 }
 
 // gets up to nMembersCount members of the given friends group, if fewer exist than requested those positions' SteamIDs will be invalid
 void CSteamFriends::GetFriendsGroupMembersList( FriendsGroupID_t friendsGroupID, CSteamID *pOutSteamIDMembers, int nMembersCount )
 {
-    VLOG_DEBUG("GetFriendsGroupMembersList called - GroupID: %d, Members: %p, Count: %d", 
-               friendsGroupID, pOutSteamIDMembers, nMembersCount);
+    VLOG_INFO(__FUNCTION__ " - GroupID: %d, Members: %p, Count: %d", friendsGroupID, pOutSteamIDMembers, nMembersCount);
 }
 
 // returns true if the specified user meets any of the criteria specified in iFriendFlags
 // iFriendFlags can be the union (binary or, |) of one or more k_EFriendFlags values
 bool CSteamFriends::HasFriend( CSteamID steamIDFriend, int iFriendFlags )
 {
-    VLOG_DEBUG("HasFriend called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Flags: %d", steamIDFriend.ConvertToUint64(), iFriendFlags);
     return false;
 }
 
 // clan (group) iteration and access functions
 int CSteamFriends::GetClanCount()
 {
-    VLOG_DEBUG("GetClanCount called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
 CSteamID CSteamFriends::GetClanByIndex( int iClan )
 {
-    VLOG_DEBUG("GetClanByIndex called - Clan: %d", iClan);
+    VLOG_INFO(__FUNCTION__ " - Clan: %d", iClan);
     return CSteamID();
 }
 
 const char *CSteamFriends::GetClanName( CSteamID steamIDClan )
 {
-    VLOG_DEBUG("GetClanName called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
     return "";
 }
 
 const char *CSteamFriends::GetClanTag( CSteamID steamIDClan )
 {
-    VLOG_DEBUG("GetClanTag called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
     return "";
 }
 
 // returns the most recent information we have about what's happening in a clan
 bool CSteamFriends::GetClanActivityCounts( CSteamID steamIDClan, int *pnOnline, int *pnInGame, int *pnChatting )
 {
-    VLOG_DEBUG("GetClanActivityCounts called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
     return false;
 }
 // for clans a user is a member of, they will have reasonably up-to-date information, but for others you'll have to download the info to have the latest
 SteamAPICall_t CSteamFriends::DownloadClanActivityCounts( CSteamID *psteamIDClans, int cClansToRequest )
 {
-    VLOG_DEBUG("DownloadClanActivityCounts called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Count: %d", psteamIDClans->ConvertToUint64(), cClansToRequest);
     return 0;
 }
 
@@ -273,34 +250,34 @@ SteamAPICall_t CSteamFriends::DownloadClanActivityCounts( CSteamID *psteamIDClan
 // steamIDSource can be the steamID of a group, game server, lobby or chat room
 int CSteamFriends::GetFriendCountFromSource( CSteamID steamIDSource )
 {
-    VLOG_DEBUG("GetFriendCountFromSource called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDSource.ConvertToUint64());
     return 0;
 }
 
 CSteamID CSteamFriends::GetFriendFromSourceByIndex( CSteamID steamIDSource, int iFriend )
 {
-    VLOG_DEBUG("GetFriendFromSourceByIndex called - Friend: %d", iFriend);
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Friend: %d", steamIDSource.ConvertToUint64(), iFriend);
     return CSteamID();
 }
 
 // returns true if the local user can see that steamIDUser is a member or in steamIDSource
 bool CSteamFriends::IsUserInSource( CSteamID steamIDUser, CSteamID steamIDSource )
 {
-    VLOG_DEBUG("IsUserInSource called");
+    VLOG_INFO(__FUNCTION__ " - SteamIDUser: %llu, SteamIDSource: %llu", steamIDUser.ConvertToUint64(), steamIDSource.ConvertToUint64());
     return false;
 }
 
 // User is in a game pressing the talk button (will suppress the microphone for all voice comms from the Steam friends UI)
 void CSteamFriends::SetInGameVoiceSpeaking( CSteamID steamIDUser, bool bSpeaking )
 {
-    VLOG_DEBUG("SetInGameVoiceSpeaking called - Speaking: %s", bSpeaking ? "true" : "false");
+    VLOG_INFO(__FUNCTION__ " - SteamIDUser: %llu, Speaking: %s", steamIDUser.ConvertToUint64(), bSpeaking ? "true" : "false");
 }
 
 // activates the game overlay, with an optional dialog to open 
 // valid options are "Friends", "Community", "Players", "Settings", "OfficialGameGroup", "Stats", "Achievements"
 void CSteamFriends::ActivateGameOverlay( const char *pchDialog )
 {
-    VLOG_DEBUG("ActivateGameOverlay called - Dialog: %s", pchDialog ? pchDialog : "null");
+    VLOG_INFO(__FUNCTION__ " - Dialog: %s", pchDialog ? pchDialog : "null");
 }
 
 // activates game overlay to a specific place
@@ -310,54 +287,58 @@ void CSteamFriends::ActivateGameOverlay( const char *pchDialog )
 //		"jointrade" - opens a window to a Steam Trading session that was started with the ISteamEconomy/StartTrade Web API
 //		"stats" - opens the overlay web browser to the specified user's stats
 //		"achievements" - opens the overlay web browser to the specified user's achievements
+//		"friendadd" - opens the overlay in minimal mode prompting the user to add the target user as a friend
+//		"friendremove" - opens the overlay in minimal mode prompting the user to remove the target friend
+//		"friendrequestaccept" - opens the overlay in minimal mode prompting the user to accept an incoming friend invite
+//		"friendrequestignore" - opens the overlay in minimal mode prompting the user to ignore an incoming friend invite
 void CSteamFriends::ActivateGameOverlayToUser( const char *pchDialog, CSteamID steamID )
 {
-    VLOG_DEBUG("ActivateGameOverlayToUser called - Dialog: %s, SteamID: %s", pchDialog ? pchDialog : "null", steamID.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Dialog: %s, SteamID: %llu", pchDialog ? pchDialog : "null", steamID.ConvertToUint64());
 }
 
 // activates game overlay web browser directly to the specified URL
 // full address with protocol type is required, e.g. http://www.steamgames.com/
 void CSteamFriends::ActivateGameOverlayToWebPage( const char *pchURL )
 {
-    VLOG_DEBUG("ActivateGameOverlayToWebPage called - URL: %s", pchURL ? pchURL : "null");
+    VLOG_INFO(__FUNCTION__ " - URL: %s", pchURL ? pchURL : "null");
 }
 
 // activates game overlay to store page for app
 void CSteamFriends::ActivateGameOverlayToStore( AppId_t nAppID, EOverlayToStoreFlag eFlag )
 {
-    VLOG_DEBUG("ActivateGameOverlayToStore called - AppID: %d, Flag: %d", nAppID, eFlag);
+    VLOG_INFO(__FUNCTION__ " - AppID: %d, Flag: %d", nAppID, eFlag);
 }
 
 // Changed from Steam SDK v1.20, backward compatibility
 void CSteamFriends::ActivateGameOverlayToStore( AppId_t nAppID )
 {
-    VLOG_DEBUG("ActivateGameOverlayToStore called - AppID: %d", nAppID);
+    VLOG_INFO(__FUNCTION__ " - AppID: %d", nAppID);
 }
 
 // Mark a target user as 'played with'. This is a client-side only feature that requires that the calling user is 
 // in game 
 void CSteamFriends::SetPlayedWith( CSteamID steamIDUserPlayedWith )
 {
-    VLOG_DEBUG("SetPlayedWith called - SteamID: %s", steamIDUserPlayedWith.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDUserPlayedWith.ConvertToUint64());
 }
 
 // activates game overlay to open the invite dialog. Invitations will be sent for the provided lobby.
 void CSteamFriends::ActivateGameOverlayInviteDialog( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("ActivateGameOverlayInviteDialog called - SteamID: %s", steamIDLobby.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDLobby.ConvertToUint64());
 }
 
 // gets the small (32x32) avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
 int CSteamFriends::GetSmallFriendAvatar( CSteamID steamIDFriend )
 {
-    VLOG_DEBUG("GetSmallFriendAvatar called - SteamID: %s", steamIDFriend.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
     return 0;
 }
 
 // gets the medium (64x64) avatar of the current user, which is a handle to be used in IClientUtils::GetImageRGBA(), or 0 if none set
 int CSteamFriends::GetMediumFriendAvatar( CSteamID steamIDFriend )
 {
-    VLOG_DEBUG("GetMediumFriendAvatar called - SteamID: %s", steamIDFriend.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
     return 0;
 }
 
@@ -365,7 +346,7 @@ int CSteamFriends::GetMediumFriendAvatar( CSteamID steamIDFriend )
 // returns -1 if this image has yet to be loaded, in this case wait for a AvatarImageLoaded_t callback and then call this again
 int CSteamFriends::GetLargeFriendAvatar( CSteamID steamIDFriend )
 {
-    VLOG_DEBUG("GetLargeFriendAvatar called - SteamID: %s", steamIDFriend.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
     return 0;
 }
 
@@ -376,7 +357,7 @@ int CSteamFriends::GetLargeFriendAvatar( CSteamID steamIDFriend )
 // if returns false, it means that we already have all the details about that user, and functions can be called immediately
 bool CSteamFriends::RequestUserInformation( CSteamID steamIDUser, bool bRequireNameOnly )
 {
-    VLOG_DEBUG("RequestUserInformation called - SteamID: %s, RequireNameOnly: %s", steamIDUser.GetAccountID(), bRequireNameOnly ? "true" : "false");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, RequireNameOnly: %s", steamIDUser.ConvertToUint64(), bRequireNameOnly ? "true" : "false");
     return false;
 }
 
@@ -388,7 +369,7 @@ bool CSteamFriends::RequestUserInformation( CSteamID steamIDUser, bool bRequireN
 // and no avatar image is available, call RequestUserInformation( steamID, false ) to download the avatar
 SteamAPICall_t CSteamFriends::RequestClanOfficerList( CSteamID steamIDClan )
 {
-    VLOG_DEBUG("RequestClanOfficerList called - SteamID: %s", steamIDClan.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
     return 0;
 }
 
@@ -397,21 +378,21 @@ SteamAPICall_t CSteamFriends::RequestClanOfficerList( CSteamID steamIDClan )
 // returns the steamID of the clan owner
 CSteamID CSteamFriends::GetClanOwner( CSteamID steamIDClan )
 {
-    VLOG_DEBUG("GetClanOwner called - SteamID: %s", steamIDClan.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
     return CSteamID();
 }
 
 // returns the number of officers in a clan (including the owner)
 int CSteamFriends::GetClanOfficerCount( CSteamID steamIDClan )
 {
-    VLOG_DEBUG("GetClanOfficerCount called - SteamID: %s", steamIDClan.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
     return 0;
 }
 
 // returns the steamID of a clan officer, by index, of range [0,GetClanOfficerCount)
 CSteamID CSteamFriends::GetClanOfficerByIndex( CSteamID steamIDClan, int iOfficer )
 {
-    VLOG_DEBUG("GetClanOfficerByIndex called - SteamID: %s, Officer: %d", steamIDClan.GetAccountID(), iOfficer);
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Officer: %d", steamIDClan.ConvertToUint64(), iOfficer);
     return CSteamID();
 }
 
@@ -420,13 +401,13 @@ CSteamID CSteamFriends::GetClanOfficerByIndex( CSteamID steamIDClan, int iOffice
 // a chat restricted user can't add friends or join any groups.
 uint32 CSteamFriends::GetUserRestrictions()
 {
-    VLOG_DEBUG("GetUserRestrictions called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
 // Rich Presence data is automatically shared between friends who are in the same game
 // Each user has a set of Key/Value pairs
-// Up to 20 different keys can be set
+// Note the following limits: k_cchMaxRichPresenceKeys, k_cchMaxRichPresenceKeyLength, k_cchMaxRichPresenceValueLength
 // There are two magic keys:
 //		"status"  - a UTF-8 string that will show up in the 'view game info' dialog in the Steam friends list
 //		"connect" - a UTF-8 string that contains the command-line for how a friend can connect to a game
@@ -436,37 +417,37 @@ uint32 CSteamFriends::GetUserRestrictions()
 // and GetFriendRichPresenceKeyByIndex() (typically only used for debugging)
 bool CSteamFriends::SetRichPresence( const char *pchKey, const char *pchValue )
 {
-    VLOG_DEBUG("SetRichPresence called - Key: %s, Value: %s", pchKey ? pchKey : "null", pchValue ? pchValue : "null");
+    VLOG_INFO(__FUNCTION__ " - Key: %s, Value: %s", pchKey ? pchKey : "null", pchValue ? pchValue : "null");
     return false;
 }
 
 void CSteamFriends::ClearRichPresence()
 {
-    VLOG_DEBUG("ClearRichPresence called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 const char *CSteamFriends::GetFriendRichPresence( CSteamID steamIDFriend, const char *pchKey )
 {
-    VLOG_DEBUG("GetFriendRichPresence called - SteamID: %s, Key: %s", steamIDFriend.GetAccountID(), pchKey ? pchKey : "null");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Key: %s", steamIDFriend.ConvertToUint64(), pchKey ? pchKey : "null");
     return "";
 }
 
 int CSteamFriends::GetFriendRichPresenceKeyCount( CSteamID steamIDFriend )
 {
-    VLOG_DEBUG("GetFriendRichPresenceKeyCount called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
     return 0;
 }
 
 const char *CSteamFriends::GetFriendRichPresenceKeyByIndex( CSteamID steamIDFriend, int iKey )
 {
-    VLOG_DEBUG("GetFriendRichPresenceKeyByIndex called");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Key: %d", steamIDFriend.ConvertToUint64(), iKey);
     return "";
 }
 
 // Requests rich presence for a specific user.
 void CSteamFriends::RequestFriendRichPresence( CSteamID steamIDFriend )
 {
-    VLOG_DEBUG("RequestFriendRichPresence called - SteamID: %s", steamIDFriend.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
 }
 
 // rich invite support
@@ -475,7 +456,7 @@ void CSteamFriends::RequestFriendRichPresence( CSteamID steamIDFriend )
 // invites can only be sent to friends
 bool CSteamFriends::InviteUserToGame( CSteamID steamIDFriend, const char *pchConnectString )
 {
-    VLOG_DEBUG("InviteUserToGame called - SteamID: %s, ConnectString: %s", steamIDFriend.GetAccountID(), pchConnectString ? pchConnectString : "null");
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, ConnectString: %s", steamIDFriend.ConvertToUint64(), pchConnectString ? pchConnectString : "null");
     return false;
 }
 
@@ -484,25 +465,25 @@ bool CSteamFriends::InviteUserToGame( CSteamID steamIDFriend, const char *pchCon
 // GetFriendCoplayTime() returns as a unix time
 int CSteamFriends::GetCoplayFriendCount()
 {
-    VLOG_DEBUG("GetCoplayFriendCount called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
 CSteamID CSteamFriends::GetCoplayFriend( int iCoplayFriend )
 {
-    VLOG_DEBUG("GetCoplayFriend called - CoplayFriend: %d", iCoplayFriend);
+    VLOG_INFO(__FUNCTION__ " - CoplayFriend: %d", iCoplayFriend);
     return CSteamID();
 }
 
 int CSteamFriends::GetFriendCoplayTime( CSteamID steamIDFriend )
 {
-    VLOG_DEBUG("GetFriendCoplayTime called - SteamID: %s", steamIDFriend.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
     return 0;
 }
 
 AppId_t CSteamFriends::GetFriendCoplayGame( CSteamID steamIDFriend )
 {
-    VLOG_DEBUG("GetFriendCoplayGame called - SteamID: %s", steamIDFriend.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
     return 0;
 }
 
@@ -513,62 +494,62 @@ AppId_t CSteamFriends::GetFriendCoplayGame( CSteamID steamIDFriend )
 // use ActivateGameOverlayToUser( "chat", steamIDClan ) to open the in-game overlay version of the chat
 SteamAPICall_t CSteamFriends::JoinClanChatRoom( CSteamID steamIDClan )
 {
-    VLOG_DEBUG("JoinClanChatRoom called - SteamID: %s", steamIDClan.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
     return 0;
 }
 
 bool CSteamFriends::LeaveClanChatRoom( CSteamID steamIDClan )
 {
-    VLOG_DEBUG("LeaveClanChatRoom called - SteamID: %s", steamIDClan.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
     return false;
 }
 
 int CSteamFriends::GetClanChatMemberCount( CSteamID steamIDClan )
 {
-    VLOG_DEBUG("GetClanChatMemberCount called - SteamID: %s", steamIDClan.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
     return 0;
 }
 
 CSteamID CSteamFriends::GetChatMemberByIndex( CSteamID steamIDClan, int iUser )
 {
-    VLOG_DEBUG("GetChatMemberByIndex called - SteamID: %s, User: %d", steamIDClan.GetAccountID(), iUser);
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, User: %d", steamIDClan.ConvertToUint64(), iUser);
     return CSteamID();
 }
 
 bool CSteamFriends::SendClanChatMessage( CSteamID steamIDClanChat, const char *pchText )
 {
-    VLOG_DEBUG("SendClanChatMessage called - SteamID: %s, Text: %s", steamIDClanChat.GetAccountID(), pchText);
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Text: %s", steamIDClanChat.ConvertToUint64(), pchText);
     return false;
 }
 
 int CSteamFriends::GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *peChatEntryType, OUT_STRUCT() CSteamID *psteamidChatter )
 {
-    VLOG_DEBUG("GetClanChatMessage called - SteamID: %s, Message: %d", steamIDClanChat.GetAccountID(), iMessage);
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Message: %d", steamIDClanChat.ConvertToUint64(), iMessage);
     return 0;
 }
 
 bool CSteamFriends::IsClanChatAdmin( CSteamID steamIDClanChat, CSteamID steamIDUser )
 {
-    VLOG_DEBUG("IsClanChatAdmin called - SteamID: %s, User: %s", steamIDClanChat.GetAccountID(), steamIDUser.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, User: %llu", steamIDClanChat.ConvertToUint64(), steamIDUser.ConvertToUint64());
     return false;
 }
 
 // interact with the Steam (game overlay / desktop)
 bool CSteamFriends::IsClanChatWindowOpenInSteam( CSteamID steamIDClanChat )
 {
-    VLOG_DEBUG("IsClanChatWindowOpenInSteam called - SteamID: %s", steamIDClanChat.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClanChat.ConvertToUint64());
     return false;
 }
 
 bool CSteamFriends::OpenClanChatWindowInSteam( CSteamID steamIDClanChat )
 {
-    VLOG_DEBUG("OpenClanChatWindowInSteam called - SteamID: %s", steamIDClanChat.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClanChat.ConvertToUint64());
     return false;
 }
 
 bool CSteamFriends::CloseClanChatWindowInSteam( CSteamID steamIDClanChat )
 {
-    VLOG_DEBUG("CloseClanChatWindowInSteam called - SteamID: %s", steamIDClanChat.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClanChat.ConvertToUint64());
     return false;
 }
 
@@ -576,38 +557,37 @@ bool CSteamFriends::CloseClanChatWindowInSteam( CSteamID steamIDClanChat )
 // this is so you can show P2P chats inline in the game
 bool CSteamFriends::SetListenForFriendsMessages( bool bInterceptEnabled )
 {
-    VLOG_DEBUG("SetListenForFriendsMessages called - InterceptEnabled: %s", bInterceptEnabled ? "true" : "false");
+    VLOG_INFO(__FUNCTION__ " - InterceptEnabled: %s", bInterceptEnabled ? "true" : "false");
     return false;
 }
 
 bool CSteamFriends::ReplyToFriendMessage( CSteamID steamIDFriend, const char *pchMsgToSend )
 {
-    VLOG_DEBUG("ReplyToFriendMessage called - SteamID: %s, Message: %s", steamIDFriend.GetAccountID(), pchMsgToSend);
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Message: %s", steamIDFriend.ConvertToUint64(), pchMsgToSend);
     return false;
 }
 
 int CSteamFriends::GetFriendMessage( CSteamID steamIDFriend, int iMessageID, void *pvData, int cubData, EChatEntryType *peChatEntryType )
 {
-    VLOG_DEBUG("GetFriendMessage called - SteamID: %s, MessageID: %d", steamIDFriend.GetAccountID(), iMessageID);
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, MessageID: %d, Data: %p, DataSize: %d, ChatEntryType: %d", steamIDFriend.ConvertToUint64(), iMessageID, pvData, cubData, peChatEntryType);
     return 0;
 }
-
 
 // following apis
 SteamAPICall_t CSteamFriends::GetFollowerCount( CSteamID steamID )
 {
-    VLOG_DEBUG("GetFollowerCount called - SteamID: %s", steamID.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamID.ConvertToUint64());
     return 0;
 }
 
 SteamAPICall_t CSteamFriends::IsFollowing( CSteamID steamID )
 {
-    VLOG_DEBUG("IsFollowing called - SteamID: %s", steamID.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamID.ConvertToUint64());
     return 0;
 }
 
 SteamAPICall_t CSteamFriends::EnumerateFollowingList( uint32 unStartIndex )
 {
-    VLOG_DEBUG("EnumerateFollowingList called - StartIndex: %d", unStartIndex);
+    VLOG_INFO(__FUNCTION__ " - StartIndex: %d", unStartIndex);
     return 0;
 }

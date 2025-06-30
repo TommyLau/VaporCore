@@ -16,13 +16,15 @@
 #include <isteamremotestorage.h>
 #include <isteamscreenshots.h>
 #include <isteamscreenshots001.h>
+#include <isteamscreenshots002.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for adding screenshots to the user's screenshot library
 //-----------------------------------------------------------------------------
 class CSteamScreenshots :
     public ISteamScreenshots,
-    public ISteamScreenshots001
+    public ISteamScreenshots001,
+    public ISteamScreenshots002
 {
 public:
 	// Singleton accessor
@@ -32,6 +34,7 @@ public:
 		return instance;
 	}
 
+public:
 	// Writes a screenshot to the user's screenshot library given the raw image data, which must be in RGB format.
 	// The return value is a handle that is valid for the duration of the game process and can be used to apply tags.
 	ScreenshotHandle WriteScreenshot( void *pubRGB, uint32 cubRGB, int nWidth, int nHeight ) override;
@@ -58,6 +61,16 @@ public:
 
 	// Tags a published file as being visible in the screenshot
 	bool TagPublishedFile( ScreenshotHandle hScreenshot, PublishedFileId_t unPublishedFileID ) override;
+
+	// Returns true if the app has hooked the screenshot
+	bool IsScreenshotsHooked() override;
+
+	// Adds a VR screenshot to the user's screenshot library from disk in the supported type.
+	// pchFilename should be the normal 2D image used in the library view
+	// pchVRFilename should contain the image that matches the correct type
+	// The return value is a handle that is valid for the duration of the game process and can be used to apply tags.
+	// JPEG, TGA, and PNG formats are supported.
+	ScreenshotHandle AddVRScreenshotToLibrary( EVRScreenshotType eType, const char *pchFilename, const char *pchVRFilename ) override;
 
 private:
     // Private constructor and destructor for singleton

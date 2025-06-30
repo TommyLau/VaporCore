@@ -87,25 +87,25 @@ private:
     std::map<HSteamPipe, ESteamPipe> m_mapSteamPipes;
     
     // Implementation class instances
-    CSteamUser* m_pSteamUser;
-    CSteamFriends* m_pSteamFriends;
+    CSteamUser& m_steamUser;
+    CSteamFriends& m_steamFriends;
     CSteamUtils* m_pSteamUtils;
     CSteamMatchmaking* m_pSteamMatchmaking;
     CSteamUserStats& m_steamUserStats;
-    CSteamApps* m_pSteamApps;
+    CSteamApps& m_steamApps;
     CSteamMatchmakingServers* m_pSteamMatchmakingServers;
     CSteamNetworking* m_pSteamNetworking;
     CSteamRemoteStorage& m_steamRemoteStorage;
     CSteamScreenshots& m_steamScreenshots;
     CSteamHTTP* m_pSteamHTTP;
     CSteamUnifiedMessages* m_pSteamUnifiedMessages;
-    CSteamController* m_pSteamController;
-    CSteamUGC* m_pSteamUGC;
+    CSteamController& m_steamController;
+    CSteamUGC& m_steamUGC;
     CSteamAppList* m_pSteamAppList;
     CSteamMusic* m_pSteamMusic;
     CSteamMusicRemote* m_pSteamMusicRemote;
     CSteamHTMLSurface* m_pSteamHTMLSurface;
-    CSteamInventory* m_pSteamInventory;
+    CSteamInventory& m_steamInventory;
     CSteamVideo* m_pSteamVideo;
     
     // Singleton instance

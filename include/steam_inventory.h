@@ -22,20 +22,15 @@
 class CSteamInventory :
 	public ISteamInventory
 {
-private:
-    // Singleton instance
-    static CSteamInventory* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamInventory& GetInstance()
+    {
+		static CSteamInventory instance;
+		return instance;
+    }
 
 public:
-    CSteamInventory();
-    ~CSteamInventory();
-
-    // Helper methods
-    static CSteamInventory* GetInstance();
-    static void ReleaseInstance();
-
-
-
 	// INVENTORY ASYNC RESULT MANAGEMENT
 	//
 	// Asynchronous inventory queries always output a result handle which can be used with
@@ -273,10 +268,21 @@ public:
 	// on the current Steam language settings (see ISteamApps::GetCurrentGameLanguage).
 	// Property names are always composed of ASCII letters, numbers, and/or underscores.
 	// Pass a NULL pointer for pchPropertyName to get a comma - separated list of available
-	// property names. 
+	// property names. If pchValueBuffer is NULL, *punValueBufferSize will contain the 
+	// suggested buffer size. Otherwise it will be the number of bytes actually copied
+	// to pchValueBuffer. If the results do not fit in the given buffer, partial 
+	// results may be copied.
 	bool GetItemDefinitionProperty( SteamItemDef_t iDefinition, const char *pchPropertyName,
-                                    OUT_STRING_COUNT(punValueBufferSize) char *pchValueBuffer, uint32 *punValueBufferSize ) override;
+                                    OUT_STRING_COUNT(punValueBufferSizeOut) char *pchValueBuffer, uint32 *punValueBufferSizeOut ) override;
 
+private:
+    // Private constructor and destructor for singleton
+    CSteamInventory();
+    ~CSteamInventory();
+
+    // Delete copy constructor and assignment operator
+    CSteamInventory(const CSteamInventory&) = delete;
+    CSteamInventory& operator=(const CSteamInventory&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_INVENTORY_H

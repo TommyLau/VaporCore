@@ -41,18 +41,15 @@ class CSteamUser :
     public ISteamUser017,
     public ISteamUser018
 {
-private:
-    // Singleton instance
-    static CSteamUser* s_pInstance;
-	
 public:
-    CSteamUser();
-    ~CSteamUser();
+	// Singleton accessor
+    static CSteamUser& GetInstance()
+	{
+		static CSteamUser instance;
+		return instance;
+	}
 
-    // Helper methods
-    static CSteamUser* GetInstance();
-    static void ReleaseInstance();
-
+public:
 	// returns the HSteamUser this interface represents
 	// this is only used internally by the API, and by a few select interfaces that support multi-user
 	HSteamUser GetHSteamUser() override;
@@ -219,6 +216,21 @@ public:
 
 	// gets whether the user has two factor enabled on their account
 	bool BIsTwoFactorEnabled() override;
+
+	// gets whether the users phone number is identifying
+	bool BIsPhoneIdentifying() override;
+
+	// gets whether the users phone number is awaiting (re)verification
+	bool BIsPhoneRequiringVerification() override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamUser();
+    ~CSteamUser();
+
+    // Delete copy constructor and assignment operator
+    CSteamUser(const CSteamUser&) = delete;
+    CSteamUser& operator=(const CSteamUser&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_USER_H

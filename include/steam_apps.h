@@ -36,18 +36,15 @@ class CSteamApps :
     public ISteamApps006,
     public ISteamApps007
 {
-private:
-    // Singleton instance
-    static CSteamApps* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamApps& GetInstance()
+	{
+		static CSteamApps instance;
+		return instance;
+	}
 
 public:
-    CSteamApps();
-    ~CSteamApps();
-
-    // Helper methods
-    static CSteamApps* GetInstance();
-    static void ReleaseInstance();
-
 	// returns 0 if the key does not exist
 	// this may be true on first call, since the app data may not be cached locally yet
 	// If you expect it to exists wait for the AppDataChanged_t after the first failure and ask again
@@ -121,6 +118,18 @@ public:
 	// appropriate appid values, ending with a final callback where the m_nAppId
 	// member is k_uAppIdInvalid (zero).
 	void RequestAllProofOfPurchaseKeys() override;
+
+	CALL_RESULT( FileDetailsResult_t )
+	SteamAPICall_t GetFileDetails( const char* pszFileName ) override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamApps();
+    ~CSteamApps();
+
+    // Delete copy constructor and assignment operator
+    CSteamApps(const CSteamApps&) = delete;
+    CSteamApps& operator=(const CSteamApps&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_APPS_H

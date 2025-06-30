@@ -12,43 +12,21 @@
 #include "vapor_base.h"
 #include "steam_user.h"
 
-// Static instance
-CSteamUser* CSteamUser::s_pInstance = nullptr;
-
 CSteamUser::CSteamUser()
 {
-    VLOG_INFO("CSteamUser constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamUser::~CSteamUser()
 {
-    VLOG_INFO("CSteamUser destructor called");
-}
-
-// Helper methods
-CSteamUser* CSteamUser::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamUser();
-    }
-    return s_pInstance;
-}
-
-void CSteamUser::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 // returns the HSteamUser this interface represents
 // this is only used internally by the API, and by a few select interfaces that support multi-user
 HSteamUser CSteamUser::GetHSteamUser()
 {
-    VLOG_DEBUG("GetHSteamUser called");
+    VLOG_INFO(__FUNCTION__);
     return 1;
 }
 
@@ -57,7 +35,7 @@ HSteamUser CSteamUser::GetHSteamUser()
 // The Steam client will automatically be trying to recreate the connection as often as possible.
 bool CSteamUser::BLoggedOn()
 {
-    VLOG_DEBUG("BLoggedOn called");
+    VLOG_INFO(__FUNCTION__);
     return true;
 }
 
@@ -65,7 +43,7 @@ bool CSteamUser::BLoggedOn()
 // a CSteamID is a unique identifier for an account, and used to differentiate users in all parts of the Steamworks API
 CSteamID CSteamUser::GetSteamID()
 {
-    VLOG_DEBUG("GetSteamID called");
+    VLOG_INFO(__FUNCTION__);
     return CSteamID();
 }
 
@@ -86,8 +64,8 @@ CSteamID CSteamUser::GetSteamID()
 // The contents of pBlob should then be sent to the game server, for it to use to complete the authentication process.
 int CSteamUser::InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer, bool bSecure )
 {
-    VLOG_DEBUG("InitiateGameConnection called - GameServer: %llu, Server: %u:%u, Secure: %s", 
-               steamIDGameServer.GetAccountID(), unIPServer, usPortServer, bSecure ? "true" : "false");
+    VLOG_INFO(__FUNCTION__ " - GameServer: %llu, Server: %u:%u, Secure: %s", 
+               steamIDGameServer.ConvertToUint64(), unIPServer, usPortServer, bSecure ? "true" : "false");
 
     if (!pAuthBlob || cbMaxAuthBlob < 64)
     {
@@ -101,7 +79,7 @@ int CSteamUser::InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSte
 // Changed from Steam SDK v1.01, backward compatibility
 int CSteamUser::InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSteamID steamIDGameServer, CGameID gameID, uint32 unIPServer, uint16 usPortServer, bool bSecure )
 {
-    VLOG_DEBUG("InitiateGameConnection called - GameServer: %llu, GameID: %llu, Server: %u:%u, Secure: %s", 
+    VLOG_INFO(__FUNCTION__ " - GameServer: %llu, GameID: %llu, Server: %u:%u, Secure: %s", 
                steamIDGameServer.ConvertToUint64(), gameID.ToUint64(), unIPServer, usPortServer, bSecure ? "true" : "false");
     
     if (!pAuthBlob || cbMaxAuthBlob < 64)
@@ -118,7 +96,7 @@ int CSteamUser::InitiateGameConnection( void *pAuthBlob, int cbMaxAuthBlob, CSte
 // needs to occur when the game client leaves the specified game server, needs to match with the InitiateGameConnection() call
 void CSteamUser::TerminateGameConnection( uint32 unIPServer, uint16 usPortServer )
 {
-    VLOG_DEBUG("TerminateGameConnection called - Server: %u:%u", unIPServer, usPortServer);
+    VLOG_INFO(__FUNCTION__ " - Server: %u:%u", unIPServer, usPortServer);
 }
 
 // Legacy functions
@@ -126,7 +104,7 @@ void CSteamUser::TerminateGameConnection( uint32 unIPServer, uint16 usPortServer
 // used by only a few games to track usage events
 void CSteamUser::TrackAppUsageEvent( CGameID gameID, int eAppUsageEvent, const char *pchExtraInfo )
 {
-    VLOG_DEBUG("TrackAppUsageEvent called - GameID: %llu, Event: %d, ExtraInfo: %s", 
+    VLOG_INFO(__FUNCTION__ " - GameID: %llu, Event: %d, ExtraInfo: %s", 
                gameID.ToUint64(), eAppUsageEvent, pchExtraInfo ? pchExtraInfo : "null");
 }
 
@@ -135,14 +113,14 @@ void CSteamUser::TrackAppUsageEvent( CGameID gameID, int eAppUsageEvent, const c
 // Removed from Steam SDK v1.01, backward compatibility
 void CSteamUser::RefreshSteam2Login()
 {
-    VLOG_DEBUG("RefreshSteam2Login called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // get the local storage folder for current Steam account to write application data, e.g. save games, configs etc.
 // this will usually be something like "C:\Progam Files\Steam\userdata\<SteamID>\<AppID>\local"
 bool CSteamUser::GetUserDataFolder( char *pchBuffer, int cubBuffer )
 {
-    VLOG_DEBUG("GetUserDataFolder called - Buffer: %s, Size: %d", pchBuffer, cubBuffer);
+    VLOG_INFO(__FUNCTION__ " - Buffer: %s, Size: %d", pchBuffer, cubBuffer);
     strcpy(pchBuffer, "C:\\Progam Files\\Steam\\userdata\\1234567890\\1234567890\\local");
     return false;
 }
@@ -150,7 +128,7 @@ bool CSteamUser::GetUserDataFolder( char *pchBuffer, int cubBuffer )
 // Starts voice recording. Once started, use GetVoice() to get the data
 void CSteamUser::StartVoiceRecording( )
 {
-    VLOG_DEBUG("StartVoiceRecording called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Stops voice recording. Because people often release push-to-talk keys early, the system will keep recording for
@@ -158,7 +136,7 @@ void CSteamUser::StartVoiceRecording( )
 // k_eVoiceResultNotRecording
 void CSteamUser::StopVoiceRecording( )
 {
-    VLOG_DEBUG("StopVoiceRecording called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Determine the amount of captured audio data that is available in bytes.
@@ -169,14 +147,14 @@ void CSteamUser::StopVoiceRecording( )
 // If you're upgrading from an older Steamworks API, you'll want to pass in 11025 to nUncompressedVoiceDesiredSampleRate
 EVoiceResult CSteamUser::GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate )
 {
-    VLOG_DEBUG("GetAvailableVoice called - Compressed: %d, Uncompressed: %d, DesiredSampleRate: %d", pcbCompressed, pcbUncompressed, nUncompressedVoiceDesiredSampleRate);
+    VLOG_INFO(__FUNCTION__ " - Compressed: %d, Uncompressed: %d, DesiredSampleRate: %d", pcbCompressed, pcbUncompressed, nUncompressedVoiceDesiredSampleRate);
     return EVoiceResult::k_EVoiceResultOK;
 }
 
 // Changed from Steam SDK v1.13, backward compatibility
 EVoiceResult CSteamUser::GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUncompressed )
 {
-    VLOG_DEBUG("GetAvailableVoice called - Compressed: %d, Uncompressed: %d", pcbCompressed, pcbUncompressed);
+    VLOG_INFO(__FUNCTION__ " - Compressed: %d, Uncompressed: %d", pcbCompressed, pcbUncompressed);
     return EVoiceResult::k_EVoiceResultOK;
 }
 
@@ -185,7 +163,7 @@ EVoiceResult CSteamUser::GetAvailableVoice( uint32 *pcbCompressed, uint32 *pcbUn
 // Removed from Steam SDK v1.06, backward compatibility
 EVoiceResult CSteamUser::GetCompressedVoice( void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
 {
-    VLOG_DEBUG("GetCompressedVoice called - Buffer: %s, Size: %d, nBytesWritten: %d", pDestBuffer, cbDestBufferSize, nBytesWritten);
+    VLOG_INFO(__FUNCTION__ " - Buffer: %s, Size: %d, nBytesWritten: %d", pDestBuffer, cbDestBufferSize, nBytesWritten);
     return EVoiceResult::k_EVoiceResultOK;
 }
 
@@ -202,7 +180,7 @@ EVoiceResult CSteamUser::GetCompressedVoice( void *pDestBuffer, uint32 cbDestBuf
 // If you're upgrading from an older Steamworks API, you'll want to pass in 11025 to nUncompressedVoiceDesiredSampleRate
 EVoiceResult CSteamUser::GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten, uint32 nUncompressedVoiceDesiredSampleRate )
 {
-    VLOG_DEBUG("GetVoice called - WantCompressed: %s, DestBuffer: %s, DestBufferSize: %d, nBytesWritten: %d, WantUncompressed: %s, UncompressedDestBuffer: %s, UncompressedDestBufferSize: %d, UncompressBytesWritten: %d, UncompressedVoiceDesiredSampleRate: %d", bWantCompressed ? "true" : "false", pDestBuffer, cbDestBufferSize, nBytesWritten, bWantUncompressed ? "true" : "false", pUncompressedDestBuffer, cbUncompressedDestBufferSize, nUncompressBytesWritten, nUncompressedVoiceDesiredSampleRate);
+    VLOG_INFO(__FUNCTION__ " - WantCompressed: %s, DestBuffer: %s, DestBufferSize: %d, nBytesWritten: %d, WantUncompressed: %s, UncompressedDestBuffer: %s, UncompressedDestBufferSize: %d, UncompressBytesWritten: %d, UncompressedVoiceDesiredSampleRate: %d", bWantCompressed ? "true" : "false", pDestBuffer, cbDestBufferSize, nBytesWritten, bWantUncompressed ? "true" : "false", pUncompressedDestBuffer, cbUncompressedDestBufferSize, nUncompressBytesWritten, nUncompressedVoiceDesiredSampleRate);
 
     return EVoiceResult::k_EVoiceResultOK;
 }
@@ -210,7 +188,7 @@ EVoiceResult CSteamUser::GetVoice( bool bWantCompressed, void *pDestBuffer, uint
 // Changed from Steam SDK v1.13, backward compatibility
 EVoiceResult CSteamUser::GetVoice( bool bWantCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, bool bWantUncompressed, void *pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 *nUncompressBytesWritten )
 {
-    VLOG_DEBUG("GetVoice called - WantCompressed: %s, DestBuffer: %s, DestBufferSize: %d, nBytesWritten: %d, WantUncompressed: %s, UncompressedDestBuffer: %s, UncompressedDestBufferSize: %d, UncompressBytesWritten: %d", bWantCompressed ? "true" : "false", pDestBuffer, cbDestBufferSize, nBytesWritten, bWantUncompressed ? "true" : "false", pUncompressedDestBuffer, cbUncompressedDestBufferSize, nUncompressBytesWritten);
+    VLOG_INFO(__FUNCTION__ " - WantCompressed: %s, DestBuffer: %s, DestBufferSize: %d, nBytesWritten: %d, WantUncompressed: %s, UncompressedDestBuffer: %s, UncompressedDestBufferSize: %d, UncompressBytesWritten: %d", bWantCompressed ? "true" : "false", pDestBuffer, cbDestBufferSize, nBytesWritten, bWantUncompressed ? "true" : "false", pUncompressedDestBuffer, cbUncompressedDestBufferSize, nUncompressBytesWritten);
 
     return EVoiceResult::k_EVoiceResultOK;
 }
@@ -223,7 +201,7 @@ EVoiceResult CSteamUser::GetVoice( bool bWantCompressed, void *pDestBuffer, uint
 // If you're upgrading from an older Steamworks API, you'll want to pass in 11025 to nDesiredSampleRate
 EVoiceResult CSteamUser::DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten, uint32 nDesiredSampleRate )
 {
-    VLOG_DEBUG("DecompressVoice called - Compressed: %s, Size: %d, DestBuffer: %s, DestBufferSize: %d, nBytesWritten: %d, DesiredSampleRate: %d", pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize, nBytesWritten, nDesiredSampleRate);
+    VLOG_INFO(__FUNCTION__ " - Compressed: %s, Size: %d, DestBuffer: %s, DestBufferSize: %d, nBytesWritten: %d, DesiredSampleRate: %d", pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize, nBytesWritten, nDesiredSampleRate);
     return EVoiceResult::k_EVoiceResultOK;
 }
 
@@ -231,7 +209,7 @@ EVoiceResult CSteamUser::DecompressVoice( const void *pCompressed, uint32 cbComp
 // Changed from Steam SDK v1.13, backward compatibility
 EVoiceResult CSteamUser::DecompressVoice( const void *pCompressed, uint32 cbCompressed, void *pDestBuffer, uint32 cbDestBufferSize, uint32 *nBytesWritten )
 {
-    VLOG_DEBUG("DecompressVoice called - Compressed: %s, Size: %d, DestBuffer: %s, DestBufferSize: %d, nBytesWritten: %d", pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize, nBytesWritten);
+    VLOG_INFO(__FUNCTION__ " - Compressed: %s, Size: %d, DestBuffer: %s, DestBufferSize: %d, nBytesWritten: %d", pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize, nBytesWritten);
     return EVoiceResult::k_EVoiceResultOK;
 }
     
@@ -244,7 +222,7 @@ EVoiceResult CSteamUser::DecompressVoice( void *pCompressed, uint32 cbCompressed
 // This returns the frequency of the voice data as it's stored internally; calling DecompressVoice() with this size will yield the best results
 uint32 CSteamUser::GetVoiceOptimalSampleRate()
 {
-    VLOG_DEBUG("GetVoiceOptimalSampleRate called");
+    VLOG_INFO(__FUNCTION__);
     return 11025;
 }
 
@@ -252,7 +230,7 @@ uint32 CSteamUser::GetVoiceOptimalSampleRate()
 // pcbTicket retrieves the length of the actual ticket.
 HAuthTicket CSteamUser::GetAuthSessionTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket )
 {
-    VLOG_DEBUG("GetAuthSessionTicket called - Ticket: %s, MaxTicket: %d, pcbTicket: %d", pTicket, cbMaxTicket, pcbTicket);
+    VLOG_INFO(__FUNCTION__ " - Ticket: %s, MaxTicket: %d, pcbTicket: %d", pTicket, cbMaxTicket, pcbTicket);
     return 0;
 }
 
@@ -260,27 +238,27 @@ HAuthTicket CSteamUser::GetAuthSessionTicket( void *pTicket, int cbMaxTicket, ui
 // Registers for callbacks if the entity goes offline or cancels the ticket ( see ValidateAuthTicketResponse_t callback and EAuthSessionResponse )
 EBeginAuthSessionResult CSteamUser::BeginAuthSession( const void *pAuthTicket, int cbAuthTicket, CSteamID steamID )
 {
-    VLOG_DEBUG("BeginAuthSession called - Ticket: %s, cbAuthTicket: %d, steamID: %llu", pAuthTicket, cbAuthTicket, steamID.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Ticket: %s, cbAuthTicket: %d, steamID: %llu", pAuthTicket, cbAuthTicket, steamID.ConvertToUint64());
     return EBeginAuthSessionResult::k_EBeginAuthSessionResultOK;
 }
 
 // Stop tracking started by BeginAuthSession - called when no longer playing game with this entity
 void CSteamUser::EndAuthSession( CSteamID steamID )
 {
-    VLOG_DEBUG("EndAuthSession called - steamID: %llu", steamID.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - steamID: %llu", steamID.ConvertToUint64());
 }
 
 // Cancel auth ticket from GetAuthSessionTicket, called when no longer playing game with the entity you gave the ticket to
 void CSteamUser::CancelAuthTicket( HAuthTicket hAuthTicket )
 {
-    VLOG_DEBUG("CancelAuthTicket called - hAuthTicket: %d", hAuthTicket);
+    VLOG_INFO(__FUNCTION__ " - hAuthTicket: %d", hAuthTicket);
 }
 
 // After receiving a user's authentication data, and passing it to BeginAuthSession, use this function
 // to determine if the user owns downloadable content specified by the provided AppID.
 EUserHasLicenseForAppResult CSteamUser::UserHasLicenseForApp( CSteamID steamID, AppId_t appID )
 {
-    VLOG_DEBUG("UserHasLicenseForApp called - steamID: %llu, appID: %d", steamID.GetAccountID(), appID);
+    VLOG_INFO(__FUNCTION__ " - steamID: %llu, appID: %d", steamID.ConvertToUint64(), appID);
     return EUserHasLicenseForAppResult::k_EUserHasLicenseResultHasLicense;
 }
 
@@ -288,7 +266,7 @@ EUserHasLicenseForAppResult CSteamUser::UserHasLicenseForApp( CSteamID steamID, 
 // (i.e a SteamServersConnected_t has been issued) and may not catch all forms of NAT.
 bool CSteamUser::BIsBehindNAT()
 {
-    VLOG_DEBUG("BIsBehindNAT called");
+    VLOG_INFO(__FUNCTION__);
     return false;
 }
 
@@ -297,7 +275,7 @@ bool CSteamUser::BIsBehindNAT()
 // uint32 unIPServer, uint16 usPortServer - the IP address of the game server
 void CSteamUser::AdvertiseGame( CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer )
 {
-    VLOG_DEBUG("AdvertiseGame called - GameServer: %llu, Server: %u:%u", steamIDGameServer.GetAccountID(), unIPServer, usPortServer);
+    VLOG_INFO(__FUNCTION__ " - GameServer: %llu, Server: %u:%u", steamIDGameServer.ConvertToUint64(), unIPServer, usPortServer);
 }
 
 // Requests a ticket encrypted with an app specific shared key
@@ -305,14 +283,14 @@ void CSteamUser::AdvertiseGame( CSteamID steamIDGameServer, uint32 unIPServer, u
 // ( This is asynchronous, you must wait for the ticket to be completed by the server )
 SteamAPICall_t CSteamUser::RequestEncryptedAppTicket( void *pDataToInclude, int cbDataToInclude )
 {
-    VLOG_DEBUG("RequestEncryptedAppTicket called - Data: %s, Size: %d", pDataToInclude, cbDataToInclude);
+    VLOG_INFO(__FUNCTION__ " - Data: %s, Size: %d", pDataToInclude, cbDataToInclude);
     return 0;
 }
 
 // retrieve a finished ticket
 bool CSteamUser::GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket )
 {
-    VLOG_DEBUG("GetEncryptedAppTicket called - Ticket: %s, MaxTicket: %d, pcbTicket: %d", pTicket, cbMaxTicket, pcbTicket);
+    VLOG_INFO(__FUNCTION__ " - Ticket: %s, MaxTicket: %d, pcbTicket: %d", pTicket, cbMaxTicket, pcbTicket);
     return false;
 }
 
@@ -321,14 +299,14 @@ bool CSteamUser::GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *
 // the user has can have two different badges for a series; the regular (max level 5) and the foil (max level 1)
 int CSteamUser::GetGameBadgeLevel( int nSeries, bool bFoil )
 {
-    VLOG_DEBUG("GetGameBadgeLevel called - Series: %d, Foil: %d", nSeries, bFoil);
+    VLOG_INFO(__FUNCTION__ " - Series: %d, Foil: %d", nSeries, bFoil);
     return 0;
 }
 
 // gets the Steam Level of the user, as shown on their profile
 int CSteamUser::GetPlayerSteamLevel()
 {
-    VLOG_DEBUG("GetPlayerSteamLevel called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
@@ -344,20 +322,34 @@ int CSteamUser::GetPlayerSteamLevel()
 // so it would be a good idea to request and visit a new auth URL every 12 hours.
 SteamAPICall_t CSteamUser::RequestStoreAuthURL( const char *pchRedirectURL )
 {
-    VLOG_DEBUG("RequestStoreAuthURL called - RedirectURL: %s", pchRedirectURL);
+    VLOG_INFO(__FUNCTION__ " - RedirectURL: %s", pchRedirectURL);
     return 0;
 }
 
 // gets whether the users phone number is verified 
 bool CSteamUser::BIsPhoneVerified()
 {
-    VLOG_DEBUG("BIsPhoneVerified called");
+    VLOG_INFO(__FUNCTION__);
     return false;
 }
 
 // gets whether the user has two factor enabled on their account
 bool CSteamUser::BIsTwoFactorEnabled()
 {
-    VLOG_DEBUG("BIsTwoFactorEnabled called");
+    VLOG_INFO(__FUNCTION__);
+    return false;
+}
+
+// gets whether the users phone number is identifying
+bool CSteamUser::BIsPhoneIdentifying()
+{
+    VLOG_INFO(__FUNCTION__);
+    return false;
+}
+
+// gets whether the users phone number is awaiting (re)verification
+bool CSteamUser::BIsPhoneRequiringVerification()
+{
+    VLOG_INFO(__FUNCTION__);
     return false;
 }
