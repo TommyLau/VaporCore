@@ -12,43 +12,21 @@
 #include "vapor_base.h"
 #include "steam_screenshots.h"
 
-// Static instance
-CSteamScreenshots* CSteamScreenshots::s_pInstance = nullptr;
-
 CSteamScreenshots::CSteamScreenshots()
 {
-    VLOG_INFO("CSteamScreenshots constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamScreenshots::~CSteamScreenshots()
 {
-    VLOG_INFO("CSteamScreenshots destructor called");
-}
-
-// Helper methods
-CSteamScreenshots* CSteamScreenshots::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamScreenshots();
-    }
-    return s_pInstance;
-}
-
-void CSteamScreenshots::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Writes a screenshot to the user's screenshot library given the raw image data, which must be in RGB format.
 // The return value is a handle that is valid for the duration of the game process and can be used to apply tags.
 ScreenshotHandle CSteamScreenshots::WriteScreenshot( void *pubRGB, uint32 cubRGB, int nWidth, int nHeight )
 {
-    VLOG_DEBUG("WriteScreenshot called - Width: %d, Height: %d", nWidth, nHeight);
+    VLOG_INFO(__FUNCTION__ " - Width: %d, Height: %d", nWidth, nHeight);
     return 0;
 }
 
@@ -58,14 +36,29 @@ ScreenshotHandle CSteamScreenshots::WriteScreenshot( void *pubRGB, uint32 cubRGB
 // JPEG, TGA, and PNG formats are supported.
 ScreenshotHandle CSteamScreenshots::AddScreenshotToLibrary( const char *pchFilename, const char *pchThumbnailFilename, int nWidth, int nHeight )
 {
-    VLOG_DEBUG("AddScreenshotToLibrary called - Width: %d, Height: %d", nWidth, nHeight);
+    VLOG_INFO(__FUNCTION__ " - Width: %d, Height: %d", nWidth, nHeight);
     return 0;
 }
 
 // Causes the Steam overlay to take a screenshot.  If screenshots are being hooked by the game then a ScreenshotRequested_t callback is sent back to the game instead. 
 void CSteamScreenshots::TriggerScreenshot()
 {
-    VLOG_DEBUG("TriggerScreenshot called");
+    VLOG_INFO(__FUNCTION__);
+
+    VAPORCORE_LOCK_GUARD();
+
+    if (m_bHook)
+    {
+        // TODO: Return ScreenshotRequested_t callback?
+        VLOG_DEBUG(__FUNCTION__ " - Screenshot requested, and hooked");
+    }
+    else
+    {
+        // TODO: Overlay take screenshot?
+        VLOG_DEBUG(__FUNCTION__ " - Screenshot requested, but not hooked");
+    }
+
+    return;
 }
 
 // Toggles whether the overlay handles screenshots when the user presses the screenshot hotkey, or the game handles them.  If the game is hooking screenshots,
@@ -73,26 +66,32 @@ void CSteamScreenshots::TriggerScreenshot()
 // in response.
 void CSteamScreenshots::HookScreenshots( bool bHook )
 {
-    VLOG_DEBUG("HookScreenshots called - bHook: %d", bHook);
+    VLOG_INFO(__FUNCTION__ " - bHook: %d", bHook);
+
+    VAPORCORE_LOCK_GUARD();
+
+    m_bHook = bHook;
+
+    return;
 }
 
 // Sets metadata about a screenshot's location (for example, the name of the map)
 bool CSteamScreenshots::SetLocation( ScreenshotHandle hScreenshot, const char *pchLocation )
 {
-    VLOG_DEBUG("SetLocation called - hScreenshot: %d, pchLocation: %s", hScreenshot, pchLocation);
+    VLOG_INFO(__FUNCTION__ " - hScreenshot: %d, pchLocation: %s", hScreenshot, pchLocation);
     return true;
 }
 
 // Tags a user as being visible in the screenshot
 bool CSteamScreenshots::TagUser( ScreenshotHandle hScreenshot, CSteamID steamID )
 {
-    VLOG_DEBUG("TagUser called - hScreenshot: %d, steamID: %d", hScreenshot, steamID);
+    VLOG_INFO(__FUNCTION__ " - hScreenshot: %d, steamID: %d", hScreenshot, steamID);
     return true;
 }
 
 // Tags a published file as being visible in the screenshot
 bool CSteamScreenshots::TagPublishedFile( ScreenshotHandle hScreenshot, PublishedFileId_t unPublishedFileID )
 {
-    VLOG_DEBUG("TagPublishedFile called - hScreenshot: %d, unPublishedFileID: %d", hScreenshot, unPublishedFileID);
+    VLOG_INFO(__FUNCTION__ " - hScreenshot: %d, unPublishedFileID: %d", hScreenshot, unPublishedFileID);
     return true;
 }

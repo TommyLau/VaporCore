@@ -29,7 +29,7 @@ CSteamClient::CSteamClient()
     , m_pSteamMatchmakingServers(CSteamMatchmakingServers::GetInstance())
     , m_pSteamNetworking(CSteamNetworking::GetInstance())
     , m_steamRemoteStorage(CSteamRemoteStorage::GetInstance())
-    , m_pSteamScreenshots(CSteamScreenshots::GetInstance())
+    , m_steamScreenshots(CSteamScreenshots::GetInstance())
     , m_pSteamHTTP(CSteamHTTP::GetInstance())
     , m_pSteamUnifiedMessages(CSteamUnifiedMessages::GetInstance())
     , m_pSteamController(CSteamController::GetInstance())
@@ -604,23 +604,18 @@ ISteamScreenshots *CSteamClient::GetISteamScreenshots( HSteamUser hSteamuser, HS
         return nullptr;
     }
 
-    if (!m_pSteamScreenshots) {
-        VLOG_ERROR("GetISteamScreenshots: Steam screenshots not available");
-        return nullptr;
-    }
-
     // Return the appropriate interface version based on the version string
     // Cast to specific interface first for proper vtable mapping, then to ISteamScreenshots*
     if (strcmp(pchVersion, STEAMSCREENSHOTS_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamScreenshots (latest) - %s", STEAMSCREENSHOTS_INTERFACE_VERSION);
-        return static_cast<ISteamScreenshots*>(m_pSteamScreenshots);
+        return static_cast<ISteamScreenshots*>(&m_steamScreenshots);
     } else if (strcmp(pchVersion, STEAMSCREENSHOTS_INTERFACE_VERSION_001) == 0) {
         VLOG_DEBUG("Returning ISteamScreenshots001");
-        return reinterpret_cast<ISteamScreenshots*>(static_cast<ISteamScreenshots001*>(m_pSteamScreenshots));
+        return reinterpret_cast<ISteamScreenshots*>(static_cast<ISteamScreenshots001*>(&m_steamScreenshots));
     } else {
         VLOG_WARNING("GetISteamScreenshots: Unknown interface version '%s', returning " STEAMSCREENSHOTS_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
-        return static_cast<ISteamScreenshots*>(m_pSteamScreenshots);
+        return static_cast<ISteamScreenshots*>(&m_steamScreenshots);
     }
 }
 

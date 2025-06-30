@@ -24,17 +24,13 @@ class CSteamScreenshots :
     public ISteamScreenshots,
     public ISteamScreenshots001
 {
-private:
-    // Singleton instance
-    static CSteamScreenshots* s_pInstance;
-
 public:
-    CSteamScreenshots();
-    ~CSteamScreenshots();
-
-    // Helper methods
-    static CSteamScreenshots* GetInstance();
-    static void ReleaseInstance();
+	// Singleton accessor
+    static CSteamScreenshots& GetInstance()
+	{
+		static CSteamScreenshots instance;
+		return instance;
+	}
 
 	// Writes a screenshot to the user's screenshot library given the raw image data, which must be in RGB format.
 	// The return value is a handle that is valid for the duration of the game process and can be used to apply tags.
@@ -62,6 +58,18 @@ public:
 
 	// Tags a published file as being visible in the screenshot
 	bool TagPublishedFile( ScreenshotHandle hScreenshot, PublishedFileId_t unPublishedFileID ) override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamScreenshots();
+    ~CSteamScreenshots();
+
+    // Delete copy constructor and assignment operator
+    CSteamScreenshots(const CSteamScreenshots&) = delete;
+    CSteamScreenshots& operator=(const CSteamScreenshots&) = delete;
+
+private:
+    bool m_bHook;
 };
 
 #endif // VAPORCORE_STEAM_SCREENSHOTS_H

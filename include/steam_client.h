@@ -96,7 +96,7 @@ private:
     CSteamMatchmakingServers* m_pSteamMatchmakingServers;
     CSteamNetworking* m_pSteamNetworking;
     CSteamRemoteStorage& m_steamRemoteStorage;
-    CSteamScreenshots* m_pSteamScreenshots;
+    CSteamScreenshots& m_steamScreenshots;
     CSteamHTTP* m_pSteamHTTP;
     CSteamUnifiedMessages* m_pSteamUnifiedMessages;
     CSteamController* m_pSteamController;
