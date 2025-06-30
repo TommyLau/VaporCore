@@ -720,6 +720,9 @@ ISteamController* CSteamClient::GetISteamController(HSteamUser hSteamUser, HStea
     if (strcmp(pchVersion, STEAMCONTROLLER_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamController (latest) - %s", STEAMCONTROLLER_INTERFACE_VERSION);
         return static_cast<ISteamController*>(&m_steamController);
+    } else if (strcmp(pchVersion, STEAMCONTROLLER_INTERFACE_VERSION_004) == 0) {
+        VLOG_DEBUG("Returning ISteamController004");
+        return reinterpret_cast<ISteamController*>(static_cast<ISteamController004*>(&m_steamController));
     } else if (strcmp(pchVersion, STEAMCONTROLLER_INTERFACE_VERSION_003) == 0) {
         VLOG_DEBUG("Returning ISteamController003");
         return reinterpret_cast<ISteamController*>(static_cast<ISteamController003*>(&m_steamController));

@@ -1,11 +1,8 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright 1996-2013, Valve Corporation, All rights reserved. =======
+//
+// Purpose: interface to steam ugc
+//
+//=============================================================================
 
 #ifndef ISTEAMUGC_H
 #define ISTEAMUGC_H
@@ -303,7 +300,7 @@ public:
 
 	// get info about pending update for items that have k_EItemStateNeedsUpdate set. punBytesTotal will be valid after download started once
 	virtual bool GetItemDownloadInfo( PublishedFileId_t nPublishedFileID, uint64 *punBytesDownloaded, uint64 *punBytesTotal ) = 0;
-
+		
 	// download new or update already installed item. If function returns true, wait for DownloadItemResult_t. If the item is already installed,
 	// then files on disk should not be used until callback received. If item is not subscribed to, it will be cached for some time.
 	// If bHighPriority is set, any other item download will be suspended and this item downloaded ASAP.

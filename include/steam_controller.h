@@ -17,6 +17,7 @@
 #include <isteamcontroller.h>
 #include <isteamcontroller001.h>
 #include <isteamcontroller003.h>
+#include <isteamcontroller004.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Native Steam controller support API
@@ -24,7 +25,8 @@
 class CSteamController :
     public ISteamController,
     public ISteamController001,
-    public ISteamController003
+    public ISteamController003,
+    public ISteamController004
 {
 public:
 	// Singleton accessor
@@ -41,7 +43,7 @@ public:
 	// Changed from Steam SDK v1.35a, backward compatibility
 	bool Init(const char *pchAbsolutePathToControllerConfigVDF) override;
 	bool Shutdown() override;
-	
+
 	// Synchronize API state with the latest Steam Controller inputs available. This
 	// is performed automatically by SteamAPI_RunCallbacks, but for the absolute lowest
 	// possible latency, you call this directly before reading controller state.
@@ -103,23 +105,35 @@ public:
 	// nFlags is currently unused and reserved for future use.
 	void TriggerRepeatedHapticPulse( ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec, unsigned short usOffMicroSec, unsigned short unRepeat, unsigned int nFlags ) override;
 
+	// Tigger a vibration event on supported controllers.  
+	void TriggerVibration( ControllerHandle_t controllerHandle, unsigned short usLeftSpeed, unsigned short usRightSpeed ) override;
+
+	// Set the controller LED color on supported controllers.  
+	void SetLEDColor( ControllerHandle_t controllerHandle, uint8 nColorR, uint8 nColorG, uint8 nColorB, unsigned int nFlags ) override;
+
 	// Set the override mode which is used to choose to use different base/legacy bindings from your config file
 	// Removed from Steam SDK v1.35a, backward compatibility
 	void SetOverrideMode(const char *pchMode) override;
-	
+
 	// Returns the associated gamepad index for the specified controller, if emulating a gamepad
 	int GetGamepadIndexForController( ControllerHandle_t ulControllerHandle ) override;
-	
+
 	// Returns the associated controller handle for the specified emulated gamepad
 	ControllerHandle_t GetControllerForGamepadIndex( int nIndex ) override;
-	
+
 	// Returns raw motion data from the specified controller
 	ControllerMotionData_t GetMotionData( ControllerHandle_t controllerHandle ) override;
-	
+
 	// Attempt to display origins of given action in the controller HUD, for the currently active action set
 	// Returns false is overlay is disabled / unavailable, or the user is not in Big Picture mode
 	bool ShowDigitalActionOrigins( ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle, float flScale, float flXPosition, float flYPosition ) override;
 	bool ShowAnalogActionOrigins( ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle, float flScale, float flXPosition, float flYPosition ) override;
+
+	// Returns a localized string (from Steam's language setting) for the specified origin
+	const char *GetStringForActionOrigin( EControllerActionOrigin eOrigin ) override;
+
+	// Get a local path to art for on-screen glyph for a particular origin 
+	const char *GetGlyphForActionOrigin( EControllerActionOrigin eOrigin ) override;
 
 private:
     // Private constructor and destructor for singleton

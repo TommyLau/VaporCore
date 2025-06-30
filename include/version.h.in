@@ -14,7 +14,7 @@
 #define VAPORCORE_VERSION_H
 
 // Base version information (update this when releasing new versions)
-// @BASE_VERSION@ = 0.1.37
+// @BASE_VERSION@ = 0.1.39
 
 // Version numbers
 #define VAPORCORE_VERSION_MAJOR     @VERSION_MAJOR@

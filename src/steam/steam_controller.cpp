@@ -181,6 +181,18 @@ void CSteamController::TriggerRepeatedHapticPulse(ControllerHandle_t controllerH
                controllerHandle, eTargetPad, usDurationMicroSec, usOffMicroSec, unRepeat, nFlags);
 }
 
+// Trigger a vibration event on supported controllers.  
+void CSteamController::TriggerVibration(ControllerHandle_t controllerHandle, unsigned short usLeftSpeed, unsigned short usRightSpeed)
+{
+    VLOG_INFO(__FUNCTION__ " - controller %llu, left speed %u, right speed %u", controllerHandle, usLeftSpeed, usRightSpeed);
+}
+
+// Set the controller LED color on supported controllers.  
+void CSteamController::SetLEDColor(ControllerHandle_t controllerHandle, uint8 nColorR, uint8 nColorG, uint8 nColorB, unsigned int nFlags)
+{
+    VLOG_INFO(__FUNCTION__ " - controller %llu, R:%u G:%u B:%u flags:%u", controllerHandle, nColorR, nColorG, nColorB, nFlags);
+}
+
 // Set the override mode which is used to choose to use different base/legacy bindings from your config file
 void CSteamController::SetOverrideMode(const char *pchMode)
 {
@@ -221,4 +233,18 @@ bool CSteamController::ShowAnalogActionOrigins(ControllerHandle_t controllerHand
 {
     VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
     return false; // Return false since overlay functionality is not implemented
+}
+
+// Returns a localized string (from Steam's language setting) for the specified origin
+const char* CSteamController::GetStringForActionOrigin(EControllerActionOrigin eOrigin)
+{
+    VLOG_INFO(__FUNCTION__ " - origin %d", eOrigin);
+    return ""; // Return empty string since localization is not implemented
+}
+
+// Get a local path to art for on-screen glyph for a particular origin 
+const char* CSteamController::GetGlyphForActionOrigin(EControllerActionOrigin eOrigin)
+{
+    VLOG_INFO(__FUNCTION__ " - origin %d", eOrigin);
+    return ""; // Return empty string since glyph paths are not implemented
 }

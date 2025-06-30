@@ -3382,6 +3382,20 @@ S_API void SteamAPI_ISteamController_TriggerRepeatedHapticPulse(intptr_t instanc
     reinterpret_cast<ISteamController*>(instancePtr)->TriggerRepeatedHapticPulse(controllerHandle, eTargetPad, usDurationMicroSec, usOffMicroSec, unRepeat, nFlags);
 }
 
+S_API void SteamAPI_ISteamController_TriggerVibration(intptr_t instancePtr, ControllerHandle_t controllerHandle, unsigned short usLeftSpeed, unsigned short usRightSpeed)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_TriggerVibration called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamController*>(instancePtr)->TriggerVibration(controllerHandle, usLeftSpeed, usRightSpeed);
+}
+
+S_API void SteamAPI_ISteamController_SetLEDColor(intptr_t instancePtr, ControllerHandle_t controllerHandle, uint8 nColorR, uint8 nColorG, uint8 nColorB, unsigned int nFlags)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_SetLEDColor called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamController*>(instancePtr)->SetLEDColor(controllerHandle, nColorR, nColorG, nColorB, nFlags);
+}
+
 S_API int SteamAPI_ISteamController_GetGamepadIndexForController(intptr_t instancePtr, ControllerHandle_t ulControllerHandle)
 {
     VLOG_DEBUG("SteamAPI_ISteamController_GetGamepadIndexForController called");
@@ -3415,6 +3429,20 @@ S_API bool SteamAPI_ISteamController_ShowAnalogActionOrigins(intptr_t instancePt
     VLOG_DEBUG("SteamAPI_ISteamController_ShowAnalogActionOrigins called");
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamController*>(instancePtr)->ShowAnalogActionOrigins(controllerHandle, analogActionHandle, flScale, flXPosition, flYPosition);
+}
+
+S_API const char * SteamAPI_ISteamController_GetStringForActionOrigin(intptr_t instancePtr, EControllerActionOrigin eOrigin)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetStringForActionOrigin called");
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetStringForActionOrigin(eOrigin);
+}
+
+S_API const char * SteamAPI_ISteamController_GetGlyphForActionOrigin(intptr_t instancePtr, EControllerActionOrigin eOrigin)
+{
+    VLOG_DEBUG("SteamAPI_ISteamController_GetGlyphForActionOrigin called");
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetGlyphForActionOrigin(eOrigin);
 }
 
 
@@ -4338,6 +4366,20 @@ S_API bool SteamAPI_ISteamInventory_GetItemDefinitionProperty(intptr_t instanceP
     VLOG_DEBUG("SteamAPI_ISteamInventory_GetItemDefinitionProperty called");
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GetItemDefinitionProperty(iDefinition, pchPropertyName, pchValueBuffer, punValueBufferSize);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamInventory_RequestEligiblePromoItemDefinitionsIDs(intptr_t instancePtr, class CSteamID steamID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamInventory_RequestEligiblePromoItemDefinitionsIDs called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->RequestEligiblePromoItemDefinitionsIDs(steamID);
+}
+
+S_API bool SteamAPI_ISteamInventory_GetEligiblePromoItemDefinitionIDs(intptr_t instancePtr, class CSteamID steamID, SteamItemDef_t * pItemDefIDs, uint32 * punItemDefIDsArraySize)
+{
+    VLOG_DEBUG("SteamAPI_ISteamInventory_GetEligiblePromoItemDefinitionIDs called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->GetEligiblePromoItemDefinitionIDs(steamID, pItemDefIDs, punItemDefIDsArraySize);
 }
 
 
