@@ -285,10 +285,10 @@ def strip_header_content(content, original_filename, version_num, class_name):
     return stripped_content, version_filename
 
 
-def find_related_steam_file(interface_name, source_dir):
+def find_related_steam_file(interface_name, base_dir):
     """
     Find the related steam implementation file for a given interface.
-    For example, ISteamApps -> steam_apps.h
+    For example, ISteamApps -> steam_apps.h (in include/) or steam_apps.cpp (in src/steam/)
     """
     # Remove the 'I' prefix and convert to snake_case
     if interface_name.startswith('ISteam'):
@@ -310,16 +310,29 @@ def find_related_steam_file(interface_name, source_dir):
                 snake_case += '_'
         snake_case += char.lower()
     
-    # Try different possible file names
+    # Try different possible file names in both include/ and src/steam/ directories
     possible_names = [
         f"steam_{snake_case}.h",
         f"steam{steam_name.lower()}.h",
+        f"steam_{snake_case}.cpp",
+        f"steam{steam_name.lower()}.cpp",
     ]
     
+    # Check in include directory first (for header files)
+    include_dir = base_dir / "include"
     for name in possible_names:
-        file_path = source_dir / name
-        if file_path.exists():
-            return file_path
+        if name.endswith('.h'):
+            file_path = include_dir / name
+            if file_path.exists():
+                return file_path
+    
+    # Check in src/steam directory for implementation files
+    src_steam_dir = base_dir / "src" / "steam"
+    for name in possible_names:
+        if name.endswith('.cpp'):
+            file_path = src_steam_dir / name
+            if file_path.exists():
+                return file_path
     
     return None
 
@@ -483,8 +496,8 @@ def main():
         sys.exit(1)
     
     # Step 3: Update related steam implementation file
-    source_dir = Path(__file__).parent.parent / "src"  # Assuming script is in script/ and src/ is parallel
-    related_file = find_related_steam_file(class_name, source_dir)
+    base_dir = Path(__file__).parent.parent  # Assuming script is in script/ and src/ is parallel
+    related_file = find_related_steam_file(class_name, base_dir)
     
     if related_file:
         print(f"Found related steam implementation file: {related_file}")
