@@ -21,7 +21,8 @@ class SDKManager:
     def __init__(self, workspace_root: Path):
         self.workspace_root = workspace_root
         self.sdk_dir = workspace_root / "include" / "sdk"
-        self.include_dir = workspace_root / "include"
+        self.include_dir = workspace_root / "include" / "steam"
+        self.src_dir = workspace_root / "src" / "steam"
     
     def find_latest_sdk_version(self) -> Optional[Path]:
         """Find the latest SDK version directory"""
@@ -503,8 +504,7 @@ class FlatAPIGenerator:
             '#include <steam_gameserver.h>',
             '#include <steam_game_server_stats.h>',
             '',
-            '#include "vaporcore_base.h"',
-            '#include "logger.h"',
+            '#include "vapor_base.h"',
             '',
         ])
         
@@ -608,9 +608,8 @@ def main():
         print("💡 Please ensure include/sdk/ directory exists with SDK versions like 132, 133b, 134, etc.")
         return 1
     
-    # Always output to src directory
-    src_dir = workspace_root / "src"
-    output_path = src_dir / 'steam_api_flat.cpp'
+    # Always output to src/steam directory
+    output_path = sdk_manager.src_dir / 'steam_api_flat.cpp'
     
     try:
         generator = FlatAPIGenerator()
