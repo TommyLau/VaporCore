@@ -80,6 +80,16 @@ const char *CSteamApps::GetAvailableGameLanguages()
 bool CSteamApps::BIsSubscribedApp( AppId_t appID )
 {
     VLOG_INFO(__FUNCTION__ " - AppID: %u", appID);
+
+    VAPORCORE_LOCK_GUARD();
+
+    if (appID == VaporCore::Config::GetInstance()->GetGameId().AppID())
+    {
+        return true;
+    }
+
+    // TODO: Add DLC subscription check here
+    
     return false;
 }
 
