@@ -89,7 +89,7 @@ private:
     // Implementation class instances
     CSteamUser& m_steamUser;
     CSteamFriends& m_steamFriends;
-    CSteamUtils* m_pSteamUtils;
+    CSteamUtils& m_steamUtils;
     CSteamMatchmaking* m_pSteamMatchmaking;
     CSteamUserStats& m_steamUserStats;
     CSteamApps& m_steamApps;
@@ -106,7 +106,7 @@ private:
     CSteamMusicRemote* m_pSteamMusicRemote;
     CSteamHTMLSurface* m_pSteamHTMLSurface;
     CSteamInventory& m_steamInventory;
-    CSteamVideo* m_pSteamVideo;
+    CSteamVideo& m_steamVideo;
     
     // Singleton instance
     static CSteamClient* s_pInstance;

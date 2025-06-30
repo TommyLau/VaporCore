@@ -294,16 +294,14 @@ S_API ISteamHTMLSurface *S_CALLTYPE SteamHTMLSurface()
 S_API ISteamInventory *S_CALLTYPE SteamInventory()
 {
     VLOG_INFO(__FUNCTION__);
-    // TODO: SteamInventory001 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamInventory(g_hSteamPipe, g_hSteamUser, STEAMINVENTORY_INTERFACE_VERSION);
+    return g_pSteamClient->GetISteamInventory(g_hSteamPipe, g_hSteamUser, STEAMINVENTORY_INTERFACE_VERSION_001);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamVideo *S_CALLTYPE SteamVideo()
 {
     VLOG_INFO(__FUNCTION__);
-    // TODO: SteamVideo001 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamVideo(g_hSteamPipe, g_hSteamUser, STEAMVIDEO_INTERFACE_VERSION);
+    return g_pSteamClient->GetISteamVideo(g_hSteamPipe, g_hSteamUser, STEAMVIDEO_INTERFACE_VERSION_001);
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//

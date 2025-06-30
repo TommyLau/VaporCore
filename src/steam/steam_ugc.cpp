@@ -182,6 +182,12 @@ bool CSteamUGC::SetReturnTotalOnly( UGCQueryHandle_t handle, bool bReturnTotalOn
     return false;
 }
 
+bool CSteamUGC::SetReturnPlaytimeStats( UGCQueryHandle_t handle, uint32 unDays )
+{
+    VLOG_INFO(__FUNCTION__ " - handle: %d, unDays: %d", handle, unDays);
+    return false;
+}
+
 bool CSteamUGC::SetLanguage( UGCQueryHandle_t handle, const char *pchLanguage )
 {
     VLOG_INFO(__FUNCTION__ " - handle: %d, pchLanguage: %s", handle, pchLanguage ? pchLanguage : "NULL");
@@ -514,5 +520,18 @@ SteamAPICall_t CSteamUGC::StopPlaytimeTracking( PublishedFileId_t *pvecPublished
 SteamAPICall_t CSteamUGC::StopPlaytimeTrackingForAllItems()
 {
     VLOG_INFO(__FUNCTION__);
+    return 0;
+}
+
+// parent-child relationship or dependency management
+SteamAPICall_t CSteamUGC::AddDependency( PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID )
+{
+    VLOG_INFO(__FUNCTION__ " - nParentPublishedFileID: %llu, nChildPublishedFileID: %llu", nParentPublishedFileID, nChildPublishedFileID);
+    return 0;
+}
+
+SteamAPICall_t CSteamUGC::RemoveDependency( PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID )
+{
+    VLOG_INFO(__FUNCTION__ " - nParentPublishedFileID: %llu, nChildPublishedFileID: %llu", nParentPublishedFileID, nChildPublishedFileID);
     return 0;
 }

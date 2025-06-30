@@ -19,6 +19,7 @@
 #include <isteamutils004.h>
 #include <isteamutils005.h>
 #include <isteamutils007.h>
+#include <isteamutils008.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to user independent utility functions
@@ -28,20 +29,18 @@ class CSteamUtils :
 	public ISteamUtils002,
 	public ISteamUtils004,
 	public ISteamUtils005,
-    public ISteamUtils007
+    public ISteamUtils007,
+    public ISteamUtils008
 {
-private:
-    // Singleton instance
-    static CSteamUtils* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamUtils& GetInstance()
+	{
+		static CSteamUtils instance;
+		return instance;
+	}
 
 public:
-    CSteamUtils();
-    ~CSteamUtils();
-
-    // Helper methods
-    static CSteamUtils* GetInstance();
-    static void ReleaseInstance();
-
 	// return the number of seconds since the user 
 	uint32 GetSecondsSinceAppActive() override;
 	uint32 GetSecondsSinceComputerActive() override;
@@ -49,7 +48,7 @@ public:
 	// the universe this client is connecting to
 	EUniverse GetConnectedUniverse() override;
 
-	// Steam server time - in PST, number of seconds since January 1, 1970 (i.e unix time)
+	// Steam server time.  Number of seconds since January 1, 1970, GMT (i.e unix time)
 	uint32 GetServerRealTime() override;
 
 	// returns the 2 digit ISO 3166-1-alpha-2 format country code this client is running in (as looked up via an IP-to-location database)
@@ -150,6 +149,25 @@ public:
 
 	// ask SteamUI to create and render its OpenVR dashboard
 	void StartVRDashboard() override;
+
+	// Returns true if the HMD content will be streamed via Steam In-Home Streaming
+	bool IsVRHeadsetStreamingEnabled() override;
+
+	// Set whether the HMD content will be streamed via Steam In-Home Streaming
+	// If this is set to true, then the scene in the HMD headset will be streamed, and remote input will not be allowed.
+	// If this is set to false, then the application window will be streamed instead, and remote input will be allowed.
+	// The default is true unless "VRHeadsetStreaming" "0" is in the extended appinfo for a game.
+	// (this is useful for games that have asymmetric multiplayer gameplay)
+	void SetVRHeadsetStreamingEnabled( bool bEnabled ) override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamUtils();
+    ~CSteamUtils();
+
+    // Delete copy constructor and assignment operator
+    CSteamUtils(const CSteamUtils&) = delete;
+    CSteamUtils& operator=(const CSteamUtils&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_UTILS_H

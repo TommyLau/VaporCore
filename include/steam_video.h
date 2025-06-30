@@ -15,30 +15,42 @@
 
 #include <isteamclient.h>
 #include <isteamvideo.h>
+#include <isteamvideo001.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Steam Video API
 //-----------------------------------------------------------------------------
 class CSteamVideo :
-	public ISteamVideo
+	public ISteamVideo,
+    public ISteamVideo001
 {
-private:
-    // Singleton instance
-    static CSteamVideo* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamVideo& GetInstance()
+    {
+		static CSteamVideo instance;
+		return instance;
+    }
 
 public:
-    CSteamVideo();
-    ~CSteamVideo();
-
-    // Helper methods
-    static CSteamVideo* GetInstance();
-    static void ReleaseInstance();
-
 	// Get a URL suitable for streaming the given Video app ID's video
 	void GetVideoURL( AppId_t unVideoAppID ) override;
 
 	// returns true if user is uploading a live broadcast
 	bool IsBroadcasting( int *pnNumViewers ) override;
+
+	// Get the OPF Details for 360 Video Playback
+	void GetOPFSettings( AppId_t unVideoAppID ) override;
+	bool GetOPFStringForApp( AppId_t unVideoAppID, char *pchBuffer, int32 *pnBufferSize ) override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamVideo();
+    ~CSteamVideo();
+
+    // Delete copy constructor and assignment operator
+    CSteamVideo(const CSteamVideo&) = delete;
+    CSteamVideo& operator=(const CSteamVideo&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_VIDEO_H

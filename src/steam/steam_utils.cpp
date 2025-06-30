@@ -13,62 +13,40 @@
 #include "vapor_base.h"
 #include "steam_utils.h"
 
-// Static instance
-CSteamUtils* CSteamUtils::s_pInstance = nullptr;
-
 CSteamUtils::CSteamUtils()
 {
-    VLOG_INFO("CSteamUtils constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamUtils::~CSteamUtils()
 {
-    VLOG_INFO("CSteamUtils destructor called");
-}
-
-// Helper methods
-CSteamUtils* CSteamUtils::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamUtils();
-    }
-    return s_pInstance;
-}
-
-void CSteamUtils::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 // return the number of seconds since the user 
 uint32 CSteamUtils::GetSecondsSinceAppActive()
 {
-    VLOG_DEBUG("GetSecondsSinceAppActive called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
 uint32 CSteamUtils::GetSecondsSinceComputerActive()
 {
-    VLOG_DEBUG("GetSecondsSinceComputerActive called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
 // the universe this client is connecting to
 EUniverse CSteamUtils::GetConnectedUniverse()
 {
-    VLOG_DEBUG("GetConnectedUniverse called");
+    VLOG_INFO(__FUNCTION__);
     return k_EUniversePublic;
 }
 
 // Steam server time - in PST, number of seconds since January 1, 1970 (i.e unix time)
 uint32 CSteamUtils::GetServerRealTime()
 {
-    VLOG_DEBUG("GetServerRealTime called");
+    VLOG_INFO(__FUNCTION__);
     return static_cast<uint32>(time(nullptr));
 }
 
@@ -76,14 +54,14 @@ uint32 CSteamUtils::GetServerRealTime()
 // e.g "US" or "UK".
 const char *CSteamUtils::GetIPCountry()
 {
-    VLOG_DEBUG("GetIPCountry called");
+    VLOG_INFO(__FUNCTION__);
     return "US";
 }
 
 // returns true if the image exists, and valid sizes were filled out
 bool CSteamUtils::GetImageSize( int iImage, uint32 *pnWidth, uint32 *pnHeight )
 {
-    VLOG_DEBUG("GetImageSize called - Image: %d", iImage);
+    VLOG_INFO(__FUNCTION__ " - image: %d, ", iImage);
     if (pnWidth) *pnWidth = 0;
     if (pnHeight) *pnHeight = 0;
     return false;
@@ -94,14 +72,14 @@ bool CSteamUtils::GetImageSize( int iImage, uint32 *pnWidth, uint32 *pnHeight )
 // the destination buffer size should be 4 * height * width * sizeof(char)
 bool CSteamUtils::GetImageRGBA( int iImage, uint8 *pubDest, int nDestBufferSize )
 {
-    VLOG_DEBUG("GetImageRGBA called - Image: %d, BufferSize: %d", iImage, nDestBufferSize);
+    VLOG_INFO(__FUNCTION__ " - image: %d, buffer size: %d", iImage, nDestBufferSize);
     return false;
 }
 
 // returns the IP of the reporting server for valve - currently only used in Source engine games
 bool CSteamUtils::GetCSERIPPort( uint32 *unIP, uint16 *usPort )
 {
-    VLOG_DEBUG("GetCSERIPPort called");
+    VLOG_INFO(__FUNCTION__);
     if (unIP) *unIP = 0;
     if (usPort) *usPort = 0;
     return false;
@@ -110,14 +88,14 @@ bool CSteamUtils::GetCSERIPPort( uint32 *unIP, uint16 *usPort )
 // return the amount of battery power left in the current system in % [0..100], 255 for being on AC power
 uint8 CSteamUtils::GetCurrentBatteryPower()
 {
-    VLOG_DEBUG("GetCurrentBatteryPower called");
+    VLOG_INFO(__FUNCTION__);
     return 255; // Assume on AC power
 }
 
 // returns the appID of the current process
 uint32 CSteamUtils::GetAppID()
 {
-    VLOG_DEBUG("GetAppID called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
@@ -125,26 +103,26 @@ uint32 CSteamUtils::GetAppID()
 // This position is per-game and if this function is called from outside of a game context it will do nothing.
 void CSteamUtils::SetOverlayNotificationPosition( ENotificationPosition eNotificationPosition )
 {
-    VLOG_DEBUG("SetOverlayNotificationPosition called - Position: %d", eNotificationPosition);
+    VLOG_INFO(__FUNCTION__ " - position: %d", eNotificationPosition);
 }
 
 // API asynchronous call results
 // can be used directly, but more commonly used via the callback dispatch API (see steam_api.h)
 bool CSteamUtils::IsAPICallCompleted( SteamAPICall_t hSteamAPICall, bool *pbFailed )
 {
-    VLOG_DEBUG("IsAPICallCompleted called - Call: %u", hSteamAPICall);
+    VLOG_INFO(__FUNCTION__ " - call: %u", hSteamAPICall);
     return false;
 }
 
 ESteamAPICallFailure CSteamUtils::GetAPICallFailureReason( SteamAPICall_t hSteamAPICall )
 {
-    VLOG_DEBUG("GetAPICallFailureReason called - Call: %u", hSteamAPICall);
+    VLOG_INFO(__FUNCTION__ " - call: %u", hSteamAPICall);
     return k_ESteamAPICallFailureNone;
 }
 
 bool CSteamUtils::GetAPICallResult( SteamAPICall_t hSteamAPICall, void *pCallback, int cubCallback, int iCallbackExpected, bool *pbFailed )
 {
-    VLOG_DEBUG("GetAPICallResult called - Call: %u", hSteamAPICall);
+    VLOG_INFO(__FUNCTION__ " - call: %u", hSteamAPICall);
     return false;
 }
 
@@ -152,7 +130,7 @@ bool CSteamUtils::GetAPICallResult( SteamAPICall_t hSteamAPICall, void *pCallbac
 // Changed from Steam SDK v1.36, backward compatibility
 void CSteamUtils::RunFrame()
 {
-    VLOG_DEBUG("RunFrame called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // returns the number of IPC calls made since the last time this function was called
@@ -161,7 +139,7 @@ void CSteamUtils::RunFrame()
 // control how often you do them.
 uint32 CSteamUtils::GetIPCCallCount()
 {
-    VLOG_DEBUG("GetIPCCallCount called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
@@ -171,14 +149,14 @@ uint32 CSteamUtils::GetIPCCallCount()
 // callbacks will occur directly after the API function is called that generated the warning or message
 void CSteamUtils::SetWarningMessageHook( SteamAPIWarningMessageHook_t pFunction )
 {
-    VLOG_DEBUG("SetWarningMessageHook called - Function: %p", pFunction);
+    VLOG_INFO(__FUNCTION__ " - function: %p", pFunction);
 }
 
 // Returns true if the overlay is running & the user can access it. The overlay process could take a few seconds to
 // start & hook the game process, so this function will initially return false while the overlay is loading.
 bool CSteamUtils::IsOverlayEnabled()
 {
-    VLOG_DEBUG("IsOverlayEnabled called");
+    VLOG_INFO(__FUNCTION__);
     return false;
 }
 
@@ -193,7 +171,7 @@ bool CSteamUtils::IsOverlayEnabled()
 // refresh the screen with Present or SwapBuffers to allow the overlay to do it's work.
 bool CSteamUtils::BOverlayNeedsPresent()
 {
-    VLOG_DEBUG("BOverlayNeedsPresent called");
+    VLOG_INFO(__FUNCTION__);
     return false;
 }
 
@@ -207,37 +185,37 @@ bool CSteamUtils::BOverlayNeedsPresent()
 //   k_ECheckFileSignatureValidSignature - The file is signed and the signature is valid.
 SteamAPICall_t CSteamUtils::CheckFileSignature( const char *szFileName )
 {
-    VLOG_DEBUG("CheckFileSignature called - File: %s", szFileName);
+    VLOG_INFO(__FUNCTION__ " - file: %s", szFileName ? szFileName : "null");
     return k_uAPICallInvalid;
 }
 
 // Activates the Big Picture text input dialog which only supports gamepad input
 bool CSteamUtils::ShowGamepadTextInput(EGamepadTextInputMode eInputMode, EGamepadTextInputLineMode eLineInputMode, const char *pchDescription, uint32 unCharMax, const char *pchExistingText)
 {
-    VLOG_DEBUG("ShowGamepadTextInput called - Mode: %d, LineMode: %d, Description: %s, MaxChars: %u, ExistingText: %s",
-               eInputMode, eLineInputMode, pchDescription ? pchDescription : "null", unCharMax,
-               pchExistingText ? pchExistingText : "null");
+    VLOG_INFO(__FUNCTION__ " - mode: %d, line mode: %d, desc: %s, max chars: %u, existing text: %s",
+              eInputMode, eLineInputMode, pchDescription ? pchDescription : "null", unCharMax,
+              pchExistingText ? pchExistingText : "null");
     return false;
 }
 
 // Changed from Steam SDK v1.29a, backward compatibility
 bool CSteamUtils::ShowGamepadTextInput(EGamepadTextInputMode eInputMode, EGamepadTextInputLineMode eLineInputMode, const char *pchDescription, uint32 unCharMax)
 {
-    VLOG_DEBUG("ShowGamepadTextInput called - Mode: %d, LineMode: %d, Description: %s, MaxChars: %u", 
-               eInputMode, eLineInputMode, pchDescription ? pchDescription : "null", unCharMax);
+    VLOG_INFO(__FUNCTION__ " - mode: %d, line mode: %d, desc: %s, max chars: %u",
+              eInputMode, eLineInputMode, pchDescription ? pchDescription : "null", unCharMax);
     return false;
 }
 
 // Returns previously entered text & length
 uint32 CSteamUtils::GetEnteredGamepadTextLength()
 {
-    VLOG_DEBUG("GetEnteredGamepadTextLength called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
 bool CSteamUtils::GetEnteredGamepadTextInput(char *pchText, uint32 cchText)
 {
-    VLOG_DEBUG("GetEnteredGamepadTextInput called - BufferSize: %u", cchText);
+    VLOG_INFO(__FUNCTION__ " - buffer size: %u", cchText);
     if (pchText && cchText > 0)
     {
         pchText[0] = '\0';
@@ -248,21 +226,21 @@ bool CSteamUtils::GetEnteredGamepadTextInput(char *pchText, uint32 cchText)
 // returns the language the steam client is running in, you probably want ISteamApps::GetCurrentGameLanguage instead, this is for very special usage cases
 const char *CSteamUtils::GetSteamUILanguage()
 {
-    VLOG_DEBUG("GetSteamUILanguage called");
+    VLOG_INFO(__FUNCTION__);
     return "english";
 }
 
 // returns true if Steam itself is running in VR mode
 bool CSteamUtils::IsSteamRunningInVR()
 {
-    VLOG_DEBUG("IsSteamRunningInVR called");
+    VLOG_INFO(__FUNCTION__);
     return false;
 }
 
 // Sets the inset of the overlay notification from the corner specified by SetOverlayNotificationPosition.
 void CSteamUtils::SetOverlayNotificationInset(int nHorizontalInset, int nVerticalInset)
 {
-    VLOG_DEBUG("SetOverlayNotificationInset called - Horizontal: %d, Vertical: %d", nHorizontalInset, nVerticalInset);
+    VLOG_INFO(__FUNCTION__ " - horizontal: %d, vertical: %d", nHorizontalInset, nVerticalInset);
 }
 
 // returns true if Steam & the Steam Overlay are running in Big Picture mode
@@ -270,12 +248,29 @@ void CSteamUtils::SetOverlayNotificationInset(int nHorizontalInset, int nVertica
 // a game can be added as a non-steam game to the developers library to test this feature
 bool CSteamUtils::IsSteamInBigPictureMode()
 {
-    VLOG_DEBUG("IsSteamInBigPictureMode called");
+    VLOG_INFO(__FUNCTION__);
     return false;
 }
 
 // ask SteamUI to create and render its OpenVR dashboard
 void CSteamUtils::StartVRDashboard()
 {
-    VLOG_DEBUG("StartVRDashboard called");
+    VLOG_INFO(__FUNCTION__);
+}
+
+// Returns true if the HMD content will be streamed via Steam In-Home Streaming
+bool CSteamUtils::IsVRHeadsetStreamingEnabled()
+{
+    VLOG_INFO(__FUNCTION__);
+    return false;
+}
+
+// Set whether the HMD content will be streamed via Steam In-Home Streaming
+// If this is set to true, then the scene in the HMD headset will be streamed, and remote input will not be allowed.
+// If this is set to false, then the application window will be streamed instead, and remote input will be allowed.
+// The default is true unless "VRHeadsetStreaming" "0" is in the extended appinfo for a game.
+// (this is useful for games that have asymmetric multiplayer gameplay)
+void CSteamUtils::SetVRHeadsetStreamingEnabled(bool bEnabled)
+{
+    VLOG_INFO(__FUNCTION__ " - enabled: %d", bEnabled);
 }

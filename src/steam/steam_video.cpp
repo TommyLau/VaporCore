@@ -12,47 +12,37 @@
 #include "vapor_base.h"
 #include "steam_video.h"
 
-// Static instance
-CSteamVideo* CSteamVideo::s_pInstance = nullptr;
-
 CSteamVideo::CSteamVideo()
 {
-    VLOG_INFO("CSteamVideo constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamVideo::~CSteamVideo()
 {
-    VLOG_INFO("CSteamVideo destructor called");
-}
-
-// Helper methods
-CSteamVideo* CSteamVideo::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamVideo();
-    }
-    return s_pInstance;
-}
-
-void CSteamVideo::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Get a URL suitable for streaming the given Video app ID's video
 void CSteamVideo::GetVideoURL( AppId_t unVideoAppID )
 {
-	VLOG_DEBUG("GetVideoURL called - %d", unVideoAppID);
+    VLOG_INFO(__FUNCTION__ " - app id: %d", unVideoAppID);
 }
 
 // returns true if user is uploading a live broadcast
 bool CSteamVideo::IsBroadcasting( int *pnNumViewers )
 {
-    VLOG_DEBUG("IsBroadcasting called");
+    VLOG_INFO(__FUNCTION__);
+    return false;
+}
+
+// Get the OPF Details for 360 Video Playback
+void CSteamVideo::GetOPFSettings(AppId_t unVideoAppID)
+{
+    VLOG_INFO(__FUNCTION__ " - app id: %d", unVideoAppID);
+}
+
+bool CSteamVideo::GetOPFStringForApp(AppId_t unVideoAppID, char *pchBuffer, int32 *pnBufferSize)
+{
+    VLOG_INFO(__FUNCTION__ " - app id: %d", unVideoAppID);
     return false;
 }

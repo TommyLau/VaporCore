@@ -22,6 +22,7 @@
 #include <isteamugc005.h>
 #include <isteamugc007.h>
 #include <isteamugc008.h>
+#include <isteamugc009.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Steam UGC support API
@@ -33,7 +34,8 @@ class CSteamUGC :
     public ISteamUGC003,
     public ISteamUGC005,
     public ISteamUGC007,
-    public ISteamUGC008
+    public ISteamUGC008,
+    public ISteamUGC009
 {
 public:
 	// Singleton accessor
@@ -85,6 +87,7 @@ public:
 	bool SetReturnChildren( UGCQueryHandle_t handle, bool bReturnChildren ) override;
 	bool SetReturnAdditionalPreviews( UGCQueryHandle_t handle, bool bReturnAdditionalPreviews ) override;
 	bool SetReturnTotalOnly( UGCQueryHandle_t handle, bool bReturnTotalOnly ) override;
+	bool SetReturnPlaytimeStats( UGCQueryHandle_t handle, uint32 unDays ) override;
 	bool SetLanguage( UGCQueryHandle_t handle, const char *pchLanguage ) override;
 	bool SetAllowCachedResponse( UGCQueryHandle_t handle, uint32 unMaxAgeSeconds ) override;
 
@@ -183,6 +186,12 @@ public:
 	SteamAPICall_t StopPlaytimeTracking( PublishedFileId_t *pvecPublishedFileID, uint32 unNumPublishedFileIDs ) override;
 	CALL_RESULT( StopPlaytimeTrackingResult_t )
 	SteamAPICall_t StopPlaytimeTrackingForAllItems() override;
+
+	// parent-child relationship or dependency management
+	CALL_RESULT( AddUGCDependencyResult_t )
+	virtual SteamAPICall_t AddDependency( PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID ) override;
+	CALL_RESULT( RemoveUGCDependencyResult_t )
+	virtual SteamAPICall_t RemoveDependency( PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID ) override;
 
 private:
     // Private constructor and destructor for singleton

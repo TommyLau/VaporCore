@@ -22,7 +22,7 @@ CSteamClient::CSteamClient()
     , m_bUserLoggedIn(false)
     , m_steamUser(CSteamUser::GetInstance())
     , m_steamFriends(CSteamFriends::GetInstance())
-    , m_pSteamUtils(CSteamUtils::GetInstance())
+    , m_steamUtils(CSteamUtils::GetInstance())
     , m_pSteamMatchmaking(CSteamMatchmaking::GetInstance())
     , m_steamUserStats(CSteamUserStats::GetInstance())
     , m_steamApps(CSteamApps::GetInstance())
@@ -39,7 +39,7 @@ CSteamClient::CSteamClient()
     , m_pSteamMusicRemote(CSteamMusicRemote::GetInstance())
     , m_pSteamHTMLSurface(CSteamHTMLSurface::GetInstance())
     , m_steamInventory(CSteamInventory::GetInstance())
-    , m_pSteamVideo(CSteamVideo::GetInstance())
+    , m_steamVideo(CSteamVideo::GetInstance())
 {
     VLOG_INFO("CSteamClient constructor called");
 }
@@ -274,30 +274,28 @@ ISteamUtils *CSteamClient::GetISteamUtils(HSteamPipe hSteamPipe, const char *pch
         return nullptr;
     }
 
-    if (!m_pSteamUtils) {
-        VLOG_ERROR("GetISteamUtils: Steam utils not available");
-        return nullptr;
-    }
-
     // Return the appropriate interface version
     if (strcmp(pchVersion, STEAMUTILS_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamUtils (latest) - %s", STEAMUTILS_INTERFACE_VERSION);
-        return static_cast<ISteamUtils*>(m_pSteamUtils);
+        return static_cast<ISteamUtils*>(&m_steamUtils);
+    } else if (strcmp(pchVersion, STEAMUTILS_INTERFACE_VERSION_008) == 0) {
+        VLOG_DEBUG("Returning ISteamUtils008");
+        return reinterpret_cast<ISteamUtils*>(static_cast<ISteamUtils008*>(&m_steamUtils));
     } else if (strcmp(pchVersion, STEAMUTILS_INTERFACE_VERSION_007) == 0) {
         VLOG_DEBUG("Returning ISteamUtils007");
-        return reinterpret_cast<ISteamUtils*>(static_cast<ISteamUtils007*>(m_pSteamUtils));
+        return reinterpret_cast<ISteamUtils*>(static_cast<ISteamUtils007*>(&m_steamUtils));
     } else if (strcmp(pchVersion, STEAMUTILS_INTERFACE_VERSION_005) == 0) {
         VLOG_DEBUG("Returning ISteamUtils005");
-        return reinterpret_cast<ISteamUtils*>(static_cast<ISteamUtils005*>(m_pSteamUtils));
+        return reinterpret_cast<ISteamUtils*>(static_cast<ISteamUtils005*>(&m_steamUtils));
     } else if (strcmp(pchVersion, STEAMUTILS_INTERFACE_VERSION_004) == 0) {
         VLOG_DEBUG("Returning ISteamUtils004");
-        return reinterpret_cast<ISteamUtils*>(static_cast<ISteamUtils004*>(m_pSteamUtils));
+        return reinterpret_cast<ISteamUtils*>(static_cast<ISteamUtils004*>(&m_steamUtils));
     } else if (strcmp(pchVersion, STEAMUTILS_INTERFACE_VERSION_002) == 0) {
         VLOG_DEBUG("Returning ISteamUtils002");
-        return reinterpret_cast<ISteamUtils*>(static_cast<ISteamUtils002*>(m_pSteamUtils));
+        return reinterpret_cast<ISteamUtils*>(static_cast<ISteamUtils002*>(&m_steamUtils));
     } else {
         VLOG_WARNING("GetISteamUtils: Unknown interface version '%s', returning " STEAMUTILS_INTERFACE_VERSION, pchVersion);
-        return static_cast<ISteamUtils*>(m_pSteamUtils);
+        return static_cast<ISteamUtils*>(&m_steamUtils);
     }
 }
 
@@ -751,6 +749,9 @@ ISteamUGC* CSteamClient::GetISteamUGC(HSteamUser hSteamUser, HSteamPipe hSteamPi
     if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamUGC (latest) - %s", STEAMUGC_INTERFACE_VERSION);
         return static_cast<ISteamUGC*>(&m_steamUGC);
+    } else if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION_009) == 0) {
+        VLOG_DEBUG("Returning ISteamUGC009");
+        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC009*>(&m_steamUGC));
     } else if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION_008) == 0) {
         VLOG_DEBUG("Returning ISteamUGC008");
         return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC008*>(&m_steamUGC));
@@ -921,6 +922,9 @@ ISteamInventory* CSteamClient::GetISteamInventory(HSteamUser hSteamuser, HSteamP
     if (strcmp(pchVersion, STEAMINVENTORY_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamInventory (latest) - %s", STEAMINVENTORY_INTERFACE_VERSION);
         return static_cast<ISteamInventory*>(&m_steamInventory);
+    } else if (strcmp(pchVersion, STEAMINVENTORY_INTERFACE_VERSION_001) == 0) {
+        VLOG_DEBUG("Returning ISteamInventory001");
+        return reinterpret_cast<ISteamInventory*>(static_cast<ISteamInventory001*>(&m_steamInventory));
     } else {
         VLOG_WARNING("GetISteamInventory: Unknown interface version '%s', returning " STEAMINVENTORY_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
@@ -938,19 +942,17 @@ ISteamVideo* CSteamClient::GetISteamVideo(HSteamUser hSteamuser, HSteamPipe hSte
         return nullptr;
     }
 
-    if (!m_pSteamVideo) {
-        VLOG_ERROR("GetISteamVideo: Steam video not available");
-        return nullptr;
-    }
-
     // Return the appropriate interface version based on the version string
     // This interface only has one version (V001)
     if (strcmp(pchVersion, STEAMVIDEO_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamVideo (latest) - %s", STEAMVIDEO_INTERFACE_VERSION);
-        return static_cast<ISteamVideo*>(m_pSteamVideo);
+        return static_cast<ISteamVideo*>(&m_steamVideo);
+    } else if (strcmp(pchVersion, STEAMVIDEO_INTERFACE_VERSION_001) == 0) {
+        VLOG_DEBUG("Returning ISteamVideo001");
+        return reinterpret_cast<ISteamVideo*>(static_cast<ISteamVideo001*>(&m_steamVideo));
     } else {
         VLOG_WARNING("GetISteamVideo: Unknown interface version '%s', returning " STEAMVIDEO_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
-        return static_cast<ISteamVideo*>(m_pSteamVideo);
+        return static_cast<ISteamVideo*>(&m_steamVideo);
     }
 }

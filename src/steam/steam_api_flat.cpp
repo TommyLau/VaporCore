@@ -1139,6 +1139,20 @@ S_API void SteamAPI_ISteamUtils_StartVRDashboard(intptr_t instancePtr)
     reinterpret_cast<ISteamUtils*>(instancePtr)->StartVRDashboard();
 }
 
+S_API bool SteamAPI_ISteamUtils_IsVRHeadsetStreamingEnabled(intptr_t instancePtr)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUtils_IsVRHeadsetStreamingEnabled called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUtils*>(instancePtr)->IsVRHeadsetStreamingEnabled();
+}
+
+S_API void SteamAPI_ISteamUtils_SetVRHeadsetStreamingEnabled(intptr_t instancePtr, bool bEnabled)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUtils_SetVRHeadsetStreamingEnabled called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamUtils*>(instancePtr)->SetVRHeadsetStreamingEnabled(bEnabled);
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamMatchmaking flat API implementations
@@ -3611,6 +3625,13 @@ S_API bool SteamAPI_ISteamUGC_SetReturnTotalOnly(intptr_t instancePtr, UGCQueryH
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnTotalOnly(handle, bReturnTotalOnly);
 }
 
+S_API bool SteamAPI_ISteamUGC_SetReturnPlaytimeStats(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 unDays)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnPlaytimeStats called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnPlaytimeStats(handle, unDays);
+}
+
 S_API bool SteamAPI_ISteamUGC_SetLanguage(intptr_t instancePtr, UGCQueryHandle_t handle, const char * pchLanguage)
 {
     VLOG_DEBUG("SteamAPI_ISteamUGC_SetLanguage called");
@@ -3917,6 +3938,20 @@ S_API SteamAPICall_t SteamAPI_ISteamUGC_StopPlaytimeTrackingForAllItems(intptr_t
     VLOG_DEBUG("SteamAPI_ISteamUGC_StopPlaytimeTrackingForAllItems called");
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->StopPlaytimeTrackingForAllItems();
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUGC_AddDependency(intptr_t instancePtr, PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_AddDependency called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->AddDependency(nParentPublishedFileID, nChildPublishedFileID);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUGC_RemoveDependency(intptr_t instancePtr, PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_RemoveDependency called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->RemoveDependency(nParentPublishedFileID, nChildPublishedFileID);
 }
 
 
@@ -4228,6 +4263,13 @@ S_API bool SteamAPI_ISteamInventory_GetResultItems(intptr_t instancePtr, SteamIn
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GetResultItems(resultHandle, pOutItemsArray, punOutItemsArraySize);
 }
 
+S_API bool SteamAPI_ISteamInventory_GetResultItemProperty(intptr_t instancePtr, SteamInventoryResult_t resultHandle, uint32 unItemIndex, const char * pchPropertyName, char * pchValueBuffer, uint32 * punValueBufferSizeOut)
+{
+    VLOG_DEBUG("SteamAPI_ISteamInventory_GetResultItemProperty called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->GetResultItemProperty(resultHandle, unItemIndex, pchPropertyName, pchValueBuffer, punValueBufferSizeOut);
+}
+
 S_API uint32 SteamAPI_ISteamInventory_GetResultTimestamp(intptr_t instancePtr, SteamInventoryResult_t resultHandle)
 {
     VLOG_DEBUG("SteamAPI_ISteamInventory_GetResultTimestamp called");
@@ -4399,6 +4441,20 @@ S_API bool SteamAPI_ISteamVideo_IsBroadcasting(intptr_t instancePtr, int * pnNum
     VLOG_DEBUG("SteamAPI_ISteamVideo_IsBroadcasting called");
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamVideo*>(instancePtr)->IsBroadcasting(pnNumViewers);
+}
+
+S_API void SteamAPI_ISteamVideo_GetOPFSettings(intptr_t instancePtr, AppId_t unVideoAppID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamVideo_GetOPFSettings called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamVideo*>(instancePtr)->GetOPFSettings(unVideoAppID);
+}
+
+S_API bool SteamAPI_ISteamVideo_GetOPFStringForApp(intptr_t instancePtr, AppId_t unVideoAppID, char * pchBuffer, int32 * pnBufferSize)
+{
+    VLOG_DEBUG("SteamAPI_ISteamVideo_GetOPFStringForApp called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamVideo*>(instancePtr)->GetOPFStringForApp(unVideoAppID, pchBuffer, pnBufferSize);
 }
 
 
