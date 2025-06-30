@@ -42,16 +42,21 @@ S_API void * S_CALLTYPE SteamInternal_ContextInit( void *pContextInitData )
     }
 
     ContextInitData *pData = (ContextInitData*)pContextInitData;
+    uintp uCallCounter = CSteamClient::GetInstance()->GetCallCounter();
 
-    VLOG_INFO(__FUNCTION__ " - data: %p, init fn: %p, counter: %lu, ctx: %p", 
-              pData, pData->pfnInit, pData->counter, &pData->ctx);
+    // Check if the counter is different from the current counter
+    if (pData->counter != uCallCounter) {
+        VLOG_DEBUG(__FUNCTION__ " - data: %p, init fn: %p, counter: %lu, ctx: %p, current counter: %lu",
+                  pData, pData->pfnInit, pData->counter, &pData->ctx, uCallCounter);
 
-    // TODO: Update global counter?
-    //pData->counter++;
+        // Call the context init function 
+        if (pData->pfnInit) {
+            pData->pfnInit(&pData->ctx);
+        }
 
-    // Call the context init function 
-    if (pData->pfnInit)
-        pData->pfnInit(&pData->ctx);
+        // Set counter to prevent re-initialization of this context
+        pData->counter = uCallCounter;
+    }
 
     return &pData->ctx;
 }

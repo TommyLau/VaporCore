@@ -111,12 +111,17 @@ private:
     // Singleton instance
     static CSteamClient* s_pInstance;
     
-    // Helper methods
-    const char* GetInterfaceVersion(const char* pchVersion, const char* pchDefaultVersion);
+    // Initialization counter
+    uintp m_uCallCounter;    // Tracks API calls
 
 public:
     CSteamClient();
     ~CSteamClient();
+
+    // Counter access methods
+    uintp IncrementCallCounter() { return ++m_uCallCounter; }
+    uintp DecrementCallCounter() { return --m_uCallCounter; }
+    uintp GetCallCounter() const { return m_uCallCounter; }
 
     // Helper methods
     static CSteamClient* GetInstance();

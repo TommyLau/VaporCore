@@ -24,9 +24,6 @@ static VaporCore::Config* g_pVaporConfig = nullptr;
 static HSteamPipe g_hSteamPipe = 0;
 static HSteamUser g_hSteamUser = 0;
 
-// Global initialization counter
-static uintp g_uSteamAPICallCounter = 0;
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 //	Steam API setup & shutdown
 //
@@ -75,7 +72,7 @@ S_API bool S_CALLTYPE SteamAPI_Init() {
     // Create steam pipe and connect to global user
     g_hSteamPipe = g_pSteamClient->CreateSteamPipe();
     g_hSteamUser = g_pSteamClient->ConnectToGlobalUser(g_hSteamPipe);
-    g_uSteamAPICallCounter++;
+    g_pSteamClient->IncrementCallCounter();
 
     return true;
 }
@@ -98,12 +95,12 @@ S_API void S_CALLTYPE SteamAPI_Shutdown() {
     }
 
     // Clean up global interface pointers in the order as in the header
-    g_uSteamAPICallCounter--;
+    g_pSteamClient->DecrementCallCounter();
 
     g_hSteamUser = 0;
     g_hSteamPipe = 0;
 
-    if (g_uSteamAPICallCounter == 0) {
+    if (g_pSteamClient->GetCallCounter() == 0) {
         CSteamClient::ReleaseInstance();
         g_pSteamClient = nullptr;
     }

@@ -40,6 +40,7 @@ CSteamClient::CSteamClient()
     , m_pSteamHTMLSurface(CSteamHTMLSurface::GetInstance())
     , m_steamInventory(CSteamInventory::GetInstance())
     , m_steamVideo(CSteamVideo::GetInstance())
+    , m_uCallCounter(0)
 {
     VLOG_INFO("CSteamClient constructor called");
 }
@@ -73,13 +74,6 @@ void CSteamClient::ReleaseInstance()
         delete s_pInstance;
         s_pInstance = nullptr;
     }
-}
-
-const char* CSteamClient::GetInterfaceVersion(const char* pchVersion, const char* pchDefaultVersion)
-{
-    VLOG_DEBUG("GetInterfaceVersion called with pchVersion=%s and pchDefaultVersion=%s", pchVersion, pchDefaultVersion);
-
-    return pchVersion ? pchVersion : pchDefaultVersion;
 }
 
 // Creates a communication pipe to the Steam client
