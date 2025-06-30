@@ -26,7 +26,16 @@ CSteamUserStats::~CSteamUserStats()
 bool CSteamUserStats::RequestCurrentStats( )
 {
     VLOG_INFO(__FUNCTION__);
-    return true;
+
+    VAPORCORE_LOCK_GUARD();
+
+    UserStatsReceived_t callback = {
+        VaporCore::Config::GetInstance()->GetGameId().ToUint64(),
+        k_EResultOK,
+        VaporCore::Config::GetInstance()->GetSteamId()
+    };
+
+    return CCallbackMgr::GetInstance().PostCallback(callback.k_iCallback, &callback, sizeof(callback));
 }
 
 // Data accessors
