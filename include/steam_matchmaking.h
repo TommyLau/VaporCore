@@ -33,18 +33,15 @@ class CSteamMatchmaking :
     public ISteamMatchmaking007,
     public ISteamMatchmaking008
 {
-private:
-    // Singleton instance
-    static CSteamMatchmaking* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamMatchmaking* GetInstance()
+    {
+        static CSteamMatchmaking instance;
+        return &instance;
+    }
 
 public:
-    CSteamMatchmaking();
-    ~CSteamMatchmaking();
-
-    // Helper methods
-    static CSteamMatchmaking* GetInstance();
-    static void ReleaseInstance();
-
 	// game server favorites storage
 	// saves basic details about a multiplayer game server locally
 
@@ -267,6 +264,15 @@ public:
 	// after completion, the local user will no longer be the owner
 	void CheckForPSNGameBootInvite( unsigned int iGameBootAttributes  ) override;
 #endif
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamMatchmaking();
+    ~CSteamMatchmaking();
+
+    // Delete copy constructor and assignment operator
+    CSteamMatchmaking(const CSteamMatchmaking&) = delete;
+    CSteamMatchmaking& operator=(const CSteamMatchmaking&) = delete;
 };
 
 //-----------------------------------------------------------------------------
@@ -399,18 +405,15 @@ class CSteamMatchmakingServers :
 	public ISteamMatchmakingServers,
 	public ISteamMatchmakingServers001
 {
-private:
-    // Singleton instance
-    static CSteamMatchmakingServers* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamMatchmakingServers* GetInstance()
+    {
+		static CSteamMatchmakingServers instance;
+		return &instance;
+    }
 
 public:
-    CSteamMatchmakingServers();
-    ~CSteamMatchmakingServers();
-
-    // Helper methods
-    static CSteamMatchmakingServers* GetInstance();
-    static void ReleaseInstance();
-
 	// Request a new list of servers of a particular type.  These calls each correspond to one of the EMatchMakingType values.
 	void RequestInternetServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse ) override;
 	void RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse001 *pRequestServersResponse ) override;
@@ -562,6 +565,15 @@ public:
 	// any in-progress requests before destructing a callback object that may have been passed 
 	// to one of the above calls to avoid crashing when callbacks occur.
 	void CancelServerQuery( HServerQuery hServerQuery ) override; 
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamMatchmakingServers();
+    ~CSteamMatchmakingServers();
+
+    // Delete copy constructor and assignment operator
+    CSteamMatchmakingServers(const CSteamMatchmakingServers&) = delete;
+    CSteamMatchmakingServers& operator=(const CSteamMatchmakingServers&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_MATCHMAKING_H

@@ -22,18 +22,15 @@
 class CSteamMusic :
 	public ISteamMusic
 {
-private:
-    // Singleton instance
-    static CSteamMusic* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamMusic& GetInstance()
+    {
+		static CSteamMusic instance;
+		return instance;
+    }
 
 public:
-    CSteamMusic();
-    ~CSteamMusic();
-
-    // Helper methods
-    static CSteamMusic* GetInstance();
-    static void ReleaseInstance();
-
 	bool BIsEnabled() override;
 	bool BIsPlaying() override;
 	
@@ -47,6 +44,15 @@ public:
 	// volume is between 0.0 and 1.0
 	void SetVolume( float flVolume ) override;
 	float GetVolume() override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamMusic();
+    ~CSteamMusic();
+
+    // Delete copy constructor and assignment operator
+    CSteamMusic(const CSteamMusic&) = delete;
+    CSteamMusic& operator=(const CSteamMusic&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_MUSIC_H

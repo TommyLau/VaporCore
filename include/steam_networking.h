@@ -32,9 +32,14 @@ class CSteamNetworking :
 	public ISteamNetworking004
 {
 public:
-    CSteamNetworking();
-    ~CSteamNetworking();
+	// Singleton accessor
+    static CSteamNetworking& GetInstance()
+    {
+		static CSteamNetworking instance;
+		return instance;
+    }
 
+public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Session-less connection functions
 	//    automatically establishes NAT-traversing or Relay server connections
@@ -44,26 +49,26 @@ public:
 	// the first packet send may be delayed as the NAT-traversal code runs
 	// if we can't get through to the user, an error will be posted via the callback P2PSessionConnectFail_t
 	// see EP2PSend enum above for the descriptions of the different ways of sending packets
-	// Changed from Steam SDK v1.11, backward compatibility
-	bool SendP2PPacket( CSteamID steamIDRemote, const void *pubData, uint32 cubData, EP2PSend eP2PSendType ) override;
 	//
 	// nChannel is a routing number you can use to help route message to different systems 	- you'll have to call ReadP2PPacket() 
 	// with the same channel number in order to retrieve the data on the other end
 	// using different channels to talk to the same user will still use the same underlying p2p connection, saving on resources
 	bool SendP2PPacket( CSteamID steamIDRemote, const void *pubData, uint32 cubData, EP2PSend eP2PSendType, int nChannel = 0 ) override;
+	// Changed from Steam SDK v1.11, backward compatibility
+	bool SendP2PPacket( CSteamID steamIDRemote, const void *pubData, uint32 cubData, EP2PSend eP2PSendType ) override;
 
 	// returns true if any data is available for read, and the amount of data that will need to be read
+	bool IsP2PPacketAvailable( uint32 *pcubMsgSize, int nChannel = 0 ) override;
 	// Changed from Steam SDK v1.11, backward compatibility
 	bool IsP2PPacketAvailable( uint32 *pcubMsgSize ) override;
-	bool IsP2PPacketAvailable( uint32 *pcubMsgSize, int nChannel = 0 ) override;
 
 	// reads in a packet that has been sent from another user via SendP2PPacket()
 	// returns the size of the message and the steamID of the user who sent it in the last two parameters
 	// if the buffer passed in is too small, the message will be truncated
 	// this call is not blocking, and will return false if no data is available
+	bool ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, CSteamID *psteamIDRemote, int nChannel = 0 ) override;
 	// Changed from Steam SDK v1.11, backward compatibility
 	bool ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, CSteamID *psteamIDRemote ) override;
-	bool ReadP2PPacket( void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, CSteamID *psteamIDRemote, int nChannel = 0 ) override;
 
 	// AcceptP2PSessionWithUser() should only be called in response to a P2PSessionRequest_t callback
 	// P2PSessionRequest_t will be posted if another user tries to send you a packet that you haven't talked to yet
@@ -113,17 +118,17 @@ public:
 	//		pass in 0 if you just want the default local IP
 	// unPort is the port to use
 	//		pass in 0 if you don't want users to be able to connect via IP/Port, but expect to be always peer-to-peer connections only
+	SNetListenSocket_t CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort, bool bAllowUseOfPacketRelay ) override;
 	// Removed from Steam SDK v1.03, backward compatibility
 	SNetListenSocket_t CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort ) override;
-	SNetListenSocket_t CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort, bool bAllowUseOfPacketRelay ) override;
 
 	// creates a socket and begin connection to a remote destination
 	// can connect via a known steamID (client or game server), or directly to an IP
 	// on success will trigger a SocketConnectCallback_t callback
 	// on failure or timeout will trigger a SocketConnectionFailureCallback_t callback
+	SNetSocket_t CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec, bool bAllowUseOfPacketRelay ) override;
 	// Removed from Steam SDK v1.03, backward compatibility
 	SNetSocket_t CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec ) override;
-	SNetSocket_t CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec, bool bAllowUseOfPacketRelay ) override;
 	SNetSocket_t CreateConnectionSocket( uint32 nIP, uint16 nPort, int nTimeoutSec ) override;
 
 	// disconnects the connection to the socket, if any, and invalidates the handle
@@ -135,8 +140,7 @@ public:
 
 	// sending data
 	// must be a handle to a connected socket
-	// data size cannot be more than 8k, although in UDP mode (default),
-	// it's recommended packets be no larger than 1300 bytes
+	// data is all sent via UDP, and thus send sizes are limited to 1200 bytes; after this, many routers will start dropping packets
 	// use the reliable flag with caution; although the resend rate is pretty aggressive,
 	// it can still cause stalls in receiving data (like TCP)
 	bool SendDataOnSocket( SNetSocket_t hSocket, void *pubData, uint32 cubData, bool bReliable ) override;
@@ -179,13 +183,14 @@ public:
 	// max packet size, in bytes
 	int GetMaxPacketSize( SNetSocket_t hSocket ) override;
 
-    // Helper methods
-    static CSteamNetworking* GetInstance();
-    static void ReleaseInstance();
-
 private:
-    // Singleton instance
-    static CSteamNetworking* s_pInstance;
+    // Private constructor and destructor for singleton
+    CSteamNetworking();
+    ~CSteamNetworking();
+
+    // Delete copy constructor and assignment operator
+    CSteamNetworking(const CSteamNetworking&) = delete;
+    CSteamNetworking& operator=(const CSteamNetworking&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_NETWORKING_H

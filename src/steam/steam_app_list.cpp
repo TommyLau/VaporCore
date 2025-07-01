@@ -12,67 +12,45 @@
 #include "vapor_base.h"
 #include "steam_app_list.h"
 
-// Static instance
-CSteamAppList* CSteamAppList::s_pInstance = nullptr;
-
 CSteamAppList::CSteamAppList()
 {
-    VLOG_INFO("CSteamAppList constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamAppList::~CSteamAppList()
 {
-    VLOG_INFO("CSteamAppList destructor called");
-}
-
-// Helper methods
-CSteamAppList* CSteamAppList::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamAppList();
-    }
-    return s_pInstance;
-}
-
-void CSteamAppList::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 uint32 CSteamAppList::GetNumInstalledApps()
 {
-    VLOG_DEBUG("GetNumInstalledApps called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
 uint32 CSteamAppList::GetInstalledApps(AppId_t* pvecAppID, uint32 unMaxAppIDs)
 {
-    VLOG_DEBUG("GetInstalledApps called - MaxAppIDs: %d", unMaxAppIDs);
+    VLOG_INFO(__FUNCTION__ " - MaxAppIDs: %d", unMaxAppIDs);
     return 0;
 }
 
 // returns -1 if no name was found
 int CSteamAppList::GetAppName(AppId_t nAppID, char* pchName, int cchNameMax)
 {
-    VLOG_DEBUG("GetAppName called - AppID: %d, MaxNameLength: %d", nAppID, cchNameMax);
+    VLOG_INFO(__FUNCTION__ " - AppID: %d, MaxNameLength: %d", nAppID, cchNameMax);
     return -1;
 }
 
 // returns -1 if no dir was found
 int CSteamAppList::GetAppInstallDir(AppId_t nAppID, char* pchDirectory, int cchNameMax)
 {
-    VLOG_DEBUG("GetAppInstallDir called - AppID: %d, MaxDirLength: %d", nAppID, cchNameMax);
+    VLOG_INFO(__FUNCTION__ " - AppID: %d, MaxDirLength: %d", nAppID, cchNameMax);
     return -1;
 }
 
 // return the buildid of this app, may change at any time based on backend updates to the game
 int CSteamAppList::GetAppBuildId(AppId_t nAppID)
 {
-    VLOG_DEBUG("GetAppBuildId called - AppID: %d", nAppID);
+    VLOG_INFO(__FUNCTION__ " - AppID: %d", nAppID);
     return 0;
 }

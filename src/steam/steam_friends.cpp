@@ -40,7 +40,7 @@ CSteamFriends::~CSteamFriends()
 const char *CSteamFriends::GetPersonaName()
 {
     VLOG_INFO(__FUNCTION__);
-    return VaporCore::Config::GetInstance()->GetUsername().c_str();
+    return VaporCore::Config::GetInstance().GetUsername().c_str();
 }
 
 // Sets the player name, stores it on the server and publishes the changes to all friends who are online.

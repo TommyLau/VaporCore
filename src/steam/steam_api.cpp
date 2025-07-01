@@ -14,12 +14,6 @@
 
 #include "vapor_base.h"
 
-// Global Steam client interface pointer
-static CSteamClient* g_pSteamClient = nullptr;
-
-// Global VaporCore config instance pointer
-static VaporCore::Config* g_pVaporConfig = nullptr;
-
 // Global pipe and user handles
 static HSteamPipe g_hSteamPipe = 0;
 static HSteamUser g_hSteamUser = 0;
@@ -47,32 +41,20 @@ S_API bool S_CALLTYPE SteamAPI_Init() {
     }
     
     // Initialize VaporCore configuration
-    g_pVaporConfig = VaporCore::Config::GetInstance();
-    if (!g_pVaporConfig) {
-        VLOG_ERROR(__FUNCTION__ " - Failed to create VaporCore config instance");
-        return false;
-    }
+    auto& config = VaporCore::Config::GetInstance();
     
     // Load configuration file (will use defaults if file doesn't exist)
-    g_pVaporConfig->LoadConfig();
+    config.LoadConfig();
     VLOG_DEBUG(__FUNCTION__ " - VaporCore configuration loaded - AppId: %u, SteamId: %llu, Username: %s, Language: %s",
-               g_pVaporConfig->GetGameId().AppID(),
-               g_pVaporConfig->GetSteamId().ConvertToUint64(),
-               g_pVaporConfig->GetUsername().c_str(),
-               g_pVaporConfig->GetLanguage().c_str());
-    
-    // Initialize Steam client
-    g_pSteamClient = CSteamClient::GetInstance();
-
-    if (!g_pSteamClient) {
-        VLOG_ERROR(__FUNCTION__ " - Failed to create Steam client instance");
-        return false;
-    }
+               config.GetGameId().AppID(),
+               config.GetSteamId().ConvertToUint64(),
+               config.GetUsername().c_str(),
+               config.GetLanguage().c_str());
     
     // Create steam pipe and connect to global user
-    g_hSteamPipe = g_pSteamClient->CreateSteamPipe();
-    g_hSteamUser = g_pSteamClient->ConnectToGlobalUser(g_hSteamPipe);
-    g_pSteamClient->IncrementCallCounter();
+    g_hSteamPipe = CSteamClient::GetInstance().CreateSteamPipe();
+    g_hSteamUser = CSteamClient::GetInstance().ConnectToGlobalUser(g_hSteamPipe);
+    CSteamClient::GetInstance().IncrementCallCounter();
 
     return true;
 }
@@ -81,29 +63,18 @@ S_API bool S_CALLTYPE SteamAPI_Init() {
 S_API void S_CALLTYPE SteamAPI_Shutdown() {
     VLOG_INFO(__FUNCTION__);
     
-    if (g_pSteamClient && g_hSteamPipe) {
+    if (g_hSteamPipe) {
         // Release user and pipe through Steam client
-        g_pSteamClient->ReleaseUser(g_hSteamPipe, g_hSteamUser);
-        g_pSteamClient->BReleaseSteamPipe(g_hSteamPipe);
-        g_pSteamClient->BShutdownIfAllPipesClosed();
-    }
-
-    // Release VaporCore configuration instance
-    if (g_pVaporConfig) {
-        VaporCore::Config::ReleaseInstance();
-        g_pVaporConfig = nullptr;
+        CSteamClient::GetInstance().ReleaseUser(g_hSteamPipe, g_hSteamUser);
+        CSteamClient::GetInstance().BReleaseSteamPipe(g_hSteamPipe);
+        CSteamClient::GetInstance().BShutdownIfAllPipesClosed();
     }
 
     // Clean up global interface pointers in the order as in the header
-    g_pSteamClient->DecrementCallCounter();
+    CSteamClient::GetInstance().DecrementCallCounter();
 
     g_hSteamUser = 0;
     g_hSteamPipe = 0;
-
-    if (g_pSteamClient->GetCallCounter() == 0) {
-        CSteamClient::ReleaseInstance();
-        g_pSteamClient = nullptr;
-    }
 }
 
 // restart your app through Steam to enable required Steamworks features
@@ -169,106 +140,106 @@ S_API ISteamClient *S_CALLTYPE SteamClient() {
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamUser *S_CALLTYPE SteamUser() {
     VLOG_INFO(__FUNCTION__);
-    return g_pSteamClient->GetISteamUser(g_hSteamPipe, g_hSteamUser, STEAMUSER_INTERFACE_VERSION_018);
+    return CSteamClient::GetInstance().GetISteamUser(g_hSteamPipe, g_hSteamUser, STEAMUSER_INTERFACE_VERSION_018);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamFriends *S_CALLTYPE SteamFriends() {
     VLOG_INFO(__FUNCTION__);
     // TODO: SteamFriends015 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamFriends(g_hSteamPipe, g_hSteamUser, STEAMFRIENDS_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamFriends(g_hSteamPipe, g_hSteamUser, STEAMFRIENDS_INTERFACE_VERSION);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamUtils *S_CALLTYPE SteamUtils() {
     VLOG_INFO(__FUNCTION__);
-    return g_pSteamClient->GetISteamUtils(g_hSteamPipe, STEAMUTILS_INTERFACE_VERSION_007);
+    return CSteamClient::GetInstance().GetISteamUtils(g_hSteamPipe, STEAMUTILS_INTERFACE_VERSION_007);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamMatchmaking *S_CALLTYPE SteamMatchmaking() {
     VLOG_INFO(__FUNCTION__);
     // TODO: SteamMatchmaking009 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamMatchmaking(g_hSteamPipe, g_hSteamUser, STEAMMATCHMAKING_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamMatchmaking(g_hSteamPipe, g_hSteamUser, STEAMMATCHMAKING_INTERFACE_VERSION);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamUserStats *S_CALLTYPE SteamUserStats() {
     VLOG_INFO(__FUNCTION__);
     // TODO: SteamUserStats011 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamUserStats(g_hSteamPipe, g_hSteamUser, STEAMUSERSTATS_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamUserStats(g_hSteamPipe, g_hSteamUser, STEAMUSERSTATS_INTERFACE_VERSION);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamApps *S_CALLTYPE SteamApps() {
     VLOG_INFO(__FUNCTION__);
-    return g_pSteamClient->GetISteamApps(g_hSteamPipe, g_hSteamUser, STEAMAPPS_INTERFACE_VERSION_007);
+    return CSteamClient::GetInstance().GetISteamApps(g_hSteamPipe, g_hSteamUser, STEAMAPPS_INTERFACE_VERSION_007);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamNetworking *S_CALLTYPE SteamNetworking() {
     VLOG_INFO(__FUNCTION__);
     // TODO: SteamNetworking005 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamNetworking(g_hSteamPipe, g_hSteamUser, STEAMNETWORKING_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamNetworking(g_hSteamPipe, g_hSteamUser, STEAMNETWORKING_INTERFACE_VERSION);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamMatchmakingServers *S_CALLTYPE SteamMatchmakingServers() {
     VLOG_INFO(__FUNCTION__);
     // TODO: SteamMatchmakingServers002 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamMatchmakingServers(g_hSteamPipe, g_hSteamUser, STEAMMATCHMAKINGSERVERS_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamMatchmakingServers(g_hSteamPipe, g_hSteamUser, STEAMMATCHMAKINGSERVERS_INTERFACE_VERSION);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamRemoteStorage *S_CALLTYPE SteamRemoteStorage() {
     VLOG_INFO(__FUNCTION__);
-    return g_pSteamClient->GetISteamRemoteStorage(g_hSteamPipe, g_hSteamUser, STEAMREMOTESTORAGE_INTERFACE_VERSION_013);
+    return CSteamClient::GetInstance().GetISteamRemoteStorage(g_hSteamPipe, g_hSteamUser, STEAMREMOTESTORAGE_INTERFACE_VERSION_013);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamScreenshots *S_CALLTYPE SteamScreenshots() {
     VLOG_INFO(__FUNCTION__);
-    return g_pSteamClient->GetISteamScreenshots(g_hSteamPipe, g_hSteamUser, STEAMSCREENSHOTS_INTERFACE_VERSION_002);
+    return CSteamClient::GetInstance().GetISteamScreenshots(g_hSteamPipe, g_hSteamUser, STEAMSCREENSHOTS_INTERFACE_VERSION_002);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamHTTP *S_CALLTYPE SteamHTTP() {
     VLOG_INFO(__FUNCTION__);
     // TODO: SteamHTTP002 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamHTTP(g_hSteamPipe, g_hSteamUser, STEAMHTTP_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamHTTP(g_hSteamPipe, g_hSteamUser, STEAMHTTP_INTERFACE_VERSION);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamUnifiedMessages *S_CALLTYPE SteamUnifiedMessages() {
     VLOG_INFO(__FUNCTION__);
     // TODO: SteamUnifiedMessages001 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamUnifiedMessages(g_hSteamPipe, g_hSteamUser, STEAMUNIFIEDMESSAGES_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamUnifiedMessages(g_hSteamPipe, g_hSteamUser, STEAMUNIFIEDMESSAGES_INTERFACE_VERSION);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamController *S_CALLTYPE SteamController() {
     VLOG_INFO(__FUNCTION__);
-    return g_pSteamClient->GetISteamController(g_hSteamPipe, g_hSteamUser, STEAMCONTROLLER_INTERFACE_VERSION_003);
+    return CSteamClient::GetInstance().GetISteamController(g_hSteamPipe, g_hSteamUser, STEAMCONTROLLER_INTERFACE_VERSION_003);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamUGC *S_CALLTYPE SteamUGC() {
     VLOG_INFO(__FUNCTION__);
-    return g_pSteamClient->GetISteamUGC(g_hSteamPipe, g_hSteamUser, STEAMUGC_INTERFACE_VERSION_007);
+    return CSteamClient::GetInstance().GetISteamUGC(g_hSteamPipe, g_hSteamUser, STEAMUGC_INTERFACE_VERSION_007);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamAppList *S_CALLTYPE SteamAppList() {
     VLOG_INFO(__FUNCTION__);
     // TODO: SteamAppList001 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamAppList(g_hSteamPipe, g_hSteamUser, STEAMAPPLIST_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamAppList(g_hSteamPipe, g_hSteamUser, STEAMAPPLIST_INTERFACE_VERSION);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamMusic *S_CALLTYPE SteamMusic() {
     VLOG_INFO(__FUNCTION__);
     // TODO: SteamMusic001 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamMusic(g_hSteamPipe, g_hSteamUser, STEAMMUSIC_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamMusic(g_hSteamPipe, g_hSteamUser, STEAMMUSIC_INTERFACE_VERSION);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
@@ -276,7 +247,7 @@ S_API ISteamMusicRemote *S_CALLTYPE SteamMusicRemote()
 {
     VLOG_INFO(__FUNCTION__);
     // TODO: SteamMusicRemote001 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamMusicRemote(g_hSteamPipe, g_hSteamUser, STEAMMUSICREMOTE_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamMusicRemote(g_hSteamPipe, g_hSteamUser, STEAMMUSICREMOTE_INTERFACE_VERSION);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
@@ -284,21 +255,21 @@ S_API ISteamHTMLSurface *S_CALLTYPE SteamHTMLSurface()
 {
     VLOG_INFO(__FUNCTION__);
     // TODO: SteamHTMLSurface003 here, to be updated to macro later when we have more version
-    return g_pSteamClient->GetISteamHTMLSurface(g_hSteamPipe, g_hSteamUser, STEAMHTMLSURFACE_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamHTMLSurface(g_hSteamPipe, g_hSteamUser, STEAMHTMLSURFACE_INTERFACE_VERSION);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamInventory *S_CALLTYPE SteamInventory()
 {
     VLOG_INFO(__FUNCTION__);
-    return g_pSteamClient->GetISteamInventory(g_hSteamPipe, g_hSteamUser, STEAMINVENTORY_INTERFACE_VERSION_001);
+    return CSteamClient::GetInstance().GetISteamInventory(g_hSteamPipe, g_hSteamUser, STEAMINVENTORY_INTERFACE_VERSION_001);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamVideo *S_CALLTYPE SteamVideo()
 {
     VLOG_INFO(__FUNCTION__);
-    return g_pSteamClient->GetISteamVideo(g_hSteamPipe, g_hSteamUser, STEAMVIDEO_INTERFACE_VERSION_001);
+    return CSteamClient::GetInstance().GetISteamVideo(g_hSteamPipe, g_hSteamUser, STEAMVIDEO_INTERFACE_VERSION_001);
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//

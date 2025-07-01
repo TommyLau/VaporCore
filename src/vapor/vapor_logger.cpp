@@ -20,9 +20,17 @@
 
 namespace VaporCore {
 
-Logger& Logger::GetInstance() {
-    static Logger instance;
-    return instance;
+Logger::Logger() {
+    m_initialized = false;
+    m_enabled = true;
+    m_currentLevel = LogLevel::INFO;
+}
+
+Logger::~Logger() {
+    if (m_logFile.is_open()) {
+        Log(LogLevel::INFO, "VaporCore Logger shutting down");
+        m_logFile.close();
+    }
 }
 
 void Logger::Initialize(const std::string& filename) {
@@ -76,13 +84,6 @@ void Logger::Log(LogLevel level, const std::string& message) {
     // Also output to console for important messages
     if (level >= LogLevel::WARNING) {
         std::cerr << "[" << LevelToString(level) << "] " << message << std::endl;
-    }
-}
-
-Logger::~Logger() {
-    if (m_logFile.is_open()) {
-        Log(LogLevel::INFO, "VaporCore Logger shutting down");
-        m_logFile.close();
     }
 }
 

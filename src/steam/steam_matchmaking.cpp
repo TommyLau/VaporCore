@@ -12,72 +12,30 @@
 #include "vapor_base.h"
 #include "steam_matchmaking.h"
 
-// Static instance
-CSteamMatchmaking* CSteamMatchmaking::s_pInstance = nullptr;
-CSteamMatchmakingServers* CSteamMatchmakingServers::s_pInstance = nullptr;
-
 CSteamMatchmaking::CSteamMatchmaking()
 {
-    VLOG_INFO("CSteamMatchmaking constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamMatchmaking::~CSteamMatchmaking()
 {
-    VLOG_INFO("CSteamMatchmaking destructor called");
-}
-
-// Helper methods
-CSteamMatchmaking* CSteamMatchmaking::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamMatchmaking();
-    }
-    return s_pInstance;
-}
-
-void CSteamMatchmaking::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamMatchmakingServers::CSteamMatchmakingServers()
 {
-    VLOG_INFO("CSteamMatchmakingServers constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamMatchmakingServers::~CSteamMatchmakingServers()
 {
-    VLOG_INFO("CSteamMatchmakingServers destructor called");
-}
-
-// Helper methods
-CSteamMatchmakingServers* CSteamMatchmakingServers::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamMatchmakingServers();
-    }
-    return s_pInstance;
-}
-
-void CSteamMatchmakingServers::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 // returns the number of favorites servers the user has stored
 int CSteamMatchmaking::GetFavoriteGameCount()
 {
-    VLOG_DEBUG("GetFavoriteGameCount called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
@@ -88,21 +46,21 @@ int CSteamMatchmaking::GetFavoriteGameCount()
 // *pRTime32LastPlayedOnServer is filled in the with the Unix time the favorite was added
 bool CSteamMatchmaking::GetFavoriteGame( int iGame, AppId_t *pnAppID, uint32 *pnIP, uint16 *pnConnPort, uint16 *pnQueryPort, uint32 *punFlags, uint32 *pRTime32LastPlayedOnServer )
 {
-    VLOG_DEBUG("GetFavoriteGame called - Game: %d", iGame);
+    VLOG_INFO(__FUNCTION__ " - Game: %d", iGame);
     return false;
 }
 
 // adds the game server to the local list; updates the time played of the server if it already exists in the list
 int CSteamMatchmaking::AddFavoriteGame( AppId_t nAppID, uint32 nIP, uint16 nConnPort, uint16 nQueryPort, uint32 unFlags, uint32 rTime32LastPlayedOnServer )
 {
-    VLOG_DEBUG("AddFavoriteGame called - AppID: %u, IP: %u, ConnPort: %u, QueryPort: %u", nAppID, nIP, nConnPort, nQueryPort);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, IP: %u, ConnPort: %u, QueryPort: %u", nAppID, nIP, nConnPort, nQueryPort);
     return 0;
 }
 
 // removes the game server from the local storage; returns true if one was removed
 bool CSteamMatchmaking::RemoveFavoriteGame( AppId_t nAppID, uint32 nIP, uint16 nConnPort, uint16 nQueryPort, uint32 unFlags )
 {
-    VLOG_DEBUG("RemoveFavoriteGame called - AppID: %u, IP: %u, ConnPort: %u, QueryPort: %u", nAppID, nIP, nConnPort, nQueryPort);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, IP: %u, ConnPort: %u, QueryPort: %u", nAppID, nIP, nConnPort, nQueryPort);
     return false;
 }
 
@@ -135,14 +93,14 @@ bool CSteamMatchmaking::RemoveFavoriteGame( AppId_t nAppID, uint32 nIP, uint16 n
 // 
 SteamAPICall_t CSteamMatchmaking::RequestLobbyList()
 {
-    VLOG_DEBUG("RequestLobbyList called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
 // Changed from Steam SDK v1.03, backward compatibility
 void CSteamMatchmaking::DEPRECATED_RequestLobbyList()
 {
-    VLOG_DEBUG("DEPRECATED_RequestLobbyList called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // filters for lobbies
@@ -151,60 +109,60 @@ void CSteamMatchmaking::DEPRECATED_RequestLobbyList()
 // Removed from Steam SDK v1.05, backward compatibility
 void CSteamMatchmaking::AddRequestLobbyListFilter( const char *pchKeyToMatch, const char *pchValueToMatch )
 {
-    VLOG_DEBUG("AddRequestLobbyListFilter called - Key: %s, Value: %s", pchKeyToMatch, pchValueToMatch);
+    VLOG_INFO(__FUNCTION__ " - Key: %s, Value: %s", pchKeyToMatch, pchValueToMatch);
 }
 
 void CSteamMatchmaking::AddRequestLobbyListStringFilter( const char *pchKeyToMatch, const char *pchValueToMatch, ELobbyComparison eComparisonType )
 {
-    VLOG_DEBUG("AddRequestLobbyListStringFilter called - Key: %s, Value: %s, Comparison Type: %d", pchKeyToMatch, pchValueToMatch, eComparisonType);
+    VLOG_INFO(__FUNCTION__ " - Key: %s, Value: %s, Comparison Type: %d", pchKeyToMatch, pchValueToMatch, eComparisonType);
 }
 
 // numerical comparison - 0 is equal, -1 is the lobby value is less than nValueToMatch, 1 is the lobby value is greater than nValueToMatch
 // Removed from Steam SDK v1.05, backward compatibility
 void CSteamMatchmaking::AddRequestLobbyListNumericalFilter( const char *pchKeyToMatch, int nValueToMatch, int nComparisonType /* 0 is equal, -1 is less than, 1 is greater than */ )
 {
-    VLOG_DEBUG("AddRequestLobbyListNumericalFilter called - Key: %s, Value: %d, Comparison Type: %d", pchKeyToMatch, nValueToMatch, nComparisonType);
+    VLOG_INFO(__FUNCTION__ " - Key: %s, Value: %d, Comparison Type: %d", pchKeyToMatch, nValueToMatch, nComparisonType);
 }
 
 void CSteamMatchmaking::AddRequestLobbyListNumericalFilter( const char *pchKeyToMatch, int nValueToMatch, ELobbyComparison eComparisonType )
 {
-    VLOG_DEBUG("AddRequestLobbyListNumericalFilter called - Key: %s, Value: %d, Comparison Type: %d", pchKeyToMatch, nValueToMatch, eComparisonType);
+    VLOG_INFO(__FUNCTION__ " - Key: %s, Value: %d, Comparison Type: %d", pchKeyToMatch, nValueToMatch, eComparisonType);
 }
 
 // sets RequestLobbyList() to only returns lobbies which aren't yet full - needs SetLobbyMemberLimit() called on the lobby to set an initial limit
 // Removed from Steam SDK v1.03, backward compatibility
 void CSteamMatchmaking::AddRequestLobbyListSlotsAvailableFilter()
 {
-    VLOG_DEBUG("AddRequestLobbyListSlotsAvailableFilter called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // returns results closest to the specified value. Multiple near filters can be added, with early filters taking precedence
 void CSteamMatchmaking::AddRequestLobbyListNearValueFilter( const char *pchKeyToMatch, int nValueToBeCloseTo )
 {
-    VLOG_DEBUG("AddRequestLobbyListNearValueFilter called - Key: %s, Value: %d", pchKeyToMatch, nValueToBeCloseTo);
+    VLOG_INFO(__FUNCTION__ " - Key: %s, Value: %d", pchKeyToMatch, nValueToBeCloseTo);
 }
 
 // returns only lobbies with the specified number of slots available
 void CSteamMatchmaking::AddRequestLobbyListFilterSlotsAvailable( int nSlotsAvailable )
 {
-    VLOG_DEBUG("AddRequestLobbyListFilterSlotsAvailable called - Slots Available: %d", nSlotsAvailable);
+    VLOG_INFO(__FUNCTION__ " - Slots Available: %d", nSlotsAvailable);
 }
 
 // sets the distance for which we should search for lobbies (based on users IP address to location map on the Steam backed)
 void CSteamMatchmaking::AddRequestLobbyListDistanceFilter( ELobbyDistanceFilter eLobbyDistanceFilter )
 {
-    VLOG_DEBUG("AddRequestLobbyListDistanceFilter called - Distance Filter: %d", eLobbyDistanceFilter);
+    VLOG_INFO(__FUNCTION__ " - Distance Filter: %d", eLobbyDistanceFilter);
 }
 
 // sets how many results to return, the lower the count the faster it is to download the lobby results & details to the client
 void CSteamMatchmaking::AddRequestLobbyListResultCountFilter( int cMaxResults )
 {
-    VLOG_DEBUG("AddRequestLobbyListResultCountFilter called - Max Results: %d", cMaxResults);
+    VLOG_INFO(__FUNCTION__ " - Max Results: %d", cMaxResults);
 }
 
 void CSteamMatchmaking::AddRequestLobbyListCompatibleMembersFilter( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("AddRequestLobbyListCompatibleMembersFilter called - Lobby: %llu", steamIDLobby.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu", steamIDLobby.GetAccountID());
 }
 
 // returns the CSteamID of a lobby, as retrieved by a RequestLobbyList call
@@ -213,7 +171,7 @@ void CSteamMatchmaking::AddRequestLobbyListCompatibleMembersFilter( CSteamID ste
 // the returned CSteamID::IsValid() will be false if iLobby is out of range
 CSteamID CSteamMatchmaking::GetLobbyByIndex( int iLobby )
 {
-    VLOG_DEBUG("GetLobbyByIndex called - Lobby: %d", iLobby);
+    VLOG_INFO(__FUNCTION__ " - Lobby: %d", iLobby);
     return CSteamID();
 }
 
@@ -225,21 +183,21 @@ CSteamID CSteamMatchmaking::GetLobbyByIndex( int iLobby )
 // a LobbyEnter_t callback will also be received (since the local user is joining their own lobby)
 SteamAPICall_t CSteamMatchmaking::CreateLobby( ELobbyType eLobbyType, int cMaxMembers )
 {
-    VLOG_DEBUG("CreateLobby called - LobbyType: %d, MaxMembers: %d", eLobbyType, cMaxMembers);
+    VLOG_INFO(__FUNCTION__ " - LobbyType = %d, MaxMembers = %d", eLobbyType, cMaxMembers);
     return 0;
 }
 
 // Changed from Steam SDK v1.05, backward compatibility
 SteamAPICall_t CSteamMatchmaking::CreateLobby( ELobbyType eLobbyType )
 {
-    VLOG_DEBUG("CreateLobby called - LobbyType: %d", eLobbyType);
+    VLOG_INFO(__FUNCTION__ " - LobbyType: %d", eLobbyType);
     return 0;
 }
 
 // Changed from Steam SDK v1.03, backward compatibility
 void CSteamMatchmaking::CreateLobby( bool bPrivate )
 {
-    VLOG_DEBUG("CreateLobby called - Private: %s", bPrivate ? "true" : "false");
+    VLOG_INFO(__FUNCTION__ " - Private: %s", bPrivate ? "true" : "false");
 }
 
 // Joins an existing lobby
@@ -248,21 +206,21 @@ void CSteamMatchmaking::CreateLobby( bool bPrivate )
 // lobby metadata is available to use immediately on this call completing
 SteamAPICall_t CSteamMatchmaking::JoinLobby( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("JoinLobby called - Lobby: %llu", steamIDLobby.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Lobby = %llu", steamIDLobby.GetAccountID());
     return 0;
 }
 
 // Changed from Steam SDK v1.03, backward compatibility
 void CSteamMatchmaking::DEPRECATED_JoinLobby( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("DEPRECATED_JoinLobby called - Lobby: %llu", steamIDLobby.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu", steamIDLobby.GetAccountID());
 }
 
 // Leave a lobby; this will take effect immediately on the client side
 // other users in the lobby will be notified by a LobbyChatUpdate_t callback
 void CSteamMatchmaking::LeaveLobby( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("LeaveLobby called - Lobby: %llu", steamIDLobby.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Lobby = %llu", steamIDLobby.GetAccountID());
 }
 
 // Invite another user to the lobby
@@ -273,7 +231,7 @@ void CSteamMatchmaking::LeaveLobby( CSteamID steamIDLobby )
 	// or if the game isn't running yet the game will be launched with the parameter +connect_lobby <64-bit lobby id>
 bool CSteamMatchmaking::InviteUserToLobby( CSteamID steamIDLobby, CSteamID steamIDInvitee )
 {
-    VLOG_DEBUG("InviteUserToLobby called - Lobby: %llu, Invitee: %llu", steamIDLobby.GetAccountID(), steamIDInvitee.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, Invitee: %llu", steamIDLobby.GetAccountID(), steamIDInvitee.GetAccountID());
     return false;
 }
 
@@ -285,7 +243,7 @@ bool CSteamMatchmaking::InviteUserToLobby( CSteamID steamIDLobby, CSteamID steam
 // returns the number of users in the specified lobby
 int CSteamMatchmaking::GetNumLobbyMembers( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("GetNumLobbyMembers called - Lobby: %llu", steamIDLobby.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu", steamIDLobby.GetAccountID());
     return 0;
 }
 
@@ -294,7 +252,7 @@ int CSteamMatchmaking::GetNumLobbyMembers( CSteamID steamIDLobby )
 	// note that the current user must be in a lobby to retrieve CSteamIDs of other users in that lobby
 CSteamID CSteamMatchmaking::GetLobbyMemberByIndex( CSteamID steamIDLobby, int iMember )
 {
-    VLOG_DEBUG("GetLobbyMemberByIndex called - Lobby: %llu, Member: %d", steamIDLobby.GetAccountID(), iMember);
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, Member: %d", steamIDLobby.GetAccountID(), iMember);
     return CSteamID();
 }
 
@@ -303,7 +261,7 @@ CSteamID CSteamMatchmaking::GetLobbyMemberByIndex( CSteamID steamIDLobby, int iM
 // "" will be returned if no value is set, or if steamIDLobby is invalid
 const char *CSteamMatchmaking::GetLobbyData( CSteamID steamIDLobby, const char *pchKey )
 {
-    VLOG_DEBUG("GetLobbyData called - Lobby: %llu, Key: %s", steamIDLobby.GetAccountID(), pchKey ? pchKey : "null");
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, Key: %s", steamIDLobby.GetAccountID(), pchKey ? pchKey : "null");
     return "";
 }
 
@@ -314,7 +272,7 @@ const char *CSteamMatchmaking::GetLobbyData( CSteamID steamIDLobby, const char *
 // other users in the lobby will receive notification of the lobby data change via a LobbyDataUpdate_t callback
 bool CSteamMatchmaking::SetLobbyData( CSteamID steamIDLobby, const char *pchKey, const char *pchValue )
 {
-    VLOG_DEBUG("SetLobbyData called - Lobby: %llu, Key: %s, Value: %s", 
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, Key: %s, Value: %s", 
                steamIDLobby.GetAccountID(), pchKey ? pchKey : "null", pchValue ? pchValue : "null");
     return true;
 }
@@ -322,14 +280,14 @@ bool CSteamMatchmaking::SetLobbyData( CSteamID steamIDLobby, const char *pchKey,
 // returns the number of metadata keys set on the specified lobby
 int CSteamMatchmaking::GetLobbyDataCount( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("GetLobbyDataCount called - Lobby: %llu", steamIDLobby.ConvertToUint64());
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu", steamIDLobby.ConvertToUint64());
     return 0;
 }
 
 // returns a lobby metadata key/values pair by index, of range [0, GetLobbyDataCount())
 bool CSteamMatchmaking::GetLobbyDataByIndex( CSteamID steamIDLobby, int iLobbyData, char *pchKey, int cchKeyBufferSize, char *pchValue, int cchValueBufferSize )
 {
-    VLOG_DEBUG("GetLobbyDataByIndex called - Lobby: %llu, Index: %d, KeySize: %d, ValueSize: %d", 
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, Index: %d, KeySize: %d, ValueSize: %d", 
                steamIDLobby.GetAccountID(), iLobbyData, cchKeyBufferSize, cchValueBufferSize);
     return false;
 }
@@ -337,14 +295,14 @@ bool CSteamMatchmaking::GetLobbyDataByIndex( CSteamID steamIDLobby, int iLobbyDa
 // removes a metadata key from the lobby
 bool CSteamMatchmaking::DeleteLobbyData( CSteamID steamIDLobby, const char *pchKey )
 {
-    VLOG_DEBUG("DeleteLobbyData called - Lobby: %llu, Key: %s", steamIDLobby.GetAccountID(), pchKey ? pchKey : "null");
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, Key: %s", steamIDLobby.GetAccountID(), pchKey ? pchKey : "null");
     return false;
 }
 
 // Gets per-user metadata for someone in this lobby
 const char *CSteamMatchmaking::GetLobbyMemberData( CSteamID steamIDLobby, CSteamID steamIDUser, const char *pchKey )
 {
-    VLOG_DEBUG("GetLobbyMemberData called - Lobby: %llu, User: %llu, Key: %s", 
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, User: %llu, Key: %s", 
                steamIDLobby.GetAccountID(), steamIDUser.GetAccountID(), pchKey ? pchKey : "null");
     return "";
 }
@@ -352,7 +310,7 @@ const char *CSteamMatchmaking::GetLobbyMemberData( CSteamID steamIDLobby, CSteam
 // Sets per-user metadata (for the local user implicitly)
 void CSteamMatchmaking::SetLobbyMemberData( CSteamID steamIDLobby, const char *pchKey, const char *pchValue )
 {
-    VLOG_DEBUG("SetLobbyMemberData called - Lobby: %llu, Key: %s, Value: %s", 
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, Key: %s, Value: %s", 
                steamIDLobby.GetAccountID(), pchKey ? pchKey : "null", pchValue ? pchValue : "null");
 }
 
@@ -363,7 +321,7 @@ void CSteamMatchmaking::SetLobbyMemberData( CSteamID steamIDLobby, const char *p
 	// if pvMsgBody is text, cubMsgBody should be strlen( text ) + 1, to include the null terminator
 bool CSteamMatchmaking::SendLobbyChatMsg( CSteamID steamIDLobby, const void *pvMsgBody, int cubMsgBody )
 {
-    VLOG_DEBUG("SendLobbyChatMsg called - Lobby: %llu, MsgSize: %d", steamIDLobby.GetAccountID(), cubMsgBody);
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, MsgSize: %d", steamIDLobby.GetAccountID(), cubMsgBody);
     return false;
 }
 
@@ -374,7 +332,7 @@ bool CSteamMatchmaking::SendLobbyChatMsg( CSteamID steamIDLobby, const void *pvM
 // return value is the number of bytes written into the buffer
 int CSteamMatchmaking::GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, OUT_STRUCT() CSteamID *pSteamIDUser, void *pvData, int cubData, EChatEntryType *peChatEntryType )
 {
-    VLOG_DEBUG("GetLobbyChatEntry called - Lobby: %llu, ChatID: %d, DataSize: %d", steamIDLobby.GetAccountID(), iChatID, cubData);
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, ChatID: %d, DataSize: %d", steamIDLobby.GetAccountID(), iChatID, cubData);
     return 0;
 }
 
@@ -387,7 +345,7 @@ int CSteamMatchmaking::GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, OU
 // if the specified lobby doesn't exist, LobbyDataUpdate_t::m_bSuccess will be set to false
 bool CSteamMatchmaking::RequestLobbyData( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("RequestLobbyData called - Lobby: %llu", steamIDLobby.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu", steamIDLobby.GetAccountID());
     return false;
 }
 
@@ -396,14 +354,14 @@ bool CSteamMatchmaking::RequestLobbyData( CSteamID steamIDLobby )
 // either the IP/Port or the steamID of the game server has to be valid, depending on how you want the clients to be able to connect
 void CSteamMatchmaking::SetLobbyGameServer( CSteamID steamIDLobby, uint32 unGameServerIP, uint16 unGameServerPort, CSteamID steamIDGameServer )
 {
-    VLOG_DEBUG("SetLobbyGameServer called - Lobby: %llu, ServerIP: %u, ServerPort: %u, GameServer: %llu", 
+    VLOG_INFO(__FUNCTION__ " - Lobby = %llu, ServerIP = %u, ServerPort = %u, GameServer = %llu", 
                steamIDLobby.GetAccountID(), unGameServerIP, unGameServerPort, steamIDGameServer.GetAccountID());
 }
 
 // returns the details of a game server set in a lobby - returns false if there is no game server set, or that lobby doesn't exist
 bool CSteamMatchmaking::GetLobbyGameServer( CSteamID steamIDLobby, uint32 *punGameServerIP, uint16 *punGameServerPort, OUT_STRUCT() CSteamID *psteamIDGameServer )
 {
-    VLOG_DEBUG("GetLobbyGameServer called - Lobby: %llu, ServerIP: %u, ServerPort: %u, GameServer: %llu", 
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, ServerIP: %u, ServerPort: %u, GameServer: %llu", 
                steamIDLobby.GetAccountID(), punGameServerIP, punGameServerPort, psteamIDGameServer->GetAccountID());
     return false;
 }
@@ -411,14 +369,14 @@ bool CSteamMatchmaking::GetLobbyGameServer( CSteamID steamIDLobby, uint32 *punGa
 // set the limit on the # of users who can join the lobby
 bool CSteamMatchmaking::SetLobbyMemberLimit( CSteamID steamIDLobby, int cMaxMembers )
 {
-    VLOG_DEBUG("SetLobbyMemberLimit called - Lobby: %llu, MaxMembers: %d", steamIDLobby.GetAccountID(), cMaxMembers);
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, MaxMembers: %d", steamIDLobby.GetAccountID(), cMaxMembers);
     return false;
 }
 
 // returns the current limit on the # of users who can join the lobby; returns 0 if no limit is defined
 int CSteamMatchmaking::GetLobbyMemberLimit( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("GetLobbyMemberLimit called - Lobby: %llu", steamIDLobby.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu", steamIDLobby.GetAccountID());
     return 0;
 }
 
@@ -429,7 +387,7 @@ int CSteamMatchmaking::GetLobbyMemberLimit( CSteamID steamIDLobby )
 // Removed from Steam SDK v1.03, backward compatibility
 bool CSteamMatchmaking::RequestFriendsLobbies()
 {
-    VLOG_DEBUG("RequestFriendsLobbies called");
+    VLOG_INFO(__FUNCTION__);
     return false;
 }
 
@@ -437,7 +395,7 @@ bool CSteamMatchmaking::RequestFriendsLobbies()
 	// only lobbies that are k_ELobbyTypePublic or k_ELobbyTypeInvisible, and are set to joinable, will be returned by RequestLobbyList() calls
 bool CSteamMatchmaking::SetLobbyType( CSteamID steamIDLobby, ELobbyType eLobbyType )
 {
-    VLOG_DEBUG("SetLobbyType called - Lobby: %llu, Type: %d", steamIDLobby.GetAccountID(), eLobbyType);
+    VLOG_INFO(__FUNCTION__ " - Lobby = %llu, Type = %d", steamIDLobby.GetAccountID(), eLobbyType);
     return false;
 }
 
@@ -445,7 +403,7 @@ bool CSteamMatchmaking::SetLobbyType( CSteamID steamIDLobby, ELobbyType eLobbyTy
 // if set to false, no user can join, even if they are a friend or have been invited
 bool CSteamMatchmaking::SetLobbyJoinable( CSteamID steamIDLobby, bool bLobbyJoinable )
 {
-    VLOG_DEBUG("SetLobbyJoinable called - Lobby: %llu, Joinable: %s", steamIDLobby.GetAccountID(), bLobbyJoinable ? "true" : "false");
+    VLOG_INFO(__FUNCTION__ " - Lobby = %llu, Joinable = %s", steamIDLobby.GetAccountID(), bLobbyJoinable ? "true" : "false");
     return false;
 }
 
@@ -455,7 +413,7 @@ bool CSteamMatchmaking::SetLobbyJoinable( CSteamID steamIDLobby, bool bLobbyJoin
 // it is possible (bur rare) to join a lobby just as the owner is leaving, thus entering a lobby with self as the owner
 CSteamID CSteamMatchmaking::GetLobbyOwner( CSteamID steamIDLobby )
 {
-    VLOG_DEBUG("GetLobbyOwner called - Lobby: %llu", steamIDLobby.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu", steamIDLobby.GetAccountID());
     return CSteamID();
 }
 
@@ -464,7 +422,7 @@ CSteamID CSteamMatchmaking::GetLobbyOwner( CSteamID steamIDLobby )
 // after completion, the local user will no longer be the owner
 bool CSteamMatchmaking::SetLobbyOwner( CSteamID steamIDLobby, CSteamID steamIDNewOwner )
 {
-    VLOG_DEBUG("SetLobbyOwner called - Lobby: %llu, NewOwner: %llu", steamIDLobby.GetAccountID(), steamIDNewOwner.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Lobby = %llu, NewOwner = %llu", steamIDLobby.GetAccountID(), steamIDNewOwner.GetAccountID());
     return false;
 }
 
@@ -472,7 +430,7 @@ bool CSteamMatchmaking::SetLobbyOwner( CSteamID steamIDLobby, CSteamID steamIDNe
 // you must be the lobby owner of both lobbies
 bool CSteamMatchmaking::SetLinkedLobby( CSteamID steamIDLobby, CSteamID steamIDLobbyDependent )
 {
-    VLOG_DEBUG("SetLinkedLobby called - Lobby: %llu, DependentLobby: %llu", steamIDLobby.GetAccountID(), steamIDLobbyDependent.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Lobby: %llu, DependentLobby: %llu", steamIDLobby.GetAccountID(), steamIDLobbyDependent.GetAccountID());
     return false;
 }
 
@@ -502,39 +460,39 @@ bool CSteamMatchmaking::SetLinkedLobby( CSteamID steamIDLobby, CSteamID steamIDL
 // Removed from Steam SDK v1.06, backward compatibility
 void CSteamMatchmakingServerListResponse::ServerResponded( int iServer )
 {
-    VLOG_DEBUG("ServerResponded called - Server: %d", iServer);
+    VLOG_INFO(__FUNCTION__ " - Server: %d", iServer);
 } 
 
 // Server has failed to respond
 // Removed from Steam SDK v1.06, backward compatibility
 void CSteamMatchmakingServerListResponse::ServerFailedToRespond( int iServer )
 {
-    VLOG_DEBUG("ServerFailedToRespond called - Server: %d", iServer);
+    VLOG_INFO(__FUNCTION__ " - Server: %d", iServer);
 } 
 
 // A list refresh you had initiated is now 100% completed
 // Removed from Steam SDK v1.06, backward compatibility
 void CSteamMatchmakingServerListResponse::RefreshComplete( EMatchMakingServerResponse response )
 {
-    VLOG_DEBUG("RefreshComplete called - Response: %d", response);
+    VLOG_INFO(__FUNCTION__ " - Response: %d", response);
 } 
 
 // Server has responded ok with updated data
 void CSteamMatchmakingServerListResponse::ServerResponded( HServerListRequest hRequest, int iServer )
 {
-    VLOG_DEBUG("ServerResponded called - Request: %d, Server: %d", hRequest, iServer);
+    VLOG_INFO(__FUNCTION__ " - Request: %d, Server: %d", hRequest, iServer);
 } 
 
 // Server has failed to respond
 void CSteamMatchmakingServerListResponse::ServerFailedToRespond( HServerListRequest hRequest, int iServer )
 {
-    VLOG_DEBUG("ServerFailedToRespond called - Request: %d, Server: %d", hRequest, iServer);
+    VLOG_INFO(__FUNCTION__ " - Request: %d, Server: %d", hRequest, iServer);
 } 
 
 // A list refresh you had initiated is now 100% completed
 void CSteamMatchmakingServerListResponse::RefreshComplete( HServerListRequest hRequest, EMatchMakingServerResponse response )
 {
-    VLOG_DEBUG("RefreshComplete called - Request: %d, Response: %d", hRequest, response);
+    VLOG_INFO(__FUNCTION__ " - Request: %d, Response: %d", hRequest, response);
 } 
 
 //-----------------------------------------------------------------------------
@@ -550,13 +508,13 @@ void CSteamMatchmakingServerListResponse::RefreshComplete( HServerListRequest hR
 // Server has responded successfully and has updated data
 void CSteamMatchmakingPingResponse::ServerResponded( gameserveritem_t &server )
 {
-    VLOG_DEBUG("ServerResponded called - Server: %d", server.m_nPing);
+    VLOG_INFO(__FUNCTION__ " - Server: %d", server.m_nPing);
 }
 
 // Server failed to respond to the ping request
 void CSteamMatchmakingPingResponse::ServerFailedToRespond()
 {
-    VLOG_DEBUG("ServerFailedToRespond called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 //-----------------------------------------------------------------------------
@@ -574,20 +532,20 @@ void CSteamMatchmakingPingResponse::ServerFailedToRespond()
 // on the server which you have requested player data on.
 void CSteamMatchmakingPlayersResponse::AddPlayerToList( const char *pchName, int nScore, float flTimePlayed )
 {
-    VLOG_DEBUG("AddPlayerToList called - Name: %s, Score: %d, TimePlayed: %f", pchName, nScore, flTimePlayed);
+    VLOG_INFO(__FUNCTION__ " - Name: %s, Score: %d, TimePlayed: %f", pchName, nScore, flTimePlayed);
 }
 
 // The server failed to respond to the request for player details
 void CSteamMatchmakingPlayersResponse::PlayersFailedToRespond()
 {
-    VLOG_DEBUG("PlayersFailedToRespond called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // The server has finished responding to the player details request 
 // (ie, you won't get anymore AddPlayerToList callbacks)
 void CSteamMatchmakingPlayersResponse::PlayersRefreshComplete()
 {
-    VLOG_DEBUG("PlayersRefreshComplete called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 
@@ -606,20 +564,20 @@ void CSteamMatchmakingPlayersResponse::PlayersRefreshComplete()
 // the server you are querying
 void CSteamMatchmakingRulesResponse::RulesResponded( const char *pchRule, const char *pchValue )
 {
-    VLOG_DEBUG("RulesResponded called - Rule: %s, Value: %s", pchRule, pchValue);
+    VLOG_INFO(__FUNCTION__ " - Rule: %s, Value: %s", pchRule, pchValue);
 }
 
 // The server failed to respond to the request for rule details
 void CSteamMatchmakingRulesResponse::RulesFailedToRespond()
 {
-    VLOG_DEBUG("RulesFailedToRespond called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // The server has finished responding to the rule details request 
 // (ie, you won't get anymore RulesResponded callbacks)
 void CSteamMatchmakingRulesResponse::RulesRefreshComplete()
 {
-    VLOG_DEBUG("RulesRefreshComplete called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 //-----------------------------------------------------------------------------
@@ -628,67 +586,67 @@ void CSteamMatchmakingRulesResponse::RulesRefreshComplete()
 // Request a new list of servers of a particular type.  These calls each correspond to one of the EMatchMakingType values.
 void CSteamMatchmakingServers::RequestInternetServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse )
 {
-    VLOG_DEBUG("RequestInternetServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
 }
 
 void CSteamMatchmakingServers::RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse001 *pRequestServersResponse )
 {
-    VLOG_DEBUG("RequestLANServerList called - AppID: %u, Response: %p", iApp, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, Response: %p", iApp, pRequestServersResponse);
 }
 
 void CSteamMatchmakingServers::RequestFriendsServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse )
 {
-    VLOG_DEBUG("RequestFriendsServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
 }
 
 void CSteamMatchmakingServers::RequestFavoritesServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse )
 {
-    VLOG_DEBUG("RequestFavoritesServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
 }
 
 void CSteamMatchmakingServers::RequestHistoryServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse )
 {
-    VLOG_DEBUG("RequestHistoryServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
 }
 
 void CSteamMatchmakingServers::RequestSpectatorServerList( AppId_t iApp, MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse001 *pRequestServersResponse )
 {
-    VLOG_DEBUG("RequestSpectatorServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
 }
 
 HServerListRequest CSteamMatchmakingServers::RequestInternetServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
 {
-    VLOG_DEBUG("RequestInternetServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
     return 0;
 }
 
 HServerListRequest CSteamMatchmakingServers::RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse *pRequestServersResponse )
 {
-    VLOG_DEBUG("RequestLANServerList called - AppID: %u, Response: %p", iApp, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, Response: %p", iApp, pRequestServersResponse);
     return 0;
 }
 
 HServerListRequest CSteamMatchmakingServers::RequestFriendsServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
 {
-    VLOG_DEBUG("RequestFriendsServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
     return 0;
 }
 
 HServerListRequest CSteamMatchmakingServers::RequestFavoritesServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
 {
-    VLOG_DEBUG("RequestFavoritesServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
     return 0;
 }
 
 HServerListRequest CSteamMatchmakingServers::RequestHistoryServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
 {
-    VLOG_DEBUG("RequestHistoryServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
     return 0;
 }
 
 HServerListRequest CSteamMatchmakingServers::RequestSpectatorServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse )
 {
-    VLOG_DEBUG("RequestSpectatorServerList called - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - AppID: %u, Filters: %d, Response: %p", iApp, nFilters, pRequestServersResponse);
     return 0;
 }
 
@@ -696,7 +654,7 @@ HServerListRequest CSteamMatchmakingServers::RequestSpectatorServerList( AppId_t
 // RefreshComplete callback is not posted when request is released.
 void CSteamMatchmakingServers::ReleaseRequest( HServerListRequest hServerListRequest )
 {
-    VLOG_DEBUG("ReleaseRequest called - Request: %d", hServerListRequest);
+    VLOG_INFO(__FUNCTION__ " - Request: %d", hServerListRequest);
 }
 
 /* the filters that are available in the ppchFilters params are:
@@ -716,14 +674,14 @@ void CSteamMatchmakingServers::ReleaseRequest( HServerListRequest hServerListReq
 // ISteamMatchmakingServerListResponse::ServerResponded() callbacks
 gameserveritem_t *CSteamMatchmakingServers::GetServerDetails( HServerListRequest hRequest, int iServer )
 {
-    VLOG_DEBUG("GetServerDetails called - Request: %d, Server: %d", hRequest, iServer);
+    VLOG_INFO(__FUNCTION__ " - Request: %d, Server: %d", hRequest, iServer);
     return nullptr;
 } 
 
 // Changed from Steam SDK v1.06, backward compatibility
 gameserveritem_t *CSteamMatchmakingServers::GetServerDetails( EMatchMakingType eType, int iServer )
 {
-    VLOG_DEBUG("GetServerDetails called - Type: %d, Server: %d", eType, iServer);
+    VLOG_INFO(__FUNCTION__ " - Type: %d, Server: %d", eType, iServer);
     return nullptr;
 } 
 
@@ -733,13 +691,13 @@ gameserveritem_t *CSteamMatchmakingServers::GetServerDetails( EMatchMakingType e
 // occurs on the destructed object.
 void CSteamMatchmakingServers::CancelQuery( HServerListRequest hRequest )
 {
-    VLOG_DEBUG("CancelQuery called - Request: %d", hRequest);
+    VLOG_INFO(__FUNCTION__ " - Request: %d", hRequest);
 } 
 
 // Changed from Steam SDK v1.06, backward compatibility
 void CSteamMatchmakingServers::CancelQuery( EMatchMakingType eType )
 {
-    VLOG_DEBUG("CancelQuery called - Type: %d", eType);
+    VLOG_INFO(__FUNCTION__ " - Type: %d", eType);
 } 
 
 // Ping every server in your list again but don't update the list of servers
@@ -749,53 +707,53 @@ void CSteamMatchmakingServers::CancelQuery( EMatchMakingType eType )
 // is released with ReleaseRequest( hRequest )
 void CSteamMatchmakingServers::RefreshQuery( HServerListRequest hRequest )
 {
-    VLOG_DEBUG("RefreshQuery called - Request: %d", hRequest);
+    VLOG_INFO(__FUNCTION__ " - Request: %d", hRequest);
 } 
 
 // Changed from Steam SDK v1.06, backward compatibility
 void CSteamMatchmakingServers::RefreshQuery( EMatchMakingType eType )
 {
-    VLOG_DEBUG("RefreshQuery called - Type: %d", eType);
+    VLOG_INFO(__FUNCTION__ " - Type: %d", eType);
 } 
 
 // Returns true if the list is currently refreshing its server list
 bool CSteamMatchmakingServers::IsRefreshing( HServerListRequest hRequest )
 {
-    VLOG_DEBUG("IsRefreshing called - Request: %d", hRequest);
+    VLOG_INFO(__FUNCTION__ " - Request: %d", hRequest);
     return false;
 } 
 
 // Changed from Steam SDK v1.06, backward compatibility
 bool CSteamMatchmakingServers::IsRefreshing( EMatchMakingType eType )
 {
-    VLOG_DEBUG("IsRefreshing called - Type: %d", eType);
+    VLOG_INFO(__FUNCTION__ " - Type: %d", eType);
     return false;
 } 
 
 // How many servers in the given list, GetServerDetails above takes 0... GetServerCount() - 1
 int CSteamMatchmakingServers::GetServerCount( HServerListRequest hRequest )
 {
-    VLOG_DEBUG("GetServerCount called - Request: %d", hRequest);
+    VLOG_INFO(__FUNCTION__ " - Request: %d", hRequest);
     return 0;
 } 
 
 // Changed from Steam SDK v1.06, backward compatibility
 int CSteamMatchmakingServers::GetServerCount( EMatchMakingType eType )
 {
-    VLOG_DEBUG("GetServerCount called - Type: %d", eType);
+    VLOG_INFO(__FUNCTION__ " - Type: %d", eType);
     return 0;
 }
 
 // Refresh a single server inside of a query (rather than all the servers )
 void CSteamMatchmakingServers::RefreshServer( HServerListRequest hRequest, int iServer )
 {
-    VLOG_DEBUG("RefreshServer called - Request: %d, Server: %d", hRequest, iServer);
+    VLOG_INFO(__FUNCTION__ " - Request: %d, Server: %d", hRequest, iServer);
 } 
 
 // Changed from Steam SDK v1.06, backward compatibility
 void CSteamMatchmakingServers::RefreshServer( EMatchMakingType eType, int iServer )
 {
-    VLOG_DEBUG("RefreshServer called - Type: %d, Server: %d", eType, iServer);
+    VLOG_INFO(__FUNCTION__ " - Type: %d, Server: %d", eType, iServer);
 } 
 
 
@@ -806,21 +764,21 @@ void CSteamMatchmakingServers::RefreshServer( EMatchMakingType eType, int iServe
 // Request updated ping time and other details from a single server
 HServerQuery CSteamMatchmakingServers::PingServer( uint32 unIP, uint16 usPort, ISteamMatchmakingPingResponse *pRequestServersResponse )
 {
-    VLOG_DEBUG("PingServer called - IP: %u, Port: %u, Response: %p", unIP, usPort, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - IP: %u, Port: %u, Response: %p", unIP, usPort, pRequestServersResponse);
     return 0;
 } 
 
 // Request the list of players currently playing on a server
 HServerQuery CSteamMatchmakingServers::PlayerDetails( uint32 unIP, uint16 usPort, ISteamMatchmakingPlayersResponse *pRequestServersResponse )
 {
-    VLOG_DEBUG("PlayerDetails called - IP: %u, Port: %u, Response: %p", unIP, usPort, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - IP: %u, Port: %u, Response: %p", unIP, usPort, pRequestServersResponse);
     return 0;
 }
 
 // Request the list of rules that the server is running (See ISteamGameServer::SetKeyValue() to set the rules server side)
 HServerQuery CSteamMatchmakingServers::ServerRules( uint32 unIP, uint16 usPort, ISteamMatchmakingRulesResponse *pRequestServersResponse )
 {
-    VLOG_DEBUG("ServerRules called - IP: %u, Port: %u, Response: %p", unIP, usPort, pRequestServersResponse);
+    VLOG_INFO(__FUNCTION__ " - IP: %u, Port: %u, Response: %p", unIP, usPort, pRequestServersResponse);
     return 0;
 }
 
@@ -829,5 +787,5 @@ HServerQuery CSteamMatchmakingServers::ServerRules( uint32 unIP, uint16 usPort, 
 // to one of the above calls to avoid crashing when callbacks occur.
 void CSteamMatchmakingServers::CancelServerQuery( HServerQuery hServerQuery )
 {
-    VLOG_DEBUG("CancelServerQuery called - Query: %d", hServerQuery);
+    VLOG_INFO(__FUNCTION__ " - Query: %d", hServerQuery);
 }

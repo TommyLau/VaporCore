@@ -22,9 +22,14 @@
 class CSteamMasterServerUpdater : public ISteamMasterServerUpdater
 {
 public:
-    CSteamMasterServerUpdater();
-    ~CSteamMasterServerUpdater();
+	// Singleton accessor
+    static CSteamMasterServerUpdater& GetInstance()
+    {
+		static CSteamMasterServerUpdater instance;
+		return instance;
+    }
 
+public:
 	// Call this as often as you like to tell the master server updater whether or not
 	// you want it to be active (default: off).
 	void SetActive( bool bActive ) override;
@@ -87,14 +92,14 @@ public:
 	// Returns the # of bytes written to pOut.
 	int GetMasterServerAddress( int iServer, char *pOut, int outBufferSize ) override;
 
-    // Helper methods
-    static CSteamMasterServerUpdater* GetInstance();
-    static void ReleaseInstance();
-
 private:
-    // Singleton instance
-    static CSteamMasterServerUpdater* s_pInstance;
+    // Private constructor and destructor for singleton
+    CSteamMasterServerUpdater();
+    ~CSteamMasterServerUpdater();
+
+    // Delete copy constructor and assignment operator
+    CSteamMasterServerUpdater(const CSteamMasterServerUpdater&) = delete;
+    CSteamMasterServerUpdater& operator=(const CSteamMasterServerUpdater&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_MASTER_SERVER_UPDATER_H
-

@@ -19,18 +19,15 @@
 class CSteamUnifiedMessages :
     public ISteamUnifiedMessages
 {
-private:
-    // Singleton instance
-    static CSteamUnifiedMessages* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamUnifiedMessages& GetInstance()
+    {
+		static CSteamUnifiedMessages instance;
+		return instance;
+    }
 
 public:
-    CSteamUnifiedMessages();
-    ~CSteamUnifiedMessages();
-
-    // Helper methods
-    static CSteamUnifiedMessages* GetInstance();
-    static void ReleaseInstance();
-
 	static const ClientUnifiedMessageHandle k_InvalidUnifiedMessageHandle = 0;
 
 	// Sends a service method (in binary serialized form) using the Steam Client.
@@ -50,6 +47,14 @@ public:
 	// Returns true if the notification was sent successfully.
 	bool SendNotification( const char *pchServiceNotification, const void *pNotificationBuffer, uint32 unNotificationBufferSize ) override;
 
+private:
+    // Private constructor and destructor for singleton
+    CSteamUnifiedMessages();
+    ~CSteamUnifiedMessages();
+
+    // Delete copy constructor and assignment operator
+    CSteamUnifiedMessages(const CSteamUnifiedMessages&) = delete;
+    CSteamUnifiedMessages& operator=(const CSteamUnifiedMessages&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_UNIFIED_MESSAGES_H

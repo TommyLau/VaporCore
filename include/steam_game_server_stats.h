@@ -23,9 +23,14 @@ class CSteamGameServerStats :
     public ISteamGameServerStats
 {
 public:
-    CSteamGameServerStats();
-    ~CSteamGameServerStats();
+    // Singleton accessor
+    static CSteamGameServerStats& GetInstance()
+    {
+		static CSteamGameServerStats instance;
+		return instance;
+    }
 
+public:
 	// downloads stats for the user
 	// returns a GSStatsReceived_t callback when completed
 	// if the user has no stats, GSStatsReceived_t.m_eResult will be set to k_EResultFail
@@ -59,13 +64,14 @@ public:
 	CALL_RESULT( GSStatsStored_t )
 	SteamAPICall_t StoreUserStats( CSteamID steamIDUser ) override;
 
-    // Helper methods
-    static CSteamGameServerStats* GetInstance();
-    static void ReleaseInstance();
-
 private:
-    // Singleton instance
-    static CSteamGameServerStats* s_pInstance;
+    // Private constructor and destructor for singleton
+    CSteamGameServerStats();
+    ~CSteamGameServerStats();
+
+    // Delete copy constructor and assignment operator
+    CSteamGameServerStats(const CSteamGameServerStats&) = delete;
+    CSteamGameServerStats& operator=(const CSteamGameServerStats&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_GAME_SERVER_STATS_H

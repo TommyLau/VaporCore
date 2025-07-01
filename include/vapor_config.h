@@ -36,36 +36,15 @@ static const char* const CONFIG_KEY_STEAM_LANGUAGE = "language";
 
 class Config
 {
-private:
-    // Singleton instance
-    static Config* s_pInstance;
-    
-    // Configuration file name
-    std::string m_sConfigFileName;
-    bool m_bLoaded;
-    
-    // Configuration data storage (section -> key -> value)
-    std::map<std::string, std::map<std::string, std::string>> m_configData;
-    
-    // Steam settings (loaded once at startup)
-    CGameID m_gameId;
-    CSteamID m_steamId;
-    std::string m_sUsername;
-    std::string m_sLanguage;
-
-    // Private helper methods
-    std::string Trim(const std::string& str) const;
-    std::string ToLower(const std::string& str) const;
-    bool ParseLine(const std::string& line, std::string& currentSection);
-    
 public:
-    Config();
-    ~Config();
+	// Singleton accessor
+    static Config& GetInstance()
+	{
+		static Config instance;
+		return instance;
+	}
 
-    // Singleton access
-    static Config* GetInstance();
-    static void ReleaseInstance();
-
+public:
     // Configuration loading
     bool LoadConfig(const std::string& filename = DEFAULT_CONFIG_FILENAME);
     bool IsLoaded() const { return m_bLoaded; }
@@ -96,6 +75,34 @@ public:
     CSteamID GetSteamId() const { return m_steamId; }
     const std::string& GetUsername() const { return m_sUsername; }
     const std::string& GetLanguage() const { return m_sLanguage; }
+
+private:
+    // Private constructor and destructor for singleton
+    Config();
+    ~Config();
+
+    // Delete copy constructor and assignment operator
+    Config(const Config&) = delete;
+    Config& operator=(const Config&) = delete;
+
+    // Private helper methods
+    std::string Trim(const std::string& str) const;
+    std::string ToLower(const std::string& str) const;
+    bool ParseLine(const std::string& line, std::string& currentSection);
+
+private:
+    // Configuration file name
+    std::string m_sConfigFileName;
+    bool m_bLoaded;
+    
+    // Configuration data storage (section -> key -> value)
+    std::map<std::string, std::map<std::string, std::string>> m_configData;
+    
+    // Steam settings (loaded once at startup)
+    CGameID m_gameId;
+    CSteamID m_steamId;
+    std::string m_sUsername;
+    std::string m_sLanguage;
 };
 
 } // namespace VaporCore

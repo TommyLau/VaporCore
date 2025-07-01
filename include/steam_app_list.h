@@ -25,18 +25,15 @@
 class CSteamAppList :
     public ISteamAppList
 {
-private:
-    // Singleton instance
-    static CSteamAppList* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamAppList& GetInstance()
+    {
+		static CSteamAppList instance;
+		return instance;
+    }
 
 public:
-    CSteamAppList();
-    ~CSteamAppList();
-
-    // Helper methods
-    static CSteamAppList* GetInstance();
-    static void ReleaseInstance();
-
     uint32 GetNumInstalledApps() override;
     uint32 GetInstalledApps(AppId_t* pvecAppID, uint32 unMaxAppIDs) override;
 
@@ -44,6 +41,15 @@ public:
     int GetAppInstallDir(AppId_t nAppID, char* pchDirectory, int cchNameMax) override; // returns -1 if no dir was found
 
     int GetAppBuildId(AppId_t nAppID) override; // return the buildid of this app, may change at any time based on backend updates to the game
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamAppList();
+    ~CSteamAppList();
+
+    // Delete copy constructor and assignment operator
+    CSteamAppList(const CSteamAppList&) = delete;
+    CSteamAppList& operator=(const CSteamAppList&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_APP_LIST_H

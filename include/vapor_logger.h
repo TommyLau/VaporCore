@@ -31,7 +31,12 @@ enum class LogLevel {
 
 class Logger {
 public:
-    static Logger& GetInstance();
+	// Singleton accessor
+    static Logger& GetInstance()
+    {
+		static Logger instance;
+		return instance;
+    }
     
     void Initialize(const std::string& filename = "vaporcore.log");
     void SetLogLevel(LogLevel level);
@@ -66,10 +71,11 @@ public:
     void Warning(const std::string& message) { Log(LogLevel::WARNING, message); }
     void Error(const std::string& message) { Log(LogLevel::ERROR, message); }
     
-    ~Logger();
 
 private:
-    Logger() = default;
+    Logger();
+    ~Logger();
+
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;
     
@@ -88,6 +94,7 @@ private:
         return formattedResult;
     }
     
+private:
     std::ofstream m_logFile;
     LogLevel m_currentLevel = LogLevel::INFO;
     bool m_enabled = true;

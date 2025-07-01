@@ -24,17 +24,13 @@ class CSteamHTMLSurface :
 	public ISteamHTMLSurface,
     public ISteamHTMLSurface002
 {
-private:
-    // Singleton instance
-    static CSteamHTMLSurface* s_pInstance;
-
 public:
-    CSteamHTMLSurface();
-    ~CSteamHTMLSurface();
-
-    // Helper methods
-    static CSteamHTMLSurface* GetInstance();
-    static void ReleaseInstance();
+	// Singleton accessor
+    static CSteamHTMLSurface& GetInstance()
+    {
+		static CSteamHTMLSurface instance;
+		return instance;
+    }
 
 public:
 	// Must call init and shutdown when starting/ending use of the interface
@@ -147,6 +143,15 @@ public:
 	// You MUST call this in response to a HTML_FileOpenDialog_t callback
 	IGNOREATTR()
 	void FileLoadDialogResponse( HHTMLBrowser unBrowserHandle, const char **pchSelectedFiles ) override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamHTMLSurface();
+    ~CSteamHTMLSurface();
+
+    // Delete copy constructor and assignment operator
+    CSteamHTMLSurface(const CSteamHTMLSurface&) = delete;
+    CSteamHTMLSurface& operator=(const CSteamHTMLSurface&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_HTML_SURFACE_H

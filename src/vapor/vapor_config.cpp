@@ -26,9 +26,6 @@ static const uint64 DEFAULT_STEAM_ID = 76561198000000000ULL;
 static const char* const DEFAULT_STEAM_USERNAME = "VaporCore User";
 static const char* const DEFAULT_STEAM_LANGUAGE = "english";
 
-// Static instance
-Config* Config::s_pInstance = nullptr;
-
 Config::Config()
     : m_sConfigFileName(DEFAULT_CONFIG_FILENAME),
       m_bLoaded(false),
@@ -37,30 +34,12 @@ Config::Config()
       m_sUsername(DEFAULT_STEAM_USERNAME),
       m_sLanguage(DEFAULT_STEAM_LANGUAGE)
 {
-    VLOG_DEBUG("VaporCore::Config constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 Config::~Config()
 {
-    VLOG_DEBUG("VaporCore::Config destructor called");
-}
-
-Config* Config::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new Config();
-    }
-    return s_pInstance;
-}
-
-void Config::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 std::string Config::Trim(const std::string& str) const
@@ -103,7 +82,7 @@ bool Config::ParseLine(const std::string& line, std::string& currentSection)
         currentSection = Trim(currentSection);
         // Make section name case-insensitive by converting to lowercase
         currentSection = ToLower(currentSection);
-        VLOG_DEBUG("Found section: %s", currentSection.c_str());
+        VLOG_INFO(__FUNCTION__ " - Found section: %s", currentSection.c_str());
         return true;
     }
     
@@ -126,12 +105,12 @@ bool Config::ParseLine(const std::string& line, std::string& currentSection)
         }
         
         m_configData[currentSection][key] = value;
-        VLOG_DEBUG("Config: [%s] %s = %s", currentSection.c_str(), key.c_str(), value.c_str());
+        VLOG_INFO(__FUNCTION__ " - Config: [%s] %s = %s", currentSection.c_str(), key.c_str(), value.c_str());
         return true;
     }
     
     // Invalid line format
-    VLOG_WARNING("Invalid config line: %s", trimmedLine.c_str());
+    VLOG_WARNING(__FUNCTION__ " - Invalid config line: %s", trimmedLine.c_str());
     return false;
 }
 
@@ -141,12 +120,12 @@ bool Config::LoadConfig(const std::string& filename)
     m_configData.clear();
     m_bLoaded = false;
     
-    VLOG_INFO("Loading configuration from: %s", filename.c_str());
+    VLOG_INFO(__FUNCTION__ " - Loading configuration from: %s", filename.c_str());
     
     std::ifstream file(filename);
     if (!file.is_open())
     {
-        VLOG_WARNING("Could not open config file: %s (using defaults)", filename.c_str());
+        VLOG_WARNING(__FUNCTION__ " - Could not open config file: %s (using defaults)", filename.c_str());
         return false;
     }
     
@@ -159,7 +138,7 @@ bool Config::LoadConfig(const std::string& filename)
         lineNumber++;
         if (!ParseLine(line, currentSection))
         {
-            VLOG_WARNING("Error parsing line %d in %s", lineNumber, filename.c_str());
+            VLOG_WARNING(__FUNCTION__ " - Error parsing line %d in %s", lineNumber, filename.c_str());
         }
     }
     
@@ -172,10 +151,10 @@ bool Config::LoadConfig(const std::string& filename)
     m_sUsername = GetString(CONFIG_SECTION_STEAM, CONFIG_KEY_STEAM_USERNAME, DEFAULT_STEAM_USERNAME);
     m_sLanguage = GetString(CONFIG_SECTION_STEAM, CONFIG_KEY_STEAM_LANGUAGE, DEFAULT_STEAM_LANGUAGE);
 
-    VLOG_DEBUG("Loaded Steam settings: AppId=%u, SteamId=%llu, Username=%s, Language=%s", 
+    VLOG_INFO(__FUNCTION__ " - Loaded Steam settings: AppId=%u, SteamId=%llu, Username=%s, Language=%s", 
                m_gameId.AppID(), m_steamId.ConvertToUint64(), m_sUsername.c_str(), m_sLanguage.c_str());
     
-    VLOG_INFO("Configuration loaded successfully from: %s", filename.c_str());
+    VLOG_INFO(__FUNCTION__ " - Configuration loaded successfully from: %s", filename.c_str());
     return true;
 }
 
@@ -216,7 +195,7 @@ int Config::GetInt(const std::string& section, const std::string& key, int defau
     }
     catch (const std::exception&)
     {
-        VLOG_WARNING("Invalid integer value for [%s] %s: %s", section.c_str(), key.c_str(), value.c_str());
+        VLOG_WARNING(__FUNCTION__ " - Invalid integer value for [%s] %s: %s", section.c_str(), key.c_str(), value.c_str());
         return defaultValue;
     }
 }
@@ -233,7 +212,7 @@ uint32 Config::GetUInt32(const std::string& section, const std::string& key, uin
     }
     catch (const std::exception&)
     {
-        VLOG_WARNING("Invalid uint32 value for [%s] %s: %s", section.c_str(), key.c_str(), value.c_str());
+        VLOG_WARNING(__FUNCTION__ " - Invalid uint32 value for [%s] %s: %s", section.c_str(), key.c_str(), value.c_str());
         return defaultValue;
     }
 }
@@ -249,7 +228,7 @@ uint64 Config::GetUInt64(const std::string& section, const std::string& key, uin
     }
     catch (const std::exception&)
     {
-        VLOG_WARNING("Invalid uint64 value for [%s] %s: %s", section.c_str(), key.c_str(), value.c_str());
+        VLOG_WARNING(__FUNCTION__ " - Invalid uint64 value for [%s] %s: %s", section.c_str(), key.c_str(), value.c_str());
         return defaultValue;
     }
 }
@@ -265,7 +244,7 @@ float Config::GetFloat(const std::string& section, const std::string& key, float
     }
     catch (const std::exception&)
     {
-        VLOG_WARNING("Invalid float value for [%s] %s: %s", section.c_str(), key.c_str(), value.c_str());
+        VLOG_WARNING(__FUNCTION__ " - Invalid float value for [%s] %s: %s", section.c_str(), key.c_str(), value.c_str());
         return defaultValue;
     }
 }
@@ -305,7 +284,7 @@ std::vector<int> Config::GetIntList(const std::string& section, const std::strin
         }
         catch (const std::exception&)
         {
-            VLOG_WARNING("Invalid integer in list for [%s] %s: %s", section.c_str(), key.c_str(), str.c_str());
+            VLOG_WARNING(__FUNCTION__ " - Invalid integer in list for [%s] %s: %s", section.c_str(), key.c_str(), str.c_str());
         }
     }
     

@@ -12,36 +12,14 @@
 #include "vapor_base.h"
 #include "steam_http.h"
 
-// Static instance
-CSteamHTTP* CSteamHTTP::s_pInstance = nullptr;
-
 CSteamHTTP::CSteamHTTP()
 {
-    VLOG_INFO("CSteamHTTP constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamHTTP::~CSteamHTTP()
 {
-    VLOG_INFO("CSteamHTTP destructor called");
-}
-
-// Helper methods
-CSteamHTTP* CSteamHTTP::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamHTTP();
-    }
-    return s_pInstance;
-}
-
-void CSteamHTTP::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Initializes a new HTTP request, returning a handle to use in further operations on it.  Requires
@@ -50,7 +28,7 @@ void CSteamHTTP::ReleaseInstance()
 // or such.
 HTTPRequestHandle CSteamHTTP::CreateHTTPRequest( EHTTPMethod eHTTPRequestMethod, const char *pchAbsoluteURL )
 {
-    VLOG_INFO("CreateHTTPRequest called - Method: %d, URL: %s", eHTTPRequestMethod, pchAbsoluteURL);
+    VLOG_INFO(__FUNCTION__ " - Method: %d, URL: %s", eHTTPRequestMethod, pchAbsoluteURL);
     return 0;
 }
 
@@ -58,7 +36,7 @@ HTTPRequestHandle CSteamHTTP::CreateHTTPRequest( EHTTPMethod eHTTPRequestMethod,
 // sending the request.  This is just so the caller can easily keep track of which callbacks go with which request data.
 bool CSteamHTTP::SetHTTPRequestContextValue( HTTPRequestHandle hRequest, uint64 ulContextValue )
 {
-    VLOG_INFO("SetHTTPRequestContextValue called - Request: %u, Context: %u", hRequest, ulContextValue);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Context: %u", hRequest, ulContextValue);
     return true;
 }
 
@@ -67,7 +45,7 @@ bool CSteamHTTP::SetHTTPRequestContextValue( HTTPRequestHandle hRequest, uint64 
 // has already been sent.
 bool CSteamHTTP::SetHTTPRequestNetworkActivityTimeout( HTTPRequestHandle hRequest, uint32 unTimeoutSeconds )
 {
-    VLOG_INFO("SetHTTPRequestNetworkActivityTimeout called - Request: %u, Timeout: %u", hRequest, unTimeoutSeconds);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Timeout: %u", hRequest, unTimeoutSeconds);
     return true;
 }
 
@@ -75,7 +53,7 @@ bool CSteamHTTP::SetHTTPRequestNetworkActivityTimeout( HTTPRequestHandle hReques
 // return false if the handle is invalid or the request is already sent.
 bool CSteamHTTP::SetHTTPRequestHeaderValue( HTTPRequestHandle hRequest, const char *pchHeaderName, const char *pchHeaderValue )
 {
-    VLOG_INFO("SetHTTPRequestHeaderValue called - Request: %u, Header: %s, Value: %s", hRequest, pchHeaderName, pchHeaderValue);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Header: %s, Value: %s", hRequest, pchHeaderName, pchHeaderValue);
     return true;
 }
 
@@ -84,7 +62,7 @@ bool CSteamHTTP::SetHTTPRequestHeaderValue( HTTPRequestHandle hRequest, const ch
 // handle is invalid or the request is already sent.
 bool CSteamHTTP::SetHTTPRequestGetOrPostParameter( HTTPRequestHandle hRequest, const char *pchParamName, const char *pchParamValue )
 {
-    VLOG_INFO("SetHTTPRequestGetOrPostParameter called - Request: %u, Param: %s, Value: %s", hRequest, pchParamName, pchParamValue);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Param: %s, Value: %s", hRequest, pchParamName, pchParamValue);
     return true;
 }
 
@@ -95,7 +73,7 @@ bool CSteamHTTP::SetHTTPRequestGetOrPostParameter( HTTPRequestHandle hRequest, c
 // header and only do a local cache lookup rather than sending any actual remote request.
 bool CSteamHTTP::SendHTTPRequest( HTTPRequestHandle hRequest, SteamAPICall_t *pCallHandle )
 {
-    VLOG_INFO("SendHTTPRequest called - Request: %u, Call Handle: %u", hRequest, pCallHandle);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Call Handle: %u", hRequest, pCallHandle);
     return true;
 }
 
@@ -104,7 +82,7 @@ bool CSteamHTTP::SendHTTPRequest( HTTPRequestHandle hRequest, SteamAPICall_t *pC
 // HTTPRequestDataReceived_t callbacks while streaming.
 bool CSteamHTTP::SendHTTPRequestAndStreamResponse( HTTPRequestHandle hRequest, SteamAPICall_t *pCallHandle )
 {
-    VLOG_INFO("SendHTTPRequestAndStreamResponse called - Request: %u, Call Handle: %u", hRequest, pCallHandle);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Call Handle: %u", hRequest, pCallHandle);
     return true;
 }
 
@@ -112,7 +90,7 @@ bool CSteamHTTP::SendHTTPRequestAndStreamResponse( HTTPRequestHandle hRequest, S
 // the specified request to the tail of the queue.  Returns false on invalid handle, or if the request is not yet sent.
 bool CSteamHTTP::DeferHTTPRequest( HTTPRequestHandle hRequest )
 {
-    VLOG_INFO("DeferHTTPRequest called - Request: %u", hRequest);
+    VLOG_INFO(__FUNCTION__ " - Request: %u", hRequest);
     return true;
 }
 
@@ -120,7 +98,7 @@ bool CSteamHTTP::DeferHTTPRequest( HTTPRequestHandle hRequest )
 // the specified request to the head of the queue.  Returns false on invalid handle, or if the request is not yet sent.
 bool CSteamHTTP::PrioritizeHTTPRequest( HTTPRequestHandle hRequest )
 {
-    VLOG_INFO("PrioritizeHTTPRequest called - Request: %u", hRequest);
+    VLOG_INFO(__FUNCTION__ " - Request: %u", hRequest);
     return true;
 }
 
@@ -129,7 +107,7 @@ bool CSteamHTTP::PrioritizeHTTPRequest( HTTPRequestHandle hRequest )
 // GetHTTPResponseHeaderValue.
 bool CSteamHTTP::GetHTTPResponseHeaderSize( HTTPRequestHandle hRequest, const char *pchHeaderName, uint32 *unResponseHeaderSize )
 {
-    VLOG_INFO("GetHTTPResponseHeaderSize called - Request: %u, Header: %s", hRequest, pchHeaderName);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Header: %s", hRequest, pchHeaderName);
     return true;
 }
 
@@ -138,7 +116,7 @@ bool CSteamHTTP::GetHTTPResponseHeaderSize( HTTPRequestHandle hRequest, const ch
 // BGetHTTPResponseHeaderSize to check for the presence of the header and to find out the size buffer needed.
 bool CSteamHTTP::GetHTTPResponseHeaderValue( HTTPRequestHandle hRequest, const char *pchHeaderName, uint8 *pHeaderValueBuffer, uint32 unBufferSize )
 {
-    VLOG_INFO("GetHTTPResponseHeaderValue called - Request: %u, Header: %s, Buffer: %p, Size: %u", hRequest, pchHeaderName, pHeaderValueBuffer, unBufferSize);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Header: %s, Buffer: %p, Size: %u", hRequest, pchHeaderName, pHeaderValueBuffer, unBufferSize);
     return true;
 }
 
@@ -146,7 +124,7 @@ bool CSteamHTTP::GetHTTPResponseHeaderValue( HTTPRequestHandle hRequest, const c
 // handle is invalid.
 bool CSteamHTTP::GetHTTPResponseBodySize( HTTPRequestHandle hRequest, uint32 *unBodySize )
 {
-    VLOG_INFO("GetHTTPResponseBodySize called - Request: %u, Body Size: %p", hRequest, unBodySize);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Body Size: %p", hRequest, unBodySize);
     return true;
 }
 
@@ -155,7 +133,7 @@ bool CSteamHTTP::GetHTTPResponseBodySize( HTTPRequestHandle hRequest, uint32 *un
 // the correct buffer size to use.
 bool CSteamHTTP::GetHTTPResponseBodyData( HTTPRequestHandle hRequest, uint8 *pBodyDataBuffer, uint32 unBufferSize )
 {
-    VLOG_INFO("GetHTTPResponseBodyData called - Request: %u, Buffer: %p, Size: %u", hRequest, pBodyDataBuffer, unBufferSize);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Buffer: %p, Size: %u", hRequest, pBodyDataBuffer, unBufferSize);
     return true;
 }
 
@@ -164,7 +142,7 @@ bool CSteamHTTP::GetHTTPResponseBodyData( HTTPRequestHandle hRequest, uint8 *pBo
 // do not match the size and offset sent in HTTPRequestDataReceived_t.
 bool CSteamHTTP::GetHTTPStreamingResponseBodyData( HTTPRequestHandle hRequest, uint32 cOffset, uint8 *pBodyDataBuffer, uint32 unBufferSize )
 {
-    VLOG_INFO("GetHTTPStreamingResponseBodyData called - Request: %u, Offset: %u, Buffer: %p, Size: %u", 
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Offset: %u, Buffer: %p, Size: %u", 
               hRequest, cOffset, pBodyDataBuffer, unBufferSize);
     return true;
 }
@@ -173,7 +151,7 @@ bool CSteamHTTP::GetHTTPStreamingResponseBodyData( HTTPRequestHandle hRequest, u
 // callback and finishing using the response.
 bool CSteamHTTP::ReleaseHTTPRequest( HTTPRequestHandle hRequest )
 {
-    VLOG_INFO("ReleaseHTTPRequest called - Request: %u", hRequest);
+    VLOG_INFO(__FUNCTION__ " - Request: %u", hRequest);
     return true;
 }
 
@@ -182,7 +160,7 @@ bool CSteamHTTP::ReleaseHTTPRequest( HTTPRequestHandle hRequest )
 // zero for the duration of the request as the size is unknown until the connection closes.
 bool CSteamHTTP::GetHTTPDownloadProgressPct( HTTPRequestHandle hRequest, float *pflPercentOut )
 {
-    VLOG_INFO("GetHTTPDownloadProgressPct called - Request: %u, Percent: %f", hRequest, pflPercentOut);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Percent: %f", hRequest, pflPercentOut);
     return true;
 }
 
@@ -191,7 +169,7 @@ bool CSteamHTTP::GetHTTPDownloadProgressPct( HTTPRequestHandle hRequest, float *
 // parameter will set the content-type header for the request so the server may know how to interpret the body.
 bool CSteamHTTP::SetHTTPRequestRawPostBody( HTTPRequestHandle hRequest, const char *pchContentType, uint8 *pubBody, uint32 unBodyLen )
 {
-    VLOG_INFO("SetHTTPRequestRawPostBody called - Request: %u, Content Type: %s, Body: %p, Length: %u", hRequest, pchContentType, pubBody, unBodyLen);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Content Type: %s, Body: %p, Length: %u", hRequest, pchContentType, pubBody, unBodyLen);
     return true;
 }
 
@@ -202,21 +180,21 @@ bool CSteamHTTP::SetHTTPRequestRawPostBody( HTTPRequestHandle hRequest, const ch
 // repeat executions of your process.
 HTTPCookieContainerHandle CSteamHTTP::CreateCookieContainer( bool bAllowResponsesToModify )
 {
-    VLOG_INFO("CreateCookieContainer called - AllowResponsesToModify: %s", bAllowResponsesToModify ? "true" : "false");
+    VLOG_INFO(__FUNCTION__ " - AllowResponsesToModify: %s", bAllowResponsesToModify ? "true" : "false");
     return 0;
 }
 
 // Release a cookie container you are finished using, freeing it's memory
 bool CSteamHTTP::ReleaseCookieContainer( HTTPCookieContainerHandle hCookieContainer )
 {
-    VLOG_INFO("ReleaseCookieContainer called - Container: %u", hCookieContainer);
+    VLOG_INFO(__FUNCTION__ " - Container: %u", hCookieContainer);
     return true;
 }
 
 // Adds a cookie to the specified cookie container that will be used with future requests.
 bool CSteamHTTP::SetCookie( HTTPCookieContainerHandle hCookieContainer, const char *pchHost, const char *pchUrl, const char *pchCookie )
 {
-    VLOG_INFO("SetCookie called - Container: %u, Host: %s, URL: %s, Cookie: %s", 
+    VLOG_INFO(__FUNCTION__ " - Container: %u, Host: %s, URL: %s, Cookie: %s", 
               hCookieContainer, pchHost, pchUrl, pchCookie);
     return true;
 }
@@ -224,21 +202,21 @@ bool CSteamHTTP::SetCookie( HTTPCookieContainerHandle hCookieContainer, const ch
 // Set the cookie container to use for a HTTP request
 bool CSteamHTTP::SetHTTPRequestCookieContainer( HTTPRequestHandle hRequest, HTTPCookieContainerHandle hCookieContainer )
 {
-    VLOG_INFO("SetHTTPRequestCookieContainer called - Request: %u, Container: %u", hRequest, hCookieContainer);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Container: %u", hRequest, hCookieContainer);
     return true;
 }
 
 // Set the extra user agent info for a request, this doesn't clobber the normal user agent, it just adds the extra info on the end
 bool CSteamHTTP::SetHTTPRequestUserAgentInfo( HTTPRequestHandle hRequest, const char *pchUserAgentInfo )
 {
-    VLOG_INFO("SetHTTPRequestUserAgentInfo called - Request: %u, User Agent: %s", hRequest, pchUserAgentInfo);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, User Agent: %s", hRequest, pchUserAgentInfo);
     return true;
 }
 
 // Set that https request should require verified SSL certificate via machines certificate trust store
 bool CSteamHTTP::SetHTTPRequestRequiresVerifiedCertificate( HTTPRequestHandle hRequest, bool bRequireVerifiedCertificate )
 {
-    VLOG_INFO("SetHTTPRequestRequiresVerifiedCertificate called - Request: %u, Require Verified: %s", 
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Require Verified: %s", 
               hRequest, bRequireVerifiedCertificate ? "true" : "false");
     return true;
 }
@@ -247,13 +225,13 @@ bool CSteamHTTP::SetHTTPRequestRequiresVerifiedCertificate( HTTPRequestHandle hR
 // which can bump everytime we get more data
 bool CSteamHTTP::SetHTTPRequestAbsoluteTimeoutMS( HTTPRequestHandle hRequest, uint32 unMilliseconds )
 {
-    VLOG_INFO("SetHTTPRequestAbsoluteTimeoutMS called - Request: %u, Timeout: %u ms", hRequest, unMilliseconds);
+    VLOG_INFO(__FUNCTION__ " - Request: %u, Timeout: %u ms", hRequest, unMilliseconds);
     return true;
 }
 
 // Check if the reason the request failed was because we timed it out (rather than some harder failure)
 bool CSteamHTTP::GetHTTPRequestWasTimedOut( HTTPRequestHandle hRequest, bool *pbWasTimedOut )
 {
-    VLOG_INFO("GetHTTPRequestWasTimedOut called - Request: %u", hRequest);
+    VLOG_INFO(__FUNCTION__ " - Request: %u", hRequest);
     return true;
 }

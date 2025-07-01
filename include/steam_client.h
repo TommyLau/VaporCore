@@ -28,10 +28,13 @@
 #include <isteamclient016.h>
 
 #include "steam_user.h"
+#include "steam_game_server.h"
 #include "steam_friends.h"
 #include "steam_utils.h"
+#include "steam_master_server_updater.h"
 #include "steam_matchmaking.h"
 #include "steam_user_stats.h"
+#include "steam_game_server_stats.h"
 #include "steam_apps.h"
 #include "steam_networking.h"
 #include "steam_remote_storage.h"
@@ -76,57 +79,20 @@ class CSteamClient :
     public ISteamClient015,
     public ISteamClient016
 {
-private:
-    // Internal state
-    HSteamUser m_hSteamUser;
-    uint32 m_unSteamPipeCounter;
-    SteamAPIWarningMessageHook_t m_pWarningMessageHook;
-    bool m_bUserLoggedIn;
-    
-    // Steam pipe management
-    std::map<HSteamPipe, ESteamPipe> m_mapSteamPipes;
-    
-    // Implementation class instances
-    CSteamUser& m_steamUser;
-    CSteamFriends& m_steamFriends;
-    CSteamUtils& m_steamUtils;
-    CSteamMatchmaking* m_pSteamMatchmaking;
-    CSteamUserStats& m_steamUserStats;
-    CSteamApps& m_steamApps;
-    CSteamMatchmakingServers* m_pSteamMatchmakingServers;
-    CSteamNetworking* m_pSteamNetworking;
-    CSteamRemoteStorage& m_steamRemoteStorage;
-    CSteamScreenshots& m_steamScreenshots;
-    CSteamHTTP* m_pSteamHTTP;
-    CSteamUnifiedMessages* m_pSteamUnifiedMessages;
-    CSteamController& m_steamController;
-    CSteamUGC& m_steamUGC;
-    CSteamAppList* m_pSteamAppList;
-    CSteamMusic* m_pSteamMusic;
-    CSteamMusicRemote* m_pSteamMusicRemote;
-    CSteamHTMLSurface* m_pSteamHTMLSurface;
-    CSteamInventory& m_steamInventory;
-    CSteamVideo& m_steamVideo;
-    
-    // Singleton instance
-    static CSteamClient* s_pInstance;
-    
-    // Initialization counter
-    uintp m_uCallCounter;    // Tracks API calls
-
 public:
-    CSteamClient();
-    ~CSteamClient();
+	// Singleton accessor
+    static CSteamClient& GetInstance()
+    {
+		static CSteamClient instance;
+		return instance;
+    }
 
     // Counter access methods
     uintp IncrementCallCounter() { return ++m_uCallCounter; }
     uintp DecrementCallCounter() { return --m_uCallCounter; }
     uintp GetCallCounter() const { return m_uCallCounter; }
 
-    // Helper methods
-    static CSteamClient* GetInstance();
-    static void ReleaseInstance();
-
+public:
 	// Creates a communication pipe to the Steam client.
 	// NOT THREADSAFE - ensure that no other threads are accessing Steamworks API when calling
 	HSteamPipe CreateSteamPipe() override;
@@ -257,6 +223,53 @@ public:
 
 	// Video
 	ISteamVideo *GetISteamVideo( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamClient();
+    ~CSteamClient();
+
+    // Delete copy constructor and assignment operator
+    CSteamClient(const CSteamClient&) = delete;
+    CSteamClient& operator=(const CSteamClient&) = delete;
+
+private:
+    // Internal state
+    HSteamUser m_hSteamUser;
+    uint32 m_unSteamPipeCounter;
+    SteamAPIWarningMessageHook_t m_pWarningMessageHook;
+    bool m_bUserLoggedIn;
+    
+    // Steam pipe management
+    std::map<HSteamPipe, ESteamPipe> m_mapSteamPipes;
+    
+    // Implementation class instances
+    CSteamUser& m_steamUser;
+    CSteamGameServer& m_steamGameServer;
+    CSteamFriends& m_steamFriends;
+    CSteamUtils& m_steamUtils;
+    CSteamMasterServerUpdater& m_steamMasterServerUpdater;
+    CSteamMatchmaking& m_steamMatchmaking;
+    CSteamUserStats& m_steamUserStats;
+    CSteamGameServerStats& m_steamGameServerStats;
+    CSteamApps& m_steamApps;
+    CSteamMatchmakingServers& m_steamMatchmakingServers;
+    CSteamNetworking& m_steamNetworking;
+    CSteamRemoteStorage& m_steamRemoteStorage;
+    CSteamScreenshots& m_steamScreenshots;
+    CSteamHTTP& m_steamHTTP;
+    CSteamUnifiedMessages& m_steamUnifiedMessages;
+    CSteamController& m_steamController;
+    CSteamUGC& m_steamUGC;
+    CSteamAppList& m_steamAppList;
+    CSteamMusic& m_steamMusic;
+    CSteamMusicRemote& m_steamMusicRemote;
+    CSteamHTMLSurface& m_steamHTMLSurface;
+    CSteamInventory& m_steamInventory;
+    CSteamVideo& m_steamVideo;
+    
+    // Initialization counter
+    uintp m_uCallCounter;    // Tracks API calls
 };
 
 #endif // VAPORCORE_STEAM_CLIENT_H 

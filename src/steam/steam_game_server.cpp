@@ -12,36 +12,14 @@
 #include "vapor_base.h"
 #include "steam_game_server.h"
 
-// Static instance
-CSteamGameServer* CSteamGameServer::s_pInstance = nullptr;
-
 CSteamGameServer::CSteamGameServer()
 {
-    VLOG_INFO("CSteamGameServer constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamGameServer::~CSteamGameServer()
 {
-    VLOG_INFO("CSteamGameServer destructor called");
-}
-
-// Helper methods
-CSteamGameServer* CSteamGameServer::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamGameServer();
-    }
-    return s_pInstance;
-}
-
-void CSteamGameServer::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 //
@@ -52,7 +30,7 @@ void CSteamGameServer::ReleaseInstance()
 // This is called by SteamGameServer_Init, and you will usually not need to call it directly
 bool CSteamGameServer::InitGameServer( uint32 unIP, uint16 usGamePort, uint16 usQueryPort, uint32 unFlags, AppId_t nGameAppId, const char *pchVersionString )
 {
-    VLOG_DEBUG("InitGameServer called - IP: %u, GamePort: %u, QueryPort: %u, Flags: %u, AppID: %u, Version: %s", unIP, usGamePort, usQueryPort, unFlags, nGameAppId, pchVersionString ? pchVersionString : "null");
+    VLOG_INFO(__FUNCTION__ " - IP: %u, GamePort: %u, QueryPort: %u, Flags: %u, AppID: %u, Version: %s", unIP, usGamePort, usQueryPort, unFlags, nGameAppId, pchVersionString ? pchVersionString : "null");
     return true;
 }
 
@@ -60,14 +38,14 @@ bool CSteamGameServer::InitGameServer( uint32 unIP, uint16 usGamePort, uint16 us
 // It's a required field, but will eventually will go away, and the AppID will be used for this purpose.
 void CSteamGameServer::SetProduct( const char *pszProduct )
 {
-    VLOG_DEBUG("SetProduct called - Product: %s", pszProduct ? pszProduct : "null");
+    VLOG_INFO(__FUNCTION__ " - Product: %s", pszProduct ? pszProduct : "null");
 }
 
 // Description of the game.  This is a required field and is displayed in the steam server browser....for now.
 // This is a required field, but it will go away eventually, as the data should be determined from the AppID.
 void CSteamGameServer::SetGameDescription( const char *pszGameDescription )
 {
-    VLOG_DEBUG("SetGameDescription called - Description: %s", pszGameDescription ? pszGameDescription : "null");
+    VLOG_INFO(__FUNCTION__ " - Description: %s", pszGameDescription ? pszGameDescription : "null");
 }
 
 // If your game is a "mod," pass the string that identifies it.  The default is an empty string, meaning
@@ -76,13 +54,13 @@ void CSteamGameServer::SetGameDescription( const char *pszGameDescription )
 // @see k_cbMaxGameServerGameDir
 void CSteamGameServer::SetModDir( const char *pszModDir )
 {
-    VLOG_DEBUG("SetModDir called - ModDir: %s", pszModDir ? pszModDir : "null");
+    VLOG_INFO(__FUNCTION__ " - ModDir: %s", pszModDir ? pszModDir : "null");
 }
 
 // Is this is a dedicated server?  The default value is false.
 void CSteamGameServer::SetDedicatedServer( bool bDedicated )
 {
-    VLOG_DEBUG("SetDedicatedServer called - Dedicated: %s", bDedicated ? "true" : "false");
+    VLOG_INFO(__FUNCTION__ " - Dedicated: %s", bDedicated ? "true" : "false");
 }
 
 //
@@ -97,19 +75,19 @@ void CSteamGameServer::SetDedicatedServer( bool bDedicated )
 // @see SteamServersDisconnected_t
 void CSteamGameServer::LogOn( const char *pszToken )
 {
-    VLOG_DEBUG("LogOn called - Token: %s", pszToken ? pszToken : "null");
+    VLOG_INFO(__FUNCTION__ " - Token: %s", pszToken ? pszToken : "null");
 }
 
 // Changed from Steam SDK v1.29a, backward compatibility
 void CSteamGameServer::LogOn( const char *pszAccountName, const char *pszPassword )
 {
-    VLOG_DEBUG("LogOn called - Account: %s, Password: %s", pszAccountName ? pszAccountName : "null", pszPassword ? pszPassword : "null");
+    VLOG_INFO(__FUNCTION__ " - Account: %s, Password: %s", pszAccountName ? pszAccountName : "null", pszPassword ? pszPassword : "null");
 }
 
 // Changed from Steam SDK v1.17, backward compatibility
 void CSteamGameServer::LogOn()
 {
-    VLOG_DEBUG("LogOn called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Login to a generic, anonymous account.
@@ -118,31 +96,33 @@ void CSteamGameServer::LogOn()
 // but this is no longer the case.
 void CSteamGameServer::LogOnAnonymous()
 {
-    VLOG_DEBUG("LogOnAnonymous called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Begin process of logging game server out of steam
 void CSteamGameServer::LogOff()
 {
-    VLOG_DEBUG("LogOff called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // status functions
 bool CSteamGameServer::BLoggedOn()
 {
-    VLOG_DEBUG("BLoggedOn called");
+    VLOG_INFO(__FUNCTION__);
+
+    // TODO: Add offline setting in config file, now always online
     return true;
 }
 
 bool CSteamGameServer::BSecure()
 {
-    VLOG_DEBUG("BSecure called");
+    VLOG_INFO(__FUNCTION__);
     return false;
 }
 
 CSteamID CSteamGameServer::GetSteamID()
 {
-    VLOG_DEBUG("GetSteamID called");
+    VLOG_INFO(__FUNCTION__);
     return CSteamID();
 }
 
@@ -150,7 +130,7 @@ CSteamID CSteamGameServer::GetSteamID()
 // Only returns true once per request.
 bool CSteamGameServer::WasRestartRequested()
 {
-    VLOG_DEBUG("WasRestartRequested called");
+    VLOG_INFO(__FUNCTION__);
     return false;
 }
 
@@ -161,13 +141,13 @@ bool CSteamGameServer::WasRestartRequested()
 // Max player count that will be reported to server browser and client queries
 void CSteamGameServer::SetMaxPlayerCount( int cPlayersMax )
 {
-    VLOG_DEBUG("SetMaxPlayerCount called - PlayersMax: %d", cPlayersMax);
+    VLOG_INFO(__FUNCTION__ " - PlayersMax: %d", cPlayersMax);
 }
 
 // Number of bots.  Default value is zero
 void CSteamGameServer::SetBotPlayerCount( int cBotplayers )
 {
-    VLOG_DEBUG("SetBotPlayerCount called - Bots: %d", cBotplayers);
+    VLOG_INFO(__FUNCTION__ " - Bots: %d", cBotplayers);
 }
 
 // Set the name of server as it will appear in the server browser
@@ -175,7 +155,7 @@ void CSteamGameServer::SetBotPlayerCount( int cBotplayers )
 // @see k_cbMaxGameServerName
 void CSteamGameServer::SetServerName( const char *pszServerName )
 {
-    VLOG_DEBUG("SetServerName called - ServerName: %s", pszServerName ? pszServerName : "null");
+    VLOG_INFO(__FUNCTION__ " - ServerName: %s", pszServerName ? pszServerName : "null");
 }
 
 // Set name of map to report in the server browser
@@ -183,20 +163,20 @@ void CSteamGameServer::SetServerName( const char *pszServerName )
 // @see k_cbMaxGameServerName
 void CSteamGameServer::SetMapName( const char *pszMapName )
 {
-    VLOG_DEBUG("SetMapName called - MapName: %s", pszMapName ? pszMapName : "null");
+    VLOG_INFO(__FUNCTION__ " - MapName: %s", pszMapName ? pszMapName : "null");
 }
 
 // Let people know if your server will require a password
 void CSteamGameServer::SetPasswordProtected( bool bPasswordProtected )
 {
-    VLOG_DEBUG("SetPasswordProtected called - PasswordProtected: %s", bPasswordProtected ? "true" : "false");
+    VLOG_INFO(__FUNCTION__ " - PasswordProtected: %s", bPasswordProtected ? "true" : "false");
 }
 
 // Spectator server.  The default value is zero, meaning the service
 // is not used.
 void CSteamGameServer::SetSpectatorPort( uint16 unSpectatorPort )
 {
-    VLOG_DEBUG("SetSpectatorPort called - SpectatorPort: %u", unSpectatorPort);
+    VLOG_INFO(__FUNCTION__ " - SpectatorPort: %u", unSpectatorPort);
 }
 
 // Name of the spectator server.  (Only used if spectator port is nonzero.)
@@ -204,19 +184,19 @@ void CSteamGameServer::SetSpectatorPort( uint16 unSpectatorPort )
 // @see k_cbMaxGameServerMapName
 void CSteamGameServer::SetSpectatorServerName( const char *pszSpectatorServerName )
 {
-    VLOG_DEBUG("SetSpectatorServerName called - SpectatorServerName: %s", pszSpectatorServerName ? pszSpectatorServerName : "null");
+    VLOG_INFO(__FUNCTION__ " - SpectatorServerName: %s", pszSpectatorServerName ? pszSpectatorServerName : "null");
 }
 
 // Call this to clear the whole list of key/values that are sent in rules queries.
 void CSteamGameServer::ClearAllKeyValues()
 {
-    VLOG_DEBUG("ClearAllKeyValues called");
+    VLOG_INFO(__FUNCTION__);
 }
 	
 // Call this to add/update a key/value pair.
 void CSteamGameServer::SetKeyValue( const char *pKey, const char *pValue )
 {
-    VLOG_DEBUG("SetKeyValue called - Key: %s, Value: %s", pKey ? pKey : "null", pValue ? pValue : "null");
+    VLOG_INFO(__FUNCTION__ " - Key: %s, Value: %s", pKey ? pKey : "null", pValue ? pValue : "null");
 }
 
 // Sets a string defining the "gametags" for this server, this is optional, but if it is set
@@ -225,7 +205,7 @@ void CSteamGameServer::SetKeyValue( const char *pKey, const char *pValue )
 // @see k_cbMaxGameServerTags
 void CSteamGameServer::SetGameTags( const char *pchGameTags )
 {
-    VLOG_DEBUG("SetGameTags called - GameTags: %s", pchGameTags ? pchGameTags : "null");
+    VLOG_INFO(__FUNCTION__ " - GameTags: %s", pchGameTags ? pchGameTags : "null");
 }
 
 // Sets a string defining the "gametype" for this server, this is optional, but if it is set
@@ -233,7 +213,7 @@ void CSteamGameServer::SetGameTags( const char *pchGameTags )
 // Changed from Steam SDK v1.09 to SetGameTags, backward compatibility
 void CSteamGameServer::SetGameType( const char *pchGameType )
 {
-    VLOG_DEBUG("SetGameType called - GameType: %s", pchGameType ? pchGameType : "null");
+    VLOG_INFO(__FUNCTION__ " - GameType: %s", pchGameType ? pchGameType : "null");
     // TODO: Call SetGameTags?
 }
 
@@ -245,13 +225,13 @@ void CSteamGameServer::SetGameType( const char *pchGameType )
 // @see k_cbMaxGameServerGameData
 void CSteamGameServer::SetGameData( const char *pchGameData)
 {
-    VLOG_DEBUG("SetGameData called - GameData: %s", pchGameData ? pchGameData : "null");
+    VLOG_INFO(__FUNCTION__ " - GameData: %s", pchGameData ? pchGameData : "null");
 }
 
 // Region identifier.  This is an optional field, the default value is empty, meaning the "world" region
 void CSteamGameServer::SetRegion( const char *pszRegion )
 {
-    VLOG_DEBUG("SetRegion called - Region: %s", pszRegion ? pszRegion : "null");
+    VLOG_INFO(__FUNCTION__ " - Region: %s", pszRegion ? pszRegion : "null");
 }
 
 //
@@ -269,7 +249,7 @@ void CSteamGameServer::SetRegion( const char *pszRegion )
 // for the user has succeeded or failed (the steamid in the callback will match the one returned by this call)
 bool CSteamGameServer::SendUserConnectAndAuthenticate( uint32 unIPClient, const void *pvAuthBlob, uint32 cubAuthBlobSize, CSteamID *pSteamIDUser )
 {
-    VLOG_DEBUG("SendUserConnectAndAuthenticate called - IP: %u, BlobSize: %u", unIPClient, cubAuthBlobSize);
+    VLOG_INFO(__FUNCTION__ " - IP: %u, BlobSize: %u", unIPClient, cubAuthBlobSize);
     return false;
 }
 
@@ -279,7 +259,7 @@ bool CSteamGameServer::SendUserConnectAndAuthenticate( uint32 unIPClient, const 
 // Removed from Steam SDK v1.01, backward compatibility
 void CSteamGameServer::SendUserConnectAndAuthenticate( CSteamID steamIDUser, uint32 unIPClient, void *pvAuthBlob, uint32 cubAuthBlobSize )
 {
-    VLOG_DEBUG("SendUserConnectAndAuthenticate called - User: %llu, IP: %u, BlobSize: %u", steamIDUser.ConvertToUint64(), unIPClient, cubAuthBlobSize);
+    VLOG_INFO(__FUNCTION__ " - User: %llu, IP: %u, BlobSize: %u", steamIDUser.ConvertToUint64(), unIPClient, cubAuthBlobSize);
 }
 
 // Creates a fake user (ie, a bot) which will be listed as playing on the server, but skips validation.  
@@ -288,7 +268,7 @@ void CSteamGameServer::SendUserConnectAndAuthenticate( CSteamID steamIDUser, uin
 // when this user leaves the server just like you would for a real user.
 CSteamID CSteamGameServer::CreateUnauthenticatedUserConnection()
 {
-    VLOG_DEBUG("CreateUnauthenticatedUserConnection called");
+    VLOG_INFO(__FUNCTION__);
     return CSteamID();
 }
 
@@ -297,7 +277,7 @@ CSteamID CSteamGameServer::CreateUnauthenticatedUserConnection()
 // account being logged into multiple servers, showing who is currently on a server, etc.
 void CSteamGameServer::SendUserDisconnect( CSteamID steamIDUser )
 {
-    VLOG_DEBUG("SendUserDisconnect called - User: %llu", steamIDUser.ConvertToUint64());
+    VLOG_INFO(__FUNCTION__ " - User: %llu", steamIDUser.ConvertToUint64());
 }
 
 // Update the data to be displayed in the server browser and matchmaking interfaces for a user
@@ -307,7 +287,7 @@ void CSteamGameServer::SendUserDisconnect( CSteamID steamIDUser )
 // Return Value: true if successful, false if failure (ie, steamIDUser wasn't for an active player)
 bool CSteamGameServer::BUpdateUserData( CSteamID steamIDUser, const char *pchPlayerName, uint32 uScore )
 {
-    VLOG_DEBUG("BUpdateUserData called - User: %llu, Name: %s, Score: %u", steamIDUser.ConvertToUint64(), pchPlayerName ? pchPlayerName : "null", uScore);
+    VLOG_INFO(__FUNCTION__ " - User: %llu, Name: %s, Score: %u", steamIDUser.ConvertToUint64(), pchPlayerName ? pchPlayerName : "null", uScore);
     return true;
 }
 
@@ -331,7 +311,7 @@ bool CSteamGameServer::BUpdateUserData( CSteamID steamIDUser, const char *pchPla
 bool CSteamGameServer::BSetServerType( uint32 unServerFlags, uint32 unGameIP, uint16 unGamePort, 
 								uint16 unSpectatorPort, uint16 usQueryPort, const char *pchGameDir, const char *pchVersion, bool bLANMode )
 {
-    VLOG_DEBUG("BSetServerType called - Flags: %u, GamePort: %u", unServerFlags, unGamePort);
+    VLOG_INFO(__FUNCTION__ " - Flags: %u, GamePort: %u", unServerFlags, unGamePort);
     return true;
 }
 
@@ -339,7 +319,7 @@ bool CSteamGameServer::BSetServerType( uint32 unServerFlags, uint32 unGameIP, ui
 bool CSteamGameServer::BSetServerType( int32 nGameAppId, uint32 unServerFlags, uint32 unGameIP, uint16 unGamePort, 
 						uint16 unSpectatorPort, uint16 usQueryPort, const char *pchGameDir, const char *pchVersion, bool bLANMode )
 {
-    VLOG_DEBUG("BSetServerType called - AppID: %d, Flags: %u, GamePort: %u", nGameAppId, unServerFlags, unGamePort);
+    VLOG_INFO(__FUNCTION__ " - AppID: %d, Flags: %u, GamePort: %u", nGameAppId, unServerFlags, unGamePort);
     return true;
 }
 
@@ -349,7 +329,7 @@ void CSteamGameServer::UpdateServerStatus( int cPlayers, int cPlayersMax, int cB
 						 const char *pchServerName, const char *pSpectatorServerName, 
 						 const char *pchMapName )
 {
-    VLOG_DEBUG("UpdateServerStatus called - Players: %d/%d, Bots: %d, Server: %s, Map: %s", 
+    VLOG_INFO(__FUNCTION__ " - Players: %d/%d, Bots: %d, Server: %s, Map: %s", 
                cPlayers, cPlayersMax, cBotPlayers, 
                pchServerName ? pchServerName : "null", 
                pchMapName ? pchMapName : "null");
@@ -359,7 +339,7 @@ void CSteamGameServer::UpdateServerStatus( int cPlayers, int cPlayersMax, int cB
 // Removed from Steam SDK v1.17, backward compatibility
 void CSteamGameServer::UpdateSpectatorPort( uint16 unSpectatorPort )
 {
-    VLOG_DEBUG("UpdateSpectatorPort called - Port: %u", unSpectatorPort);
+    VLOG_INFO(__FUNCTION__ " - Port: %u", unSpectatorPort);
 }
 
 
@@ -367,7 +347,7 @@ void CSteamGameServer::UpdateSpectatorPort( uint16 unSpectatorPort )
 // Removed from Steam SDK v1.08, backward compatibility
 bool CSteamGameServer::BGetUserAchievementStatus( CSteamID steamID, const char *pchAchievementName )
 {
-    VLOG_DEBUG("BGetUserAchievementStatus called - User: %llu, Achievement: %s", 
+    VLOG_INFO(__FUNCTION__ " - User: %llu, Achievement: %s", 
                steamID.ConvertToUint64(), pchAchievementName ? pchAchievementName : "null");
     return false;
 }
@@ -379,7 +359,7 @@ bool CSteamGameServer::BGetUserAchievementStatus( CSteamID steamID, const char *
 // pcbTicket retrieves the length of the actual ticket.
 HAuthTicket CSteamGameServer::GetAuthSessionTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket )
 {
-    VLOG_DEBUG("GetAuthSessionTicket called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
@@ -387,27 +367,27 @@ HAuthTicket CSteamGameServer::GetAuthSessionTicket( void *pTicket, int cbMaxTick
 // Registers for callbacks if the entity goes offline or cancels the ticket ( see ValidateAuthTicketResponse_t callback and EAuthSessionResponse )
 EBeginAuthSessionResult CSteamGameServer::BeginAuthSession( const void *pAuthTicket, int cbAuthTicket, CSteamID steamID )
 {
-    VLOG_DEBUG("BeginAuthSession called");
+    VLOG_INFO(__FUNCTION__);
     return EBeginAuthSessionResult::k_EBeginAuthSessionResultOK;
 }
 
 // Stop tracking started by BeginAuthSession - called when no longer playing game with this entity
 void CSteamGameServer::EndAuthSession( CSteamID steamID )
 {
-    VLOG_DEBUG("EndAuthSession called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Cancel auth ticket from GetAuthSessionTicket, called when no longer playing game with the entity you gave the ticket to
 void CSteamGameServer::CancelAuthTicket( HAuthTicket hAuthTicket )
 {
-    VLOG_DEBUG("CancelAuthTicket called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // After receiving a user's authentication data, and passing it to SendUserConnectAndAuthenticate, use this function
 // to determine if the user owns downloadable content specified by the provided AppID.
 EUserHasLicenseForAppResult CSteamGameServer::UserHasLicenseForApp( CSteamID steamID, AppId_t appID )
 {
-    VLOG_DEBUG("UserHasLicenseForApp called - User: %llu, AppID: %u", steamID.ConvertToUint64(), appID);
+    VLOG_INFO(__FUNCTION__ " - User: %llu, AppID: %u", steamID.ConvertToUint64(), appID);
     return EUserHasLicenseForAppResult::k_EUserHasLicenseResultHasLicense;
 }
 
@@ -415,7 +395,7 @@ EUserHasLicenseForAppResult CSteamGameServer::UserHasLicenseForApp( CSteamID ste
 // returns false if we're not connected to the steam servers and thus cannot ask
 bool CSteamGameServer::RequestUserGroupStatus( CSteamID steamIDUser, CSteamID steamIDGroup )
 {
-    VLOG_DEBUG("RequestUserGroupStatus called - User: %llu, Group: %llu", 
+    VLOG_INFO(__FUNCTION__ " - User: %llu, Group: %llu", 
                steamIDUser.ConvertToUint64(), steamIDGroup.ConvertToUint64());
     return false;
 }
@@ -427,14 +407,14 @@ bool CSteamGameServer::RequestUserGroupStatus( CSteamID steamIDUser, CSteamID st
 // Ask for the gameplay stats for the server. Results returned in a callback
 void CSteamGameServer::GetGameplayStats( )
 {
-    VLOG_DEBUG("GetGameplayStats called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Gets the reputation score for the game server. This API also checks if the server or some
 // other server on the same IP is banned from the Steam master servers.
 SteamAPICall_t CSteamGameServer::GetServerReputation( )
 {
-    VLOG_DEBUG("GetServerReputation called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
@@ -443,7 +423,7 @@ SteamAPICall_t CSteamGameServer::GetServerReputation( )
 // connect to
 uint32 CSteamGameServer::GetPublicIP()
 {
-    VLOG_DEBUG("GetPublicIP called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
@@ -464,7 +444,7 @@ uint32 CSteamGameServer::GetPublicIP()
 // it's for us.
 bool CSteamGameServer::HandleIncomingPacket( const void *pData, int cbData, uint32 srcIP, uint16 srcPort )
 {
-    VLOG_DEBUG("HandleIncomingPacket called - DataSize: %d, SourceIP: %u, SourcePort: %u", cbData, srcIP, srcPort);
+    VLOG_INFO(__FUNCTION__ " - DataSize: %d, SourceIP: %u, SourcePort: %u", cbData, srcIP, srcPort);
     return false;
 }
 
@@ -474,7 +454,7 @@ bool CSteamGameServer::HandleIncomingPacket( const void *pData, int cbData, uint
 // Call this each frame until it returns 0.
 int CSteamGameServer::GetNextOutgoingPacket( void *pOut, int cbMaxOut, uint32 *pNetAdr, uint16 *pPort )
 {
-    VLOG_DEBUG("GetNextOutgoingPacket called - MaxOut: %d", cbMaxOut);
+    VLOG_INFO(__FUNCTION__ " - MaxOut: %d", cbMaxOut);
     return 0;
 }
 
@@ -486,7 +466,7 @@ int CSteamGameServer::GetNextOutgoingPacket( void *pOut, int cbMaxOut, uint32 *p
 // you want it to be active (default: off).
 void CSteamGameServer::EnableHeartbeats( bool bActive )
 {
-    VLOG_DEBUG("EnableHeartbeats called - Active: %s", bActive ? "true" : "false");
+    VLOG_INFO(__FUNCTION__ " - Active: %s", bActive ? "true" : "false");
 }
 
 // You usually don't need to modify this.
@@ -494,25 +474,25 @@ void CSteamGameServer::EnableHeartbeats( bool bActive )
 // Some mods change this.
 void CSteamGameServer::SetHeartbeatInterval( int iHeartbeatInterval )
 {
-    VLOG_DEBUG("SetHeartbeatInterval called - Interval: %d", iHeartbeatInterval);
+    VLOG_INFO(__FUNCTION__ " - Interval: %d", iHeartbeatInterval);
 }
 
 // Force a heartbeat to steam at the next opportunity
 void CSteamGameServer::ForceHeartbeat()
 {
-    VLOG_DEBUG("ForceHeartbeat called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // associate this game server with this clan for the purposes of computing player compat
 SteamAPICall_t CSteamGameServer::AssociateWithClan( CSteamID steamIDClan )
 {
-    VLOG_DEBUG("AssociateWithClan called - Clan: %llu", steamIDClan.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - Clan: %llu", steamIDClan.GetAccountID());
     return 0;
 }
 
 // ask if any of the current players dont want to play with this new player - or vice versa
 SteamAPICall_t CSteamGameServer::ComputeNewPlayerCompatibility( CSteamID steamIDNewPlayer )
 {
-    VLOG_DEBUG("ComputeNewPlayerCompatibility called - NewPlayer: %llu", steamIDNewPlayer.GetAccountID());
+    VLOG_INFO(__FUNCTION__ " - NewPlayer: %llu", steamIDNewPlayer.GetAccountID());
     return 0;
 }

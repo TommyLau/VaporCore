@@ -34,18 +34,15 @@ class CSteamGameServer :
 	public ISteamGameServer010,
 	public ISteamGameServer011
 {
-private:
-    // Singleton instance
-    static CSteamGameServer* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamGameServer& GetInstance()
+	{
+		static CSteamGameServer instance;
+		return instance;
+	}
 
 public:
-    CSteamGameServer();
-    ~CSteamGameServer();
-
-    // Helper methods
-    static CSteamGameServer* GetInstance();
-    static void ReleaseInstance();
-
 //
 // Basic server data.  These properties, if set, must be set before before calling LogOn.  They
 // may not be changed after logged in.
@@ -326,7 +323,15 @@ public:
 	// ask if any of the current players dont want to play with this new player - or vice versa
 	CALL_RESULT( ComputeNewPlayerCompatibilityResult_t )
 	SteamAPICall_t ComputeNewPlayerCompatibility( CSteamID steamIDNewPlayer ) override;
-};
 
+private:
+    // Private constructor and destructor for singleton
+    CSteamGameServer();
+    ~CSteamGameServer();
+
+    // Delete copy constructor and assignment operator
+    CSteamGameServer(const CSteamGameServer&) = delete;
+    CSteamGameServer& operator=(const CSteamGameServer&) = delete;
+};
 #endif // VAPORCORE_STEAM_GAME_SERVER_H
 

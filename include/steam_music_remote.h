@@ -19,18 +19,15 @@
 class CSteamMusicRemote :
     public ISteamMusicRemote
 {
-private:
-    // Singleton instance
-    static CSteamMusicRemote* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamMusicRemote& GetInstance()
+    {
+		static CSteamMusicRemote instance;
+		return instance;
+    }
 
 public:
-    CSteamMusicRemote();
-    ~CSteamMusicRemote();
-
-    // Helper methods
-    static CSteamMusicRemote* GetInstance();
-    static void ReleaseInstance();
-
 	// Service Definition
     bool RegisterSteamMusicRemote(const char *pchName) override;
     bool DeregisterSteamMusicRemote() override;
@@ -75,6 +72,15 @@ public:
     bool SetPlaylistEntry(int nID, int nPosition, const char *pchEntryText) override;
     bool SetCurrentPlaylistEntry(int nID) override;
     bool PlaylistDidChange() override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamMusicRemote();
+    ~CSteamMusicRemote();
+
+    // Delete copy constructor and assignment operator
+    CSteamMusicRemote(const CSteamMusicRemote&) = delete;
+    CSteamMusicRemote& operator=(const CSteamMusicRemote&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_MUSIC_REMOTE_H

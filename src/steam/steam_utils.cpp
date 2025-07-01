@@ -96,7 +96,7 @@ uint8 CSteamUtils::GetCurrentBatteryPower()
 uint32 CSteamUtils::GetAppID()
 {
     VLOG_INFO(__FUNCTION__);
-    return 0;
+    return VaporCore::Config::GetInstance().GetGameId().AppID();
 }
 
 // Sets the position where the overlay instance for the currently calling game should show notifications.
@@ -227,7 +227,7 @@ bool CSteamUtils::GetEnteredGamepadTextInput(char *pchText, uint32 cchText)
 const char *CSteamUtils::GetSteamUILanguage()
 {
     VLOG_INFO(__FUNCTION__);
-    return "english";
+    return VaporCore::Config::GetInstance().GetLanguage().c_str();
 }
 
 // returns true if Steam itself is running in VR mode

@@ -42,7 +42,7 @@ S_API void * S_CALLTYPE SteamInternal_ContextInit( void *pContextInitData )
     }
 
     ContextInitData *pData = (ContextInitData*)pContextInitData;
-    uintp uCallCounter = CSteamClient::GetInstance()->GetCallCounter();
+    uintp uCallCounter = CSteamClient::GetInstance().GetCallCounter();
 
     // Check if the counter is different from the current counter
     if (pData->counter != uCallCounter) {
@@ -71,49 +71,44 @@ S_API void * S_CALLTYPE SteamInternal_CreateInterface( const char *ver )
         return nullptr;
     }
 
-    // Get the Steam client through the public API
-    CSteamClient* pSteamClient = CSteamClient::GetInstance();
-
-    if (!pSteamClient) {
-        VLOG_ERROR(__FUNCTION__ " - Steam client not available");
-        return nullptr;
-    }
+    // Get the Steam client through the public API - store reference first
+    CSteamClient& steamClient = CSteamClient::GetInstance();
 
     // Return the appropriate interface version based on the version string
     if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamClient (latest) - %s", STEAMCLIENT_INTERFACE_VERSION);
-        return static_cast<ISteamClient*>(pSteamClient);
+        return &steamClient;
     } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_016) == 0) {
         VLOG_DEBUG("Returning ISteamClient016");
-        return static_cast<ISteamClient016*>(pSteamClient);
+        return reinterpret_cast<ISteamClient*>(static_cast<ISteamClient016*>(&steamClient));
     } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_015) == 0) {
         VLOG_DEBUG("Returning ISteamClient015");
-        return static_cast<ISteamClient015*>(pSteamClient);
+        return reinterpret_cast<ISteamClient*>(static_cast<ISteamClient015*>(&steamClient));
     } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_014) == 0) {
         VLOG_DEBUG("Returning ISteamClient014");
-        return static_cast<ISteamClient014*>(pSteamClient);
+        return reinterpret_cast<ISteamClient*>(static_cast<ISteamClient014*>(&steamClient));
     } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_012) == 0) {
         VLOG_DEBUG("Returning ISteamClient012");
-        return static_cast<ISteamClient012*>(pSteamClient);
+        return reinterpret_cast<ISteamClient*>(static_cast<ISteamClient012*>(&steamClient));
     } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_011) == 0) {
         VLOG_DEBUG("Returning ISteamClient011");
-        return static_cast<ISteamClient011*>(pSteamClient);
+        return reinterpret_cast<ISteamClient*>(static_cast<ISteamClient011*>(&steamClient));
     } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_010) == 0) {
         VLOG_DEBUG("Returning ISteamClient010");
-        return static_cast<ISteamClient010*>(pSteamClient);
+        return reinterpret_cast<ISteamClient*>(static_cast<ISteamClient010*>(&steamClient));
     } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_009) == 0) {
         VLOG_DEBUG("Returning ISteamClient009");
-        return static_cast<ISteamClient009*>(pSteamClient);
+        return reinterpret_cast<ISteamClient*>(static_cast<ISteamClient009*>(&steamClient));
     } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_008) == 0) {
         VLOG_DEBUG("Returning ISteamClient008");
-        return static_cast<ISteamClient008*>(pSteamClient);
+        return reinterpret_cast<ISteamClient*>(static_cast<ISteamClient008*>(&steamClient));
     } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_007) == 0) {
         VLOG_DEBUG("Returning ISteamClient007");
-        return static_cast<ISteamClient007*>(pSteamClient);
+        return reinterpret_cast<ISteamClient*>(static_cast<ISteamClient007*>(&steamClient));
     } else {
         VLOG_WARNING(__FUNCTION__ " - Unknown interface version '%s', returning " STEAMCLIENT_INTERFACE_VERSION, ver);
         // Return the latest interface as fallback
-        return static_cast<ISteamClient*>(pSteamClient);
+        return &steamClient;
     }
 }
 

@@ -24,18 +24,15 @@ class CSteamHTTP :
     public ISteamHTTP,
     public ISteamHTTP001
 {
-private:
-    // Singleton instance
-    static CSteamHTTP* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamHTTP& GetInstance()
+    {
+        static CSteamHTTP instance;
+        return instance;
+    }
 
 public:
-    CSteamHTTP();
-    ~CSteamHTTP();
-
-    // Helper methods
-    static CSteamHTTP* GetInstance();
-    static void ReleaseInstance();
-
 	// Initializes a new HTTP request, returning a handle to use in further operations on it.  Requires
 	// the method (GET or POST) and the absolute URL for the request.  Both http and https are supported,
 	// so this string must start with http:// or https:// and should look like http://store.steampowered.com/app/250/ 
@@ -146,6 +143,15 @@ public:
 
 	// Check if the reason the request failed was because we timed it out (rather than some harder failure)
 	bool GetHTTPRequestWasTimedOut( HTTPRequestHandle hRequest, bool *pbWasTimedOut ) override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamHTTP();
+    ~CSteamHTTP();
+
+    // Delete copy constructor and assignment operator
+    CSteamHTTP(const CSteamHTTP&) = delete;
+    CSteamHTTP& operator=(const CSteamHTTP&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_HTTP_H

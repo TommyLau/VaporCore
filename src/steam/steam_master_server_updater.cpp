@@ -12,24 +12,21 @@
 #include "vapor_base.h"
 #include "steam_master_server_updater.h"
 
-// Static instance
-CSteamMasterServerUpdater* CSteamMasterServerUpdater::s_pInstance = nullptr;
-
 CSteamMasterServerUpdater::CSteamMasterServerUpdater()
 {
-    VLOG_INFO("CSteamMasterServerUpdater constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamMasterServerUpdater::~CSteamMasterServerUpdater()
 {
-    VLOG_INFO("CSteamMasterServerUpdater destructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Call this as often as you like to tell the master server updater whether or not
 // you want it to be active (default: off).
 void CSteamMasterServerUpdater::SetActive( bool bActive )
 {
-    VLOG_DEBUG("SetActive called - Active: %s", bActive ? "true" : "false");
+    VLOG_INFO(__FUNCTION__ " - Active: %s", bActive ? "true" : "false");
 }
 
 // You usually don't need to modify this.
@@ -37,14 +34,14 @@ void CSteamMasterServerUpdater::SetActive( bool bActive )
 // Some mods change this.
 void CSteamMasterServerUpdater::SetHeartbeatInterval( int iHeartbeatInterval )
 {
-    VLOG_DEBUG("SetHeartbeatInterval called - Interval: %d", iHeartbeatInterval);
+    VLOG_INFO(__FUNCTION__ " - Interval: %d", iHeartbeatInterval);
 }
 
 // Call this when a packet that starts with 0xFFFFFFFF comes in. That means
 // it's for us.
 bool CSteamMasterServerUpdater::HandleIncomingPacket( const void *pData, int cbData, uint32 srcIP, uint16 srcPort )
 {
-    VLOG_DEBUG("HandleIncomingPacket called - DataSize: %d, SrcIP: %u, SrcPort: %u", cbData, srcIP, srcPort);
+    VLOG_INFO(__FUNCTION__ " - DataSize: %d, SrcIP: %u, SrcPort: %u", cbData, srcIP, srcPort);
     return false;
 }
 
@@ -54,7 +51,7 @@ bool CSteamMasterServerUpdater::HandleIncomingPacket( const void *pData, int cbD
 // Call this each frame until it returns 0.
 int CSteamMasterServerUpdater::GetNextOutgoingPacket( void *pOut, int cbMaxOut, uint32 *pNetAdr, uint16 *pPort )
 {
-    VLOG_DEBUG("GetNextOutgoingPacket called - MaxOut: %d", cbMaxOut);
+    VLOG_INFO(__FUNCTION__ " - MaxOut: %d", cbMaxOut);
     return 0;
 }
 
@@ -68,7 +65,7 @@ void CSteamMasterServerUpdater::SetBasicServerData(
 	bool bPasswordProtected,
 	const char *pGameDescription )
 {
-    VLOG_DEBUG("SetBasicServerData called - Protocol: %u, Dedicated: %s, Region: %s, Product: %s, MaxClients: %u, Password: %s, Description: %s",
+    VLOG_INFO(__FUNCTION__ " - Protocol: %u, Dedicated: %s, Region: %s, Product: %s, MaxClients: %u, Password: %s, Description: %s",
                nProtocolVersion,
                bDedicatedServer ? "true" : "false",
                pRegionName ? pRegionName : "null",
@@ -81,83 +78,63 @@ void CSteamMasterServerUpdater::SetBasicServerData(
 // Call this to clear the whole list of key/values that are sent in rules queries.
 void CSteamMasterServerUpdater::ClearAllKeyValues()
 {
-    VLOG_DEBUG("ClearAllKeyValues called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Call this to add/update a key/value pair.
 void CSteamMasterServerUpdater::SetKeyValue( const char *pKey, const char *pValue )
 {
-    VLOG_DEBUG("SetKeyValue called - Key: %s, Value: %s", pKey ? pKey : "null", pValue ? pValue : "null");
+    VLOG_INFO(__FUNCTION__ " - Key: %s, Value: %s", pKey ? pKey : "null", pValue ? pValue : "null");
 }
 
 // You can call this upon shutdown to clear out data stored for this game server and
 // to tell the master servers that this server is going away.
 void CSteamMasterServerUpdater::NotifyShutdown()
 {
-    VLOG_DEBUG("NotifyShutdown called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Returns true if the master server has requested a restart.
 // Only returns true once per request.
 bool CSteamMasterServerUpdater::WasRestartRequested()
 {
-    VLOG_DEBUG("WasRestartRequested called");
+    VLOG_INFO(__FUNCTION__);
     return false;
 }
 
 // Force it to request a heartbeat from the master servers.
 void CSteamMasterServerUpdater::ForceHeartbeat()
 {
-    VLOG_DEBUG("ForceHeartbeat called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // Manually edit and query the master server list.
 // It will provide name resolution and use the default master server port if none is provided.
 bool CSteamMasterServerUpdater::AddMasterServer( const char *pServerAddress )
 {
-    VLOG_DEBUG("AddMasterServer called - Address: %s", pServerAddress ? pServerAddress : "null");
+    VLOG_INFO(__FUNCTION__ " - Address: %s", pServerAddress ? pServerAddress : "null");
     return true;
 }
 
 bool CSteamMasterServerUpdater::RemoveMasterServer( const char *pServerAddress )
 {
-    VLOG_DEBUG("RemoveMasterServer called - Address: %s", pServerAddress ? pServerAddress : "null");
+    VLOG_INFO(__FUNCTION__ " - Address: %s", pServerAddress ? pServerAddress : "null");
     return true;
 }
 
 int CSteamMasterServerUpdater::GetNumMasterServers()
 {
-    VLOG_DEBUG("GetNumMasterServers called");
+    VLOG_INFO(__FUNCTION__);
     return 0;
 }
 
 // Returns the # of bytes written to pOut.
 int CSteamMasterServerUpdater::GetMasterServerAddress( int iServer, char *pOut, int outBufferSize )
 {
-    VLOG_DEBUG("GetMasterServerAddress called - Server: %d, BufferSize: %d", iServer, outBufferSize);
+    VLOG_INFO(__FUNCTION__ " - Server: %d, BufferSize: %d", iServer, outBufferSize);
     if (pOut && outBufferSize > 0)
     {
         pOut[0] = '\0';
     }
     return 0;
 }
-
-// Helper methods
-CSteamMasterServerUpdater* CSteamMasterServerUpdater::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamMasterServerUpdater();
-    }
-    return s_pInstance;
-}
-
-void CSteamMasterServerUpdater::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
-}
-
