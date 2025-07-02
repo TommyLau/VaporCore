@@ -1,11 +1,8 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright 1996-2015, Valve Corporation, All rights reserved. =======
+//
+// Purpose: Internal private Steamworks API declarations and definitions
+//
+//=============================================================================
 
 #ifndef STEAM_API_INTERNAL_H
 #define STEAM_API_INTERNAL_H

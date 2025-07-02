@@ -621,7 +621,14 @@ ISteamHTTP *CSteamClient::GetISteamHTTP( HSteamUser hSteamuser, HSteamPipe hStea
     }
 }
 
-// Exposes the ISteamUnifiedMessages interface
+// Deprecated - the ISteamUnifiedMessages interface is no longer intended for public consumption.
+void *CSteamClient::DEPRECATED_GetISteamUnifiedMessages( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
+{
+    VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamuser, hSteamPipe, pchVersion);
+    return nullptr;
+}
+
+// Removed from Steam SDK v1.42, backward compatibility
 ISteamUnifiedMessages* CSteamClient::GetISteamUnifiedMessages(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamuser, hSteamPipe, pchVersion);
@@ -794,8 +801,20 @@ ISteamHTMLSurface* CSteamClient::GetISteamHTMLSurface(HSteamUser hSteamuser, HSt
 }
 
 // Helper functions for internal Steam usage
+// Deprecated from Steam SDK v1.37, backward compatibility
+void CSteamClient::DEPRECATED_Set_SteamAPI_CPostAPIResultInProcess(void (*func)())
+{
+    VLOG_INFO(__FUNCTION__);
+}
+
 // Changed from Steam SDK v1.36, backward compatibility
 void CSteamClient::Set_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func)
+{
+    VLOG_INFO(__FUNCTION__);
+}
+
+// Deprecated from Steam SDK v1.37, backward compatibility
+void CSteamClient::DEPRECATED_Remove_SteamAPI_CPostAPIResultInProcess(void (*func)())
 {
     VLOG_INFO(__FUNCTION__);
 }

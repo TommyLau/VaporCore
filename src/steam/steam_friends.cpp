@@ -591,3 +591,15 @@ SteamAPICall_t CSteamFriends::EnumerateFollowingList( uint32 unStartIndex )
     VLOG_INFO(__FUNCTION__ " - StartIndex: %d", unStartIndex);
     return 0;
 }
+
+bool CSteamFriends::IsClanPublic( CSteamID steamIDClan )
+{
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
+    return false;
+}
+
+bool CSteamFriends::IsClanOfficialGameGroup( CSteamID steamIDClan )
+{
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
+    return false;
+}

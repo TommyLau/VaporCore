@@ -18,6 +18,7 @@
 #include <isteamcontroller001.h>
 #include <isteamcontroller003.h>
 #include <isteamcontroller004.h>
+#include <isteamcontroller005.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Native Steam controller support API
@@ -26,7 +27,8 @@ class CSteamController :
     public ISteamController,
     public ISteamController001,
     public ISteamController003,
-    public ISteamController004
+    public ISteamController004,
+    public ISteamController005
 {
 public:
 	// Singleton accessor
@@ -71,6 +73,12 @@ public:
 	// your state loops, instead of trying to place it in all of your state transitions.
 	void ActivateActionSet( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle ) override;
 	ControllerActionSetHandle_t GetCurrentActionSet( ControllerHandle_t controllerHandle ) override;
+
+	void ActivateActionSetLayer( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetLayerHandle ) override;
+	void DeactivateActionSetLayer( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetLayerHandle ) override;
+	void DeactivateAllActionSetLayers( ControllerHandle_t controllerHandle ) override;
+	int GetActiveActionSetLayers( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t *handlesOut ) override;
+
 
 	// ACTIONS
 	// Lookup the handle for a digital action. Best to do this once on startup, and store the handles for all future API calls.
@@ -134,6 +142,9 @@ public:
 
 	// Get a local path to art for on-screen glyph for a particular origin 
 	const char *GetGlyphForActionOrigin( EControllerActionOrigin eOrigin ) override;
+
+	// Returns the input type for a particular handle
+	ESteamInputType GetInputTypeForHandle( ControllerHandle_t controllerHandle ) override;
 
 private:
     // Private constructor and destructor for singleton

@@ -290,6 +290,9 @@ public:
 	CALL_RESULT( FriendsEnumerateFollowingList_t )
 	SteamAPICall_t EnumerateFollowingList( uint32 unStartIndex ) override;
 
+	bool IsClanPublic( CSteamID steamIDClan ) override;
+	bool IsClanOfficialGameGroup( CSteamID steamIDClan ) override;
+
 private:
     // Private constructor and destructor for singleton
     CSteamFriends();

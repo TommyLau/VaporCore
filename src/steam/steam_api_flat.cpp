@@ -20,231 +20,224 @@
 
 S_API HSteamPipe SteamAPI_ISteamClient_CreateSteamPipe(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_CreateSteamPipe called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamClient*>(instancePtr)->CreateSteamPipe();
 }
 
 S_API bool SteamAPI_ISteamClient_BReleaseSteamPipe(intptr_t instancePtr, HSteamPipe hSteamPipe)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_BReleaseSteamPipe called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamClient*>(instancePtr)->BReleaseSteamPipe(hSteamPipe);
 }
 
 S_API HSteamUser SteamAPI_ISteamClient_ConnectToGlobalUser(intptr_t instancePtr, HSteamPipe hSteamPipe)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_ConnectToGlobalUser called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamClient*>(instancePtr)->ConnectToGlobalUser(hSteamPipe);
 }
 
 S_API HSteamUser SteamAPI_ISteamClient_CreateLocalUser(intptr_t instancePtr, HSteamPipe * phSteamPipe, EAccountType eAccountType)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_CreateLocalUser called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamClient*>(instancePtr)->CreateLocalUser(phSteamPipe, eAccountType);
 }
 
 S_API void SteamAPI_ISteamClient_ReleaseUser(intptr_t instancePtr, HSteamPipe hSteamPipe, HSteamUser hUser)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_ReleaseUser called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamClient*>(instancePtr)->ReleaseUser(hSteamPipe, hUser);
 }
 
 S_API class ISteamUser * SteamAPI_ISteamClient_GetISteamUser(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamUser called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamUser(hSteamUser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamGameServer * SteamAPI_ISteamClient_GetISteamGameServer(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamGameServer called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamGameServer(hSteamUser, hSteamPipe, pchVersion);
 }
 
 S_API void SteamAPI_ISteamClient_SetLocalIPBinding(intptr_t instancePtr, uint32 unIP, uint16 usPort)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_SetLocalIPBinding called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamClient*>(instancePtr)->SetLocalIPBinding(unIP, usPort);
 }
 
 S_API class ISteamFriends * SteamAPI_ISteamClient_GetISteamFriends(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamFriends called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamFriends(hSteamUser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamUtils * SteamAPI_ISteamClient_GetISteamUtils(intptr_t instancePtr, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamUtils called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamUtils(hSteamPipe, pchVersion);
 }
 
 S_API class ISteamMatchmaking * SteamAPI_ISteamClient_GetISteamMatchmaking(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamMatchmaking called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamMatchmaking(hSteamUser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamMatchmakingServers * SteamAPI_ISteamClient_GetISteamMatchmakingServers(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamMatchmakingServers called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamMatchmakingServers(hSteamUser, hSteamPipe, pchVersion);
 }
 
 S_API void * SteamAPI_ISteamClient_GetISteamGenericInterface(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamGenericInterface called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamGenericInterface(hSteamUser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamUserStats * SteamAPI_ISteamClient_GetISteamUserStats(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamUserStats called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamUserStats(hSteamUser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamGameServerStats * SteamAPI_ISteamClient_GetISteamGameServerStats(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamGameServerStats called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamGameServerStats(hSteamuser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamApps * SteamAPI_ISteamClient_GetISteamApps(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamApps called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamApps(hSteamUser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamNetworking * SteamAPI_ISteamClient_GetISteamNetworking(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamNetworking called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamNetworking(hSteamUser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamRemoteStorage * SteamAPI_ISteamClient_GetISteamRemoteStorage(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamRemoteStorage called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamRemoteStorage(hSteamuser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamScreenshots * SteamAPI_ISteamClient_GetISteamScreenshots(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamScreenshots called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamScreenshots(hSteamuser, hSteamPipe, pchVersion);
 }
 
 S_API uint32 SteamAPI_ISteamClient_GetIPCCallCount(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetIPCCallCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetIPCCallCount();
 }
 
 S_API void SteamAPI_ISteamClient_SetWarningMessageHook(intptr_t instancePtr, SteamAPIWarningMessageHook_t pFunction)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_SetWarningMessageHook called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamClient*>(instancePtr)->SetWarningMessageHook(pFunction);
 }
 
 S_API bool SteamAPI_ISteamClient_BShutdownIfAllPipesClosed(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_BShutdownIfAllPipesClosed called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamClient*>(instancePtr)->BShutdownIfAllPipesClosed();
 }
 
 S_API class ISteamHTTP * SteamAPI_ISteamClient_GetISteamHTTP(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamHTTP called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamHTTP(hSteamuser, hSteamPipe, pchVersion);
 }
 
-S_API class ISteamUnifiedMessages * SteamAPI_ISteamClient_GetISteamUnifiedMessages(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
-{
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamUnifiedMessages called");
-    if (!instancePtr) return nullptr;
-    return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamUnifiedMessages(hSteamuser, hSteamPipe, pchVersion);
-}
-
 S_API class ISteamController * SteamAPI_ISteamClient_GetISteamController(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamController called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamController(hSteamUser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamUGC * SteamAPI_ISteamClient_GetISteamUGC(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamUGC called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamUGC(hSteamUser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamAppList * SteamAPI_ISteamClient_GetISteamAppList(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamAppList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamAppList(hSteamUser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamMusic * SteamAPI_ISteamClient_GetISteamMusic(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamMusic called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamMusic(hSteamuser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamMusicRemote * SteamAPI_ISteamClient_GetISteamMusicRemote(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamMusicRemote called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamMusicRemote(hSteamuser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamHTMLSurface * SteamAPI_ISteamClient_GetISteamHTMLSurface(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamHTMLSurface called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamHTMLSurface(hSteamuser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamInventory * SteamAPI_ISteamClient_GetISteamInventory(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamInventory called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamInventory(hSteamuser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamVideo * SteamAPI_ISteamClient_GetISteamVideo(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamVideo called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamVideo(hSteamuser, hSteamPipe, pchVersion);
 }
 
 S_API class ISteamParentalSettings * SteamAPI_ISteamClient_GetISteamParentalSettings(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamParentalSettings called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamParentalSettings(hSteamuser, hSteamPipe, pchVersion);
 }
@@ -256,203 +249,203 @@ S_API class ISteamParentalSettings * SteamAPI_ISteamClient_GetISteamParentalSett
 
 S_API HSteamUser SteamAPI_ISteamUser_GetHSteamUser(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_GetHSteamUser called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUser*>(instancePtr)->GetHSteamUser();
 }
 
 S_API bool SteamAPI_ISteamUser_BLoggedOn(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_BLoggedOn called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUser*>(instancePtr)->BLoggedOn();
 }
 
 S_API uint64 SteamAPI_ISteamUser_GetSteamID(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_GetSteamID called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUser*>(instancePtr)->GetSteamID().ConvertToUint64();
 }
 
 S_API int SteamAPI_ISteamUser_InitiateGameConnection(intptr_t instancePtr, void * pAuthBlob, int cbMaxAuthBlob, class CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer, bool bSecure)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_InitiateGameConnection called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUser*>(instancePtr)->InitiateGameConnection(pAuthBlob, cbMaxAuthBlob, steamIDGameServer, unIPServer, usPortServer, bSecure);
 }
 
 S_API void SteamAPI_ISteamUser_TerminateGameConnection(intptr_t instancePtr, uint32 unIPServer, uint16 usPortServer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_TerminateGameConnection called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUser*>(instancePtr)->TerminateGameConnection(unIPServer, usPortServer);
 }
 
 S_API void SteamAPI_ISteamUser_TrackAppUsageEvent(intptr_t instancePtr, class CGameID gameID, int eAppUsageEvent, const char * pchExtraInfo)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_TrackAppUsageEvent called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUser*>(instancePtr)->TrackAppUsageEvent(gameID, eAppUsageEvent, pchExtraInfo);
 }
 
 S_API bool SteamAPI_ISteamUser_GetUserDataFolder(intptr_t instancePtr, char * pchBuffer, int cubBuffer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_GetUserDataFolder called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUser*>(instancePtr)->GetUserDataFolder(pchBuffer, cubBuffer);
 }
 
 S_API void SteamAPI_ISteamUser_StartVoiceRecording(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_StartVoiceRecording called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUser*>(instancePtr)->StartVoiceRecording();
 }
 
 S_API void SteamAPI_ISteamUser_StopVoiceRecording(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_StopVoiceRecording called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUser*>(instancePtr)->StopVoiceRecording();
 }
 
 S_API EVoiceResult SteamAPI_ISteamUser_GetAvailableVoice(intptr_t instancePtr, uint32 * pcbCompressed, uint32 * pcbUncompressed, uint32 nUncompressedVoiceDesiredSampleRate)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_GetAvailableVoice called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EVoiceResultNotInitialized;
     return reinterpret_cast<ISteamUser*>(instancePtr)->GetAvailableVoice(pcbCompressed, pcbUncompressed, nUncompressedVoiceDesiredSampleRate);
 }
 
 S_API EVoiceResult SteamAPI_ISteamUser_GetVoice(intptr_t instancePtr, bool bWantCompressed, void * pDestBuffer, uint32 cbDestBufferSize, uint32 * nBytesWritten, bool bWantUncompressed, void * pUncompressedDestBuffer, uint32 cbUncompressedDestBufferSize, uint32 * nUncompressBytesWritten, uint32 nUncompressedVoiceDesiredSampleRate)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_GetVoice called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EVoiceResultNotInitialized;
     return reinterpret_cast<ISteamUser*>(instancePtr)->GetVoice(bWantCompressed, pDestBuffer, cbDestBufferSize, nBytesWritten, bWantUncompressed, pUncompressedDestBuffer, cbUncompressedDestBufferSize, nUncompressBytesWritten, nUncompressedVoiceDesiredSampleRate);
 }
 
 S_API EVoiceResult SteamAPI_ISteamUser_DecompressVoice(intptr_t instancePtr, const void * pCompressed, uint32 cbCompressed, void * pDestBuffer, uint32 cbDestBufferSize, uint32 * nBytesWritten, uint32 nDesiredSampleRate)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_DecompressVoice called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EVoiceResultNotInitialized;
     return reinterpret_cast<ISteamUser*>(instancePtr)->DecompressVoice(pCompressed, cbCompressed, pDestBuffer, cbDestBufferSize, nBytesWritten, nDesiredSampleRate);
 }
 
 S_API uint32 SteamAPI_ISteamUser_GetVoiceOptimalSampleRate(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_GetVoiceOptimalSampleRate called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUser*>(instancePtr)->GetVoiceOptimalSampleRate();
 }
 
 S_API HAuthTicket SteamAPI_ISteamUser_GetAuthSessionTicket(intptr_t instancePtr, void * pTicket, int cbMaxTicket, uint32 * pcbTicket)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_GetAuthSessionTicket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUser*>(instancePtr)->GetAuthSessionTicket(pTicket, cbMaxTicket, pcbTicket);
 }
 
 S_API EBeginAuthSessionResult SteamAPI_ISteamUser_BeginAuthSession(intptr_t instancePtr, const void * pAuthTicket, int cbAuthTicket, class CSteamID steamID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_BeginAuthSession called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EBeginAuthSessionResultInvalidTicket;
     return reinterpret_cast<ISteamUser*>(instancePtr)->BeginAuthSession(pAuthTicket, cbAuthTicket, steamID);
 }
 
 S_API void SteamAPI_ISteamUser_EndAuthSession(intptr_t instancePtr, class CSteamID steamID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_EndAuthSession called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUser*>(instancePtr)->EndAuthSession(steamID);
 }
 
 S_API void SteamAPI_ISteamUser_CancelAuthTicket(intptr_t instancePtr, HAuthTicket hAuthTicket)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_CancelAuthTicket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUser*>(instancePtr)->CancelAuthTicket(hAuthTicket);
 }
 
 S_API EUserHasLicenseForAppResult SteamAPI_ISteamUser_UserHasLicenseForApp(intptr_t instancePtr, class CSteamID steamID, AppId_t appID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_UserHasLicenseForApp called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EUserHasLicenseResultHasLicense;
     return reinterpret_cast<ISteamUser*>(instancePtr)->UserHasLicenseForApp(steamID, appID);
 }
 
 S_API bool SteamAPI_ISteamUser_BIsBehindNAT(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_BIsBehindNAT called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUser*>(instancePtr)->BIsBehindNAT();
 }
 
 S_API void SteamAPI_ISteamUser_AdvertiseGame(intptr_t instancePtr, class CSteamID steamIDGameServer, uint32 unIPServer, uint16 usPortServer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_AdvertiseGame called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUser*>(instancePtr)->AdvertiseGame(steamIDGameServer, unIPServer, usPortServer);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUser_RequestEncryptedAppTicket(intptr_t instancePtr, void * pDataToInclude, int cbDataToInclude)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_RequestEncryptedAppTicket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUser*>(instancePtr)->RequestEncryptedAppTicket(pDataToInclude, cbDataToInclude);
 }
 
 S_API bool SteamAPI_ISteamUser_GetEncryptedAppTicket(intptr_t instancePtr, void * pTicket, int cbMaxTicket, uint32 * pcbTicket)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_GetEncryptedAppTicket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUser*>(instancePtr)->GetEncryptedAppTicket(pTicket, cbMaxTicket, pcbTicket);
 }
 
 S_API int SteamAPI_ISteamUser_GetGameBadgeLevel(intptr_t instancePtr, int nSeries, bool bFoil)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_GetGameBadgeLevel called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUser*>(instancePtr)->GetGameBadgeLevel(nSeries, bFoil);
 }
 
 S_API int SteamAPI_ISteamUser_GetPlayerSteamLevel(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_GetPlayerSteamLevel called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUser*>(instancePtr)->GetPlayerSteamLevel();
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUser_RequestStoreAuthURL(intptr_t instancePtr, const char * pchRedirectURL)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_RequestStoreAuthURL called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUser*>(instancePtr)->RequestStoreAuthURL(pchRedirectURL);
 }
 
 S_API bool SteamAPI_ISteamUser_BIsPhoneVerified(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_BIsPhoneVerified called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUser*>(instancePtr)->BIsPhoneVerified();
 }
 
 S_API bool SteamAPI_ISteamUser_BIsTwoFactorEnabled(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_BIsTwoFactorEnabled called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUser*>(instancePtr)->BIsTwoFactorEnabled();
 }
 
 S_API bool SteamAPI_ISteamUser_BIsPhoneIdentifying(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_BIsPhoneIdentifying called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUser*>(instancePtr)->BIsPhoneIdentifying();
 }
 
 S_API bool SteamAPI_ISteamUser_BIsPhoneRequiringVerification(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUser_BIsPhoneRequiringVerification called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUser*>(instancePtr)->BIsPhoneRequiringVerification();
 }
@@ -464,492 +457,506 @@ S_API bool SteamAPI_ISteamUser_BIsPhoneRequiringVerification(intptr_t instancePt
 
 S_API const char * SteamAPI_ISteamFriends_GetPersonaName(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetPersonaName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetPersonaName();
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamFriends_SetPersonaName(intptr_t instancePtr, const char * pchPersonaName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_SetPersonaName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->SetPersonaName(pchPersonaName);
 }
 
 S_API EPersonaState SteamAPI_ISteamFriends_GetPersonaState(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetPersonaState called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EPersonaStateOffline;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetPersonaState();
 }
 
 S_API int SteamAPI_ISteamFriends_GetFriendCount(intptr_t instancePtr, int iFriendFlags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendCount(iFriendFlags);
 }
 
 S_API uint64 SteamAPI_ISteamFriends_GetFriendByIndex(intptr_t instancePtr, int iFriend, int iFriendFlags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendByIndex called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendByIndex(iFriend, iFriendFlags).ConvertToUint64();
 }
 
 S_API EFriendRelationship SteamAPI_ISteamFriends_GetFriendRelationship(intptr_t instancePtr, class CSteamID steamIDFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendRelationship called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EFriendRelationshipNone;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendRelationship(steamIDFriend);
 }
 
 S_API EPersonaState SteamAPI_ISteamFriends_GetFriendPersonaState(intptr_t instancePtr, class CSteamID steamIDFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendPersonaState called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EPersonaStateOffline;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendPersonaState(steamIDFriend);
 }
 
 S_API const char * SteamAPI_ISteamFriends_GetFriendPersonaName(intptr_t instancePtr, class CSteamID steamIDFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendPersonaName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendPersonaName(steamIDFriend);
 }
 
 S_API bool SteamAPI_ISteamFriends_GetFriendGamePlayed(intptr_t instancePtr, class CSteamID steamIDFriend, struct FriendGameInfo_t * pFriendGameInfo)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendGamePlayed called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendGamePlayed(steamIDFriend, pFriendGameInfo);
 }
 
 S_API const char * SteamAPI_ISteamFriends_GetFriendPersonaNameHistory(intptr_t instancePtr, class CSteamID steamIDFriend, int iPersonaName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendPersonaNameHistory called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendPersonaNameHistory(steamIDFriend, iPersonaName);
 }
 
 S_API int SteamAPI_ISteamFriends_GetFriendSteamLevel(intptr_t instancePtr, class CSteamID steamIDFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendSteamLevel called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendSteamLevel(steamIDFriend);
 }
 
 S_API const char * SteamAPI_ISteamFriends_GetPlayerNickname(intptr_t instancePtr, class CSteamID steamIDPlayer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetPlayerNickname called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetPlayerNickname(steamIDPlayer);
 }
 
 S_API int SteamAPI_ISteamFriends_GetFriendsGroupCount(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendsGroupCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendsGroupCount();
 }
 
 S_API FriendsGroupID_t SteamAPI_ISteamFriends_GetFriendsGroupIDByIndex(intptr_t instancePtr, int iFG)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendsGroupIDByIndex called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendsGroupIDByIndex(iFG);
 }
 
 S_API const char * SteamAPI_ISteamFriends_GetFriendsGroupName(intptr_t instancePtr, FriendsGroupID_t friendsGroupID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendsGroupName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendsGroupName(friendsGroupID);
 }
 
 S_API int SteamAPI_ISteamFriends_GetFriendsGroupMembersCount(intptr_t instancePtr, FriendsGroupID_t friendsGroupID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendsGroupMembersCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendsGroupMembersCount(friendsGroupID);
 }
 
 S_API void SteamAPI_ISteamFriends_GetFriendsGroupMembersList(intptr_t instancePtr, FriendsGroupID_t friendsGroupID, class CSteamID * pOutSteamIDMembers, int nMembersCount)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendsGroupMembersList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendsGroupMembersList(friendsGroupID, pOutSteamIDMembers, nMembersCount);
 }
 
 S_API bool SteamAPI_ISteamFriends_HasFriend(intptr_t instancePtr, class CSteamID steamIDFriend, int iFriendFlags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_HasFriend called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->HasFriend(steamIDFriend, iFriendFlags);
 }
 
 S_API int SteamAPI_ISteamFriends_GetClanCount(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetClanCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetClanCount();
 }
 
 S_API uint64 SteamAPI_ISteamFriends_GetClanByIndex(intptr_t instancePtr, int iClan)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetClanByIndex called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetClanByIndex(iClan).ConvertToUint64();
 }
 
 S_API const char * SteamAPI_ISteamFriends_GetClanName(intptr_t instancePtr, class CSteamID steamIDClan)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetClanName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetClanName(steamIDClan);
 }
 
 S_API const char * SteamAPI_ISteamFriends_GetClanTag(intptr_t instancePtr, class CSteamID steamIDClan)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetClanTag called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetClanTag(steamIDClan);
 }
 
 S_API bool SteamAPI_ISteamFriends_GetClanActivityCounts(intptr_t instancePtr, class CSteamID steamIDClan, int * pnOnline, int * pnInGame, int * pnChatting)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetClanActivityCounts called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetClanActivityCounts(steamIDClan, pnOnline, pnInGame, pnChatting);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamFriends_DownloadClanActivityCounts(intptr_t instancePtr, class CSteamID * psteamIDClans, int cClansToRequest)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_DownloadClanActivityCounts called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->DownloadClanActivityCounts(psteamIDClans, cClansToRequest);
 }
 
 S_API int SteamAPI_ISteamFriends_GetFriendCountFromSource(intptr_t instancePtr, class CSteamID steamIDSource)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendCountFromSource called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendCountFromSource(steamIDSource);
 }
 
 S_API uint64 SteamAPI_ISteamFriends_GetFriendFromSourceByIndex(intptr_t instancePtr, class CSteamID steamIDSource, int iFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendFromSourceByIndex called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendFromSourceByIndex(steamIDSource, iFriend).ConvertToUint64();
 }
 
 S_API bool SteamAPI_ISteamFriends_IsUserInSource(intptr_t instancePtr, class CSteamID steamIDUser, class CSteamID steamIDSource)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_IsUserInSource called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->IsUserInSource(steamIDUser, steamIDSource);
 }
 
 S_API void SteamAPI_ISteamFriends_SetInGameVoiceSpeaking(intptr_t instancePtr, class CSteamID steamIDUser, bool bSpeaking)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_SetInGameVoiceSpeaking called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamFriends*>(instancePtr)->SetInGameVoiceSpeaking(steamIDUser, bSpeaking);
 }
 
 S_API void SteamAPI_ISteamFriends_ActivateGameOverlay(intptr_t instancePtr, const char * pchDialog)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_ActivateGameOverlay called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamFriends*>(instancePtr)->ActivateGameOverlay(pchDialog);
 }
 
 S_API void SteamAPI_ISteamFriends_ActivateGameOverlayToUser(intptr_t instancePtr, const char * pchDialog, class CSteamID steamID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_ActivateGameOverlayToUser called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamFriends*>(instancePtr)->ActivateGameOverlayToUser(pchDialog, steamID);
 }
 
 S_API void SteamAPI_ISteamFriends_ActivateGameOverlayToWebPage(intptr_t instancePtr, const char * pchURL)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_ActivateGameOverlayToWebPage called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamFriends*>(instancePtr)->ActivateGameOverlayToWebPage(pchURL);
 }
 
 S_API void SteamAPI_ISteamFriends_ActivateGameOverlayToStore(intptr_t instancePtr, AppId_t nAppID, EOverlayToStoreFlag eFlag)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_ActivateGameOverlayToStore called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamFriends*>(instancePtr)->ActivateGameOverlayToStore(nAppID, eFlag);
 }
 
 S_API void SteamAPI_ISteamFriends_SetPlayedWith(intptr_t instancePtr, class CSteamID steamIDUserPlayedWith)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_SetPlayedWith called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamFriends*>(instancePtr)->SetPlayedWith(steamIDUserPlayedWith);
 }
 
 S_API void SteamAPI_ISteamFriends_ActivateGameOverlayInviteDialog(intptr_t instancePtr, class CSteamID steamIDLobby)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_ActivateGameOverlayInviteDialog called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamFriends*>(instancePtr)->ActivateGameOverlayInviteDialog(steamIDLobby);
 }
 
 S_API int SteamAPI_ISteamFriends_GetSmallFriendAvatar(intptr_t instancePtr, class CSteamID steamIDFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetSmallFriendAvatar called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetSmallFriendAvatar(steamIDFriend);
 }
 
 S_API int SteamAPI_ISteamFriends_GetMediumFriendAvatar(intptr_t instancePtr, class CSteamID steamIDFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetMediumFriendAvatar called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetMediumFriendAvatar(steamIDFriend);
 }
 
 S_API int SteamAPI_ISteamFriends_GetLargeFriendAvatar(intptr_t instancePtr, class CSteamID steamIDFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetLargeFriendAvatar called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetLargeFriendAvatar(steamIDFriend);
 }
 
 S_API bool SteamAPI_ISteamFriends_RequestUserInformation(intptr_t instancePtr, class CSteamID steamIDUser, bool bRequireNameOnly)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_RequestUserInformation called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->RequestUserInformation(steamIDUser, bRequireNameOnly);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamFriends_RequestClanOfficerList(intptr_t instancePtr, class CSteamID steamIDClan)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_RequestClanOfficerList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->RequestClanOfficerList(steamIDClan);
 }
 
 S_API uint64 SteamAPI_ISteamFriends_GetClanOwner(intptr_t instancePtr, class CSteamID steamIDClan)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetClanOwner called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetClanOwner(steamIDClan).ConvertToUint64();
 }
 
 S_API int SteamAPI_ISteamFriends_GetClanOfficerCount(intptr_t instancePtr, class CSteamID steamIDClan)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetClanOfficerCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetClanOfficerCount(steamIDClan);
 }
 
 S_API uint64 SteamAPI_ISteamFriends_GetClanOfficerByIndex(intptr_t instancePtr, class CSteamID steamIDClan, int iOfficer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetClanOfficerByIndex called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetClanOfficerByIndex(steamIDClan, iOfficer).ConvertToUint64();
 }
 
 S_API uint32 SteamAPI_ISteamFriends_GetUserRestrictions(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetUserRestrictions called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetUserRestrictions();
 }
 
 S_API bool SteamAPI_ISteamFriends_SetRichPresence(intptr_t instancePtr, const char * pchKey, const char * pchValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_SetRichPresence called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->SetRichPresence(pchKey, pchValue);
 }
 
 S_API void SteamAPI_ISteamFriends_ClearRichPresence(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_ClearRichPresence called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamFriends*>(instancePtr)->ClearRichPresence();
 }
 
 S_API const char * SteamAPI_ISteamFriends_GetFriendRichPresence(intptr_t instancePtr, class CSteamID steamIDFriend, const char * pchKey)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendRichPresence called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendRichPresence(steamIDFriend, pchKey);
 }
 
 S_API int SteamAPI_ISteamFriends_GetFriendRichPresenceKeyCount(intptr_t instancePtr, class CSteamID steamIDFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendRichPresenceKeyCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendRichPresenceKeyCount(steamIDFriend);
 }
 
 S_API const char * SteamAPI_ISteamFriends_GetFriendRichPresenceKeyByIndex(intptr_t instancePtr, class CSteamID steamIDFriend, int iKey)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendRichPresenceKeyByIndex called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendRichPresenceKeyByIndex(steamIDFriend, iKey);
 }
 
 S_API void SteamAPI_ISteamFriends_RequestFriendRichPresence(intptr_t instancePtr, class CSteamID steamIDFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_RequestFriendRichPresence called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamFriends*>(instancePtr)->RequestFriendRichPresence(steamIDFriend);
 }
 
 S_API bool SteamAPI_ISteamFriends_InviteUserToGame(intptr_t instancePtr, class CSteamID steamIDFriend, const char * pchConnectString)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_InviteUserToGame called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->InviteUserToGame(steamIDFriend, pchConnectString);
 }
 
 S_API int SteamAPI_ISteamFriends_GetCoplayFriendCount(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetCoplayFriendCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetCoplayFriendCount();
 }
 
 S_API uint64 SteamAPI_ISteamFriends_GetCoplayFriend(intptr_t instancePtr, int iCoplayFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetCoplayFriend called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetCoplayFriend(iCoplayFriend).ConvertToUint64();
 }
 
 S_API int SteamAPI_ISteamFriends_GetFriendCoplayTime(intptr_t instancePtr, class CSteamID steamIDFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendCoplayTime called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendCoplayTime(steamIDFriend);
 }
 
 S_API AppId_t SteamAPI_ISteamFriends_GetFriendCoplayGame(intptr_t instancePtr, class CSteamID steamIDFriend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendCoplayGame called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendCoplayGame(steamIDFriend);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamFriends_JoinClanChatRoom(intptr_t instancePtr, class CSteamID steamIDClan)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_JoinClanChatRoom called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->JoinClanChatRoom(steamIDClan);
 }
 
 S_API bool SteamAPI_ISteamFriends_LeaveClanChatRoom(intptr_t instancePtr, class CSteamID steamIDClan)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_LeaveClanChatRoom called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->LeaveClanChatRoom(steamIDClan);
 }
 
 S_API int SteamAPI_ISteamFriends_GetClanChatMemberCount(intptr_t instancePtr, class CSteamID steamIDClan)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetClanChatMemberCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetClanChatMemberCount(steamIDClan);
 }
 
 S_API uint64 SteamAPI_ISteamFriends_GetChatMemberByIndex(intptr_t instancePtr, class CSteamID steamIDClan, int iUser)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetChatMemberByIndex called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetChatMemberByIndex(steamIDClan, iUser).ConvertToUint64();
 }
 
 S_API bool SteamAPI_ISteamFriends_SendClanChatMessage(intptr_t instancePtr, class CSteamID steamIDClanChat, const char * pchText)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_SendClanChatMessage called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->SendClanChatMessage(steamIDClanChat, pchText);
 }
 
 S_API int SteamAPI_ISteamFriends_GetClanChatMessage(intptr_t instancePtr, class CSteamID steamIDClanChat, int iMessage, void * prgchText, int cchTextMax, EChatEntryType * peChatEntryType, class CSteamID * psteamidChatter)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetClanChatMessage called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetClanChatMessage(steamIDClanChat, iMessage, prgchText, cchTextMax, peChatEntryType, psteamidChatter);
 }
 
 S_API bool SteamAPI_ISteamFriends_IsClanChatAdmin(intptr_t instancePtr, class CSteamID steamIDClanChat, class CSteamID steamIDUser)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_IsClanChatAdmin called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->IsClanChatAdmin(steamIDClanChat, steamIDUser);
 }
 
 S_API bool SteamAPI_ISteamFriends_IsClanChatWindowOpenInSteam(intptr_t instancePtr, class CSteamID steamIDClanChat)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_IsClanChatWindowOpenInSteam called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->IsClanChatWindowOpenInSteam(steamIDClanChat);
 }
 
 S_API bool SteamAPI_ISteamFriends_OpenClanChatWindowInSteam(intptr_t instancePtr, class CSteamID steamIDClanChat)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_OpenClanChatWindowInSteam called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->OpenClanChatWindowInSteam(steamIDClanChat);
 }
 
 S_API bool SteamAPI_ISteamFriends_CloseClanChatWindowInSteam(intptr_t instancePtr, class CSteamID steamIDClanChat)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_CloseClanChatWindowInSteam called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->CloseClanChatWindowInSteam(steamIDClanChat);
 }
 
 S_API bool SteamAPI_ISteamFriends_SetListenForFriendsMessages(intptr_t instancePtr, bool bInterceptEnabled)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_SetListenForFriendsMessages called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->SetListenForFriendsMessages(bInterceptEnabled);
 }
 
 S_API bool SteamAPI_ISteamFriends_ReplyToFriendMessage(intptr_t instancePtr, class CSteamID steamIDFriend, const char * pchMsgToSend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_ReplyToFriendMessage called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->ReplyToFriendMessage(steamIDFriend, pchMsgToSend);
 }
 
 S_API int SteamAPI_ISteamFriends_GetFriendMessage(intptr_t instancePtr, class CSteamID steamIDFriend, int iMessageID, void * pvData, int cubData, EChatEntryType * peChatEntryType)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFriendMessage called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFriendMessage(steamIDFriend, iMessageID, pvData, cubData, peChatEntryType);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamFriends_GetFollowerCount(intptr_t instancePtr, class CSteamID steamID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_GetFollowerCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->GetFollowerCount(steamID);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamFriends_IsFollowing(intptr_t instancePtr, class CSteamID steamID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_IsFollowing called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->IsFollowing(steamID);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamFriends_EnumerateFollowingList(intptr_t instancePtr, uint32 unStartIndex)
 {
-    VLOG_DEBUG("SteamAPI_ISteamFriends_EnumerateFollowingList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->EnumerateFollowingList(unStartIndex);
+}
+
+S_API bool SteamAPI_ISteamFriends_IsClanPublic(intptr_t instancePtr, class CSteamID steamIDClan)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamFriends*>(instancePtr)->IsClanPublic(steamIDClan);
+}
+
+S_API bool SteamAPI_ISteamFriends_IsClanOfficialGameGroup(intptr_t instancePtr, class CSteamID steamIDClan)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamFriends*>(instancePtr)->IsClanOfficialGameGroup(steamIDClan);
 }
 
 
@@ -959,203 +966,203 @@ S_API SteamAPICall_t SteamAPI_ISteamFriends_EnumerateFollowingList(intptr_t inst
 
 S_API uint32 SteamAPI_ISteamUtils_GetSecondsSinceAppActive(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetSecondsSinceAppActive called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetSecondsSinceAppActive();
 }
 
 S_API uint32 SteamAPI_ISteamUtils_GetSecondsSinceComputerActive(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetSecondsSinceComputerActive called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetSecondsSinceComputerActive();
 }
 
 S_API EUniverse SteamAPI_ISteamUtils_GetConnectedUniverse(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetConnectedUniverse called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EUniverseInvalid;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetConnectedUniverse();
 }
 
 S_API uint32 SteamAPI_ISteamUtils_GetServerRealTime(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetServerRealTime called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetServerRealTime();
 }
 
 S_API const char * SteamAPI_ISteamUtils_GetIPCountry(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetIPCountry called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetIPCountry();
 }
 
 S_API bool SteamAPI_ISteamUtils_GetImageSize(intptr_t instancePtr, int iImage, uint32 * pnWidth, uint32 * pnHeight)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetImageSize called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetImageSize(iImage, pnWidth, pnHeight);
 }
 
 S_API bool SteamAPI_ISteamUtils_GetImageRGBA(intptr_t instancePtr, int iImage, uint8 * pubDest, int nDestBufferSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetImageRGBA called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetImageRGBA(iImage, pubDest, nDestBufferSize);
 }
 
 S_API bool SteamAPI_ISteamUtils_GetCSERIPPort(intptr_t instancePtr, uint32 * unIP, uint16 * usPort)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetCSERIPPort called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetCSERIPPort(unIP, usPort);
 }
 
 S_API uint8 SteamAPI_ISteamUtils_GetCurrentBatteryPower(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetCurrentBatteryPower called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetCurrentBatteryPower();
 }
 
 S_API uint32 SteamAPI_ISteamUtils_GetAppID(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetAppID called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetAppID();
 }
 
 S_API void SteamAPI_ISteamUtils_SetOverlayNotificationPosition(intptr_t instancePtr, ENotificationPosition eNotificationPosition)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_SetOverlayNotificationPosition called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUtils*>(instancePtr)->SetOverlayNotificationPosition(eNotificationPosition);
 }
 
 S_API bool SteamAPI_ISteamUtils_IsAPICallCompleted(intptr_t instancePtr, SteamAPICall_t hSteamAPICall, bool * pbFailed)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_IsAPICallCompleted called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->IsAPICallCompleted(hSteamAPICall, pbFailed);
 }
 
 S_API ESteamAPICallFailure SteamAPI_ISteamUtils_GetAPICallFailureReason(intptr_t instancePtr, SteamAPICall_t hSteamAPICall)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetAPICallFailureReason called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_ESteamAPICallFailureNone;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetAPICallFailureReason(hSteamAPICall);
 }
 
 S_API bool SteamAPI_ISteamUtils_GetAPICallResult(intptr_t instancePtr, SteamAPICall_t hSteamAPICall, void * pCallback, int cubCallback, int iCallbackExpected, bool * pbFailed)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetAPICallResult called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetAPICallResult(hSteamAPICall, pCallback, cubCallback, iCallbackExpected, pbFailed);
 }
 
 S_API uint32 SteamAPI_ISteamUtils_GetIPCCallCount(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetIPCCallCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetIPCCallCount();
 }
 
 S_API void SteamAPI_ISteamUtils_SetWarningMessageHook(intptr_t instancePtr, SteamAPIWarningMessageHook_t pFunction)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_SetWarningMessageHook called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUtils*>(instancePtr)->SetWarningMessageHook(pFunction);
 }
 
 S_API bool SteamAPI_ISteamUtils_IsOverlayEnabled(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_IsOverlayEnabled called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->IsOverlayEnabled();
 }
 
 S_API bool SteamAPI_ISteamUtils_BOverlayNeedsPresent(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_BOverlayNeedsPresent called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->BOverlayNeedsPresent();
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUtils_CheckFileSignature(intptr_t instancePtr, const char * szFileName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_CheckFileSignature called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->CheckFileSignature(szFileName);
 }
 
 S_API bool SteamAPI_ISteamUtils_ShowGamepadTextInput(intptr_t instancePtr, EGamepadTextInputMode eInputMode, EGamepadTextInputLineMode eLineInputMode, const char * pchDescription, uint32 unCharMax, const char * pchExistingText)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_ShowGamepadTextInput called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->ShowGamepadTextInput(eInputMode, eLineInputMode, pchDescription, unCharMax, pchExistingText);
 }
 
 S_API uint32 SteamAPI_ISteamUtils_GetEnteredGamepadTextLength(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetEnteredGamepadTextLength called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetEnteredGamepadTextLength();
 }
 
 S_API bool SteamAPI_ISteamUtils_GetEnteredGamepadTextInput(intptr_t instancePtr, char * pchText, uint32 cchText)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetEnteredGamepadTextInput called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetEnteredGamepadTextInput(pchText, cchText);
 }
 
 S_API const char * SteamAPI_ISteamUtils_GetSteamUILanguage(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_GetSteamUILanguage called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->GetSteamUILanguage();
 }
 
 S_API bool SteamAPI_ISteamUtils_IsSteamRunningInVR(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_IsSteamRunningInVR called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->IsSteamRunningInVR();
 }
 
 S_API void SteamAPI_ISteamUtils_SetOverlayNotificationInset(intptr_t instancePtr, int nHorizontalInset, int nVerticalInset)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_SetOverlayNotificationInset called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUtils*>(instancePtr)->SetOverlayNotificationInset(nHorizontalInset, nVerticalInset);
 }
 
 S_API bool SteamAPI_ISteamUtils_IsSteamInBigPictureMode(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_IsSteamInBigPictureMode called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->IsSteamInBigPictureMode();
 }
 
 S_API void SteamAPI_ISteamUtils_StartVRDashboard(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_StartVRDashboard called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUtils*>(instancePtr)->StartVRDashboard();
 }
 
 S_API bool SteamAPI_ISteamUtils_IsVRHeadsetStreamingEnabled(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_IsVRHeadsetStreamingEnabled called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->IsVRHeadsetStreamingEnabled();
 }
 
 S_API void SteamAPI_ISteamUtils_SetVRHeadsetStreamingEnabled(intptr_t instancePtr, bool bEnabled)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_SetVRHeadsetStreamingEnabled called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUtils*>(instancePtr)->SetVRHeadsetStreamingEnabled(bEnabled);
 }
@@ -1167,266 +1174,266 @@ S_API void SteamAPI_ISteamUtils_SetVRHeadsetStreamingEnabled(intptr_t instancePt
 
 S_API int SteamAPI_ISteamMatchmaking_GetFavoriteGameCount(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetFavoriteGameCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetFavoriteGameCount();
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_GetFavoriteGame(intptr_t instancePtr, int iGame, AppId_t * pnAppID, uint32 * pnIP, uint16 * pnConnPort, uint16 * pnQueryPort, uint32 * punFlags, uint32 * pRTime32LastPlayedOnServer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetFavoriteGame called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetFavoriteGame(iGame, pnAppID, pnIP, pnConnPort, pnQueryPort, punFlags, pRTime32LastPlayedOnServer);
 }
 
 S_API int SteamAPI_ISteamMatchmaking_AddFavoriteGame(intptr_t instancePtr, AppId_t nAppID, uint32 nIP, uint16 nConnPort, uint16 nQueryPort, uint32 unFlags, uint32 rTime32LastPlayedOnServer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_AddFavoriteGame called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->AddFavoriteGame(nAppID, nIP, nConnPort, nQueryPort, unFlags, rTime32LastPlayedOnServer);
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_RemoveFavoriteGame(intptr_t instancePtr, AppId_t nAppID, uint32 nIP, uint16 nConnPort, uint16 nQueryPort, uint32 unFlags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_RemoveFavoriteGame called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->RemoveFavoriteGame(nAppID, nIP, nConnPort, nQueryPort, unFlags);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamMatchmaking_RequestLobbyList(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_RequestLobbyList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->RequestLobbyList();
 }
 
 S_API void SteamAPI_ISteamMatchmaking_AddRequestLobbyListStringFilter(intptr_t instancePtr, const char * pchKeyToMatch, const char * pchValueToMatch, ELobbyComparison eComparisonType)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_AddRequestLobbyListStringFilter called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmaking*>(instancePtr)->AddRequestLobbyListStringFilter(pchKeyToMatch, pchValueToMatch, eComparisonType);
 }
 
 S_API void SteamAPI_ISteamMatchmaking_AddRequestLobbyListNumericalFilter(intptr_t instancePtr, const char * pchKeyToMatch, int nValueToMatch, ELobbyComparison eComparisonType)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_AddRequestLobbyListNumericalFilter called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmaking*>(instancePtr)->AddRequestLobbyListNumericalFilter(pchKeyToMatch, nValueToMatch, eComparisonType);
 }
 
 S_API void SteamAPI_ISteamMatchmaking_AddRequestLobbyListNearValueFilter(intptr_t instancePtr, const char * pchKeyToMatch, int nValueToBeCloseTo)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_AddRequestLobbyListNearValueFilter called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmaking*>(instancePtr)->AddRequestLobbyListNearValueFilter(pchKeyToMatch, nValueToBeCloseTo);
 }
 
 S_API void SteamAPI_ISteamMatchmaking_AddRequestLobbyListFilterSlotsAvailable(intptr_t instancePtr, int nSlotsAvailable)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_AddRequestLobbyListFilterSlotsAvailable called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmaking*>(instancePtr)->AddRequestLobbyListFilterSlotsAvailable(nSlotsAvailable);
 }
 
 S_API void SteamAPI_ISteamMatchmaking_AddRequestLobbyListDistanceFilter(intptr_t instancePtr, ELobbyDistanceFilter eLobbyDistanceFilter)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_AddRequestLobbyListDistanceFilter called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmaking*>(instancePtr)->AddRequestLobbyListDistanceFilter(eLobbyDistanceFilter);
 }
 
 S_API void SteamAPI_ISteamMatchmaking_AddRequestLobbyListResultCountFilter(intptr_t instancePtr, int cMaxResults)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_AddRequestLobbyListResultCountFilter called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmaking*>(instancePtr)->AddRequestLobbyListResultCountFilter(cMaxResults);
 }
 
 S_API void SteamAPI_ISteamMatchmaking_AddRequestLobbyListCompatibleMembersFilter(intptr_t instancePtr, class CSteamID steamIDLobby)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_AddRequestLobbyListCompatibleMembersFilter called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmaking*>(instancePtr)->AddRequestLobbyListCompatibleMembersFilter(steamIDLobby);
 }
 
 S_API uint64 SteamAPI_ISteamMatchmaking_GetLobbyByIndex(intptr_t instancePtr, int iLobby)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetLobbyByIndex called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetLobbyByIndex(iLobby).ConvertToUint64();
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamMatchmaking_CreateLobby(intptr_t instancePtr, ELobbyType eLobbyType, int cMaxMembers)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_CreateLobby called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->CreateLobby(eLobbyType, cMaxMembers);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamMatchmaking_JoinLobby(intptr_t instancePtr, class CSteamID steamIDLobby)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_JoinLobby called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->JoinLobby(steamIDLobby);
 }
 
 S_API void SteamAPI_ISteamMatchmaking_LeaveLobby(intptr_t instancePtr, class CSteamID steamIDLobby)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_LeaveLobby called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmaking*>(instancePtr)->LeaveLobby(steamIDLobby);
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_InviteUserToLobby(intptr_t instancePtr, class CSteamID steamIDLobby, class CSteamID steamIDInvitee)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_InviteUserToLobby called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->InviteUserToLobby(steamIDLobby, steamIDInvitee);
 }
 
 S_API int SteamAPI_ISteamMatchmaking_GetNumLobbyMembers(intptr_t instancePtr, class CSteamID steamIDLobby)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetNumLobbyMembers called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetNumLobbyMembers(steamIDLobby);
 }
 
 S_API uint64 SteamAPI_ISteamMatchmaking_GetLobbyMemberByIndex(intptr_t instancePtr, class CSteamID steamIDLobby, int iMember)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetLobbyMemberByIndex called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetLobbyMemberByIndex(steamIDLobby, iMember).ConvertToUint64();
 }
 
 S_API const char * SteamAPI_ISteamMatchmaking_GetLobbyData(intptr_t instancePtr, class CSteamID steamIDLobby, const char * pchKey)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetLobbyData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetLobbyData(steamIDLobby, pchKey);
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_SetLobbyData(intptr_t instancePtr, class CSteamID steamIDLobby, const char * pchKey, const char * pchValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_SetLobbyData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->SetLobbyData(steamIDLobby, pchKey, pchValue);
 }
 
 S_API int SteamAPI_ISteamMatchmaking_GetLobbyDataCount(intptr_t instancePtr, class CSteamID steamIDLobby)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetLobbyDataCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetLobbyDataCount(steamIDLobby);
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_GetLobbyDataByIndex(intptr_t instancePtr, class CSteamID steamIDLobby, int iLobbyData, char * pchKey, int cchKeyBufferSize, char * pchValue, int cchValueBufferSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetLobbyDataByIndex called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetLobbyDataByIndex(steamIDLobby, iLobbyData, pchKey, cchKeyBufferSize, pchValue, cchValueBufferSize);
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_DeleteLobbyData(intptr_t instancePtr, class CSteamID steamIDLobby, const char * pchKey)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_DeleteLobbyData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->DeleteLobbyData(steamIDLobby, pchKey);
 }
 
 S_API const char * SteamAPI_ISteamMatchmaking_GetLobbyMemberData(intptr_t instancePtr, class CSteamID steamIDLobby, class CSteamID steamIDUser, const char * pchKey)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetLobbyMemberData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetLobbyMemberData(steamIDLobby, steamIDUser, pchKey);
 }
 
 S_API void SteamAPI_ISteamMatchmaking_SetLobbyMemberData(intptr_t instancePtr, class CSteamID steamIDLobby, const char * pchKey, const char * pchValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_SetLobbyMemberData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmaking*>(instancePtr)->SetLobbyMemberData(steamIDLobby, pchKey, pchValue);
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_SendLobbyChatMsg(intptr_t instancePtr, class CSteamID steamIDLobby, const void * pvMsgBody, int cubMsgBody)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_SendLobbyChatMsg called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->SendLobbyChatMsg(steamIDLobby, pvMsgBody, cubMsgBody);
 }
 
 S_API int SteamAPI_ISteamMatchmaking_GetLobbyChatEntry(intptr_t instancePtr, class CSteamID steamIDLobby, int iChatID, class CSteamID * pSteamIDUser, void * pvData, int cubData, EChatEntryType * peChatEntryType)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetLobbyChatEntry called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetLobbyChatEntry(steamIDLobby, iChatID, pSteamIDUser, pvData, cubData, peChatEntryType);
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_RequestLobbyData(intptr_t instancePtr, class CSteamID steamIDLobby)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_RequestLobbyData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->RequestLobbyData(steamIDLobby);
 }
 
 S_API void SteamAPI_ISteamMatchmaking_SetLobbyGameServer(intptr_t instancePtr, class CSteamID steamIDLobby, uint32 unGameServerIP, uint16 unGameServerPort, class CSteamID steamIDGameServer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_SetLobbyGameServer called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmaking*>(instancePtr)->SetLobbyGameServer(steamIDLobby, unGameServerIP, unGameServerPort, steamIDGameServer);
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_GetLobbyGameServer(intptr_t instancePtr, class CSteamID steamIDLobby, uint32 * punGameServerIP, uint16 * punGameServerPort, class CSteamID * psteamIDGameServer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetLobbyGameServer called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetLobbyGameServer(steamIDLobby, punGameServerIP, punGameServerPort, psteamIDGameServer);
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_SetLobbyMemberLimit(intptr_t instancePtr, class CSteamID steamIDLobby, int cMaxMembers)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_SetLobbyMemberLimit called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->SetLobbyMemberLimit(steamIDLobby, cMaxMembers);
 }
 
 S_API int SteamAPI_ISteamMatchmaking_GetLobbyMemberLimit(intptr_t instancePtr, class CSteamID steamIDLobby)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetLobbyMemberLimit called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetLobbyMemberLimit(steamIDLobby);
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_SetLobbyType(intptr_t instancePtr, class CSteamID steamIDLobby, ELobbyType eLobbyType)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_SetLobbyType called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->SetLobbyType(steamIDLobby, eLobbyType);
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_SetLobbyJoinable(intptr_t instancePtr, class CSteamID steamIDLobby, bool bLobbyJoinable)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_SetLobbyJoinable called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->SetLobbyJoinable(steamIDLobby, bLobbyJoinable);
 }
 
 S_API uint64 SteamAPI_ISteamMatchmaking_GetLobbyOwner(intptr_t instancePtr, class CSteamID steamIDLobby)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_GetLobbyOwner called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->GetLobbyOwner(steamIDLobby).ConvertToUint64();
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_SetLobbyOwner(intptr_t instancePtr, class CSteamID steamIDLobby, class CSteamID steamIDNewOwner)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_SetLobbyOwner called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->SetLobbyOwner(steamIDLobby, steamIDNewOwner);
 }
 
 S_API bool SteamAPI_ISteamMatchmaking_SetLinkedLobby(intptr_t instancePtr, class CSteamID steamIDLobby, class CSteamID steamIDLobbyDependent)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmaking_SetLinkedLobby called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmaking*>(instancePtr)->SetLinkedLobby(steamIDLobby, steamIDLobbyDependent);
 }
@@ -1438,21 +1445,21 @@ S_API bool SteamAPI_ISteamMatchmaking_SetLinkedLobby(intptr_t instancePtr, class
 
 S_API void SteamAPI_ISteamMatchmakingServerListResponse_ServerResponded(intptr_t instancePtr, HServerListRequest hRequest, int iServer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServerListResponse_ServerResponded called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingServerListResponse*>(instancePtr)->ServerResponded(hRequest, iServer);
 }
 
 S_API void SteamAPI_ISteamMatchmakingServerListResponse_ServerFailedToRespond(intptr_t instancePtr, HServerListRequest hRequest, int iServer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServerListResponse_ServerFailedToRespond called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingServerListResponse*>(instancePtr)->ServerFailedToRespond(hRequest, iServer);
 }
 
 S_API void SteamAPI_ISteamMatchmakingServerListResponse_RefreshComplete(intptr_t instancePtr, HServerListRequest hRequest, EMatchMakingServerResponse response)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServerListResponse_RefreshComplete called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingServerListResponse*>(instancePtr)->RefreshComplete(hRequest, response);
 }
@@ -1464,14 +1471,14 @@ S_API void SteamAPI_ISteamMatchmakingServerListResponse_RefreshComplete(intptr_t
 
 S_API void SteamAPI_ISteamMatchmakingPingResponse_ServerResponded(intptr_t instancePtr, class gameserveritem_t & server)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingPingResponse_ServerResponded called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingPingResponse*>(instancePtr)->ServerResponded(server);
 }
 
 S_API void SteamAPI_ISteamMatchmakingPingResponse_ServerFailedToRespond(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingPingResponse_ServerFailedToRespond called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingPingResponse*>(instancePtr)->ServerFailedToRespond();
 }
@@ -1483,21 +1490,21 @@ S_API void SteamAPI_ISteamMatchmakingPingResponse_ServerFailedToRespond(intptr_t
 
 S_API void SteamAPI_ISteamMatchmakingPlayersResponse_AddPlayerToList(intptr_t instancePtr, const char * pchName, int nScore, float flTimePlayed)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingPlayersResponse_AddPlayerToList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingPlayersResponse*>(instancePtr)->AddPlayerToList(pchName, nScore, flTimePlayed);
 }
 
 S_API void SteamAPI_ISteamMatchmakingPlayersResponse_PlayersFailedToRespond(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingPlayersResponse_PlayersFailedToRespond called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingPlayersResponse*>(instancePtr)->PlayersFailedToRespond();
 }
 
 S_API void SteamAPI_ISteamMatchmakingPlayersResponse_PlayersRefreshComplete(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingPlayersResponse_PlayersRefreshComplete called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingPlayersResponse*>(instancePtr)->PlayersRefreshComplete();
 }
@@ -1509,21 +1516,21 @@ S_API void SteamAPI_ISteamMatchmakingPlayersResponse_PlayersRefreshComplete(intp
 
 S_API void SteamAPI_ISteamMatchmakingRulesResponse_RulesResponded(intptr_t instancePtr, const char * pchRule, const char * pchValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingRulesResponse_RulesResponded called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingRulesResponse*>(instancePtr)->RulesResponded(pchRule, pchValue);
 }
 
 S_API void SteamAPI_ISteamMatchmakingRulesResponse_RulesFailedToRespond(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingRulesResponse_RulesFailedToRespond called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingRulesResponse*>(instancePtr)->RulesFailedToRespond();
 }
 
 S_API void SteamAPI_ISteamMatchmakingRulesResponse_RulesRefreshComplete(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingRulesResponse_RulesRefreshComplete called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingRulesResponse*>(instancePtr)->RulesRefreshComplete();
 }
@@ -1535,119 +1542,119 @@ S_API void SteamAPI_ISteamMatchmakingRulesResponse_RulesRefreshComplete(intptr_t
 
 S_API HServerListRequest SteamAPI_ISteamMatchmakingServers_RequestInternetServerList(intptr_t instancePtr, AppId_t iApp, struct MatchMakingKeyValuePair_t ** ppchFilters, uint32 nFilters, class ISteamMatchmakingServerListResponse * pRequestServersResponse)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RequestInternetServerList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RequestInternetServerList(iApp, ppchFilters, nFilters, pRequestServersResponse);
 }
 
 S_API HServerListRequest SteamAPI_ISteamMatchmakingServers_RequestLANServerList(intptr_t instancePtr, AppId_t iApp, class ISteamMatchmakingServerListResponse * pRequestServersResponse)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RequestLANServerList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RequestLANServerList(iApp, pRequestServersResponse);
 }
 
 S_API HServerListRequest SteamAPI_ISteamMatchmakingServers_RequestFriendsServerList(intptr_t instancePtr, AppId_t iApp, struct MatchMakingKeyValuePair_t ** ppchFilters, uint32 nFilters, class ISteamMatchmakingServerListResponse * pRequestServersResponse)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RequestFriendsServerList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RequestFriendsServerList(iApp, ppchFilters, nFilters, pRequestServersResponse);
 }
 
 S_API HServerListRequest SteamAPI_ISteamMatchmakingServers_RequestFavoritesServerList(intptr_t instancePtr, AppId_t iApp, struct MatchMakingKeyValuePair_t ** ppchFilters, uint32 nFilters, class ISteamMatchmakingServerListResponse * pRequestServersResponse)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RequestFavoritesServerList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RequestFavoritesServerList(iApp, ppchFilters, nFilters, pRequestServersResponse);
 }
 
 S_API HServerListRequest SteamAPI_ISteamMatchmakingServers_RequestHistoryServerList(intptr_t instancePtr, AppId_t iApp, struct MatchMakingKeyValuePair_t ** ppchFilters, uint32 nFilters, class ISteamMatchmakingServerListResponse * pRequestServersResponse)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RequestHistoryServerList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RequestHistoryServerList(iApp, ppchFilters, nFilters, pRequestServersResponse);
 }
 
 S_API HServerListRequest SteamAPI_ISteamMatchmakingServers_RequestSpectatorServerList(intptr_t instancePtr, AppId_t iApp, struct MatchMakingKeyValuePair_t ** ppchFilters, uint32 nFilters, class ISteamMatchmakingServerListResponse * pRequestServersResponse)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RequestSpectatorServerList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RequestSpectatorServerList(iApp, ppchFilters, nFilters, pRequestServersResponse);
 }
 
 S_API void SteamAPI_ISteamMatchmakingServers_ReleaseRequest(intptr_t instancePtr, HServerListRequest hServerListRequest)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_ReleaseRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->ReleaseRequest(hServerListRequest);
 }
 
 S_API class gameserveritem_t * SteamAPI_ISteamMatchmakingServers_GetServerDetails(intptr_t instancePtr, HServerListRequest hRequest, int iServer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_GetServerDetails called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->GetServerDetails(hRequest, iServer);
 }
 
 S_API void SteamAPI_ISteamMatchmakingServers_CancelQuery(intptr_t instancePtr, HServerListRequest hRequest)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_CancelQuery called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->CancelQuery(hRequest);
 }
 
 S_API void SteamAPI_ISteamMatchmakingServers_RefreshQuery(intptr_t instancePtr, HServerListRequest hRequest)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RefreshQuery called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RefreshQuery(hRequest);
 }
 
 S_API bool SteamAPI_ISteamMatchmakingServers_IsRefreshing(intptr_t instancePtr, HServerListRequest hRequest)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_IsRefreshing called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->IsRefreshing(hRequest);
 }
 
 S_API int SteamAPI_ISteamMatchmakingServers_GetServerCount(intptr_t instancePtr, HServerListRequest hRequest)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_GetServerCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->GetServerCount(hRequest);
 }
 
 S_API void SteamAPI_ISteamMatchmakingServers_RefreshServer(intptr_t instancePtr, HServerListRequest hRequest, int iServer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_RefreshServer called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->RefreshServer(hRequest, iServer);
 }
 
 S_API HServerQuery SteamAPI_ISteamMatchmakingServers_PingServer(intptr_t instancePtr, uint32 unIP, uint16 usPort, class ISteamMatchmakingPingResponse * pRequestServersResponse)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_PingServer called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return HSERVERQUERY_INVALID;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->PingServer(unIP, usPort, pRequestServersResponse);
 }
 
 S_API HServerQuery SteamAPI_ISteamMatchmakingServers_PlayerDetails(intptr_t instancePtr, uint32 unIP, uint16 usPort, class ISteamMatchmakingPlayersResponse * pRequestServersResponse)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_PlayerDetails called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return HSERVERQUERY_INVALID;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->PlayerDetails(unIP, usPort, pRequestServersResponse);
 }
 
 S_API HServerQuery SteamAPI_ISteamMatchmakingServers_ServerRules(intptr_t instancePtr, uint32 unIP, uint16 usPort, class ISteamMatchmakingRulesResponse * pRequestServersResponse)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_ServerRules called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return HSERVERQUERY_INVALID;
     return reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->ServerRules(unIP, usPort, pRequestServersResponse);
 }
 
 S_API void SteamAPI_ISteamMatchmakingServers_CancelServerQuery(intptr_t instancePtr, HServerQuery hServerQuery)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMatchmakingServers_CancelServerQuery called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->CancelServerQuery(hServerQuery);
 }
@@ -1659,385 +1666,385 @@ S_API void SteamAPI_ISteamMatchmakingServers_CancelServerQuery(intptr_t instance
 
 S_API bool SteamAPI_ISteamRemoteStorage_FileWrite(intptr_t instancePtr, const char * pchFile, const void * pvData, int32 cubData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileWrite called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileWrite(pchFile, pvData, cubData);
 }
 
 S_API int32 SteamAPI_ISteamRemoteStorage_FileRead(intptr_t instancePtr, const char * pchFile, void * pvData, int32 cubDataToRead)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileRead called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileRead(pchFile, pvData, cubDataToRead);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_FileWriteAsync(intptr_t instancePtr, const char * pchFile, const void * pvData, uint32 cubData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileWriteAsync called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileWriteAsync(pchFile, pvData, cubData);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_FileReadAsync(intptr_t instancePtr, const char * pchFile, uint32 nOffset, uint32 cubToRead)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileReadAsync called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileReadAsync(pchFile, nOffset, cubToRead);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_FileReadAsyncComplete(intptr_t instancePtr, SteamAPICall_t hReadCall, void * pvBuffer, uint32 cubToRead)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileReadAsyncComplete called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileReadAsyncComplete(hReadCall, pvBuffer, cubToRead);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_FileForget(intptr_t instancePtr, const char * pchFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileForget called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileForget(pchFile);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_FileDelete(intptr_t instancePtr, const char * pchFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileDelete called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileDelete(pchFile);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_FileShare(intptr_t instancePtr, const char * pchFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileShare called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileShare(pchFile);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_SetSyncPlatforms(intptr_t instancePtr, const char * pchFile, ERemoteStoragePlatform eRemoteStoragePlatform)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_SetSyncPlatforms called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->SetSyncPlatforms(pchFile, eRemoteStoragePlatform);
 }
 
 S_API UGCFileWriteStreamHandle_t SteamAPI_ISteamRemoteStorage_FileWriteStreamOpen(intptr_t instancePtr, const char * pchFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileWriteStreamOpen called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_UGCFileStreamHandleInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileWriteStreamOpen(pchFile);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_FileWriteStreamWriteChunk(intptr_t instancePtr, UGCFileWriteStreamHandle_t writeHandle, const void * pvData, int32 cubData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileWriteStreamWriteChunk called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileWriteStreamWriteChunk(writeHandle, pvData, cubData);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_FileWriteStreamClose(intptr_t instancePtr, UGCFileWriteStreamHandle_t writeHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileWriteStreamClose called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileWriteStreamClose(writeHandle);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_FileWriteStreamCancel(intptr_t instancePtr, UGCFileWriteStreamHandle_t writeHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileWriteStreamCancel called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileWriteStreamCancel(writeHandle);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_FileExists(intptr_t instancePtr, const char * pchFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FileExists called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FileExists(pchFile);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_FilePersisted(intptr_t instancePtr, const char * pchFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_FilePersisted called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->FilePersisted(pchFile);
 }
 
 S_API int32 SteamAPI_ISteamRemoteStorage_GetFileSize(intptr_t instancePtr, const char * pchFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetFileSize called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetFileSize(pchFile);
 }
 
 S_API int64 SteamAPI_ISteamRemoteStorage_GetFileTimestamp(intptr_t instancePtr, const char * pchFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetFileTimestamp called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetFileTimestamp(pchFile);
 }
 
 S_API ERemoteStoragePlatform SteamAPI_ISteamRemoteStorage_GetSyncPlatforms(intptr_t instancePtr, const char * pchFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetSyncPlatforms called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_ERemoteStoragePlatformNone;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetSyncPlatforms(pchFile);
 }
 
 S_API int32 SteamAPI_ISteamRemoteStorage_GetFileCount(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetFileCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetFileCount();
 }
 
 S_API const char * SteamAPI_ISteamRemoteStorage_GetFileNameAndSize(intptr_t instancePtr, int iFile, int32 * pnFileSizeInBytes)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetFileNameAndSize called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetFileNameAndSize(iFile, pnFileSizeInBytes);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_GetQuota(intptr_t instancePtr, uint64 * pnTotalBytes, uint64 * puAvailableBytes)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetQuota called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetQuota(pnTotalBytes, puAvailableBytes);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_IsCloudEnabledForAccount(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_IsCloudEnabledForAccount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->IsCloudEnabledForAccount();
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_IsCloudEnabledForApp(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_IsCloudEnabledForApp called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->IsCloudEnabledForApp();
 }
 
 S_API void SteamAPI_ISteamRemoteStorage_SetCloudEnabledForApp(intptr_t instancePtr, bool bEnabled)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_SetCloudEnabledForApp called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->SetCloudEnabledForApp(bEnabled);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_UGCDownload(intptr_t instancePtr, UGCHandle_t hContent, uint32 unPriority)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_UGCDownload called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->UGCDownload(hContent, unPriority);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_GetUGCDownloadProgress(intptr_t instancePtr, UGCHandle_t hContent, int32 * pnBytesDownloaded, int32 * pnBytesExpected)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetUGCDownloadProgress called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetUGCDownloadProgress(hContent, pnBytesDownloaded, pnBytesExpected);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_GetUGCDetails(intptr_t instancePtr, UGCHandle_t hContent, AppId_t * pnAppID, char ** ppchName, int32 * pnFileSizeInBytes, class CSteamID * pSteamIDOwner)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetUGCDetails called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetUGCDetails(hContent, pnAppID, ppchName, pnFileSizeInBytes, pSteamIDOwner);
 }
 
 S_API int32 SteamAPI_ISteamRemoteStorage_UGCRead(intptr_t instancePtr, UGCHandle_t hContent, void * pvData, int32 cubDataToRead, uint32 cOffset, EUGCReadAction eAction)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_UGCRead called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->UGCRead(hContent, pvData, cubDataToRead, cOffset, eAction);
 }
 
 S_API int32 SteamAPI_ISteamRemoteStorage_GetCachedUGCCount(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetCachedUGCCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetCachedUGCCount();
 }
 
 S_API UGCHandle_t SteamAPI_ISteamRemoteStorage_GetCachedUGCHandle(intptr_t instancePtr, int32 iCachedContent)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetCachedUGCHandle called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_UGCHandleInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetCachedUGCHandle(iCachedContent);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_PublishWorkshopFile(intptr_t instancePtr, const char * pchFile, const char * pchPreviewFile, AppId_t nConsumerAppId, const char * pchTitle, const char * pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, struct SteamParamStringArray_t * pTags, EWorkshopFileType eWorkshopFileType)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_PublishWorkshopFile called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->PublishWorkshopFile(pchFile, pchPreviewFile, nConsumerAppId, pchTitle, pchDescription, eVisibility, pTags, eWorkshopFileType);
 }
 
 S_API PublishedFileUpdateHandle_t SteamAPI_ISteamRemoteStorage_CreatePublishedFileUpdateRequest(intptr_t instancePtr, PublishedFileId_t unPublishedFileId)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_CreatePublishedFileUpdateRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_PublishedFileUpdateHandleInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->CreatePublishedFileUpdateRequest(unPublishedFileId);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_UpdatePublishedFileFile(intptr_t instancePtr, PublishedFileUpdateHandle_t updateHandle, const char * pchFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_UpdatePublishedFileFile called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->UpdatePublishedFileFile(updateHandle, pchFile);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_UpdatePublishedFilePreviewFile(intptr_t instancePtr, PublishedFileUpdateHandle_t updateHandle, const char * pchPreviewFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_UpdatePublishedFilePreviewFile called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->UpdatePublishedFilePreviewFile(updateHandle, pchPreviewFile);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_UpdatePublishedFileTitle(intptr_t instancePtr, PublishedFileUpdateHandle_t updateHandle, const char * pchTitle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_UpdatePublishedFileTitle called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->UpdatePublishedFileTitle(updateHandle, pchTitle);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_UpdatePublishedFileDescription(intptr_t instancePtr, PublishedFileUpdateHandle_t updateHandle, const char * pchDescription)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_UpdatePublishedFileDescription called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->UpdatePublishedFileDescription(updateHandle, pchDescription);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_UpdatePublishedFileVisibility(intptr_t instancePtr, PublishedFileUpdateHandle_t updateHandle, ERemoteStoragePublishedFileVisibility eVisibility)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_UpdatePublishedFileVisibility called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->UpdatePublishedFileVisibility(updateHandle, eVisibility);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_UpdatePublishedFileTags(intptr_t instancePtr, PublishedFileUpdateHandle_t updateHandle, struct SteamParamStringArray_t * pTags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_UpdatePublishedFileTags called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->UpdatePublishedFileTags(updateHandle, pTags);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_CommitPublishedFileUpdate(intptr_t instancePtr, PublishedFileUpdateHandle_t updateHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_CommitPublishedFileUpdate called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->CommitPublishedFileUpdate(updateHandle);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_GetPublishedFileDetails(intptr_t instancePtr, PublishedFileId_t unPublishedFileId, uint32 unMaxSecondsOld)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetPublishedFileDetails called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetPublishedFileDetails(unPublishedFileId, unMaxSecondsOld);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_DeletePublishedFile(intptr_t instancePtr, PublishedFileId_t unPublishedFileId)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_DeletePublishedFile called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->DeletePublishedFile(unPublishedFileId);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_EnumerateUserPublishedFiles(intptr_t instancePtr, uint32 unStartIndex)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_EnumerateUserPublishedFiles called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->EnumerateUserPublishedFiles(unStartIndex);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_SubscribePublishedFile(intptr_t instancePtr, PublishedFileId_t unPublishedFileId)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_SubscribePublishedFile called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->SubscribePublishedFile(unPublishedFileId);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_EnumerateUserSubscribedFiles(intptr_t instancePtr, uint32 unStartIndex)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_EnumerateUserSubscribedFiles called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->EnumerateUserSubscribedFiles(unStartIndex);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_UnsubscribePublishedFile(intptr_t instancePtr, PublishedFileId_t unPublishedFileId)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_UnsubscribePublishedFile called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->UnsubscribePublishedFile(unPublishedFileId);
 }
 
 S_API bool SteamAPI_ISteamRemoteStorage_UpdatePublishedFileSetChangeDescription(intptr_t instancePtr, PublishedFileUpdateHandle_t updateHandle, const char * pchChangeDescription)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_UpdatePublishedFileSetChangeDescription called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->UpdatePublishedFileSetChangeDescription(updateHandle, pchChangeDescription);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_GetPublishedItemVoteDetails(intptr_t instancePtr, PublishedFileId_t unPublishedFileId)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetPublishedItemVoteDetails called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetPublishedItemVoteDetails(unPublishedFileId);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_UpdateUserPublishedItemVote(intptr_t instancePtr, PublishedFileId_t unPublishedFileId, bool bVoteUp)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_UpdateUserPublishedItemVote called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->UpdateUserPublishedItemVote(unPublishedFileId, bVoteUp);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_GetUserPublishedItemVoteDetails(intptr_t instancePtr, PublishedFileId_t unPublishedFileId)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_GetUserPublishedItemVoteDetails called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->GetUserPublishedItemVoteDetails(unPublishedFileId);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_EnumerateUserSharedWorkshopFiles(intptr_t instancePtr, class CSteamID steamId, uint32 unStartIndex, struct SteamParamStringArray_t * pRequiredTags, struct SteamParamStringArray_t * pExcludedTags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_EnumerateUserSharedWorkshopFiles called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->EnumerateUserSharedWorkshopFiles(steamId, unStartIndex, pRequiredTags, pExcludedTags);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_PublishVideo(intptr_t instancePtr, EWorkshopVideoProvider eVideoProvider, const char * pchVideoAccount, const char * pchVideoIdentifier, const char * pchPreviewFile, AppId_t nConsumerAppId, const char * pchTitle, const char * pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, struct SteamParamStringArray_t * pTags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_PublishVideo called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->PublishVideo(eVideoProvider, pchVideoAccount, pchVideoIdentifier, pchPreviewFile, nConsumerAppId, pchTitle, pchDescription, eVisibility, pTags);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_SetUserPublishedFileAction(intptr_t instancePtr, PublishedFileId_t unPublishedFileId, EWorkshopFileAction eAction)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_SetUserPublishedFileAction called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->SetUserPublishedFileAction(unPublishedFileId, eAction);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_EnumeratePublishedFilesByUserAction(intptr_t instancePtr, EWorkshopFileAction eAction, uint32 unStartIndex)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_EnumeratePublishedFilesByUserAction called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->EnumeratePublishedFilesByUserAction(eAction, unStartIndex);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_EnumeratePublishedWorkshopFiles(intptr_t instancePtr, EWorkshopEnumerationType eEnumerationType, uint32 unStartIndex, uint32 unCount, uint32 unDays, struct SteamParamStringArray_t * pTags, struct SteamParamStringArray_t * pUserTags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_EnumeratePublishedWorkshopFiles called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->EnumeratePublishedWorkshopFiles(eEnumerationType, unStartIndex, unCount, unDays, pTags, pUserTags);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_UGCDownloadToLocation(intptr_t instancePtr, UGCHandle_t hContent, const char * pchLocation, uint32 unPriority)
 {
-    VLOG_DEBUG("SteamAPI_ISteamRemoteStorage_UGCDownloadToLocation called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamRemoteStorage*>(instancePtr)->UGCDownloadToLocation(hContent, pchLocation, unPriority);
 }
@@ -2049,301 +2056,301 @@ S_API SteamAPICall_t SteamAPI_ISteamRemoteStorage_UGCDownloadToLocation(intptr_t
 
 S_API bool SteamAPI_ISteamUserStats_RequestCurrentStats(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_RequestCurrentStats called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->RequestCurrentStats();
 }
 
 S_API bool SteamAPI_ISteamUserStats_GetStat(intptr_t instancePtr, const char * pchName, int32 * pData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetStat called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetStat(pchName, pData);
 }
 
 S_API bool SteamAPI_ISteamUserStats_GetStat0(intptr_t instancePtr, const char * pchName, float * pData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetStat0 called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetStat(pchName, pData);
 }
 
 S_API bool SteamAPI_ISteamUserStats_SetStat(intptr_t instancePtr, const char * pchName, int32 nData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_SetStat called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->SetStat(pchName, nData);
 }
 
 S_API bool SteamAPI_ISteamUserStats_SetStat0(intptr_t instancePtr, const char * pchName, float fData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_SetStat0 called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->SetStat(pchName, fData);
 }
 
 S_API bool SteamAPI_ISteamUserStats_UpdateAvgRateStat(intptr_t instancePtr, const char * pchName, float flCountThisSession, double dSessionLength)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_UpdateAvgRateStat called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->UpdateAvgRateStat(pchName, flCountThisSession, dSessionLength);
 }
 
 S_API bool SteamAPI_ISteamUserStats_GetAchievement(intptr_t instancePtr, const char * pchName, bool * pbAchieved)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetAchievement called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetAchievement(pchName, pbAchieved);
 }
 
 S_API bool SteamAPI_ISteamUserStats_SetAchievement(intptr_t instancePtr, const char * pchName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_SetAchievement called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->SetAchievement(pchName);
 }
 
 S_API bool SteamAPI_ISteamUserStats_ClearAchievement(intptr_t instancePtr, const char * pchName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_ClearAchievement called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->ClearAchievement(pchName);
 }
 
 S_API bool SteamAPI_ISteamUserStats_GetAchievementAndUnlockTime(intptr_t instancePtr, const char * pchName, bool * pbAchieved, uint32 * punUnlockTime)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetAchievementAndUnlockTime called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetAchievementAndUnlockTime(pchName, pbAchieved, punUnlockTime);
 }
 
 S_API bool SteamAPI_ISteamUserStats_StoreStats(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_StoreStats called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->StoreStats();
 }
 
 S_API int SteamAPI_ISteamUserStats_GetAchievementIcon(intptr_t instancePtr, const char * pchName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetAchievementIcon called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetAchievementIcon(pchName);
 }
 
 S_API const char * SteamAPI_ISteamUserStats_GetAchievementDisplayAttribute(intptr_t instancePtr, const char * pchName, const char * pchKey)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetAchievementDisplayAttribute called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetAchievementDisplayAttribute(pchName, pchKey);
 }
 
 S_API bool SteamAPI_ISteamUserStats_IndicateAchievementProgress(intptr_t instancePtr, const char * pchName, uint32 nCurProgress, uint32 nMaxProgress)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_IndicateAchievementProgress called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->IndicateAchievementProgress(pchName, nCurProgress, nMaxProgress);
 }
 
 S_API uint32 SteamAPI_ISteamUserStats_GetNumAchievements(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetNumAchievements called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetNumAchievements();
 }
 
 S_API const char * SteamAPI_ISteamUserStats_GetAchievementName(intptr_t instancePtr, uint32 iAchievement)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetAchievementName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetAchievementName(iAchievement);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUserStats_RequestUserStats(intptr_t instancePtr, class CSteamID steamIDUser)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_RequestUserStats called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->RequestUserStats(steamIDUser);
 }
 
 S_API bool SteamAPI_ISteamUserStats_GetUserStat(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchName, int32 * pData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetUserStat called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetUserStat(steamIDUser, pchName, pData);
 }
 
 S_API bool SteamAPI_ISteamUserStats_GetUserStat0(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchName, float * pData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetUserStat0 called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetUserStat(steamIDUser, pchName, pData);
 }
 
 S_API bool SteamAPI_ISteamUserStats_GetUserAchievement(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchName, bool * pbAchieved)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetUserAchievement called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetUserAchievement(steamIDUser, pchName, pbAchieved);
 }
 
 S_API bool SteamAPI_ISteamUserStats_GetUserAchievementAndUnlockTime(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchName, bool * pbAchieved, uint32 * punUnlockTime)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetUserAchievementAndUnlockTime called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetUserAchievementAndUnlockTime(steamIDUser, pchName, pbAchieved, punUnlockTime);
 }
 
 S_API bool SteamAPI_ISteamUserStats_ResetAllStats(intptr_t instancePtr, bool bAchievementsToo)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_ResetAllStats called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->ResetAllStats(bAchievementsToo);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUserStats_FindOrCreateLeaderboard(intptr_t instancePtr, const char * pchLeaderboardName, ELeaderboardSortMethod eLeaderboardSortMethod, ELeaderboardDisplayType eLeaderboardDisplayType)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_FindOrCreateLeaderboard called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->FindOrCreateLeaderboard(pchLeaderboardName, eLeaderboardSortMethod, eLeaderboardDisplayType);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUserStats_FindLeaderboard(intptr_t instancePtr, const char * pchLeaderboardName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_FindLeaderboard called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->FindLeaderboard(pchLeaderboardName);
 }
 
 S_API const char * SteamAPI_ISteamUserStats_GetLeaderboardName(intptr_t instancePtr, SteamLeaderboard_t hSteamLeaderboard)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetLeaderboardName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetLeaderboardName(hSteamLeaderboard);
 }
 
 S_API int SteamAPI_ISteamUserStats_GetLeaderboardEntryCount(intptr_t instancePtr, SteamLeaderboard_t hSteamLeaderboard)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetLeaderboardEntryCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetLeaderboardEntryCount(hSteamLeaderboard);
 }
 
 S_API ELeaderboardSortMethod SteamAPI_ISteamUserStats_GetLeaderboardSortMethod(intptr_t instancePtr, SteamLeaderboard_t hSteamLeaderboard)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetLeaderboardSortMethod called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_ELeaderboardSortMethodNone;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetLeaderboardSortMethod(hSteamLeaderboard);
 }
 
 S_API ELeaderboardDisplayType SteamAPI_ISteamUserStats_GetLeaderboardDisplayType(intptr_t instancePtr, SteamLeaderboard_t hSteamLeaderboard)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetLeaderboardDisplayType called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_ELeaderboardDisplayTypeNone;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetLeaderboardDisplayType(hSteamLeaderboard);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUserStats_DownloadLeaderboardEntries(intptr_t instancePtr, SteamLeaderboard_t hSteamLeaderboard, ELeaderboardDataRequest eLeaderboardDataRequest, int nRangeStart, int nRangeEnd)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_DownloadLeaderboardEntries called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->DownloadLeaderboardEntries(hSteamLeaderboard, eLeaderboardDataRequest, nRangeStart, nRangeEnd);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUserStats_DownloadLeaderboardEntriesForUsers(intptr_t instancePtr, SteamLeaderboard_t hSteamLeaderboard, class CSteamID * prgUsers, int cUsers)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_DownloadLeaderboardEntriesForUsers called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->DownloadLeaderboardEntriesForUsers(hSteamLeaderboard, prgUsers, cUsers);
 }
 
 S_API bool SteamAPI_ISteamUserStats_GetDownloadedLeaderboardEntry(intptr_t instancePtr, SteamLeaderboardEntries_t hSteamLeaderboardEntries, int index, struct LeaderboardEntry_t * pLeaderboardEntry, int32 * pDetails, int cDetailsMax)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetDownloadedLeaderboardEntry called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetDownloadedLeaderboardEntry(hSteamLeaderboardEntries, index, pLeaderboardEntry, pDetails, cDetailsMax);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUserStats_UploadLeaderboardScore(intptr_t instancePtr, SteamLeaderboard_t hSteamLeaderboard, ELeaderboardUploadScoreMethod eLeaderboardUploadScoreMethod, int32 nScore, const int32 * pScoreDetails, int cScoreDetailsCount)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_UploadLeaderboardScore called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->UploadLeaderboardScore(hSteamLeaderboard, eLeaderboardUploadScoreMethod, nScore, pScoreDetails, cScoreDetailsCount);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUserStats_AttachLeaderboardUGC(intptr_t instancePtr, SteamLeaderboard_t hSteamLeaderboard, UGCHandle_t hUGC)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_AttachLeaderboardUGC called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->AttachLeaderboardUGC(hSteamLeaderboard, hUGC);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUserStats_GetNumberOfCurrentPlayers(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetNumberOfCurrentPlayers called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetNumberOfCurrentPlayers();
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUserStats_RequestGlobalAchievementPercentages(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_RequestGlobalAchievementPercentages called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->RequestGlobalAchievementPercentages();
 }
 
 S_API int SteamAPI_ISteamUserStats_GetMostAchievedAchievementInfo(intptr_t instancePtr, char * pchName, uint32 unNameBufLen, float * pflPercent, bool * pbAchieved)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetMostAchievedAchievementInfo called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetMostAchievedAchievementInfo(pchName, unNameBufLen, pflPercent, pbAchieved);
 }
 
 S_API int SteamAPI_ISteamUserStats_GetNextMostAchievedAchievementInfo(intptr_t instancePtr, int iIteratorPrevious, char * pchName, uint32 unNameBufLen, float * pflPercent, bool * pbAchieved)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetNextMostAchievedAchievementInfo called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetNextMostAchievedAchievementInfo(iIteratorPrevious, pchName, unNameBufLen, pflPercent, pbAchieved);
 }
 
 S_API bool SteamAPI_ISteamUserStats_GetAchievementAchievedPercent(intptr_t instancePtr, const char * pchName, float * pflPercent)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetAchievementAchievedPercent called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetAchievementAchievedPercent(pchName, pflPercent);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUserStats_RequestGlobalStats(intptr_t instancePtr, int nHistoryDays)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_RequestGlobalStats called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->RequestGlobalStats(nHistoryDays);
 }
 
 S_API bool SteamAPI_ISteamUserStats_GetGlobalStat(intptr_t instancePtr, const char * pchStatName, int64 * pData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetGlobalStat called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetGlobalStat(pchStatName, pData);
 }
 
 S_API bool SteamAPI_ISteamUserStats_GetGlobalStat0(intptr_t instancePtr, const char * pchStatName, double * pData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetGlobalStat0 called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetGlobalStat(pchStatName, pData);
 }
 
 S_API int32 SteamAPI_ISteamUserStats_GetGlobalStatHistory(intptr_t instancePtr, const char * pchStatName, int64 * pData, uint32 cubData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetGlobalStatHistory called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetGlobalStatHistory(pchStatName, pData, cubData);
 }
 
 S_API int32 SteamAPI_ISteamUserStats_GetGlobalStatHistory0(intptr_t instancePtr, const char * pchStatName, double * pData, uint32 cubData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUserStats_GetGlobalStatHistory0 called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUserStats*>(instancePtr)->GetGlobalStatHistory(pchStatName, pData, cubData);
 }
@@ -2355,182 +2362,182 @@ S_API int32 SteamAPI_ISteamUserStats_GetGlobalStatHistory0(intptr_t instancePtr,
 
 S_API bool SteamAPI_ISteamApps_BIsSubscribed(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_BIsSubscribed called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamApps*>(instancePtr)->BIsSubscribed();
 }
 
 S_API bool SteamAPI_ISteamApps_BIsLowViolence(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_BIsLowViolence called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamApps*>(instancePtr)->BIsLowViolence();
 }
 
 S_API bool SteamAPI_ISteamApps_BIsCybercafe(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_BIsCybercafe called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamApps*>(instancePtr)->BIsCybercafe();
 }
 
 S_API bool SteamAPI_ISteamApps_BIsVACBanned(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_BIsVACBanned called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamApps*>(instancePtr)->BIsVACBanned();
 }
 
 S_API const char * SteamAPI_ISteamApps_GetCurrentGameLanguage(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_GetCurrentGameLanguage called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetCurrentGameLanguage();
 }
 
 S_API const char * SteamAPI_ISteamApps_GetAvailableGameLanguages(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_GetAvailableGameLanguages called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetAvailableGameLanguages();
 }
 
 S_API bool SteamAPI_ISteamApps_BIsSubscribedApp(intptr_t instancePtr, AppId_t appID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_BIsSubscribedApp called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamApps*>(instancePtr)->BIsSubscribedApp(appID);
 }
 
 S_API bool SteamAPI_ISteamApps_BIsDlcInstalled(intptr_t instancePtr, AppId_t appID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_BIsDlcInstalled called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamApps*>(instancePtr)->BIsDlcInstalled(appID);
 }
 
 S_API uint32 SteamAPI_ISteamApps_GetEarliestPurchaseUnixTime(intptr_t instancePtr, AppId_t nAppID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_GetEarliestPurchaseUnixTime called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetEarliestPurchaseUnixTime(nAppID);
 }
 
 S_API bool SteamAPI_ISteamApps_BIsSubscribedFromFreeWeekend(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_BIsSubscribedFromFreeWeekend called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamApps*>(instancePtr)->BIsSubscribedFromFreeWeekend();
 }
 
 S_API int SteamAPI_ISteamApps_GetDLCCount(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_GetDLCCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetDLCCount();
 }
 
 S_API bool SteamAPI_ISteamApps_BGetDLCDataByIndex(intptr_t instancePtr, int iDLC, AppId_t * pAppID, bool * pbAvailable, char * pchName, int cchNameBufferSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_BGetDLCDataByIndex called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamApps*>(instancePtr)->BGetDLCDataByIndex(iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize);
 }
 
 S_API void SteamAPI_ISteamApps_InstallDLC(intptr_t instancePtr, AppId_t nAppID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_InstallDLC called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamApps*>(instancePtr)->InstallDLC(nAppID);
 }
 
 S_API void SteamAPI_ISteamApps_UninstallDLC(intptr_t instancePtr, AppId_t nAppID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_UninstallDLC called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamApps*>(instancePtr)->UninstallDLC(nAppID);
 }
 
 S_API void SteamAPI_ISteamApps_RequestAppProofOfPurchaseKey(intptr_t instancePtr, AppId_t nAppID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_RequestAppProofOfPurchaseKey called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamApps*>(instancePtr)->RequestAppProofOfPurchaseKey(nAppID);
 }
 
 S_API bool SteamAPI_ISteamApps_GetCurrentBetaName(intptr_t instancePtr, char * pchName, int cchNameBufferSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_GetCurrentBetaName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetCurrentBetaName(pchName, cchNameBufferSize);
 }
 
 S_API bool SteamAPI_ISteamApps_MarkContentCorrupt(intptr_t instancePtr, bool bMissingFilesOnly)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_MarkContentCorrupt called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamApps*>(instancePtr)->MarkContentCorrupt(bMissingFilesOnly);
 }
 
 S_API uint32 SteamAPI_ISteamApps_GetInstalledDepots(intptr_t instancePtr, AppId_t appID, DepotId_t * pvecDepots, uint32 cMaxDepots)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_GetInstalledDepots called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetInstalledDepots(appID, pvecDepots, cMaxDepots);
 }
 
 S_API uint32 SteamAPI_ISteamApps_GetAppInstallDir(intptr_t instancePtr, AppId_t appID, char * pchFolder, uint32 cchFolderBufferSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_GetAppInstallDir called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetAppInstallDir(appID, pchFolder, cchFolderBufferSize);
 }
 
 S_API bool SteamAPI_ISteamApps_BIsAppInstalled(intptr_t instancePtr, AppId_t appID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_BIsAppInstalled called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamApps*>(instancePtr)->BIsAppInstalled(appID);
 }
 
 S_API uint64 SteamAPI_ISteamApps_GetAppOwner(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_GetAppOwner called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetAppOwner().ConvertToUint64();
 }
 
 S_API const char * SteamAPI_ISteamApps_GetLaunchQueryParam(intptr_t instancePtr, const char * pchKey)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_GetLaunchQueryParam called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetLaunchQueryParam(pchKey);
 }
 
 S_API bool SteamAPI_ISteamApps_GetDlcDownloadProgress(intptr_t instancePtr, AppId_t nAppID, uint64 * punBytesDownloaded, uint64 * punBytesTotal)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_GetDlcDownloadProgress called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetDlcDownloadProgress(nAppID, punBytesDownloaded, punBytesTotal);
 }
 
 S_API int SteamAPI_ISteamApps_GetAppBuildId(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_GetAppBuildId called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetAppBuildId();
 }
 
 S_API void SteamAPI_ISteamApps_RequestAllProofOfPurchaseKeys(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_RequestAllProofOfPurchaseKeys called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamApps*>(instancePtr)->RequestAllProofOfPurchaseKeys();
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamApps_GetFileDetails(intptr_t instancePtr, const char * pszFileName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamApps_GetFileDetails called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetFileDetails(pszFileName);
 }
@@ -2542,154 +2549,154 @@ S_API SteamAPICall_t SteamAPI_ISteamApps_GetFileDetails(intptr_t instancePtr, co
 
 S_API bool SteamAPI_ISteamNetworking_SendP2PPacket(intptr_t instancePtr, class CSteamID steamIDRemote, const void * pubData, uint32 cubData, EP2PSend eP2PSendType, int nChannel)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_SendP2PPacket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->SendP2PPacket(steamIDRemote, pubData, cubData, eP2PSendType, nChannel);
 }
 
 S_API bool SteamAPI_ISteamNetworking_IsP2PPacketAvailable(intptr_t instancePtr, uint32 * pcubMsgSize, int nChannel)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_IsP2PPacketAvailable called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->IsP2PPacketAvailable(pcubMsgSize, nChannel);
 }
 
 S_API bool SteamAPI_ISteamNetworking_ReadP2PPacket(intptr_t instancePtr, void * pubDest, uint32 cubDest, uint32 * pcubMsgSize, class CSteamID * psteamIDRemote, int nChannel)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_ReadP2PPacket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->ReadP2PPacket(pubDest, cubDest, pcubMsgSize, psteamIDRemote, nChannel);
 }
 
 S_API bool SteamAPI_ISteamNetworking_AcceptP2PSessionWithUser(intptr_t instancePtr, class CSteamID steamIDRemote)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_AcceptP2PSessionWithUser called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->AcceptP2PSessionWithUser(steamIDRemote);
 }
 
 S_API bool SteamAPI_ISteamNetworking_CloseP2PSessionWithUser(intptr_t instancePtr, class CSteamID steamIDRemote)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_CloseP2PSessionWithUser called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->CloseP2PSessionWithUser(steamIDRemote);
 }
 
 S_API bool SteamAPI_ISteamNetworking_CloseP2PChannelWithUser(intptr_t instancePtr, class CSteamID steamIDRemote, int nChannel)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_CloseP2PChannelWithUser called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->CloseP2PChannelWithUser(steamIDRemote, nChannel);
 }
 
 S_API bool SteamAPI_ISteamNetworking_GetP2PSessionState(intptr_t instancePtr, class CSteamID steamIDRemote, struct P2PSessionState_t * pConnectionState)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_GetP2PSessionState called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->GetP2PSessionState(steamIDRemote, pConnectionState);
 }
 
 S_API bool SteamAPI_ISteamNetworking_AllowP2PPacketRelay(intptr_t instancePtr, bool bAllow)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_AllowP2PPacketRelay called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->AllowP2PPacketRelay(bAllow);
 }
 
 S_API SNetListenSocket_t SteamAPI_ISteamNetworking_CreateListenSocket(intptr_t instancePtr, int nVirtualP2PPort, uint32 nIP, uint16 nPort, bool bAllowUseOfPacketRelay)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_CreateListenSocket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->CreateListenSocket(nVirtualP2PPort, nIP, nPort, bAllowUseOfPacketRelay);
 }
 
 S_API SNetSocket_t SteamAPI_ISteamNetworking_CreateP2PConnectionSocket(intptr_t instancePtr, class CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec, bool bAllowUseOfPacketRelay)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_CreateP2PConnectionSocket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->CreateP2PConnectionSocket(steamIDTarget, nVirtualPort, nTimeoutSec, bAllowUseOfPacketRelay);
 }
 
 S_API SNetSocket_t SteamAPI_ISteamNetworking_CreateConnectionSocket(intptr_t instancePtr, uint32 nIP, uint16 nPort, int nTimeoutSec)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_CreateConnectionSocket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->CreateConnectionSocket(nIP, nPort, nTimeoutSec);
 }
 
 S_API bool SteamAPI_ISteamNetworking_DestroySocket(intptr_t instancePtr, SNetSocket_t hSocket, bool bNotifyRemoteEnd)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_DestroySocket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->DestroySocket(hSocket, bNotifyRemoteEnd);
 }
 
 S_API bool SteamAPI_ISteamNetworking_DestroyListenSocket(intptr_t instancePtr, SNetListenSocket_t hSocket, bool bNotifyRemoteEnd)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_DestroyListenSocket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->DestroyListenSocket(hSocket, bNotifyRemoteEnd);
 }
 
 S_API bool SteamAPI_ISteamNetworking_SendDataOnSocket(intptr_t instancePtr, SNetSocket_t hSocket, void * pubData, uint32 cubData, bool bReliable)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_SendDataOnSocket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->SendDataOnSocket(hSocket, pubData, cubData, bReliable);
 }
 
 S_API bool SteamAPI_ISteamNetworking_IsDataAvailableOnSocket(intptr_t instancePtr, SNetSocket_t hSocket, uint32 * pcubMsgSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_IsDataAvailableOnSocket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->IsDataAvailableOnSocket(hSocket, pcubMsgSize);
 }
 
 S_API bool SteamAPI_ISteamNetworking_RetrieveDataFromSocket(intptr_t instancePtr, SNetSocket_t hSocket, void * pubDest, uint32 cubDest, uint32 * pcubMsgSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_RetrieveDataFromSocket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->RetrieveDataFromSocket(hSocket, pubDest, cubDest, pcubMsgSize);
 }
 
 S_API bool SteamAPI_ISteamNetworking_IsDataAvailable(intptr_t instancePtr, SNetListenSocket_t hListenSocket, uint32 * pcubMsgSize, SNetSocket_t * phSocket)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_IsDataAvailable called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->IsDataAvailable(hListenSocket, pcubMsgSize, phSocket);
 }
 
 S_API bool SteamAPI_ISteamNetworking_RetrieveData(intptr_t instancePtr, SNetListenSocket_t hListenSocket, void * pubDest, uint32 cubDest, uint32 * pcubMsgSize, SNetSocket_t * phSocket)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_RetrieveData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->RetrieveData(hListenSocket, pubDest, cubDest, pcubMsgSize, phSocket);
 }
 
 S_API bool SteamAPI_ISteamNetworking_GetSocketInfo(intptr_t instancePtr, SNetSocket_t hSocket, class CSteamID * pSteamIDRemote, int * peSocketStatus, uint32 * punIPRemote, uint16 * punPortRemote)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_GetSocketInfo called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->GetSocketInfo(hSocket, pSteamIDRemote, peSocketStatus, punIPRemote, punPortRemote);
 }
 
 S_API bool SteamAPI_ISteamNetworking_GetListenSocketInfo(intptr_t instancePtr, SNetListenSocket_t hListenSocket, uint32 * pnIP, uint16 * pnPort)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_GetListenSocketInfo called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->GetListenSocketInfo(hListenSocket, pnIP, pnPort);
 }
 
 S_API ESNetSocketConnectionType SteamAPI_ISteamNetworking_GetSocketConnectionType(intptr_t instancePtr, SNetSocket_t hSocket)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_GetSocketConnectionType called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_ESNetSocketConnectionTypeNotConnected;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->GetSocketConnectionType(hSocket);
 }
 
 S_API int SteamAPI_ISteamNetworking_GetMaxPacketSize(intptr_t instancePtr, SNetSocket_t hSocket)
 {
-    VLOG_DEBUG("SteamAPI_ISteamNetworking_GetMaxPacketSize called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->GetMaxPacketSize(hSocket);
 }
@@ -2701,63 +2708,63 @@ S_API int SteamAPI_ISteamNetworking_GetMaxPacketSize(intptr_t instancePtr, SNetS
 
 S_API ScreenshotHandle SteamAPI_ISteamScreenshots_WriteScreenshot(intptr_t instancePtr, void * pubRGB, uint32 cubRGB, int nWidth, int nHeight)
 {
-    VLOG_DEBUG("SteamAPI_ISteamScreenshots_WriteScreenshot called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return INVALID_SCREENSHOT_HANDLE;
     return reinterpret_cast<ISteamScreenshots*>(instancePtr)->WriteScreenshot(pubRGB, cubRGB, nWidth, nHeight);
 }
 
 S_API ScreenshotHandle SteamAPI_ISteamScreenshots_AddScreenshotToLibrary(intptr_t instancePtr, const char * pchFilename, const char * pchThumbnailFilename, int nWidth, int nHeight)
 {
-    VLOG_DEBUG("SteamAPI_ISteamScreenshots_AddScreenshotToLibrary called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return INVALID_SCREENSHOT_HANDLE;
     return reinterpret_cast<ISteamScreenshots*>(instancePtr)->AddScreenshotToLibrary(pchFilename, pchThumbnailFilename, nWidth, nHeight);
 }
 
 S_API void SteamAPI_ISteamScreenshots_TriggerScreenshot(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamScreenshots_TriggerScreenshot called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamScreenshots*>(instancePtr)->TriggerScreenshot();
 }
 
 S_API void SteamAPI_ISteamScreenshots_HookScreenshots(intptr_t instancePtr, bool bHook)
 {
-    VLOG_DEBUG("SteamAPI_ISteamScreenshots_HookScreenshots called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamScreenshots*>(instancePtr)->HookScreenshots(bHook);
 }
 
 S_API bool SteamAPI_ISteamScreenshots_SetLocation(intptr_t instancePtr, ScreenshotHandle hScreenshot, const char * pchLocation)
 {
-    VLOG_DEBUG("SteamAPI_ISteamScreenshots_SetLocation called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamScreenshots*>(instancePtr)->SetLocation(hScreenshot, pchLocation);
 }
 
 S_API bool SteamAPI_ISteamScreenshots_TagUser(intptr_t instancePtr, ScreenshotHandle hScreenshot, class CSteamID steamID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamScreenshots_TagUser called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamScreenshots*>(instancePtr)->TagUser(hScreenshot, steamID);
 }
 
 S_API bool SteamAPI_ISteamScreenshots_TagPublishedFile(intptr_t instancePtr, ScreenshotHandle hScreenshot, PublishedFileId_t unPublishedFileID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamScreenshots_TagPublishedFile called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamScreenshots*>(instancePtr)->TagPublishedFile(hScreenshot, unPublishedFileID);
 }
 
 S_API bool SteamAPI_ISteamScreenshots_IsScreenshotsHooked(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamScreenshots_IsScreenshotsHooked called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamScreenshots*>(instancePtr)->IsScreenshotsHooked();
 }
 
 S_API ScreenshotHandle SteamAPI_ISteamScreenshots_AddVRScreenshotToLibrary(intptr_t instancePtr, EVRScreenshotType eType, const char * pchFilename, const char * pchVRFilename)
 {
-    VLOG_DEBUG("SteamAPI_ISteamScreenshots_AddVRScreenshotToLibrary called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return INVALID_SCREENSHOT_HANDLE;
     return reinterpret_cast<ISteamScreenshots*>(instancePtr)->AddVRScreenshotToLibrary(eType, pchFilename, pchVRFilename);
 }
@@ -2769,63 +2776,63 @@ S_API ScreenshotHandle SteamAPI_ISteamScreenshots_AddVRScreenshotToLibrary(intpt
 
 S_API bool SteamAPI_ISteamMusic_BIsEnabled(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusic_BIsEnabled called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusic*>(instancePtr)->BIsEnabled();
 }
 
 S_API bool SteamAPI_ISteamMusic_BIsPlaying(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusic_BIsPlaying called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusic*>(instancePtr)->BIsPlaying();
 }
 
 S_API AudioPlayback_Status SteamAPI_ISteamMusic_GetPlaybackStatus(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusic_GetPlaybackStatus called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return AudioPlayback_Idle;
     return reinterpret_cast<ISteamMusic*>(instancePtr)->GetPlaybackStatus();
 }
 
 S_API void SteamAPI_ISteamMusic_Play(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusic_Play called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMusic*>(instancePtr)->Play();
 }
 
 S_API void SteamAPI_ISteamMusic_Pause(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusic_Pause called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMusic*>(instancePtr)->Pause();
 }
 
 S_API void SteamAPI_ISteamMusic_PlayPrevious(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusic_PlayPrevious called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMusic*>(instancePtr)->PlayPrevious();
 }
 
 S_API void SteamAPI_ISteamMusic_PlayNext(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusic_PlayNext called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMusic*>(instancePtr)->PlayNext();
 }
 
 S_API void SteamAPI_ISteamMusic_SetVolume(intptr_t instancePtr, float flVolume)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusic_SetVolume called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMusic*>(instancePtr)->SetVolume(flVolume);
 }
 
 S_API float SteamAPI_ISteamMusic_GetVolume(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusic_GetVolume called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0.0f;
     return reinterpret_cast<ISteamMusic*>(instancePtr)->GetVolume();
 }
@@ -2837,224 +2844,224 @@ S_API float SteamAPI_ISteamMusic_GetVolume(intptr_t instancePtr)
 
 S_API bool SteamAPI_ISteamMusicRemote_RegisterSteamMusicRemote(intptr_t instancePtr, const char * pchName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_RegisterSteamMusicRemote called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->RegisterSteamMusicRemote(pchName);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_DeregisterSteamMusicRemote(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_DeregisterSteamMusicRemote called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->DeregisterSteamMusicRemote();
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_BIsCurrentMusicRemote(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_BIsCurrentMusicRemote called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->BIsCurrentMusicRemote();
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_BActivationSuccess(intptr_t instancePtr, bool bValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_BActivationSuccess called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->BActivationSuccess(bValue);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_SetDisplayName(intptr_t instancePtr, const char * pchDisplayName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_SetDisplayName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->SetDisplayName(pchDisplayName);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_SetPNGIcon_64x64(intptr_t instancePtr, void * pvBuffer, uint32 cbBufferLength)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_SetPNGIcon_64x64 called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->SetPNGIcon_64x64(pvBuffer, cbBufferLength);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_EnablePlayPrevious(intptr_t instancePtr, bool bValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_EnablePlayPrevious called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->EnablePlayPrevious(bValue);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_EnablePlayNext(intptr_t instancePtr, bool bValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_EnablePlayNext called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->EnablePlayNext(bValue);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_EnableShuffled(intptr_t instancePtr, bool bValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_EnableShuffled called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->EnableShuffled(bValue);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_EnableLooped(intptr_t instancePtr, bool bValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_EnableLooped called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->EnableLooped(bValue);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_EnableQueue(intptr_t instancePtr, bool bValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_EnableQueue called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->EnableQueue(bValue);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_EnablePlaylists(intptr_t instancePtr, bool bValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_EnablePlaylists called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->EnablePlaylists(bValue);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_UpdatePlaybackStatus(intptr_t instancePtr, AudioPlayback_Status nStatus)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_UpdatePlaybackStatus called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->UpdatePlaybackStatus(nStatus);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_UpdateShuffled(intptr_t instancePtr, bool bValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_UpdateShuffled called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->UpdateShuffled(bValue);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_UpdateLooped(intptr_t instancePtr, bool bValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_UpdateLooped called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->UpdateLooped(bValue);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_UpdateVolume(intptr_t instancePtr, float flValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_UpdateVolume called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->UpdateVolume(flValue);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_CurrentEntryWillChange(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_CurrentEntryWillChange called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->CurrentEntryWillChange();
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_CurrentEntryIsAvailable(intptr_t instancePtr, bool bAvailable)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_CurrentEntryIsAvailable called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->CurrentEntryIsAvailable(bAvailable);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_UpdateCurrentEntryText(intptr_t instancePtr, const char * pchText)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_UpdateCurrentEntryText called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->UpdateCurrentEntryText(pchText);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_UpdateCurrentEntryElapsedSeconds(intptr_t instancePtr, int nValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_UpdateCurrentEntryElapsedSeconds called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->UpdateCurrentEntryElapsedSeconds(nValue);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_UpdateCurrentEntryCoverArt(intptr_t instancePtr, void * pvBuffer, uint32 cbBufferLength)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_UpdateCurrentEntryCoverArt called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->UpdateCurrentEntryCoverArt(pvBuffer, cbBufferLength);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_CurrentEntryDidChange(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_CurrentEntryDidChange called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->CurrentEntryDidChange();
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_QueueWillChange(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_QueueWillChange called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->QueueWillChange();
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_ResetQueueEntries(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_ResetQueueEntries called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->ResetQueueEntries();
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_SetQueueEntry(intptr_t instancePtr, int nID, int nPosition, const char * pchEntryText)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_SetQueueEntry called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->SetQueueEntry(nID, nPosition, pchEntryText);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_SetCurrentQueueEntry(intptr_t instancePtr, int nID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_SetCurrentQueueEntry called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->SetCurrentQueueEntry(nID);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_QueueDidChange(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_QueueDidChange called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->QueueDidChange();
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_PlaylistWillChange(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_PlaylistWillChange called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->PlaylistWillChange();
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_ResetPlaylistEntries(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_ResetPlaylistEntries called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->ResetPlaylistEntries();
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_SetPlaylistEntry(intptr_t instancePtr, int nID, int nPosition, const char * pchEntryText)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_SetPlaylistEntry called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->SetPlaylistEntry(nID, nPosition, pchEntryText);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_SetCurrentPlaylistEntry(intptr_t instancePtr, int nID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_SetCurrentPlaylistEntry called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->SetCurrentPlaylistEntry(nID);
 }
 
 S_API bool SteamAPI_ISteamMusicRemote_PlaylistDidChange(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamMusicRemote_PlaylistDidChange called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamMusicRemote*>(instancePtr)->PlaylistDidChange();
 }
@@ -3066,217 +3073,177 @@ S_API bool SteamAPI_ISteamMusicRemote_PlaylistDidChange(intptr_t instancePtr)
 
 S_API HTTPRequestHandle SteamAPI_ISteamHTTP_CreateHTTPRequest(intptr_t instancePtr, EHTTPMethod eHTTPRequestMethod, const char * pchAbsoluteURL)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_CreateHTTPRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return INVALID_HTTPREQUEST_HANDLE;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->CreateHTTPRequest(eHTTPRequestMethod, pchAbsoluteURL);
 }
 
 S_API bool SteamAPI_ISteamHTTP_SetHTTPRequestContextValue(intptr_t instancePtr, HTTPRequestHandle hRequest, uint64 ulContextValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_SetHTTPRequestContextValue called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->SetHTTPRequestContextValue(hRequest, ulContextValue);
 }
 
 S_API bool SteamAPI_ISteamHTTP_SetHTTPRequestNetworkActivityTimeout(intptr_t instancePtr, HTTPRequestHandle hRequest, uint32 unTimeoutSeconds)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_SetHTTPRequestNetworkActivityTimeout called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->SetHTTPRequestNetworkActivityTimeout(hRequest, unTimeoutSeconds);
 }
 
 S_API bool SteamAPI_ISteamHTTP_SetHTTPRequestHeaderValue(intptr_t instancePtr, HTTPRequestHandle hRequest, const char * pchHeaderName, const char * pchHeaderValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_SetHTTPRequestHeaderValue called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->SetHTTPRequestHeaderValue(hRequest, pchHeaderName, pchHeaderValue);
 }
 
 S_API bool SteamAPI_ISteamHTTP_SetHTTPRequestGetOrPostParameter(intptr_t instancePtr, HTTPRequestHandle hRequest, const char * pchParamName, const char * pchParamValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_SetHTTPRequestGetOrPostParameter called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->SetHTTPRequestGetOrPostParameter(hRequest, pchParamName, pchParamValue);
 }
 
 S_API bool SteamAPI_ISteamHTTP_SendHTTPRequest(intptr_t instancePtr, HTTPRequestHandle hRequest, SteamAPICall_t * pCallHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_SendHTTPRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->SendHTTPRequest(hRequest, pCallHandle);
 }
 
 S_API bool SteamAPI_ISteamHTTP_SendHTTPRequestAndStreamResponse(intptr_t instancePtr, HTTPRequestHandle hRequest, SteamAPICall_t * pCallHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_SendHTTPRequestAndStreamResponse called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->SendHTTPRequestAndStreamResponse(hRequest, pCallHandle);
 }
 
 S_API bool SteamAPI_ISteamHTTP_DeferHTTPRequest(intptr_t instancePtr, HTTPRequestHandle hRequest)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_DeferHTTPRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->DeferHTTPRequest(hRequest);
 }
 
 S_API bool SteamAPI_ISteamHTTP_PrioritizeHTTPRequest(intptr_t instancePtr, HTTPRequestHandle hRequest)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_PrioritizeHTTPRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->PrioritizeHTTPRequest(hRequest);
 }
 
 S_API bool SteamAPI_ISteamHTTP_GetHTTPResponseHeaderSize(intptr_t instancePtr, HTTPRequestHandle hRequest, const char * pchHeaderName, uint32 * unResponseHeaderSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_GetHTTPResponseHeaderSize called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->GetHTTPResponseHeaderSize(hRequest, pchHeaderName, unResponseHeaderSize);
 }
 
 S_API bool SteamAPI_ISteamHTTP_GetHTTPResponseHeaderValue(intptr_t instancePtr, HTTPRequestHandle hRequest, const char * pchHeaderName, uint8 * pHeaderValueBuffer, uint32 unBufferSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_GetHTTPResponseHeaderValue called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->GetHTTPResponseHeaderValue(hRequest, pchHeaderName, pHeaderValueBuffer, unBufferSize);
 }
 
 S_API bool SteamAPI_ISteamHTTP_GetHTTPResponseBodySize(intptr_t instancePtr, HTTPRequestHandle hRequest, uint32 * unBodySize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_GetHTTPResponseBodySize called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->GetHTTPResponseBodySize(hRequest, unBodySize);
 }
 
 S_API bool SteamAPI_ISteamHTTP_GetHTTPResponseBodyData(intptr_t instancePtr, HTTPRequestHandle hRequest, uint8 * pBodyDataBuffer, uint32 unBufferSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_GetHTTPResponseBodyData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->GetHTTPResponseBodyData(hRequest, pBodyDataBuffer, unBufferSize);
 }
 
 S_API bool SteamAPI_ISteamHTTP_GetHTTPStreamingResponseBodyData(intptr_t instancePtr, HTTPRequestHandle hRequest, uint32 cOffset, uint8 * pBodyDataBuffer, uint32 unBufferSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_GetHTTPStreamingResponseBodyData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->GetHTTPStreamingResponseBodyData(hRequest, cOffset, pBodyDataBuffer, unBufferSize);
 }
 
 S_API bool SteamAPI_ISteamHTTP_ReleaseHTTPRequest(intptr_t instancePtr, HTTPRequestHandle hRequest)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_ReleaseHTTPRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->ReleaseHTTPRequest(hRequest);
 }
 
 S_API bool SteamAPI_ISteamHTTP_GetHTTPDownloadProgressPct(intptr_t instancePtr, HTTPRequestHandle hRequest, float * pflPercentOut)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_GetHTTPDownloadProgressPct called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->GetHTTPDownloadProgressPct(hRequest, pflPercentOut);
 }
 
 S_API bool SteamAPI_ISteamHTTP_SetHTTPRequestRawPostBody(intptr_t instancePtr, HTTPRequestHandle hRequest, const char * pchContentType, uint8 * pubBody, uint32 unBodyLen)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_SetHTTPRequestRawPostBody called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->SetHTTPRequestRawPostBody(hRequest, pchContentType, pubBody, unBodyLen);
 }
 
 S_API HTTPCookieContainerHandle SteamAPI_ISteamHTTP_CreateCookieContainer(intptr_t instancePtr, bool bAllowResponsesToModify)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_CreateCookieContainer called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return INVALID_HTTPCOOKIE_HANDLE;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->CreateCookieContainer(bAllowResponsesToModify);
 }
 
 S_API bool SteamAPI_ISteamHTTP_ReleaseCookieContainer(intptr_t instancePtr, HTTPCookieContainerHandle hCookieContainer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_ReleaseCookieContainer called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->ReleaseCookieContainer(hCookieContainer);
 }
 
 S_API bool SteamAPI_ISteamHTTP_SetCookie(intptr_t instancePtr, HTTPCookieContainerHandle hCookieContainer, const char * pchHost, const char * pchUrl, const char * pchCookie)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_SetCookie called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->SetCookie(hCookieContainer, pchHost, pchUrl, pchCookie);
 }
 
 S_API bool SteamAPI_ISteamHTTP_SetHTTPRequestCookieContainer(intptr_t instancePtr, HTTPRequestHandle hRequest, HTTPCookieContainerHandle hCookieContainer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_SetHTTPRequestCookieContainer called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->SetHTTPRequestCookieContainer(hRequest, hCookieContainer);
 }
 
 S_API bool SteamAPI_ISteamHTTP_SetHTTPRequestUserAgentInfo(intptr_t instancePtr, HTTPRequestHandle hRequest, const char * pchUserAgentInfo)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_SetHTTPRequestUserAgentInfo called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->SetHTTPRequestUserAgentInfo(hRequest, pchUserAgentInfo);
 }
 
 S_API bool SteamAPI_ISteamHTTP_SetHTTPRequestRequiresVerifiedCertificate(intptr_t instancePtr, HTTPRequestHandle hRequest, bool bRequireVerifiedCertificate)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_SetHTTPRequestRequiresVerifiedCertificate called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->SetHTTPRequestRequiresVerifiedCertificate(hRequest, bRequireVerifiedCertificate);
 }
 
 S_API bool SteamAPI_ISteamHTTP_SetHTTPRequestAbsoluteTimeoutMS(intptr_t instancePtr, HTTPRequestHandle hRequest, uint32 unMilliseconds)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_SetHTTPRequestAbsoluteTimeoutMS called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->SetHTTPRequestAbsoluteTimeoutMS(hRequest, unMilliseconds);
 }
 
 S_API bool SteamAPI_ISteamHTTP_GetHTTPRequestWasTimedOut(intptr_t instancePtr, HTTPRequestHandle hRequest, bool * pbWasTimedOut)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTTP_GetHTTPRequestWasTimedOut called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTTP*>(instancePtr)->GetHTTPRequestWasTimedOut(hRequest, pbWasTimedOut);
-}
-
-
-//-----------------------------------------------------------------------------
-// ISteamUnifiedMessages flat API implementations
-//-----------------------------------------------------------------------------
-
-S_API ClientUnifiedMessageHandle SteamAPI_ISteamUnifiedMessages_SendMethod(intptr_t instancePtr, const char * pchServiceMethod, const void * pRequestBuffer, uint32 unRequestBufferSize, uint64 unContext)
-{
-    VLOG_DEBUG("SteamAPI_ISteamUnifiedMessages_SendMethod called");
-    if (!instancePtr) return ISteamUnifiedMessages::k_InvalidUnifiedMessageHandle;
-    return reinterpret_cast<ISteamUnifiedMessages*>(instancePtr)->SendMethod(pchServiceMethod, pRequestBuffer, unRequestBufferSize, unContext);
-}
-
-S_API bool SteamAPI_ISteamUnifiedMessages_GetMethodResponseInfo(intptr_t instancePtr, ClientUnifiedMessageHandle hHandle, uint32 * punResponseSize, EResult * peResult)
-{
-    VLOG_DEBUG("SteamAPI_ISteamUnifiedMessages_GetMethodResponseInfo called");
-    if (!instancePtr) return false;
-    return reinterpret_cast<ISteamUnifiedMessages*>(instancePtr)->GetMethodResponseInfo(hHandle, punResponseSize, peResult);
-}
-
-S_API bool SteamAPI_ISteamUnifiedMessages_GetMethodResponseData(intptr_t instancePtr, ClientUnifiedMessageHandle hHandle, void * pResponseBuffer, uint32 unResponseBufferSize, bool bAutoRelease)
-{
-    VLOG_DEBUG("SteamAPI_ISteamUnifiedMessages_GetMethodResponseData called");
-    if (!instancePtr) return false;
-    return reinterpret_cast<ISteamUnifiedMessages*>(instancePtr)->GetMethodResponseData(hHandle, pResponseBuffer, unResponseBufferSize, bAutoRelease);
-}
-
-S_API bool SteamAPI_ISteamUnifiedMessages_ReleaseMethod(intptr_t instancePtr, ClientUnifiedMessageHandle hHandle)
-{
-    VLOG_DEBUG("SteamAPI_ISteamUnifiedMessages_ReleaseMethod called");
-    if (!instancePtr) return false;
-    return reinterpret_cast<ISteamUnifiedMessages*>(instancePtr)->ReleaseMethod(hHandle);
-}
-
-S_API bool SteamAPI_ISteamUnifiedMessages_SendNotification(intptr_t instancePtr, const char * pchServiceNotification, const void * pNotificationBuffer, uint32 unNotificationBufferSize)
-{
-    VLOG_DEBUG("SteamAPI_ISteamUnifiedMessages_SendNotification called");
-    if (!instancePtr) return false;
-    return reinterpret_cast<ISteamUnifiedMessages*>(instancePtr)->SendNotification(pchServiceNotification, pNotificationBuffer, unNotificationBufferSize);
 }
 
 
@@ -3286,184 +3253,219 @@ S_API bool SteamAPI_ISteamUnifiedMessages_SendNotification(intptr_t instancePtr,
 
 S_API bool SteamAPI_ISteamController_Init(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_Init called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamController*>(instancePtr)->Init();
 }
 
 S_API bool SteamAPI_ISteamController_Shutdown(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_Shutdown called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamController*>(instancePtr)->Shutdown();
 }
 
 S_API void SteamAPI_ISteamController_RunFrame(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_RunFrame called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamController*>(instancePtr)->RunFrame();
 }
 
 S_API int SteamAPI_ISteamController_GetConnectedControllers(intptr_t instancePtr, ControllerHandle_t * handlesOut)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetConnectedControllers called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamController*>(instancePtr)->GetConnectedControllers(handlesOut);
 }
 
 S_API bool SteamAPI_ISteamController_ShowBindingPanel(intptr_t instancePtr, ControllerHandle_t controllerHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_ShowBindingPanel called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamController*>(instancePtr)->ShowBindingPanel(controllerHandle);
 }
 
 S_API ControllerActionSetHandle_t SteamAPI_ISteamController_GetActionSetHandle(intptr_t instancePtr, const char * pszActionSetName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetActionSetHandle called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamController*>(instancePtr)->GetActionSetHandle(pszActionSetName);
 }
 
 S_API void SteamAPI_ISteamController_ActivateActionSet(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_ActivateActionSet called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamController*>(instancePtr)->ActivateActionSet(controllerHandle, actionSetHandle);
 }
 
 S_API ControllerActionSetHandle_t SteamAPI_ISteamController_GetCurrentActionSet(intptr_t instancePtr, ControllerHandle_t controllerHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetCurrentActionSet called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamController*>(instancePtr)->GetCurrentActionSet(controllerHandle);
 }
 
+S_API void SteamAPI_ISteamController_ActivateActionSetLayer(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetLayerHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamController*>(instancePtr)->ActivateActionSetLayer(controllerHandle, actionSetLayerHandle);
+}
+
+S_API void SteamAPI_ISteamController_DeactivateActionSetLayer(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetLayerHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamController*>(instancePtr)->DeactivateActionSetLayer(controllerHandle, actionSetLayerHandle);
+}
+
+S_API void SteamAPI_ISteamController_DeactivateAllActionSetLayers(intptr_t instancePtr, ControllerHandle_t controllerHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamController*>(instancePtr)->DeactivateAllActionSetLayers(controllerHandle);
+}
+
+S_API int SteamAPI_ISteamController_GetActiveActionSetLayers(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerActionSetHandle_t * handlesOut)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetActiveActionSetLayers(controllerHandle, handlesOut);
+}
+
 S_API ControllerDigitalActionHandle_t SteamAPI_ISteamController_GetDigitalActionHandle(intptr_t instancePtr, const char * pszActionName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetDigitalActionHandle called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamController*>(instancePtr)->GetDigitalActionHandle(pszActionName);
 }
 
 S_API struct ControllerDigitalActionData_t SteamAPI_ISteamController_GetDigitalActionData(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetDigitalActionData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return {};
     return reinterpret_cast<ISteamController*>(instancePtr)->GetDigitalActionData(controllerHandle, digitalActionHandle);
 }
 
 S_API int SteamAPI_ISteamController_GetDigitalActionOrigins(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerDigitalActionHandle_t digitalActionHandle, EControllerActionOrigin * originsOut)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetDigitalActionOrigins called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamController*>(instancePtr)->GetDigitalActionOrigins(controllerHandle, actionSetHandle, digitalActionHandle, originsOut);
 }
 
 S_API ControllerAnalogActionHandle_t SteamAPI_ISteamController_GetAnalogActionHandle(intptr_t instancePtr, const char * pszActionName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetAnalogActionHandle called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamController*>(instancePtr)->GetAnalogActionHandle(pszActionName);
 }
 
 S_API struct ControllerAnalogActionData_t SteamAPI_ISteamController_GetAnalogActionData(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetAnalogActionData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return {};
     return reinterpret_cast<ISteamController*>(instancePtr)->GetAnalogActionData(controllerHandle, analogActionHandle);
 }
 
 S_API int SteamAPI_ISteamController_GetAnalogActionOrigins(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerAnalogActionHandle_t analogActionHandle, EControllerActionOrigin * originsOut)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetAnalogActionOrigins called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamController*>(instancePtr)->GetAnalogActionOrigins(controllerHandle, actionSetHandle, analogActionHandle, originsOut);
 }
 
 S_API void SteamAPI_ISteamController_StopAnalogActionMomentum(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t eAction)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_StopAnalogActionMomentum called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamController*>(instancePtr)->StopAnalogActionMomentum(controllerHandle, eAction);
 }
 
 S_API void SteamAPI_ISteamController_TriggerHapticPulse(intptr_t instancePtr, ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_TriggerHapticPulse called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamController*>(instancePtr)->TriggerHapticPulse(controllerHandle, eTargetPad, usDurationMicroSec);
 }
 
 S_API void SteamAPI_ISteamController_TriggerRepeatedHapticPulse(intptr_t instancePtr, ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec, unsigned short usOffMicroSec, unsigned short unRepeat, unsigned int nFlags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_TriggerRepeatedHapticPulse called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamController*>(instancePtr)->TriggerRepeatedHapticPulse(controllerHandle, eTargetPad, usDurationMicroSec, usOffMicroSec, unRepeat, nFlags);
 }
 
 S_API void SteamAPI_ISteamController_TriggerVibration(intptr_t instancePtr, ControllerHandle_t controllerHandle, unsigned short usLeftSpeed, unsigned short usRightSpeed)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_TriggerVibration called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamController*>(instancePtr)->TriggerVibration(controllerHandle, usLeftSpeed, usRightSpeed);
 }
 
 S_API void SteamAPI_ISteamController_SetLEDColor(intptr_t instancePtr, ControllerHandle_t controllerHandle, uint8 nColorR, uint8 nColorG, uint8 nColorB, unsigned int nFlags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_SetLEDColor called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamController*>(instancePtr)->SetLEDColor(controllerHandle, nColorR, nColorG, nColorB, nFlags);
 }
 
 S_API int SteamAPI_ISteamController_GetGamepadIndexForController(intptr_t instancePtr, ControllerHandle_t ulControllerHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetGamepadIndexForController called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamController*>(instancePtr)->GetGamepadIndexForController(ulControllerHandle);
 }
 
 S_API ControllerHandle_t SteamAPI_ISteamController_GetControllerForGamepadIndex(intptr_t instancePtr, int nIndex)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetControllerForGamepadIndex called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamController*>(instancePtr)->GetControllerForGamepadIndex(nIndex);
 }
 
 S_API struct ControllerMotionData_t SteamAPI_ISteamController_GetMotionData(intptr_t instancePtr, ControllerHandle_t controllerHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetMotionData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return {};
     return reinterpret_cast<ISteamController*>(instancePtr)->GetMotionData(controllerHandle);
 }
 
 S_API bool SteamAPI_ISteamController_ShowDigitalActionOrigins(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle, float flScale, float flXPosition, float flYPosition)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_ShowDigitalActionOrigins called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamController*>(instancePtr)->ShowDigitalActionOrigins(controllerHandle, digitalActionHandle, flScale, flXPosition, flYPosition);
 }
 
 S_API bool SteamAPI_ISteamController_ShowAnalogActionOrigins(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle, float flScale, float flXPosition, float flYPosition)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_ShowAnalogActionOrigins called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamController*>(instancePtr)->ShowAnalogActionOrigins(controllerHandle, analogActionHandle, flScale, flXPosition, flYPosition);
 }
 
 S_API const char * SteamAPI_ISteamController_GetStringForActionOrigin(intptr_t instancePtr, EControllerActionOrigin eOrigin)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetStringForActionOrigin called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamController*>(instancePtr)->GetStringForActionOrigin(eOrigin);
 }
 
 S_API const char * SteamAPI_ISteamController_GetGlyphForActionOrigin(intptr_t instancePtr, EControllerActionOrigin eOrigin)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetGlyphForActionOrigin called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamController*>(instancePtr)->GetGlyphForActionOrigin(eOrigin);
+}
+
+S_API ESteamInputType SteamAPI_ISteamController_GetInputTypeForHandle(intptr_t instancePtr, ControllerHandle_t controllerHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return ESteamInputType::k_ESteamInputType_Unknown;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetInputTypeForHandle(controllerHandle);
 }
 
 
@@ -3473,518 +3475,518 @@ S_API const char * SteamAPI_ISteamController_GetGlyphForActionOrigin(intptr_t in
 
 S_API UGCQueryHandle_t SteamAPI_ISteamUGC_CreateQueryUserUGCRequest(intptr_t instancePtr, AccountID_t unAccountID, EUserUGCList eListType, EUGCMatchingUGCType eMatchingUGCType, EUserUGCListSortOrder eSortOrder, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_CreateQueryUserUGCRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_UGCQueryHandleInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->CreateQueryUserUGCRequest(unAccountID, eListType, eMatchingUGCType, eSortOrder, nCreatorAppID, nConsumerAppID, unPage);
 }
 
 S_API UGCQueryHandle_t SteamAPI_ISteamUGC_CreateQueryAllUGCRequest(intptr_t instancePtr, EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_CreateQueryAllUGCRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_UGCQueryHandleInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->CreateQueryAllUGCRequest(eQueryType, eMatchingeMatchingUGCTypeFileType, nCreatorAppID, nConsumerAppID, unPage);
 }
 
 S_API UGCQueryHandle_t SteamAPI_ISteamUGC_CreateQueryUGCDetailsRequest(intptr_t instancePtr, PublishedFileId_t * pvecPublishedFileID, uint32 unNumPublishedFileIDs)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_CreateQueryUGCDetailsRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_UGCQueryHandleInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->CreateQueryUGCDetailsRequest(pvecPublishedFileID, unNumPublishedFileIDs);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_SendQueryUGCRequest(intptr_t instancePtr, UGCQueryHandle_t handle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SendQueryUGCRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SendQueryUGCRequest(handle);
 }
 
 S_API bool SteamAPI_ISteamUGC_GetQueryUGCResult(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, struct SteamUGCDetails_t * pDetails)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCResult called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCResult(handle, index, pDetails);
 }
 
 S_API bool SteamAPI_ISteamUGC_GetQueryUGCPreviewURL(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, char * pchURL, uint32 cchURLSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCPreviewURL called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCPreviewURL(handle, index, pchURL, cchURLSize);
 }
 
 S_API bool SteamAPI_ISteamUGC_GetQueryUGCMetadata(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, char * pchMetadata, uint32 cchMetadatasize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCMetadata called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCMetadata(handle, index, pchMetadata, cchMetadatasize);
 }
 
 S_API bool SteamAPI_ISteamUGC_GetQueryUGCChildren(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, PublishedFileId_t * pvecPublishedFileID, uint32 cMaxEntries)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCChildren called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCChildren(handle, index, pvecPublishedFileID, cMaxEntries);
 }
 
 S_API bool SteamAPI_ISteamUGC_GetQueryUGCStatistic(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint64 * pStatValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCStatistic called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCStatistic(handle, index, eStatType, pStatValue);
 }
 
 S_API uint32 SteamAPI_ISteamUGC_GetQueryUGCNumAdditionalPreviews(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCNumAdditionalPreviews called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCNumAdditionalPreviews(handle, index);
 }
 
 S_API bool SteamAPI_ISteamUGC_GetQueryUGCAdditionalPreview(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, char * pchURLOrVideoID, uint32 cchURLSize, char * pchOriginalFileName, uint32 cchOriginalFileNameSize, EItemPreviewType * pPreviewType)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCAdditionalPreview called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCAdditionalPreview(handle, index, previewIndex, pchURLOrVideoID, cchURLSize, pchOriginalFileName, cchOriginalFileNameSize, pPreviewType);
 }
 
 S_API uint32 SteamAPI_ISteamUGC_GetQueryUGCNumKeyValueTags(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCNumKeyValueTags called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCNumKeyValueTags(handle, index);
 }
 
 S_API bool SteamAPI_ISteamUGC_GetQueryUGCKeyValueTag(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, uint32 keyValueTagIndex, char * pchKey, uint32 cchKeySize, char * pchValue, uint32 cchValueSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetQueryUGCKeyValueTag called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCKeyValueTag(handle, index, keyValueTagIndex, pchKey, cchKeySize, pchValue, cchValueSize);
 }
 
 S_API bool SteamAPI_ISteamUGC_ReleaseQueryUGCRequest(intptr_t instancePtr, UGCQueryHandle_t handle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_ReleaseQueryUGCRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->ReleaseQueryUGCRequest(handle);
 }
 
 S_API bool SteamAPI_ISteamUGC_AddRequiredTag(intptr_t instancePtr, UGCQueryHandle_t handle, const char * pTagName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_AddRequiredTag called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->AddRequiredTag(handle, pTagName);
 }
 
 S_API bool SteamAPI_ISteamUGC_AddExcludedTag(intptr_t instancePtr, UGCQueryHandle_t handle, const char * pTagName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_AddExcludedTag called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->AddExcludedTag(handle, pTagName);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetReturnOnlyIDs(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnOnlyIDs)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnOnlyIDs called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnOnlyIDs(handle, bReturnOnlyIDs);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetReturnKeyValueTags(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnKeyValueTags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnKeyValueTags called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnKeyValueTags(handle, bReturnKeyValueTags);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetReturnLongDescription(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnLongDescription)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnLongDescription called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnLongDescription(handle, bReturnLongDescription);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetReturnMetadata(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnMetadata)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnMetadata called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnMetadata(handle, bReturnMetadata);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetReturnChildren(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnChildren)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnChildren called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnChildren(handle, bReturnChildren);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetReturnAdditionalPreviews(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnAdditionalPreviews)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnAdditionalPreviews called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnAdditionalPreviews(handle, bReturnAdditionalPreviews);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetReturnTotalOnly(intptr_t instancePtr, UGCQueryHandle_t handle, bool bReturnTotalOnly)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnTotalOnly called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnTotalOnly(handle, bReturnTotalOnly);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetReturnPlaytimeStats(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 unDays)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetReturnPlaytimeStats called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetReturnPlaytimeStats(handle, unDays);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetLanguage(intptr_t instancePtr, UGCQueryHandle_t handle, const char * pchLanguage)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetLanguage called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetLanguage(handle, pchLanguage);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetAllowCachedResponse(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 unMaxAgeSeconds)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetAllowCachedResponse called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetAllowCachedResponse(handle, unMaxAgeSeconds);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetCloudFileNameFilter(intptr_t instancePtr, UGCQueryHandle_t handle, const char * pMatchCloudFileName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetCloudFileNameFilter called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetCloudFileNameFilter(handle, pMatchCloudFileName);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetMatchAnyTag(intptr_t instancePtr, UGCQueryHandle_t handle, bool bMatchAnyTag)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetMatchAnyTag called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetMatchAnyTag(handle, bMatchAnyTag);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetSearchText(intptr_t instancePtr, UGCQueryHandle_t handle, const char * pSearchText)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetSearchText called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetSearchText(handle, pSearchText);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetRankedByTrendDays(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 unDays)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetRankedByTrendDays called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetRankedByTrendDays(handle, unDays);
 }
 
 S_API bool SteamAPI_ISteamUGC_AddRequiredKeyValueTag(intptr_t instancePtr, UGCQueryHandle_t handle, const char * pKey, const char * pValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_AddRequiredKeyValueTag called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->AddRequiredKeyValueTag(handle, pKey, pValue);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_RequestUGCDetails(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, uint32 unMaxAgeSeconds)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_RequestUGCDetails called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->RequestUGCDetails(nPublishedFileID, unMaxAgeSeconds);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_CreateItem(intptr_t instancePtr, AppId_t nConsumerAppId, EWorkshopFileType eFileType)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_CreateItem called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->CreateItem(nConsumerAppId, eFileType);
 }
 
 S_API UGCUpdateHandle_t SteamAPI_ISteamUGC_StartItemUpdate(intptr_t instancePtr, AppId_t nConsumerAppId, PublishedFileId_t nPublishedFileID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_StartItemUpdate called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_UGCUpdateHandleInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->StartItemUpdate(nConsumerAppId, nPublishedFileID);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetItemTitle(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchTitle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetItemTitle called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemTitle(handle, pchTitle);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetItemDescription(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchDescription)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetItemDescription called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemDescription(handle, pchDescription);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetItemUpdateLanguage(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchLanguage)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetItemUpdateLanguage called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemUpdateLanguage(handle, pchLanguage);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetItemMetadata(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchMetaData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetItemMetadata called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemMetadata(handle, pchMetaData);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetItemVisibility(intptr_t instancePtr, UGCUpdateHandle_t handle, ERemoteStoragePublishedFileVisibility eVisibility)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetItemVisibility called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemVisibility(handle, eVisibility);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetItemTags(intptr_t instancePtr, UGCUpdateHandle_t updateHandle, const struct SteamParamStringArray_t * pTags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetItemTags called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemTags(updateHandle, pTags);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetItemContent(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pszContentFolder)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetItemContent called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemContent(handle, pszContentFolder);
 }
 
 S_API bool SteamAPI_ISteamUGC_SetItemPreview(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pszPreviewFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetItemPreview called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemPreview(handle, pszPreviewFile);
 }
 
 S_API bool SteamAPI_ISteamUGC_RemoveItemKeyValueTags(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchKey)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_RemoveItemKeyValueTags called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->RemoveItemKeyValueTags(handle, pchKey);
 }
 
 S_API bool SteamAPI_ISteamUGC_AddItemKeyValueTag(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchKey, const char * pchValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_AddItemKeyValueTag called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->AddItemKeyValueTag(handle, pchKey, pchValue);
 }
 
 S_API bool SteamAPI_ISteamUGC_AddItemPreviewFile(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pszPreviewFile, EItemPreviewType type)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_AddItemPreviewFile called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->AddItemPreviewFile(handle, pszPreviewFile, type);
 }
 
 S_API bool SteamAPI_ISteamUGC_AddItemPreviewVideo(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pszVideoID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_AddItemPreviewVideo called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->AddItemPreviewVideo(handle, pszVideoID);
 }
 
 S_API bool SteamAPI_ISteamUGC_UpdateItemPreviewFile(intptr_t instancePtr, UGCUpdateHandle_t handle, uint32 index, const char * pszPreviewFile)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_UpdateItemPreviewFile called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->UpdateItemPreviewFile(handle, index, pszPreviewFile);
 }
 
 S_API bool SteamAPI_ISteamUGC_UpdateItemPreviewVideo(intptr_t instancePtr, UGCUpdateHandle_t handle, uint32 index, const char * pszVideoID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_UpdateItemPreviewVideo called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->UpdateItemPreviewVideo(handle, index, pszVideoID);
 }
 
 S_API bool SteamAPI_ISteamUGC_RemoveItemPreview(intptr_t instancePtr, UGCUpdateHandle_t handle, uint32 index)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_RemoveItemPreview called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->RemoveItemPreview(handle, index);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_SubmitItemUpdate(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchChangeNote)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SubmitItemUpdate called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SubmitItemUpdate(handle, pchChangeNote);
 }
 
 S_API EItemUpdateStatus SteamAPI_ISteamUGC_GetItemUpdateProgress(intptr_t instancePtr, UGCUpdateHandle_t handle, uint64 * punBytesProcessed, uint64 * punBytesTotal)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetItemUpdateProgress called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EItemUpdateStatusInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetItemUpdateProgress(handle, punBytesProcessed, punBytesTotal);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_SetUserItemVote(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, bool bVoteUp)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SetUserItemVote called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetUserItemVote(nPublishedFileID, bVoteUp);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_GetUserItemVote(intptr_t instancePtr, PublishedFileId_t nPublishedFileID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetUserItemVote called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetUserItemVote(nPublishedFileID);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_AddItemToFavorites(intptr_t instancePtr, AppId_t nAppId, PublishedFileId_t nPublishedFileID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_AddItemToFavorites called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->AddItemToFavorites(nAppId, nPublishedFileID);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_RemoveItemFromFavorites(intptr_t instancePtr, AppId_t nAppId, PublishedFileId_t nPublishedFileID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_RemoveItemFromFavorites called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->RemoveItemFromFavorites(nAppId, nPublishedFileID);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_SubscribeItem(intptr_t instancePtr, PublishedFileId_t nPublishedFileID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SubscribeItem called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SubscribeItem(nPublishedFileID);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_UnsubscribeItem(intptr_t instancePtr, PublishedFileId_t nPublishedFileID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_UnsubscribeItem called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->UnsubscribeItem(nPublishedFileID);
 }
 
 S_API uint32 SteamAPI_ISteamUGC_GetNumSubscribedItems(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetNumSubscribedItems called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetNumSubscribedItems();
 }
 
 S_API uint32 SteamAPI_ISteamUGC_GetSubscribedItems(intptr_t instancePtr, PublishedFileId_t * pvecPublishedFileID, uint32 cMaxEntries)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetSubscribedItems called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetSubscribedItems(pvecPublishedFileID, cMaxEntries);
 }
 
 S_API uint32 SteamAPI_ISteamUGC_GetItemState(intptr_t instancePtr, PublishedFileId_t nPublishedFileID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetItemState called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetItemState(nPublishedFileID);
 }
 
 S_API bool SteamAPI_ISteamUGC_GetItemInstallInfo(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, uint64 * punSizeOnDisk, char * pchFolder, uint32 cchFolderSize, uint32 * punTimeStamp)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetItemInstallInfo called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetItemInstallInfo(nPublishedFileID, punSizeOnDisk, pchFolder, cchFolderSize, punTimeStamp);
 }
 
 S_API bool SteamAPI_ISteamUGC_GetItemDownloadInfo(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, uint64 * punBytesDownloaded, uint64 * punBytesTotal)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetItemDownloadInfo called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetItemDownloadInfo(nPublishedFileID, punBytesDownloaded, punBytesTotal);
 }
 
 S_API bool SteamAPI_ISteamUGC_DownloadItem(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, bool bHighPriority)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_DownloadItem called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->DownloadItem(nPublishedFileID, bHighPriority);
 }
 
 S_API bool SteamAPI_ISteamUGC_BInitWorkshopForGameServer(intptr_t instancePtr, DepotId_t unWorkshopDepotID, const char * pszFolder)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_BInitWorkshopForGameServer called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->BInitWorkshopForGameServer(unWorkshopDepotID, pszFolder);
 }
 
 S_API void SteamAPI_ISteamUGC_SuspendDownloads(intptr_t instancePtr, bool bSuspend)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_SuspendDownloads called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUGC*>(instancePtr)->SuspendDownloads(bSuspend);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_StartPlaytimeTracking(intptr_t instancePtr, PublishedFileId_t * pvecPublishedFileID, uint32 unNumPublishedFileIDs)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_StartPlaytimeTracking called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->StartPlaytimeTracking(pvecPublishedFileID, unNumPublishedFileIDs);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_StopPlaytimeTracking(intptr_t instancePtr, PublishedFileId_t * pvecPublishedFileID, uint32 unNumPublishedFileIDs)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_StopPlaytimeTracking called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->StopPlaytimeTracking(pvecPublishedFileID, unNumPublishedFileIDs);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_StopPlaytimeTrackingForAllItems(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_StopPlaytimeTrackingForAllItems called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->StopPlaytimeTrackingForAllItems();
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_AddDependency(intptr_t instancePtr, PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_AddDependency called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->AddDependency(nParentPublishedFileID, nChildPublishedFileID);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_RemoveDependency(intptr_t instancePtr, PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_RemoveDependency called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->RemoveDependency(nParentPublishedFileID, nChildPublishedFileID);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_AddAppDependency(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, AppId_t nAppID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_AddAppDependency called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->AddAppDependency(nPublishedFileID, nAppID);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_RemoveAppDependency(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, AppId_t nAppID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_RemoveAppDependency called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->RemoveAppDependency(nPublishedFileID, nAppID);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_GetAppDependencies(intptr_t instancePtr, PublishedFileId_t nPublishedFileID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetAppDependencies called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetAppDependencies(nPublishedFileID);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamUGC_DeleteItem(intptr_t instancePtr, PublishedFileId_t nPublishedFileID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_DeleteItem called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->DeleteItem(nPublishedFileID);
 }
@@ -3996,35 +3998,35 @@ S_API SteamAPICall_t SteamAPI_ISteamUGC_DeleteItem(intptr_t instancePtr, Publish
 
 S_API uint32 SteamAPI_ISteamAppList_GetNumInstalledApps(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamAppList_GetNumInstalledApps called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamAppList*>(instancePtr)->GetNumInstalledApps();
 }
 
 S_API uint32 SteamAPI_ISteamAppList_GetInstalledApps(intptr_t instancePtr, AppId_t * pvecAppID, uint32 unMaxAppIDs)
 {
-    VLOG_DEBUG("SteamAPI_ISteamAppList_GetInstalledApps called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamAppList*>(instancePtr)->GetInstalledApps(pvecAppID, unMaxAppIDs);
 }
 
 S_API int SteamAPI_ISteamAppList_GetAppName(intptr_t instancePtr, AppId_t nAppID, char * pchName, int cchNameMax)
 {
-    VLOG_DEBUG("SteamAPI_ISteamAppList_GetAppName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamAppList*>(instancePtr)->GetAppName(nAppID, pchName, cchNameMax);
 }
 
 S_API int SteamAPI_ISteamAppList_GetAppInstallDir(intptr_t instancePtr, AppId_t nAppID, char * pchDirectory, int cchNameMax)
 {
-    VLOG_DEBUG("SteamAPI_ISteamAppList_GetAppInstallDir called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamAppList*>(instancePtr)->GetAppInstallDir(nAppID, pchDirectory, cchNameMax);
 }
 
 S_API int SteamAPI_ISteamAppList_GetAppBuildId(intptr_t instancePtr, AppId_t nAppID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamAppList_GetAppBuildId called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamAppList*>(instancePtr)->GetAppBuildId(nAppID);
 }
@@ -4036,252 +4038,252 @@ S_API int SteamAPI_ISteamAppList_GetAppBuildId(intptr_t instancePtr, AppId_t nAp
 
 S_API void SteamAPI_ISteamHTMLSurface_DestructISteamHTMLSurface(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_DestructISteamHTMLSurface called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     // reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->DestructISteamHTMLSurface();
 }
 
 S_API bool SteamAPI_ISteamHTMLSurface_Init(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_Init called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->Init();
 }
 
 S_API bool SteamAPI_ISteamHTMLSurface_Shutdown(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_Shutdown called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->Shutdown();
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamHTMLSurface_CreateBrowser(intptr_t instancePtr, const char * pchUserAgent, const char * pchUserCSS)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_CreateBrowser called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->CreateBrowser(pchUserAgent, pchUserCSS);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_RemoveBrowser(intptr_t instancePtr, HHTMLBrowser unBrowserHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_RemoveBrowser called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->RemoveBrowser(unBrowserHandle);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_LoadURL(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, const char * pchURL, const char * pchPostData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_LoadURL called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->LoadURL(unBrowserHandle, pchURL, pchPostData);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_SetSize(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 unWidth, uint32 unHeight)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_SetSize called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetSize(unBrowserHandle, unWidth, unHeight);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_StopLoad(intptr_t instancePtr, HHTMLBrowser unBrowserHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_StopLoad called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->StopLoad(unBrowserHandle);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_Reload(intptr_t instancePtr, HHTMLBrowser unBrowserHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_Reload called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->Reload(unBrowserHandle);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_GoBack(intptr_t instancePtr, HHTMLBrowser unBrowserHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_GoBack called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->GoBack(unBrowserHandle);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_GoForward(intptr_t instancePtr, HHTMLBrowser unBrowserHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_GoForward called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->GoForward(unBrowserHandle);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_AddHeader(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, const char * pchKey, const char * pchValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_AddHeader called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->AddHeader(unBrowserHandle, pchKey, pchValue);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_ExecuteJavascript(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, const char * pchScript)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_ExecuteJavascript called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->ExecuteJavascript(unBrowserHandle, pchScript);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_MouseUp(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, EHTMLMouseButton eMouseButton)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_MouseUp called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->MouseUp(unBrowserHandle, eMouseButton);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_MouseDown(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, EHTMLMouseButton eMouseButton)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_MouseDown called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->MouseDown(unBrowserHandle, eMouseButton);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_MouseDoubleClick(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, EHTMLMouseButton eMouseButton)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_MouseDoubleClick called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->MouseDoubleClick(unBrowserHandle, eMouseButton);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_MouseMove(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, int x, int y)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_MouseMove called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->MouseMove(unBrowserHandle, x, y);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_MouseWheel(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, int32 nDelta)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_MouseWheel called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->MouseWheel(unBrowserHandle, nDelta);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_KeyDown(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_KeyDown called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->KeyDown(unBrowserHandle, nNativeKeyCode, eHTMLKeyModifiers);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_KeyUp(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_KeyUp called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->KeyUp(unBrowserHandle, nNativeKeyCode, eHTMLKeyModifiers);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_KeyChar(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 cUnicodeChar, EHTMLKeyModifiers eHTMLKeyModifiers)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_KeyChar called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->KeyChar(unBrowserHandle, cUnicodeChar, eHTMLKeyModifiers);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_SetHorizontalScroll(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nAbsolutePixelScroll)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_SetHorizontalScroll called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetHorizontalScroll(unBrowserHandle, nAbsolutePixelScroll);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_SetVerticalScroll(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nAbsolutePixelScroll)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_SetVerticalScroll called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetVerticalScroll(unBrowserHandle, nAbsolutePixelScroll);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_SetKeyFocus(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, bool bHasKeyFocus)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_SetKeyFocus called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetKeyFocus(unBrowserHandle, bHasKeyFocus);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_ViewSource(intptr_t instancePtr, HHTMLBrowser unBrowserHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_ViewSource called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->ViewSource(unBrowserHandle);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_CopyToClipboard(intptr_t instancePtr, HHTMLBrowser unBrowserHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_CopyToClipboard called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->CopyToClipboard(unBrowserHandle);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_PasteFromClipboard(intptr_t instancePtr, HHTMLBrowser unBrowserHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_PasteFromClipboard called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->PasteFromClipboard(unBrowserHandle);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_Find(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, const char * pchSearchStr, bool bCurrentlyInFind, bool bReverse)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_Find called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->Find(unBrowserHandle, pchSearchStr, bCurrentlyInFind, bReverse);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_StopFind(intptr_t instancePtr, HHTMLBrowser unBrowserHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_StopFind called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->StopFind(unBrowserHandle);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_GetLinkAtPosition(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, int x, int y)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_GetLinkAtPosition called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->GetLinkAtPosition(unBrowserHandle, x, y);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_SetCookie(intptr_t instancePtr, const char * pchHostname, const char * pchKey, const char * pchValue, const char * pchPath, RTime32 nExpires, bool bSecure, bool bHTTPOnly)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_SetCookie called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetCookie(pchHostname, pchKey, pchValue, pchPath, nExpires, bSecure, bHTTPOnly);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_SetPageScaleFactor(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, float flZoom, int nPointX, int nPointY)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_SetPageScaleFactor called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetPageScaleFactor(unBrowserHandle, flZoom, nPointX, nPointY);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_SetBackgroundMode(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, bool bBackgroundMode)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_SetBackgroundMode called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetBackgroundMode(unBrowserHandle, bBackgroundMode);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_SetDPIScalingFactor(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, float flDPIScaling)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_SetDPIScalingFactor called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetDPIScalingFactor(unBrowserHandle, flDPIScaling);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_AllowStartRequest(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, bool bAllowed)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_AllowStartRequest called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->AllowStartRequest(unBrowserHandle, bAllowed);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_JSDialogResponse(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, bool bResult)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_JSDialogResponse called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->JSDialogResponse(unBrowserHandle, bResult);
 }
@@ -4293,177 +4295,261 @@ S_API void SteamAPI_ISteamHTMLSurface_JSDialogResponse(intptr_t instancePtr, HHT
 
 S_API EResult SteamAPI_ISteamInventory_GetResultStatus(intptr_t instancePtr, SteamInventoryResult_t resultHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_GetResultStatus called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EResultFail;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GetResultStatus(resultHandle);
 }
 
 S_API bool SteamAPI_ISteamInventory_GetResultItems(intptr_t instancePtr, SteamInventoryResult_t resultHandle, struct SteamItemDetails_t * pOutItemsArray, uint32 * punOutItemsArraySize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_GetResultItems called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GetResultItems(resultHandle, pOutItemsArray, punOutItemsArraySize);
 }
 
 S_API bool SteamAPI_ISteamInventory_GetResultItemProperty(intptr_t instancePtr, SteamInventoryResult_t resultHandle, uint32 unItemIndex, const char * pchPropertyName, char * pchValueBuffer, uint32 * punValueBufferSizeOut)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_GetResultItemProperty called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GetResultItemProperty(resultHandle, unItemIndex, pchPropertyName, pchValueBuffer, punValueBufferSizeOut);
 }
 
 S_API uint32 SteamAPI_ISteamInventory_GetResultTimestamp(intptr_t instancePtr, SteamInventoryResult_t resultHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_GetResultTimestamp called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GetResultTimestamp(resultHandle);
 }
 
 S_API bool SteamAPI_ISteamInventory_CheckResultSteamID(intptr_t instancePtr, SteamInventoryResult_t resultHandle, class CSteamID steamIDExpected)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_CheckResultSteamID called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->CheckResultSteamID(resultHandle, steamIDExpected);
 }
 
 S_API void SteamAPI_ISteamInventory_DestroyResult(intptr_t instancePtr, SteamInventoryResult_t resultHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_DestroyResult called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamInventory*>(instancePtr)->DestroyResult(resultHandle);
 }
 
 S_API bool SteamAPI_ISteamInventory_GetAllItems(intptr_t instancePtr, SteamInventoryResult_t * pResultHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_GetAllItems called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GetAllItems(pResultHandle);
 }
 
 S_API bool SteamAPI_ISteamInventory_GetItemsByID(intptr_t instancePtr, SteamInventoryResult_t * pResultHandle, const SteamItemInstanceID_t * pInstanceIDs, uint32 unCountInstanceIDs)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_GetItemsByID called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GetItemsByID(pResultHandle, pInstanceIDs, unCountInstanceIDs);
 }
 
 S_API bool SteamAPI_ISteamInventory_SerializeResult(intptr_t instancePtr, SteamInventoryResult_t resultHandle, void * pOutBuffer, uint32 * punOutBufferSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_SerializeResult called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->SerializeResult(resultHandle, pOutBuffer, punOutBufferSize);
 }
 
 S_API bool SteamAPI_ISteamInventory_DeserializeResult(intptr_t instancePtr, SteamInventoryResult_t * pOutResultHandle, const void * pBuffer, uint32 unBufferSize, bool bRESERVED_MUST_BE_FALSE)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_DeserializeResult called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->DeserializeResult(pOutResultHandle, pBuffer, unBufferSize, bRESERVED_MUST_BE_FALSE);
 }
 
 S_API bool SteamAPI_ISteamInventory_GenerateItems(intptr_t instancePtr, SteamInventoryResult_t * pResultHandle, const SteamItemDef_t * pArrayItemDefs, const uint32 * punArrayQuantity, uint32 unArrayLength)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_GenerateItems called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GenerateItems(pResultHandle, pArrayItemDefs, punArrayQuantity, unArrayLength);
 }
 
 S_API bool SteamAPI_ISteamInventory_GrantPromoItems(intptr_t instancePtr, SteamInventoryResult_t * pResultHandle)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_GrantPromoItems called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GrantPromoItems(pResultHandle);
 }
 
 S_API bool SteamAPI_ISteamInventory_AddPromoItem(intptr_t instancePtr, SteamInventoryResult_t * pResultHandle, SteamItemDef_t itemDef)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_AddPromoItem called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->AddPromoItem(pResultHandle, itemDef);
 }
 
 S_API bool SteamAPI_ISteamInventory_AddPromoItems(intptr_t instancePtr, SteamInventoryResult_t * pResultHandle, const SteamItemDef_t * pArrayItemDefs, uint32 unArrayLength)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_AddPromoItems called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->AddPromoItems(pResultHandle, pArrayItemDefs, unArrayLength);
 }
 
 S_API bool SteamAPI_ISteamInventory_ConsumeItem(intptr_t instancePtr, SteamInventoryResult_t * pResultHandle, SteamItemInstanceID_t itemConsume, uint32 unQuantity)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_ConsumeItem called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->ConsumeItem(pResultHandle, itemConsume, unQuantity);
 }
 
 S_API bool SteamAPI_ISteamInventory_ExchangeItems(intptr_t instancePtr, SteamInventoryResult_t * pResultHandle, const SteamItemDef_t * pArrayGenerate, const uint32 * punArrayGenerateQuantity, uint32 unArrayGenerateLength, const SteamItemInstanceID_t * pArrayDestroy, const uint32 * punArrayDestroyQuantity, uint32 unArrayDestroyLength)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_ExchangeItems called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->ExchangeItems(pResultHandle, pArrayGenerate, punArrayGenerateQuantity, unArrayGenerateLength, pArrayDestroy, punArrayDestroyQuantity, unArrayDestroyLength);
 }
 
 S_API bool SteamAPI_ISteamInventory_TransferItemQuantity(intptr_t instancePtr, SteamInventoryResult_t * pResultHandle, SteamItemInstanceID_t itemIdSource, uint32 unQuantity, SteamItemInstanceID_t itemIdDest)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_TransferItemQuantity called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->TransferItemQuantity(pResultHandle, itemIdSource, unQuantity, itemIdDest);
 }
 
 S_API void SteamAPI_ISteamInventory_SendItemDropHeartbeat(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_SendItemDropHeartbeat called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamInventory*>(instancePtr)->SendItemDropHeartbeat();
 }
 
 S_API bool SteamAPI_ISteamInventory_TriggerItemDrop(intptr_t instancePtr, SteamInventoryResult_t * pResultHandle, SteamItemDef_t dropListDefinition)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_TriggerItemDrop called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->TriggerItemDrop(pResultHandle, dropListDefinition);
 }
 
 S_API bool SteamAPI_ISteamInventory_TradeItems(intptr_t instancePtr, SteamInventoryResult_t * pResultHandle, class CSteamID steamIDTradePartner, const SteamItemInstanceID_t * pArrayGive, const uint32 * pArrayGiveQuantity, uint32 nArrayGiveLength, const SteamItemInstanceID_t * pArrayGet, const uint32 * pArrayGetQuantity, uint32 nArrayGetLength)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_TradeItems called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->TradeItems(pResultHandle, steamIDTradePartner, pArrayGive, pArrayGiveQuantity, nArrayGiveLength, pArrayGet, pArrayGetQuantity, nArrayGetLength);
 }
 
 S_API bool SteamAPI_ISteamInventory_LoadItemDefinitions(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_LoadItemDefinitions called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->LoadItemDefinitions();
 }
 
 S_API bool SteamAPI_ISteamInventory_GetItemDefinitionIDs(intptr_t instancePtr, SteamItemDef_t * pItemDefIDs, uint32 * punItemDefIDsArraySize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_GetItemDefinitionIDs called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GetItemDefinitionIDs(pItemDefIDs, punItemDefIDsArraySize);
 }
 
 S_API bool SteamAPI_ISteamInventory_GetItemDefinitionProperty(intptr_t instancePtr, SteamItemDef_t iDefinition, const char * pchPropertyName, char * pchValueBuffer, uint32 * punValueBufferSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_GetItemDefinitionProperty called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GetItemDefinitionProperty(iDefinition, pchPropertyName, pchValueBuffer, punValueBufferSize);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamInventory_RequestEligiblePromoItemDefinitionsIDs(intptr_t instancePtr, class CSteamID steamID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_RequestEligiblePromoItemDefinitionsIDs called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->RequestEligiblePromoItemDefinitionsIDs(steamID);
 }
 
 S_API bool SteamAPI_ISteamInventory_GetEligiblePromoItemDefinitionIDs(intptr_t instancePtr, class CSteamID steamID, SteamItemDef_t * pItemDefIDs, uint32 * punItemDefIDsArraySize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamInventory_GetEligiblePromoItemDefinitionIDs called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GetEligiblePromoItemDefinitionIDs(steamID, pItemDefIDs, punItemDefIDsArraySize);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamInventory_StartPurchase(intptr_t instancePtr, const SteamItemDef_t * pArrayItemDefs, const uint32 * punArrayQuantity, uint32 unArrayLength)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->StartPurchase(pArrayItemDefs, punArrayQuantity, unArrayLength);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamInventory_RequestPrices(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->RequestPrices();
+}
+
+S_API uint32 SteamAPI_ISteamInventory_GetNumItemsWithPrices(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->GetNumItemsWithPrices();
+}
+
+S_API bool SteamAPI_ISteamInventory_GetItemsWithPrices(intptr_t instancePtr, SteamItemDef_t * pArrayItemDefs, uint64 * pPrices, uint32 unArrayLength)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->GetItemsWithPrices(pArrayItemDefs, pPrices, unArrayLength);
+}
+
+S_API bool SteamAPI_ISteamInventory_GetItemPrice(intptr_t instancePtr, SteamItemDef_t iDefinition, uint64 * pPrice)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->GetItemPrice(iDefinition, pPrice);
+}
+
+S_API SteamInventoryUpdateHandle_t SteamAPI_ISteamInventory_StartUpdateProperties(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->StartUpdateProperties();
+}
+
+S_API bool SteamAPI_ISteamInventory_RemoveProperty(intptr_t instancePtr, SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char * pchPropertyName)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->RemoveProperty(handle, nItemID, pchPropertyName);
+}
+
+S_API bool SteamAPI_ISteamInventory_SetProperty(intptr_t instancePtr, SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char * pchPropertyName, const char * pchPropertyValue)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->SetProperty(handle, nItemID, pchPropertyName, pchPropertyValue);
+}
+
+S_API bool SteamAPI_ISteamInventory_SetProperty0(intptr_t instancePtr, SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char * pchPropertyName, bool bValue)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->SetProperty(handle, nItemID, pchPropertyName, bValue);
+}
+
+S_API bool SteamAPI_ISteamInventory_SetProperty1(intptr_t instancePtr, SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char * pchPropertyName, int64 nValue)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->SetProperty(handle, nItemID, pchPropertyName, nValue);
+}
+
+S_API bool SteamAPI_ISteamInventory_SetProperty2(intptr_t instancePtr, SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char * pchPropertyName, float flValue)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->SetProperty(handle, nItemID, pchPropertyName, flValue);
+}
+
+S_API bool SteamAPI_ISteamInventory_SubmitUpdateProperties(intptr_t instancePtr, SteamInventoryUpdateHandle_t handle, SteamInventoryResult_t * pResultHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->SubmitUpdateProperties(handle, pResultHandle);
 }
 
 
@@ -4473,28 +4559,28 @@ S_API bool SteamAPI_ISteamInventory_GetEligiblePromoItemDefinitionIDs(intptr_t i
 
 S_API void SteamAPI_ISteamVideo_GetVideoURL(intptr_t instancePtr, AppId_t unVideoAppID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamVideo_GetVideoURL called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamVideo*>(instancePtr)->GetVideoURL(unVideoAppID);
 }
 
 S_API bool SteamAPI_ISteamVideo_IsBroadcasting(intptr_t instancePtr, int * pnNumViewers)
 {
-    VLOG_DEBUG("SteamAPI_ISteamVideo_IsBroadcasting called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamVideo*>(instancePtr)->IsBroadcasting(pnNumViewers);
 }
 
 S_API void SteamAPI_ISteamVideo_GetOPFSettings(intptr_t instancePtr, AppId_t unVideoAppID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamVideo_GetOPFSettings called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamVideo*>(instancePtr)->GetOPFSettings(unVideoAppID);
 }
 
 S_API bool SteamAPI_ISteamVideo_GetOPFStringForApp(intptr_t instancePtr, AppId_t unVideoAppID, char * pchBuffer, int32 * pnBufferSize)
 {
-    VLOG_DEBUG("SteamAPI_ISteamVideo_GetOPFStringForApp called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamVideo*>(instancePtr)->GetOPFStringForApp(unVideoAppID, pchBuffer, pnBufferSize);
 }
@@ -4506,42 +4592,42 @@ S_API bool SteamAPI_ISteamVideo_GetOPFStringForApp(intptr_t instancePtr, AppId_t
 
 S_API bool SteamAPI_ISteamParentalSettings_BIsParentalLockEnabled(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamParentalSettings_BIsParentalLockEnabled called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsParentalLockEnabled();
 }
 
 S_API bool SteamAPI_ISteamParentalSettings_BIsParentalLockLocked(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamParentalSettings_BIsParentalLockLocked called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsParentalLockLocked();
 }
 
 S_API bool SteamAPI_ISteamParentalSettings_BIsAppBlocked(intptr_t instancePtr, AppId_t nAppID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamParentalSettings_BIsAppBlocked called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsAppBlocked(nAppID);
 }
 
 S_API bool SteamAPI_ISteamParentalSettings_BIsAppInBlockList(intptr_t instancePtr, AppId_t nAppID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamParentalSettings_BIsAppInBlockList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsAppInBlockList(nAppID);
 }
 
 S_API bool SteamAPI_ISteamParentalSettings_BIsFeatureBlocked(intptr_t instancePtr, EParentalFeature eFeature)
 {
-    VLOG_DEBUG("SteamAPI_ISteamParentalSettings_BIsFeatureBlocked called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsFeatureBlocked(eFeature);
 }
 
 S_API bool SteamAPI_ISteamParentalSettings_BIsFeatureInBlockList(intptr_t instancePtr, EParentalFeature eFeature)
 {
-    VLOG_DEBUG("SteamAPI_ISteamParentalSettings_BIsFeatureInBlockList called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsFeatureInBlockList(eFeature);
 }
@@ -4553,308 +4639,308 @@ S_API bool SteamAPI_ISteamParentalSettings_BIsFeatureInBlockList(intptr_t instan
 
 S_API bool SteamAPI_ISteamGameServer_InitGameServer(intptr_t instancePtr, uint32 unIP, uint16 usGamePort, uint16 usQueryPort, uint32 unFlags, AppId_t nGameAppId, const char * pchVersionString)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_InitGameServer called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->InitGameServer(unIP, usGamePort, usQueryPort, unFlags, nGameAppId, pchVersionString);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetProduct(intptr_t instancePtr, const char * pszProduct)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetProduct called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetProduct(pszProduct);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetGameDescription(intptr_t instancePtr, const char * pszGameDescription)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetGameDescription called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetGameDescription(pszGameDescription);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetModDir(intptr_t instancePtr, const char * pszModDir)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetModDir called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetModDir(pszModDir);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetDedicatedServer(intptr_t instancePtr, bool bDedicated)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetDedicatedServer called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetDedicatedServer(bDedicated);
 }
 
 S_API void SteamAPI_ISteamGameServer_LogOn(intptr_t instancePtr, const char * pszToken)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_LogOn called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->LogOn(pszToken);
 }
 
 S_API void SteamAPI_ISteamGameServer_LogOnAnonymous(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_LogOnAnonymous called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->LogOnAnonymous();
 }
 
 S_API void SteamAPI_ISteamGameServer_LogOff(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_LogOff called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->LogOff();
 }
 
 S_API bool SteamAPI_ISteamGameServer_BLoggedOn(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_BLoggedOn called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->BLoggedOn();
 }
 
 S_API bool SteamAPI_ISteamGameServer_BSecure(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_BSecure called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->BSecure();
 }
 
 S_API uint64 SteamAPI_ISteamGameServer_GetSteamID(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_GetSteamID called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->GetSteamID().ConvertToUint64();
 }
 
 S_API bool SteamAPI_ISteamGameServer_WasRestartRequested(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_WasRestartRequested called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->WasRestartRequested();
 }
 
 S_API void SteamAPI_ISteamGameServer_SetMaxPlayerCount(intptr_t instancePtr, int cPlayersMax)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetMaxPlayerCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetMaxPlayerCount(cPlayersMax);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetBotPlayerCount(intptr_t instancePtr, int cBotplayers)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetBotPlayerCount called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetBotPlayerCount(cBotplayers);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetServerName(intptr_t instancePtr, const char * pszServerName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetServerName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetServerName(pszServerName);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetMapName(intptr_t instancePtr, const char * pszMapName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetMapName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetMapName(pszMapName);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetPasswordProtected(intptr_t instancePtr, bool bPasswordProtected)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetPasswordProtected called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetPasswordProtected(bPasswordProtected);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetSpectatorPort(intptr_t instancePtr, uint16 unSpectatorPort)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetSpectatorPort called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetSpectatorPort(unSpectatorPort);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetSpectatorServerName(intptr_t instancePtr, const char * pszSpectatorServerName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetSpectatorServerName called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetSpectatorServerName(pszSpectatorServerName);
 }
 
 S_API void SteamAPI_ISteamGameServer_ClearAllKeyValues(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_ClearAllKeyValues called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->ClearAllKeyValues();
 }
 
 S_API void SteamAPI_ISteamGameServer_SetKeyValue(intptr_t instancePtr, const char * pKey, const char * pValue)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetKeyValue called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetKeyValue(pKey, pValue);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetGameTags(intptr_t instancePtr, const char * pchGameTags)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetGameTags called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetGameTags(pchGameTags);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetGameData(intptr_t instancePtr, const char * pchGameData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetGameData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetGameData(pchGameData);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetRegion(intptr_t instancePtr, const char * pszRegion)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetRegion called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetRegion(pszRegion);
 }
 
 S_API bool SteamAPI_ISteamGameServer_SendUserConnectAndAuthenticate(intptr_t instancePtr, uint32 unIPClient, const void * pvAuthBlob, uint32 cubAuthBlobSize, class CSteamID * pSteamIDUser)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SendUserConnectAndAuthenticate called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->SendUserConnectAndAuthenticate(unIPClient, pvAuthBlob, cubAuthBlobSize, pSteamIDUser);
 }
 
 S_API uint64 SteamAPI_ISteamGameServer_CreateUnauthenticatedUserConnection(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_CreateUnauthenticatedUserConnection called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->CreateUnauthenticatedUserConnection().ConvertToUint64();
 }
 
 S_API void SteamAPI_ISteamGameServer_SendUserDisconnect(intptr_t instancePtr, class CSteamID steamIDUser)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SendUserDisconnect called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SendUserDisconnect(steamIDUser);
 }
 
 S_API bool SteamAPI_ISteamGameServer_BUpdateUserData(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchPlayerName, uint32 uScore)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_BUpdateUserData called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->BUpdateUserData(steamIDUser, pchPlayerName, uScore);
 }
 
 S_API HAuthTicket SteamAPI_ISteamGameServer_GetAuthSessionTicket(intptr_t instancePtr, void * pTicket, int cbMaxTicket, uint32 * pcbTicket)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_GetAuthSessionTicket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->GetAuthSessionTicket(pTicket, cbMaxTicket, pcbTicket);
 }
 
 S_API EBeginAuthSessionResult SteamAPI_ISteamGameServer_BeginAuthSession(intptr_t instancePtr, const void * pAuthTicket, int cbAuthTicket, class CSteamID steamID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_BeginAuthSession called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EBeginAuthSessionResultInvalidTicket;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->BeginAuthSession(pAuthTicket, cbAuthTicket, steamID);
 }
 
 S_API void SteamAPI_ISteamGameServer_EndAuthSession(intptr_t instancePtr, class CSteamID steamID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_EndAuthSession called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->EndAuthSession(steamID);
 }
 
 S_API void SteamAPI_ISteamGameServer_CancelAuthTicket(intptr_t instancePtr, HAuthTicket hAuthTicket)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_CancelAuthTicket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->CancelAuthTicket(hAuthTicket);
 }
 
 S_API EUserHasLicenseForAppResult SteamAPI_ISteamGameServer_UserHasLicenseForApp(intptr_t instancePtr, class CSteamID steamID, AppId_t appID)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_UserHasLicenseForApp called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_EUserHasLicenseResultHasLicense;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->UserHasLicenseForApp(steamID, appID);
 }
 
 S_API bool SteamAPI_ISteamGameServer_RequestUserGroupStatus(intptr_t instancePtr, class CSteamID steamIDUser, class CSteamID steamIDGroup)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_RequestUserGroupStatus called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->RequestUserGroupStatus(steamIDUser, steamIDGroup);
 }
 
 S_API void SteamAPI_ISteamGameServer_GetGameplayStats(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_GetGameplayStats called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->GetGameplayStats();
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamGameServer_GetServerReputation(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_GetServerReputation called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->GetServerReputation();
 }
 
 S_API uint32 SteamAPI_ISteamGameServer_GetPublicIP(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_GetPublicIP called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->GetPublicIP();
 }
 
 S_API bool SteamAPI_ISteamGameServer_HandleIncomingPacket(intptr_t instancePtr, const void * pData, int cbData, uint32 srcIP, uint16 srcPort)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_HandleIncomingPacket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->HandleIncomingPacket(pData, cbData, srcIP, srcPort);
 }
 
 S_API int SteamAPI_ISteamGameServer_GetNextOutgoingPacket(intptr_t instancePtr, void * pOut, int cbMaxOut, uint32 * pNetAdr, uint16 * pPort)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_GetNextOutgoingPacket called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->GetNextOutgoingPacket(pOut, cbMaxOut, pNetAdr, pPort);
 }
 
 S_API void SteamAPI_ISteamGameServer_EnableHeartbeats(intptr_t instancePtr, bool bActive)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_EnableHeartbeats called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->EnableHeartbeats(bActive);
 }
 
 S_API void SteamAPI_ISteamGameServer_SetHeartbeatInterval(intptr_t instancePtr, int iHeartbeatInterval)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_SetHeartbeatInterval called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->SetHeartbeatInterval(iHeartbeatInterval);
 }
 
 S_API void SteamAPI_ISteamGameServer_ForceHeartbeat(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_ForceHeartbeat called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamGameServer*>(instancePtr)->ForceHeartbeat();
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamGameServer_AssociateWithClan(intptr_t instancePtr, class CSteamID steamIDClan)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_AssociateWithClan called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->AssociateWithClan(steamIDClan);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamGameServer_ComputeNewPlayerCompatibility(intptr_t instancePtr, class CSteamID steamIDNewPlayer)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServer_ComputeNewPlayerCompatibility called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->ComputeNewPlayerCompatibility(steamIDNewPlayer);
 }
@@ -4866,70 +4952,70 @@ S_API SteamAPICall_t SteamAPI_ISteamGameServer_ComputeNewPlayerCompatibility(int
 
 S_API SteamAPICall_t SteamAPI_ISteamGameServerStats_RequestUserStats(intptr_t instancePtr, class CSteamID steamIDUser)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServerStats_RequestUserStats called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamGameServerStats*>(instancePtr)->RequestUserStats(steamIDUser);
 }
 
 S_API bool SteamAPI_ISteamGameServerStats_GetUserStat(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchName, int32 * pData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServerStats_GetUserStat called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServerStats*>(instancePtr)->GetUserStat(steamIDUser, pchName, pData);
 }
 
 S_API bool SteamAPI_ISteamGameServerStats_GetUserStat0(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchName, float * pData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServerStats_GetUserStat0 called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServerStats*>(instancePtr)->GetUserStat(steamIDUser, pchName, pData);
 }
 
 S_API bool SteamAPI_ISteamGameServerStats_GetUserAchievement(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchName, bool * pbAchieved)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServerStats_GetUserAchievement called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServerStats*>(instancePtr)->GetUserAchievement(steamIDUser, pchName, pbAchieved);
 }
 
 S_API bool SteamAPI_ISteamGameServerStats_SetUserStat(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchName, int32 nData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServerStats_SetUserStat called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServerStats*>(instancePtr)->SetUserStat(steamIDUser, pchName, nData);
 }
 
 S_API bool SteamAPI_ISteamGameServerStats_SetUserStat0(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchName, float fData)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServerStats_SetUserStat0 called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServerStats*>(instancePtr)->SetUserStat(steamIDUser, pchName, fData);
 }
 
 S_API bool SteamAPI_ISteamGameServerStats_UpdateUserAvgRateStat(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchName, float flCountThisSession, double dSessionLength)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServerStats_UpdateUserAvgRateStat called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServerStats*>(instancePtr)->UpdateUserAvgRateStat(steamIDUser, pchName, flCountThisSession, dSessionLength);
 }
 
 S_API bool SteamAPI_ISteamGameServerStats_SetUserAchievement(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServerStats_SetUserAchievement called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServerStats*>(instancePtr)->SetUserAchievement(steamIDUser, pchName);
 }
 
 S_API bool SteamAPI_ISteamGameServerStats_ClearUserAchievement(intptr_t instancePtr, class CSteamID steamIDUser, const char * pchName)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServerStats_ClearUserAchievement called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamGameServerStats*>(instancePtr)->ClearUserAchievement(steamIDUser, pchName);
 }
 
 S_API SteamAPICall_t SteamAPI_ISteamGameServerStats_StoreUserStats(intptr_t instancePtr, class CSteamID steamIDUser)
 {
-    VLOG_DEBUG("SteamAPI_ISteamGameServerStats_StoreUserStats called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamGameServerStats*>(instancePtr)->StoreUserStats(steamIDUser);
 }
@@ -4938,65 +5024,107 @@ S_API SteamAPICall_t SteamAPI_ISteamGameServerStats_StoreUserStats(intptr_t inst
 // Preserved existing functions
 //-----------------------------------------------------------------------------
 
+S_API class ISteamUnifiedMessages * SteamAPI_ISteamClient_GetISteamUnifiedMessages(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamClient016*>(instancePtr)->GetISteamUnifiedMessages(hSteamuser, hSteamPipe, pchVersion);
+}
+
+S_API ClientUnifiedMessageHandle SteamAPI_ISteamUnifiedMessages_SendMethod(intptr_t instancePtr, const char * pchServiceMethod, const void * pRequestBuffer, uint32 unRequestBufferSize, uint64 unContext)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return ISteamUnifiedMessages::k_InvalidUnifiedMessageHandle;
+    return reinterpret_cast<ISteamUnifiedMessages*>(instancePtr)->SendMethod(pchServiceMethod, pRequestBuffer, unRequestBufferSize, unContext);
+}
+
+S_API bool SteamAPI_ISteamUnifiedMessages_GetMethodResponseInfo(intptr_t instancePtr, ClientUnifiedMessageHandle hHandle, uint32 * punResponseSize, EResult * peResult)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUnifiedMessages*>(instancePtr)->GetMethodResponseInfo(hHandle, punResponseSize, peResult);
+}
+
+S_API bool SteamAPI_ISteamUnifiedMessages_GetMethodResponseData(intptr_t instancePtr, ClientUnifiedMessageHandle hHandle, void * pResponseBuffer, uint32 unResponseBufferSize, bool bAutoRelease)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUnifiedMessages*>(instancePtr)->GetMethodResponseData(hHandle, pResponseBuffer, unResponseBufferSize, bAutoRelease);
+}
+
+S_API bool SteamAPI_ISteamUnifiedMessages_ReleaseMethod(intptr_t instancePtr, ClientUnifiedMessageHandle hHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUnifiedMessages*>(instancePtr)->ReleaseMethod(hHandle);
+}
+
+S_API bool SteamAPI_ISteamUnifiedMessages_SendNotification(intptr_t instancePtr, const char * pchServiceNotification, const void * pNotificationBuffer, uint32 unNotificationBufferSize)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUnifiedMessages*>(instancePtr)->SendNotification(pchServiceNotification, pNotificationBuffer, unNotificationBufferSize);
+}
+
 S_API void SteamAPI_ISteamClient_RunFrame(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_RunFrame called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamClient*>(instancePtr)->RunFrame();
 }
 
 S_API void SteamAPI_ISteamClient_Set_SteamAPI_CPostAPIResultInProcess(intptr_t instancePtr, SteamAPI_PostAPIResultInProcess_t func)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_Set_SteamAPI_CPostAPIResultInProcess called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
-    reinterpret_cast<ISteamClient*>(instancePtr)->Set_SteamAPI_CPostAPIResultInProcess(func);
+    reinterpret_cast<ISteamClient016*>(instancePtr)->Set_SteamAPI_CPostAPIResultInProcess(func);
 }
 
 S_API void SteamAPI_ISteamClient_Remove_SteamAPI_CPostAPIResultInProcess(intptr_t instancePtr, SteamAPI_PostAPIResultInProcess_t func)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_Remove_SteamAPI_CPostAPIResultInProcess called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
-    reinterpret_cast<ISteamClient*>(instancePtr)->Remove_SteamAPI_CPostAPIResultInProcess(func);
+    reinterpret_cast<ISteamClient016*>(instancePtr)->Remove_SteamAPI_CPostAPIResultInProcess(func);
 }
 
 S_API void SteamAPI_ISteamClient_Set_SteamAPI_CCheckCallbackRegisteredInProcess(intptr_t instancePtr, SteamAPI_CheckCallbackRegistered_t func)
 {
-    VLOG_DEBUG("SteamAPI_ISteamClient_Set_SteamAPI_CCheckCallbackRegisteredInProcess called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamClient*>(instancePtr)->Set_SteamAPI_CCheckCallbackRegisteredInProcess(func);
 }
 
 S_API void SteamAPI_ISteamUtils_RunFrame(intptr_t instancePtr)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUtils_RunFrame called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUtils*>(instancePtr)->RunFrame();
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_FileLoadDialogResponse(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, const char ** pchSelectedFiles)
 {
-    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_FileLoadDialogResponse called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->FileLoadDialogResponse(unBrowserHandle, pchSelectedFiles);
 }
 
 S_API bool SteamAPI_ISteamController_GetControllerState(intptr_t instancePtr, uint32 unControllerIndex, struct SteamControllerState001_t * pState)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_GetControllerState called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamController001*>(instancePtr)->GetControllerState(unControllerIndex, pState);
 }
 
 S_API void SteamAPI_ISteamController_SetOverrideMode(intptr_t instancePtr, const char * pchMode)
 {
-    VLOG_DEBUG("SteamAPI_ISteamController_SetOverrideMode called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamController001*>(instancePtr)->SetOverrideMode(pchMode);
 }
 
 S_API bool SteamAPI_ISteamUGC_GetItemUpdateInfo(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, bool * pbNeedsUpdate, bool * pbIsDownloading, uint64 * punBytesDownloaded, uint64 * punBytesTotal)
 {
-    VLOG_DEBUG("SteamAPI_ISteamUGC_GetItemUpdateInfo called");
+    VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC003*>(instancePtr)->GetItemUpdateInfo(nPublishedFileID, pbNeedsUpdate, pbIsDownloading, punBytesDownloaded, punBytesTotal);
 }

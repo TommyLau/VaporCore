@@ -277,17 +277,7 @@ bool CSteamInventory::TriggerItemDrop( SteamInventoryResult_t *pResultHandle, St
 	return false;
 }
 
-// IN-GAME TRADING
-//
-// TradeItems() implements limited in-game trading of items, if you prefer not to use
-// the overlay or an in-game web browser to perform Steam Trading through the website.
-// You should implement a UI where both players can see and agree to a trade, and then
-// each client should call TradeItems simultaneously (+/- 5 seconds) with matching
-// (but reversed) parameters. The result is the same as if both players performed a
-// Steam Trading transaction through the web. Each player will get an inventory result
-// confirming the removal or quantity changes of the items given away, and the new
-// item instance id numbers and quantities of the received items.
-// (Note: new item instance IDs are generated whenever an item changes ownership.)
+// Deprecated. This method is not supported.
 bool CSteamInventory::TradeItems( SteamInventoryResult_t *pResultHandle, CSteamID steamIDTradePartner, ARRAY_COUNT(nArrayGiveLength) const SteamItemInstanceID_t *pArrayGive, ARRAY_COUNT(nArrayGiveLength) const uint32 *pArrayGiveQuantity, uint32 nArrayGiveLength, ARRAY_COUNT(nArrayGetLength) const SteamItemInstanceID_t *pArrayGet, ARRAY_COUNT(nArrayGetLength) const uint32 *pArrayGetQuantity, uint32 nArrayGetLength )
 {
 	VLOG_INFO(__FUNCTION__ " - pResultHandle: %p, steamIDTradePartner: %d, pArrayGive: %p, pArrayGiveQuantity: %p, nArrayGiveLength: %d, pArrayGet: %p, pArrayGetQuantity: %p, nArrayGetLength: %d", pResultHandle, steamIDTradePartner, pArrayGive, pArrayGiveQuantity, nArrayGiveLength, pArrayGet, pArrayGetQuantity, nArrayGetLength);
@@ -360,5 +350,98 @@ bool CSteamInventory::GetEligiblePromoItemDefinitionIDs(
 {
     VLOG_INFO(__FUNCTION__ " - steamID: %llu, pItemDefIDs: %p, punItemDefIDsArraySize: %p", 
               steamID.ConvertToUint64(), pItemDefIDs, punItemDefIDsArraySize);
+    return false;
+}
+
+// Starts the purchase process for the given item definitions.  The callback SteamInventoryStartPurchaseResult_t
+// will be posted if Steam was able to initialize the transaction.
+// 
+// Once the purchase has been authorized and completed by the user, the callback SteamInventoryResultReady_t 
+// will be posted.
+SteamAPICall_t CSteamInventory::StartPurchase( ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, ARRAY_COUNT(unArrayLength) const uint32 *punArrayQuantity, uint32 unArrayLength )
+{
+    VLOG_INFO(__FUNCTION__ " - pArrayItemDefs: %p, punArrayQuantity: %p, unArrayLength: %d", pArrayItemDefs, punArrayQuantity, unArrayLength);
+    return k_uAPICallInvalid;
+}
+
+// Request current prices for all applicable item definitions
+SteamAPICall_t CSteamInventory::RequestPrices()
+{
+    VLOG_INFO(__FUNCTION__);
+    return k_uAPICallInvalid;
+}
+
+// Returns the number of items with prices. Need to call RequestPrices() first.
+uint32 CSteamInventory::GetNumItemsWithPrices()
+{
+    VLOG_INFO(__FUNCTION__);
+    return 0;
+}
+
+// Returns item definition ids and their prices in the user's local currency.
+// Need to call RequestPrices() first.
+bool CSteamInventory::GetItemsWithPrices( ARRAY_COUNT(unArrayLength) OUT_ARRAY_COUNT(pArrayItemDefs, Items with prices) SteamItemDef_t *pArrayItemDefs,
+                                         ARRAY_COUNT(unArrayLength) OUT_ARRAY_COUNT(pPrices, List of prices for the given item defs) uint64 *pPrices,
+                                         uint32 unArrayLength )
+{
+    VLOG_INFO(__FUNCTION__ " - pArrayItemDefs: %p, pPrices: %p, unArrayLength: %d", pArrayItemDefs, pPrices, unArrayLength);
+    return false;
+}
+
+// Retrieves the price for the item definition id
+// Returns false if there is no price stored for the item definition.
+bool CSteamInventory::GetItemPrice( SteamItemDef_t iDefinition, uint64 *pPrice )
+{
+    VLOG_INFO(__FUNCTION__ " - iDefinition: %d, pPrice: %p", iDefinition, pPrice);
+    return false;
+}
+
+// Create a request to update properties on items
+SteamInventoryUpdateHandle_t CSteamInventory::StartUpdateProperties()
+{
+    VLOG_INFO(__FUNCTION__);
+    return k_SteamInventoryUpdateHandleInvalid;
+}
+
+// Remove the property on the item
+bool CSteamInventory::RemoveProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName )
+{
+    VLOG_INFO(__FUNCTION__ " - handle: %llu, nItemID: %llu, pchPropertyName: %s", handle, nItemID, pchPropertyName ? pchPropertyName : "NULL");
+    return false;
+}
+
+// Accessor methods to set properties on items
+bool CSteamInventory::SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, const char *pchPropertyValue )
+{
+    VLOG_INFO(__FUNCTION__ " - handle: %llu, nItemID: %llu, pchPropertyName: %s, pchPropertyValue: %s", 
+              handle, nItemID, pchPropertyName ? pchPropertyName : "NULL", pchPropertyValue ? pchPropertyValue : "NULL");
+    return false;
+}
+
+bool CSteamInventory::SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, bool bValue )
+{
+    VLOG_INFO(__FUNCTION__ " - handle: %llu, nItemID: %llu, pchPropertyName: %s, bValue: %s", 
+              handle, nItemID, pchPropertyName ? pchPropertyName : "NULL", bValue ? "true" : "false");
+    return false;
+}
+
+bool CSteamInventory::SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, int64 nValue )
+{
+    VLOG_INFO(__FUNCTION__ " - handle: %llu, nItemID: %llu, pchPropertyName: %s, nValue: %lld", 
+              handle, nItemID, pchPropertyName ? pchPropertyName : "NULL", nValue);
+    return false;
+}
+
+bool CSteamInventory::SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, float flValue )
+{
+    VLOG_INFO(__FUNCTION__ " - handle: %llu, nItemID: %llu, pchPropertyName: %s, flValue: %f", 
+              handle, nItemID, pchPropertyName ? pchPropertyName : "NULL", flValue);
+    return false;
+}
+
+// Submit the update request by handle
+bool CSteamInventory::SubmitUpdateProperties( SteamInventoryUpdateHandle_t handle, SteamInventoryResult_t * pResultHandle )
+{
+    VLOG_INFO(__FUNCTION__ " - handle: %llu, pResultHandle: %p", handle, pResultHandle);
     return false;
 }

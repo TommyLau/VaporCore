@@ -223,17 +223,7 @@ public:
 	bool TriggerItemDrop( SteamInventoryResult_t *pResultHandle, SteamItemDef_t dropListDefinition ) override;
 
 
-	// IN-GAME TRADING
-	//
-	// TradeItems() implements limited in-game trading of items, if you prefer not to use
-	// the overlay or an in-game web browser to perform Steam Trading through the website.
-	// You should implement a UI where both players can see and agree to a trade, and then
-	// each client should call TradeItems simultaneously (+/- 5 seconds) with matching
-	// (but reversed) parameters. The result is the same as if both players performed a
-	// Steam Trading transaction through the web. Each player will get an inventory result
-	// confirming the removal or quantity changes of the items given away, and the new
-	// item instance id numbers and quantities of the received items.
-	// (Note: new item instance IDs are generated whenever an item changes ownership.)
+	// Deprecated. This method is not supported.
 	bool TradeItems( SteamInventoryResult_t *pResultHandle, CSteamID steamIDTradePartner,
                      ARRAY_COUNT(nArrayGiveLength) const SteamItemInstanceID_t *pArrayGive, ARRAY_COUNT(nArrayGiveLength) const uint32 *pArrayGiveQuantity, uint32 nArrayGiveLength,
                      ARRAY_COUNT(nArrayGetLength) const SteamItemInstanceID_t *pArrayGet, ARRAY_COUNT(nArrayGetLength) const uint32 *pArrayGetQuantity, uint32 nArrayGetLength ) override;
@@ -290,6 +280,43 @@ public:
 		CSteamID steamID,
 		OUT_ARRAY_COUNT(punItemDefIDsArraySize,List of item definition IDs) SteamItemDef_t *pItemDefIDs,
 		DESC(Size of array is passed in and actual size used is returned in this param) uint32 *punItemDefIDsArraySize ) override;
+
+	// Starts the purchase process for the given item definitions.  The callback SteamInventoryStartPurchaseResult_t
+	// will be posted if Steam was able to initialize the transaction.
+	// 
+	// Once the purchase has been authorized and completed by the user, the callback SteamInventoryResultReady_t 
+	// will be posted.
+	CALL_RESULT( SteamInventoryStartPurchaseResult_t )
+	SteamAPICall_t StartPurchase( ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, ARRAY_COUNT(unArrayLength) const uint32 *punArrayQuantity, uint32 unArrayLength ) override;
+
+	// Request current prices for all applicable item definitions
+	CALL_RESULT( SteamInventoryRequestPricesResult_t )
+	SteamAPICall_t RequestPrices() override;
+
+	// Returns the number of items with prices.  Need to call RequestPrices() first.
+	uint32 GetNumItemsWithPrices() override;
+
+	// Returns item definition ids and their prices in the user's local currency.
+	// Need to call RequestPrices() first.
+	bool GetItemsWithPrices( ARRAY_COUNT(unArrayLength) OUT_ARRAY_COUNT(pArrayItemDefs, Items with prices) SteamItemDef_t *pArrayItemDefs,
+							 ARRAY_COUNT(unArrayLength) OUT_ARRAY_COUNT(pPrices, List of prices for the given item defs) uint64 *pPrices,
+							 uint32 unArrayLength ) override;
+
+	// Retrieves the price for the item definition id
+	// Returns false if there is no price stored for the item definition.
+	bool GetItemPrice( SteamItemDef_t iDefinition, uint64 *pPrice ) override;
+
+	// Create a request to update properties on items
+	SteamInventoryUpdateHandle_t StartUpdateProperties() override;
+	// Remove the property on the item
+	bool RemoveProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName ) override;
+	// Accessor methods to set properties on items
+	bool SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, const char *pchPropertyValue ) override;
+	bool SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, bool bValue ) override;
+	bool SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, int64 nValue ) override;
+	bool SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, float flValue ) override;
+	// Submit the update request by handle
+	bool SubmitUpdateProperties( SteamInventoryUpdateHandle_t handle, SteamInventoryResult_t * pResultHandle ) override;
 
 private:
     // Private constructor and destructor for singleton

@@ -103,6 +103,27 @@ ControllerActionSetHandle_t CSteamController::GetCurrentActionSet(ControllerHand
     return 0; // Return invalid handle
 }
 
+void CSteamController::ActivateActionSetLayer(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetLayerHandle)
+{
+    VLOG_INFO(__FUNCTION__ " - controller %llu, action set layer %llu", controllerHandle, actionSetLayerHandle);
+}
+
+void CSteamController::DeactivateActionSetLayer(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetLayerHandle)
+{
+    VLOG_INFO(__FUNCTION__ " - controller %llu, action set layer %llu", controllerHandle, actionSetLayerHandle);
+}
+
+void CSteamController::DeactivateAllActionSetLayers(ControllerHandle_t controllerHandle)
+{
+    VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
+}
+
+int CSteamController::GetActiveActionSetLayers(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t *handlesOut)
+{
+    VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
+    return 0; // Return 0 since no layers are active
+}
+
 // ACTIONS
 // Lookup the handle for a digital action. Best to do this once on startup, and store the handles for all future API calls.
 ControllerDigitalActionHandle_t CSteamController::GetDigitalActionHandle(const char *pszActionName)
@@ -247,4 +268,11 @@ const char* CSteamController::GetGlyphForActionOrigin(EControllerActionOrigin eO
 {
     VLOG_INFO(__FUNCTION__ " - origin %d", eOrigin);
     return ""; // Return empty string since glyph paths are not implemented
+}
+
+// Returns the input type for a particular handle
+ESteamInputType CSteamController::GetInputTypeForHandle(ControllerHandle_t controllerHandle)
+{
+    VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
+    return ESteamInputType::k_ESteamInputType_Unknown; // Return unknown since input type is not implemented
 }

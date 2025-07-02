@@ -13,6 +13,8 @@
 #pragma once
 #endif
 
+extern "C" typedef void( *SteamAPI_PostAPIResultInProcess_t )(SteamAPICall_t callHandle, void *, uint32 unCallbackSize, int iCallbackNum);
+
 //-----------------------------------------------------------------------------
 // Purpose: Interface to creating a new steam instance, or to
 //			connect to an existing steam instance, whether it's in a

@@ -15,6 +15,8 @@
 
 #include <map>
 
+class ISteamUnifiedMessages;
+
 #include <isteammasterserverupdater.h>
 #include <isteamclient.h>
 #include <isteamclient007.h>
@@ -190,7 +192,9 @@ public:
 	// Expose HTTP interface
 	ISteamHTTP *GetISteamHTTP( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
-	// Exposes the ISteamUnifiedMessages interface
+	// Deprecated - the ISteamUnifiedMessages interface is no longer intended for public consumption.
+	STEAM_PRIVATE_API( void *DEPRECATED_GetISteamUnifiedMessages( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override ; )
+	// Removed from Steam SDK v1.42, backward compatibility
 	ISteamUnifiedMessages *GetISteamUnifiedMessages( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// Exposes the ISteamController interface
@@ -212,8 +216,12 @@ public:
 	ISteamHTMLSurface *GetISteamHTMLSurface(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion) override;
 
 	// Helper functions for internal Steam usage
+	// Deprecated from Steam SDK v1.37, backward compatibility
+	STEAM_PRIVATE_API( void DEPRECATED_Set_SteamAPI_CPostAPIResultInProcess( void (*)() ) override; )
 	// Changed from Steam SDK v1.36, backward compatibility
 	STEAM_PRIVATE_API( void Set_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func) override; )
+	// Deprecated from Steam SDK v1.37, backward compatibility
+	STEAM_PRIVATE_API( void DEPRECATED_Remove_SteamAPI_CPostAPIResultInProcess( void (*)() ) override; )
 	// Changed from Steam SDK v1.36, backward compatibility
 	STEAM_PRIVATE_API( void Remove_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultInProcess_t func) override; )
 	// Changed from Steam SDK v1.36, backward compatibility
