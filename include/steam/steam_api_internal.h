@@ -56,6 +56,7 @@ inline ISteamMusicRemote *SteamMusicRemote()				{ return SteamInternal_ModuleCon
 inline ISteamHTMLSurface *SteamHTMLSurface()				{ return SteamInternal_ModuleContext().SteamHTMLSurface(); }
 inline ISteamInventory *SteamInventory()					{ return SteamInternal_ModuleContext().SteamInventory(); }
 inline ISteamVideo *SteamVideo()							{ return SteamInternal_ModuleContext().SteamVideo(); }
+inline ISteamParentalSettings *SteamParentalSettings()		{ return SteamInternal_ModuleContext().SteamParentalSettings(); }
 
 #endif // !defined( STEAM_API_EXPORTS )
 
@@ -83,6 +84,8 @@ inline void CSteamAPIContext::Clear()
 	m_pSteamMusicRemote = NULL;
 	m_pSteamHTMLSurface = NULL;
 	m_pSteamInventory = NULL;
+	m_pSteamVideo = NULL;
+	m_pSteamParentalSettings = NULL;
 }
 
 
@@ -176,6 +179,10 @@ inline bool CSteamAPIContext::Init()
 
 	m_pSteamVideo = m_pSteamClient->GetISteamVideo( hSteamUser, hSteamPipe, STEAMVIDEO_INTERFACE_VERSION );
 	if ( !m_pSteamVideo )
+		return false;
+
+	m_pSteamParentalSettings = m_pSteamClient->GetISteamParentalSettings( hSteamUser, hSteamPipe, STEAMPARENTALSETTINGS_INTERFACE_VERSION );
+	if ( !m_pSteamParentalSettings )
 		return false;
 
 	return true;

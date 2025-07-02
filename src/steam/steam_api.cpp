@@ -31,25 +31,16 @@ static HSteamUser g_hSteamUser = 0;
 S_API bool S_CALLTYPE SteamAPI_Init() {
     VLOG_INFO(__FUNCTION__);
 
-#ifdef VAPORCORE_ENABLE_LOGGING
-    // Set log level to DEBUG to show all log messages
-    VLOG_SET_DEBUG();
-#endif
-
     if(g_hSteamPipe) {
         return true;
     }
     
-    // Initialize VaporCore configuration
-    auto& config = VaporCore::Config::GetInstance();
-    
     // Load configuration file (will use defaults if file doesn't exist)
-    config.LoadConfig();
     VLOG_DEBUG(__FUNCTION__ " - VaporCore configuration loaded - AppId: %u, SteamId: %llu, Username: %s, Language: %s",
-               config.GetGameId().AppID(),
-               config.GetSteamId().ConvertToUint64(),
-               config.GetUsername().c_str(),
-               config.GetLanguage().c_str());
+               VaporCore::Config::GetInstance().GameID().AppID(),
+               VaporCore::Config::GetInstance().SteamID().ConvertToUint64(),
+               VaporCore::Config::GetInstance().PersonaName(),
+               VaporCore::Config::GetInstance().Language());
     
     // Create steam pipe and connect to global user
     g_hSteamPipe = CSteamClient::GetInstance().CreateSteamPipe();
@@ -98,7 +89,14 @@ S_API bool S_CALLTYPE SteamAPI_RestartApp( uint32 unOwnAppID )
 S_API bool S_CALLTYPE SteamAPI_RestartAppIfNecessary( uint32 unOwnAppID )
 {
     VLOG_INFO(__FUNCTION__ " - AppID: %d", unOwnAppID);
-    return true;
+
+    if (unOwnAppID != 0 && !VaporCore::Config::GetInstance().GameID().AppID())
+    {
+        VLOG_DEBUG(__FUNCTION__ " - Setting AppID: %d", unOwnAppID);
+        VaporCore::Config::GetInstance().SetGameID(unOwnAppID);
+    }
+
+    return false;
 }
 
 // Many Steam API functions allocate a small amount of thread-local memory for parameter storage.
@@ -254,8 +252,7 @@ S_API ISteamMusicRemote *S_CALLTYPE SteamMusicRemote()
 S_API ISteamHTMLSurface *S_CALLTYPE SteamHTMLSurface()
 {
     VLOG_INFO(__FUNCTION__);
-    // TODO: SteamHTMLSurface003 here, to be updated to macro later when we have more version
-    return CSteamClient::GetInstance().GetISteamHTMLSurface(g_hSteamPipe, g_hSteamUser, STEAMHTMLSURFACE_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamHTMLSurface(g_hSteamPipe, g_hSteamUser, STEAMHTMLSURFACE_INTERFACE_VERSION_003);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility

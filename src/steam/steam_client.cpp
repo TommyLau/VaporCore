@@ -40,6 +40,7 @@ CSteamClient::CSteamClient()
     , m_steamHTMLSurface(CSteamHTMLSurface::GetInstance())
     , m_steamInventory(CSteamInventory::GetInstance())
     , m_steamVideo(CSteamVideo::GetInstance())
+    , m_steamParentalSettings(CSteamParentalSettings::GetInstance())
     , m_uCallCounter(0)
 {
     VLOG_INFO(__FUNCTION__);
@@ -781,6 +782,8 @@ ISteamHTMLSurface* CSteamClient::GetISteamHTMLSurface(HSteamUser hSteamuser, HSt
     // Cast to specific interface first for proper vtable mapping, then to ISteamHTMLSurface*
     if (strcmp(pchVersion, STEAMHTMLSURFACE_INTERFACE_VERSION) == 0) {
         return static_cast<ISteamHTMLSurface*>(&m_steamHTMLSurface);
+    } else if (strcmp(pchVersion, STEAMHTMLSURFACE_INTERFACE_VERSION_003) == 0) {
+        return reinterpret_cast<ISteamHTMLSurface*>(static_cast<ISteamHTMLSurface003*>(&m_steamHTMLSurface));
     } else if (strcmp(pchVersion, STEAMHTMLSURFACE_INTERFACE_VERSION_002) == 0) {
         return reinterpret_cast<ISteamHTMLSurface*>(static_cast<ISteamHTMLSurface002*>(&m_steamHTMLSurface));
     } else {
@@ -852,5 +855,26 @@ ISteamVideo* CSteamClient::GetISteamVideo(HSteamUser hSteamuser, HSteamPipe hSte
         VLOG_ERROR(__FUNCTION__ " - Unknown interface version '%s', returning " STEAMVIDEO_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
         return static_cast<ISteamVideo*>(&m_steamVideo);
+    }
+}
+
+// Parental controls
+ISteamParentalSettings *CSteamClient::GetISteamParentalSettings( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
+{
+    VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamuser, hSteamPipe, pchVersion);
+
+    if (!pchVersion) {
+        VLOG_ERROR(__FUNCTION__ " - Invalid version string (null)");
+        return nullptr;
+    }
+    
+    // Return the appropriate interface version based on the version string
+    // This interface only has one version (001)
+    if (strcmp(pchVersion, STEAMPARENTALSETTINGS_INTERFACE_VERSION) == 0) {
+        return static_cast<ISteamParentalSettings*>(&m_steamParentalSettings);
+    } else {
+        VLOG_ERROR(__FUNCTION__ " - Unknown interface version '%s', returning " STEAMPARENTALSETTINGS_INTERFACE_VERSION, pchVersion);
+        // Return the latest interface as fallback
+        return static_cast<ISteamParentalSettings*>(&m_steamParentalSettings);
     }
 }

@@ -21,7 +21,7 @@
 namespace VaporCore {
 
 // Default configuration values (private implementation details)
-static const uint32 DEFAULT_STEAM_APP_ID = 480; // Spacewar
+static const uint32 DEFAULT_STEAM_APP_ID = 0;
 static const uint64 DEFAULT_STEAM_ID = 76561198000000000ULL;
 static const char* const DEFAULT_STEAM_USERNAME = "VaporCore User";
 static const char* const DEFAULT_STEAM_LANGUAGE = "english";
@@ -35,6 +35,8 @@ Config::Config()
       m_sLanguage(DEFAULT_STEAM_LANGUAGE)
 {
     VLOG_INFO(__FUNCTION__);
+
+    LoadConfig(m_sConfigFileName);
 }
 
 Config::~Config()

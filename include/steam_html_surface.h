@@ -16,13 +16,15 @@
 #include <isteamclient.h>
 #include <isteamhtmlsurface.h>
 #include <isteamhtmlsurface002.h>
+#include <isteamhtmlsurface003.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for displaying HTML pages and interacting with them
 //-----------------------------------------------------------------------------
 class CSteamHTMLSurface :
 	public ISteamHTMLSurface,
-    public ISteamHTMLSurface002
+    public ISteamHTMLSurface002,
+    public ISteamHTMLSurface003
 {
 public:
 	// Singleton accessor
@@ -124,6 +126,10 @@ public:
 	// all HTML5 video and audio objects will execute ".pause()" and gain the property "._steam_background_paused = 1".
 	// When background mode is disabled, any video or audio objects with that property will resume with ".play()".
 	void SetBackgroundMode( HHTMLBrowser unBrowserHandle, bool bBackgroundMode ) override;
+
+	// Scale the output display space by this factor, this is useful when displaying content on high dpi devices.
+	// Specifies the ratio between physical and logical pixels.
+	void SetDPIScalingFactor( HHTMLBrowser unBrowserHandle, float flDPIScaling ) override;
 
 	// CALLBACKS
 	//

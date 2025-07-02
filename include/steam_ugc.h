@@ -189,9 +189,23 @@ public:
 
 	// parent-child relationship or dependency management
 	CALL_RESULT( AddUGCDependencyResult_t )
-	virtual SteamAPICall_t AddDependency( PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID ) override;
+	SteamAPICall_t AddDependency( PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID ) override;
 	CALL_RESULT( RemoveUGCDependencyResult_t )
-	virtual SteamAPICall_t RemoveDependency( PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID ) override;
+	SteamAPICall_t RemoveDependency( PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID ) override;
+
+	// add/remove app dependence/requirements (usually DLC)
+	CALL_RESULT( AddAppDependencyResult_t )
+	SteamAPICall_t AddAppDependency( PublishedFileId_t nPublishedFileID, AppId_t nAppID ) override;
+	CALL_RESULT( RemoveAppDependencyResult_t )
+	SteamAPICall_t RemoveAppDependency( PublishedFileId_t nPublishedFileID, AppId_t nAppID ) override;
+	// request app dependencies. note that whatever callback you register for GetAppDependenciesResult_t may be called multiple times
+	// until all app dependencies have been returned
+	CALL_RESULT( GetAppDependenciesResult_t )
+	SteamAPICall_t GetAppDependencies( PublishedFileId_t nPublishedFileID ) override;
+	
+	// delete the item without prompting the user
+	CALL_RESULT( DeleteItemResult_t )
+	SteamAPICall_t DeleteItem( PublishedFileId_t nPublishedFileID ) override;
 
 private:
     // Private constructor and destructor for singleton

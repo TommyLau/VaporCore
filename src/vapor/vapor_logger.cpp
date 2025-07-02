@@ -23,7 +23,7 @@ namespace VaporCore {
 Logger::Logger() {
     m_initialized = false;
     m_enabled = true;
-    m_currentLevel = LogLevel::INFO;
+    m_currentLevel = LogLevel::DEBUG;
 }
 
 Logger::~Logger() {

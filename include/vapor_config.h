@@ -70,11 +70,13 @@ public:
     // Get all keys in a section
     std::vector<std::string> GetSectionKeys(const std::string& section) const;
     
-    // Direct getters for Steam settings
-    CGameID GetGameId() const { return m_gameId; }
-    CSteamID GetSteamId() const { return m_steamId; }
-    const std::string& GetUsername() const { return m_sUsername; }
-    const std::string& GetLanguage() const { return m_sLanguage; }
+    // Direct getters and setters for Steam settings
+    [[nodiscard]] const CGameID& GameID() const noexcept { return m_gameId; }
+    void SetGameID(AppId_t nAppID) noexcept { m_gameId = CGameID(nAppID); }
+    [[nodiscard]] const CSteamID& SteamID() const noexcept { return m_steamId; }
+    void SetSteamID(uint64 ulSteamID) noexcept { m_steamId = CSteamID(ulSteamID); }
+    [[nodiscard]] const char* PersonaName() const noexcept { return m_sUsername.c_str(); }
+    [[nodiscard]] const char* Language() const noexcept { return m_sLanguage.c_str(); }
 
 private:
     // Private constructor and destructor for singleton

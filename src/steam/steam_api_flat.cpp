@@ -242,6 +242,13 @@ S_API class ISteamVideo * SteamAPI_ISteamClient_GetISteamVideo(intptr_t instance
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamVideo(hSteamuser, hSteamPipe, pchVersion);
 }
 
+S_API class ISteamParentalSettings * SteamAPI_ISteamClient_GetISteamParentalSettings(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
+{
+    VLOG_DEBUG("SteamAPI_ISteamClient_GetISteamParentalSettings called");
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamParentalSettings(hSteamuser, hSteamPipe, pchVersion);
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamUser flat API implementations
@@ -3954,6 +3961,34 @@ S_API SteamAPICall_t SteamAPI_ISteamUGC_RemoveDependency(intptr_t instancePtr, P
     return reinterpret_cast<ISteamUGC*>(instancePtr)->RemoveDependency(nParentPublishedFileID, nChildPublishedFileID);
 }
 
+S_API SteamAPICall_t SteamAPI_ISteamUGC_AddAppDependency(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, AppId_t nAppID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_AddAppDependency called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->AddAppDependency(nPublishedFileID, nAppID);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUGC_RemoveAppDependency(intptr_t instancePtr, PublishedFileId_t nPublishedFileID, AppId_t nAppID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_RemoveAppDependency called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->RemoveAppDependency(nPublishedFileID, nAppID);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUGC_GetAppDependencies(intptr_t instancePtr, PublishedFileId_t nPublishedFileID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_GetAppDependencies called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetAppDependencies(nPublishedFileID);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUGC_DeleteItem(intptr_t instancePtr, PublishedFileId_t nPublishedFileID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamUGC_DeleteItem called");
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->DeleteItem(nPublishedFileID);
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamAppList flat API implementations
@@ -4230,6 +4265,13 @@ S_API void SteamAPI_ISteamHTMLSurface_SetBackgroundMode(intptr_t instancePtr, HH
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetBackgroundMode(unBrowserHandle, bBackgroundMode);
 }
 
+S_API void SteamAPI_ISteamHTMLSurface_SetDPIScalingFactor(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, float flDPIScaling)
+{
+    VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_SetDPIScalingFactor called");
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetDPIScalingFactor(unBrowserHandle, flDPIScaling);
+}
+
 S_API void SteamAPI_ISteamHTMLSurface_AllowStartRequest(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, bool bAllowed)
 {
     VLOG_DEBUG("SteamAPI_ISteamHTMLSurface_AllowStartRequest called");
@@ -4455,6 +4497,53 @@ S_API bool SteamAPI_ISteamVideo_GetOPFStringForApp(intptr_t instancePtr, AppId_t
     VLOG_DEBUG("SteamAPI_ISteamVideo_GetOPFStringForApp called");
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamVideo*>(instancePtr)->GetOPFStringForApp(unVideoAppID, pchBuffer, pnBufferSize);
+}
+
+
+//-----------------------------------------------------------------------------
+// ISteamParentalSettings flat API implementations
+//-----------------------------------------------------------------------------
+
+S_API bool SteamAPI_ISteamParentalSettings_BIsParentalLockEnabled(intptr_t instancePtr)
+{
+    VLOG_DEBUG("SteamAPI_ISteamParentalSettings_BIsParentalLockEnabled called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsParentalLockEnabled();
+}
+
+S_API bool SteamAPI_ISteamParentalSettings_BIsParentalLockLocked(intptr_t instancePtr)
+{
+    VLOG_DEBUG("SteamAPI_ISteamParentalSettings_BIsParentalLockLocked called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsParentalLockLocked();
+}
+
+S_API bool SteamAPI_ISteamParentalSettings_BIsAppBlocked(intptr_t instancePtr, AppId_t nAppID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamParentalSettings_BIsAppBlocked called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsAppBlocked(nAppID);
+}
+
+S_API bool SteamAPI_ISteamParentalSettings_BIsAppInBlockList(intptr_t instancePtr, AppId_t nAppID)
+{
+    VLOG_DEBUG("SteamAPI_ISteamParentalSettings_BIsAppInBlockList called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsAppInBlockList(nAppID);
+}
+
+S_API bool SteamAPI_ISteamParentalSettings_BIsFeatureBlocked(intptr_t instancePtr, EParentalFeature eFeature)
+{
+    VLOG_DEBUG("SteamAPI_ISteamParentalSettings_BIsFeatureBlocked called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsFeatureBlocked(eFeature);
+}
+
+S_API bool SteamAPI_ISteamParentalSettings_BIsFeatureInBlockList(intptr_t instancePtr, EParentalFeature eFeature)
+{
+    VLOG_DEBUG("SteamAPI_ISteamParentalSettings_BIsFeatureInBlockList called");
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsFeatureInBlockList(eFeature);
 }
 
 

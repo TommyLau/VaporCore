@@ -44,7 +44,7 @@ bool CSteamUser::BLoggedOn()
 CSteamID CSteamUser::GetSteamID()
 {
     VLOG_INFO(__FUNCTION__);
-    return VaporCore::Config::GetInstance().GetSteamId();
+    return VaporCore::Config::GetInstance().SteamID();
 }
 
 // Multiplayer Authentication functions

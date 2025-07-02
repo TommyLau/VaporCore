@@ -535,3 +535,31 @@ SteamAPICall_t CSteamUGC::RemoveDependency( PublishedFileId_t nParentPublishedFi
     VLOG_INFO(__FUNCTION__ " - nParentPublishedFileID: %llu, nChildPublishedFileID: %llu", nParentPublishedFileID, nChildPublishedFileID);
     return 0;
 }
+
+// add/remove app dependence/requirements (usually DLC)
+SteamAPICall_t CSteamUGC::AddAppDependency( PublishedFileId_t nPublishedFileID, AppId_t nAppID )
+{
+    VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu, nAppID: %u", nPublishedFileID, nAppID);
+    return 0;
+}
+
+SteamAPICall_t CSteamUGC::RemoveAppDependency( PublishedFileId_t nPublishedFileID, AppId_t nAppID )
+{
+    VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu, nAppID: %u", nPublishedFileID, nAppID);
+    return 0;
+}
+
+// request app dependencies. note that whatever callback you register for GetAppDependenciesResult_t may be called multiple times
+// until all app dependencies have been returned
+SteamAPICall_t CSteamUGC::GetAppDependencies( PublishedFileId_t nPublishedFileID )
+{
+    VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu", nPublishedFileID);
+    return 0;
+}
+
+// delete the item without prompting the user
+SteamAPICall_t CSteamUGC::DeleteItem( PublishedFileId_t nPublishedFileID )
+{
+    VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu", nPublishedFileID);
+    return 0;
+}

@@ -241,6 +241,13 @@ void CSteamHTMLSurface::SetBackgroundMode(HHTMLBrowser unBrowserHandle, bool bBa
                unBrowserHandle, bBackgroundMode ? "true" : "false");
 }
 
+// Scale the output display space by this factor, this is useful when displaying content on high dpi devices.
+// Specifies the ratio between physical and logical pixels.
+void CSteamHTMLSurface::SetDPIScalingFactor(HHTMLBrowser unBrowserHandle, float flDPIScaling)
+{
+    VLOG_INFO(__FUNCTION__ " - Handle: %u, DPIScaling: %f", unBrowserHandle, flDPIScaling);
+}
+
 //
 //  These set of functions are used as responses to callback requests
 //

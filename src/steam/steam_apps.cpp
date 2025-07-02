@@ -67,7 +67,7 @@ bool CSteamApps::BIsVACBanned()
 const char *CSteamApps::GetCurrentGameLanguage()
 {
     VLOG_INFO(__FUNCTION__);
-    return VaporCore::Config::GetInstance().GetLanguage().c_str();
+    return VaporCore::Config::GetInstance().Language();
 }
 
 const char *CSteamApps::GetAvailableGameLanguages()
@@ -83,7 +83,7 @@ bool CSteamApps::BIsSubscribedApp( AppId_t appID )
 
     VAPORCORE_LOCK_GUARD();
 
-    if (appID == VaporCore::Config::GetInstance().GetGameId().AppID())
+    if (appID == VaporCore::Config::GetInstance().GameID().AppID())
     {
         return true;
     }

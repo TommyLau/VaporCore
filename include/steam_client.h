@@ -49,6 +49,7 @@
 #include "steam_html_surface.h"
 #include "steam_inventory.h"
 #include "steam_video.h"
+#include "steam_parental_settings.h"
 
 // Steam pipe state enumeration
 enum ESteamPipe {
@@ -224,6 +225,9 @@ public:
 	// Video
 	ISteamVideo *GetISteamVideo( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
+	// Parental controls
+	ISteamParentalSettings *GetISteamParentalSettings( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
 private:
     // Private constructor and destructor for singleton
     CSteamClient();
@@ -267,6 +271,7 @@ private:
     CSteamHTMLSurface& m_steamHTMLSurface;
     CSteamInventory& m_steamInventory;
     CSteamVideo& m_steamVideo;
+    CSteamParentalSettings& m_steamParentalSettings;
     
     // Initialization counter
     uintp m_uCallCounter;    // Tracks API calls

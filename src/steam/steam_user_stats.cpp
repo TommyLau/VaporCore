@@ -30,9 +30,9 @@ bool CSteamUserStats::RequestCurrentStats( )
     VAPORCORE_LOCK_GUARD();
 
     UserStatsReceived_t callback = {
-        VaporCore::Config::GetInstance().GetGameId().ToUint64(),
+        VaporCore::Config::GetInstance().GameID().ToUint64(),
         k_EResultOK,
-        VaporCore::Config::GetInstance().GetSteamId()
+        VaporCore::Config::GetInstance().SteamID().ConvertToUint64()
     };
 
     return CCallbackMgr::GetInstance().PostCallback(callback.k_iCallback, &callback, sizeof(callback));
