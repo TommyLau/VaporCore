@@ -462,7 +462,7 @@ class FlatAPIGenerator:
         lines.append('{')
         
         # Debug log
-        lines.append(f'    VLOG_DEBUG("{func.function_name} called");')
+        lines.append('    VLOG_INFO(__FUNCTION__);')
         
         # Null check for instancePtr
         default_return = self._get_default_return_value(func.return_type)
@@ -614,7 +614,7 @@ def main():
     try:
         generator = FlatAPIGenerator()
         generator.parse_header_file(str(header_path))
-        generator.generate_cpp_file(output_path)
+        generator.generate_cpp_file(str(output_path))
         
         print(f"\n🎉 Successfully generated flat API implementation!")
         print(f"📁 Header file: {header_path}")
