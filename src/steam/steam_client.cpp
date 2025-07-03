@@ -147,6 +147,8 @@ ISteamUser *CSteamClient::GetISteamUser( HSteamUser hSteamUser, HSteamPipe hStea
     // Cast to specific interface first for proper vtable mapping, then to ISteamUser*
     if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION) == 0) {
         return &m_steamUser;
+    } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_019) == 0) {
+        return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser019*>(&m_steamUser));
     } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_018) == 0) {
         return reinterpret_cast<ISteamUser*>(static_cast<ISteamUser018*>(&m_steamUser));
     } else if (strcmp(pchVersion, STEAMUSER_INTERFACE_VERSION_017) == 0) {
@@ -228,6 +230,8 @@ ISteamFriends *CSteamClient::GetISteamFriends( HSteamUser hSteamUser, HSteamPipe
     // Cast to specific interface first for proper vtable mapping, then to ISteamFriends*
     if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION) == 0) {
         return static_cast<ISteamFriends*>(&m_steamFriends);
+    } else if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION_015) == 0) {
+        return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends015*>(&m_steamFriends));
     } else if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION_014) == 0) {
         return reinterpret_cast<ISteamFriends*>(static_cast<ISteamFriends014*>(&m_steamFriends));
     } else if (strcmp(pchVersion, STEAMFRIENDS_INTERFACE_VERSION_013) == 0) {
@@ -652,6 +656,8 @@ ISteamHTTP *CSteamClient::GetISteamHTTP( HSteamUser hSteamuser, HSteamPipe hStea
     // Cast to specific interface first for proper vtable mapping, then to ISteamHTTP*
     if (strcmp(pchVersion, STEAMHTTP_INTERFACE_VERSION) == 0) {
         return static_cast<ISteamHTTP*>(&m_steamHTTP);
+    } else if (strcmp(pchVersion, STEAMHTTP_INTERFACE_VERSION_002) == 0) {
+        return reinterpret_cast<ISteamHTTP*>(static_cast<ISteamHTTP002*>(&m_steamHTTP));
     } else if (strcmp(pchVersion, STEAMHTTP_INTERFACE_VERSION_001) == 0) {
         return reinterpret_cast<ISteamHTTP*>(static_cast<ISteamHTTP001*>(&m_steamHTTP));
     } else {
@@ -704,6 +710,10 @@ ISteamController* CSteamClient::GetISteamController( HSteamUser hSteamUser, HSte
     // Cast to specific interface first for proper vtable mapping, then to ISteamController*
     if (strcmp(pchVersion, STEAMCONTROLLER_INTERFACE_VERSION) == 0) {
         return static_cast<ISteamController*>(&m_steamController);
+    } else if (strcmp(pchVersion, STEAMCONTROLLER_INTERFACE_VERSION_006) == 0) {
+        return reinterpret_cast<ISteamController*>(static_cast<ISteamController006*>(&m_steamController));
+    } else if (strcmp(pchVersion, STEAMCONTROLLER_INTERFACE_VERSION_005) == 0) {
+        return reinterpret_cast<ISteamController*>(static_cast<ISteamController005*>(&m_steamController));
     } else if (strcmp(pchVersion, STEAMCONTROLLER_INTERFACE_VERSION_004) == 0) {
         return reinterpret_cast<ISteamController*>(static_cast<ISteamController004*>(&m_steamController));
     } else if (strcmp(pchVersion, STEAMCONTROLLER_INTERFACE_VERSION_003) == 0) {
@@ -731,6 +741,8 @@ ISteamUGC* CSteamClient::GetISteamUGC( HSteamUser hSteamUser, HSteamPipe hSteamP
     // Cast to specific interface first for proper vtable mapping, then to ISteamUGC*
     if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION) == 0) {
         return static_cast<ISteamUGC*>(&m_steamUGC);
+    } else if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION_010) == 0) {
+        return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC010*>(&m_steamUGC));
     } else if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION_009) == 0) {
         return reinterpret_cast<ISteamUGC*>(static_cast<ISteamUGC009*>(&m_steamUGC));
     } else if (strcmp(pchVersion, STEAMUGC_INTERFACE_VERSION_008) == 0) {
@@ -829,6 +841,8 @@ ISteamHTMLSurface* CSteamClient::GetISteamHTMLSurface( HSteamUser hSteamuser, HS
     // Cast to specific interface first for proper vtable mapping, then to ISteamHTMLSurface*
     if (strcmp(pchVersion, STEAMHTMLSURFACE_INTERFACE_VERSION) == 0) {
         return static_cast<ISteamHTMLSurface*>(&m_steamHTMLSurface);
+    } else if (strcmp(pchVersion, STEAMHTMLSURFACE_INTERFACE_VERSION_004) == 0) {
+        return reinterpret_cast<ISteamHTMLSurface*>(static_cast<ISteamHTMLSurface004*>(&m_steamHTMLSurface));
     } else if (strcmp(pchVersion, STEAMHTMLSURFACE_INTERFACE_VERSION_003) == 0) {
         return reinterpret_cast<ISteamHTMLSurface*>(static_cast<ISteamHTMLSurface003*>(&m_steamHTMLSurface));
     } else if (strcmp(pchVersion, STEAMHTMLSURFACE_INTERFACE_VERSION_002) == 0) {
@@ -885,6 +899,8 @@ ISteamInventory* CSteamClient::GetISteamInventory( HSteamUser hSteamuser, HSteam
     // This interface only has one version (V001)
     if (strcmp(pchVersion, STEAMINVENTORY_INTERFACE_VERSION) == 0) {
         return static_cast<ISteamInventory*>(&m_steamInventory);
+    } else if (strcmp(pchVersion, STEAMINVENTORY_INTERFACE_VERSION_002) == 0) {
+        return reinterpret_cast<ISteamInventory*>(static_cast<ISteamInventory002*>(&m_steamInventory));
     } else if (strcmp(pchVersion, STEAMINVENTORY_INTERFACE_VERSION_001) == 0) {
         return reinterpret_cast<ISteamInventory*>(static_cast<ISteamInventory001*>(&m_steamInventory));
     } else {

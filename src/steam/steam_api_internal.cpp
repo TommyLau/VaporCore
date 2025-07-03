@@ -218,6 +218,9 @@ S_API void * S_CALLTYPE SteamInternal_CreateInterface( const char *ver )
     if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION) == 0) {
         VLOG_DEBUG("Returning ISteamClient (latest) - %s", STEAMCLIENT_INTERFACE_VERSION);
         return &steamClient;
+    } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_017) == 0) {
+        VLOG_DEBUG("Returning ISteamClient017");
+        return reinterpret_cast<ISteamClient*>(static_cast<ISteamClient017*>(&steamClient));
     } else if (strcmp(ver, STEAMCLIENT_INTERFACE_VERSION_016) == 0) {
         VLOG_DEBUG("Returning ISteamClient016");
         return reinterpret_cast<ISteamClient*>(static_cast<ISteamClient016*>(&steamClient));
@@ -273,5 +276,5 @@ S_API void *S_CALLTYPE SteamInternal_FindOrCreateGameServerInterface( HSteamUser
         return nullptr;
     }
 
-    return CSteamClient::GetInstance().GetISteamGenericInterface(hSteamUser, SteamGameServer_GetHSteamPipe(), pszVersion);
+    return CSteamClient::GetInstance().GetISteamGenericInterface(hSteamUser, SteamAPI_GetHSteamPipe(), pszVersion);
 }
