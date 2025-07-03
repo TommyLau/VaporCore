@@ -367,3 +367,10 @@ bool CSteamUser::BIsPhoneRequiringVerification()
     VLOG_INFO(__FUNCTION__);
     return false;
 }
+
+STEAM_CALL_RESULT( MarketEligibilityResponse_t )
+SteamAPICall_t CSteamUser::GetMarketEligibility()
+{
+    VLOG_INFO(__FUNCTION__);
+    return 0;
+}

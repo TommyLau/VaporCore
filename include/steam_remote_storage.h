@@ -63,16 +63,16 @@ public:
     bool FileWrite( const char *pchFile, const void *pvData, int32 cubData ) override;
     int32 FileRead( const char *pchFile, void *pvData, int32 cubDataToRead ) override;
 
-	CALL_RESULT( RemoteStorageFileWriteAsyncComplete_t )
+	STEAM_CALL_RESULT( RemoteStorageFileWriteAsyncComplete_t )
 	SteamAPICall_t FileWriteAsync( const char *pchFile, const void *pvData, uint32 cubData ) override;
 	
-	CALL_RESULT( RemoteStorageFileReadAsyncComplete_t )
+	STEAM_CALL_RESULT( RemoteStorageFileReadAsyncComplete_t )
 	SteamAPICall_t FileReadAsync( const char *pchFile, uint32 nOffset, uint32 cubToRead ) override;
 	bool FileReadAsyncComplete( SteamAPICall_t hReadCall, void *pvBuffer, uint32 cubToRead ) override;
 
     bool FileForget( const char *pchFile ) override;
     bool FileDelete( const char *pchFile ) override;
-	CALL_RESULT( RemoteStorageFileShareResult_t )
+	STEAM_CALL_RESULT( RemoteStorageFileShareResult_t )
     SteamAPICall_t FileShare( const char *pchFile ) override;
     bool SetSyncPlatforms( const char *pchFile, ERemoteStoragePlatform eRemoteStoragePlatform ) override;
 
@@ -106,7 +106,7 @@ public:
 	// Downloads a UGC file.  A priority value of 0 will download the file immediately,
 	// otherwise it will wait to download the file until all downloads with a lower priority
 	// value are completed.  Downloads with equal priority will occur simultaneously.
-	CALL_RESULT( RemoteStorageDownloadUGCResult_t )
+	STEAM_CALL_RESULT( RemoteStorageDownloadUGCResult_t )
     SteamAPICall_t UGCDownload( UGCHandle_t hContent, uint32 unPriority ) override;
     // Changed from Steam SDK v1.22, backward compatibility
     SteamAPICall_t UGCDownload( UGCHandle_t hContent ) override;
@@ -116,7 +116,7 @@ public:
 	bool GetUGCDownloadProgress( UGCHandle_t hContent, int32 *pnBytesDownloaded, int32 *pnBytesExpected ) override;
 
 	// Gets metadata for a file after it has been downloaded. This is the same metadata given in the RemoteStorageDownloadUGCResult_t call result
-    bool GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, OUT_STRING() char **ppchName, int32 *pnFileSizeInBytes, OUT_STRUCT() CSteamID *pSteamIDOwner ) override;
+    bool GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, STEAM_OUT_STRING() char **ppchName, int32 *pnFileSizeInBytes, STEAM_OUT_STRUCT() CSteamID *pSteamIDOwner ) override;
 
 	// After download, gets the content of the file.  
 	// Small files can be read all at once by calling this function with an offset of 0 and cubDataToRead equal to the size of the file.
@@ -159,7 +159,7 @@ public:
     SteamAPICall_t PublishWorkshopFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, SteamParamStringArray_t *pTags ) override;
     // Removed from Steam SDK v1.18, backward compatibility
     SteamAPICall_t UpdatePublishedFile( RemoteStorageUpdatePublishedFileRequest_t updatePublishedFileRequest ) override;
-	CALL_RESULT( RemoteStoragePublishFileProgress_t )
+	STEAM_CALL_RESULT( RemoteStoragePublishFileProgress_t )
 	SteamAPICall_t PublishWorkshopFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags, EWorkshopFileType eWorkshopFileType ) override;
 	PublishedFileUpdateHandle_t CreatePublishedFileUpdateRequest( PublishedFileId_t unPublishedFileId ) override;
 	bool UpdatePublishedFileFile( PublishedFileUpdateHandle_t updateHandle, const char *pchFile ) override;
@@ -168,50 +168,50 @@ public:
 	bool UpdatePublishedFileDescription( PublishedFileUpdateHandle_t updateHandle, const char *pchDescription ) override;
 	bool UpdatePublishedFileVisibility( PublishedFileUpdateHandle_t updateHandle, ERemoteStoragePublishedFileVisibility eVisibility ) override;
 	bool UpdatePublishedFileTags( PublishedFileUpdateHandle_t updateHandle, SteamParamStringArray_t *pTags ) override;
-	CALL_RESULT( RemoteStorageUpdatePublishedFileResult_t )
+	STEAM_CALL_RESULT( RemoteStorageUpdatePublishedFileResult_t )
 	SteamAPICall_t CommitPublishedFileUpdate( PublishedFileUpdateHandle_t updateHandle ) override;
 	// Gets published file details for the given publishedfileid.  If unMaxSecondsOld is greater than 0,
 	// cached data may be returned, depending on how long ago it was cached.  A value of 0 will force a refresh.
 	// A value of k_WorkshopForceLoadPublishedFileDetailsFromCache will use cached data if it exists, no matter how old it is.
-	CALL_RESULT( RemoteStorageGetPublishedFileDetailsResult_t )
+	STEAM_CALL_RESULT( RemoteStorageGetPublishedFileDetailsResult_t )
 	SteamAPICall_t GetPublishedFileDetails( PublishedFileId_t unPublishedFileId, uint32 unMaxSecondsOld ) override;
-	CALL_RESULT( RemoteStorageDeletePublishedFileResult_t )
+	STEAM_CALL_RESULT( RemoteStorageDeletePublishedFileResult_t )
     SteamAPICall_t GetPublishedFileDetails( PublishedFileId_t unPublishedFileId ) override;
     SteamAPICall_t DeletePublishedFile( PublishedFileId_t unPublishedFileId ) override;
 	// enumerate the files that the current user published with this app
-	CALL_RESULT( RemoteStorageEnumerateUserPublishedFilesResult_t )
+	STEAM_CALL_RESULT( RemoteStorageEnumerateUserPublishedFilesResult_t )
     SteamAPICall_t EnumerateUserPublishedFiles( uint32 unStartIndex ) override;
-	CALL_RESULT( RemoteStorageSubscribePublishedFileResult_t )
+	STEAM_CALL_RESULT( RemoteStorageSubscribePublishedFileResult_t )
     SteamAPICall_t SubscribePublishedFile( PublishedFileId_t unPublishedFileId ) override;
-	CALL_RESULT( RemoteStorageEnumerateUserSubscribedFilesResult_t )
+	STEAM_CALL_RESULT( RemoteStorageEnumerateUserSubscribedFilesResult_t )
     SteamAPICall_t EnumerateUserSubscribedFiles( uint32 unStartIndex ) override;
-	CALL_RESULT( RemoteStorageUnsubscribePublishedFileResult_t )
+	STEAM_CALL_RESULT( RemoteStorageUnsubscribePublishedFileResult_t )
     SteamAPICall_t UnsubscribePublishedFile( PublishedFileId_t unPublishedFileId ) override;
     bool UpdatePublishedFileSetChangeDescription( PublishedFileUpdateHandle_t updateHandle, const char *pchChangeDescription ) override;
-	CALL_RESULT( RemoteStorageGetPublishedItemVoteDetailsResult_t )
+	STEAM_CALL_RESULT( RemoteStorageGetPublishedItemVoteDetailsResult_t )
     SteamAPICall_t GetPublishedItemVoteDetails( PublishedFileId_t unPublishedFileId ) override;
-	CALL_RESULT( RemoteStorageUpdateUserPublishedItemVoteResult_t )
+	STEAM_CALL_RESULT( RemoteStorageUpdateUserPublishedItemVoteResult_t )
     SteamAPICall_t UpdateUserPublishedItemVote( PublishedFileId_t unPublishedFileId, bool bVoteUp ) override;
-	CALL_RESULT( RemoteStorageGetPublishedItemVoteDetailsResult_t )
+	STEAM_CALL_RESULT( RemoteStorageGetPublishedItemVoteDetailsResult_t )
     SteamAPICall_t GetUserPublishedItemVoteDetails( PublishedFileId_t unPublishedFileId ) override;
-	CALL_RESULT( RemoteStorageEnumerateUserPublishedFilesResult_t )
+	STEAM_CALL_RESULT( RemoteStorageEnumerateUserPublishedFilesResult_t )
     SteamAPICall_t EnumerateUserSharedWorkshopFiles( CSteamID steamId, uint32 unStartIndex, SteamParamStringArray_t *pRequiredTags, SteamParamStringArray_t *pExcludedTags ) override;
-	CALL_RESULT( RemoteStoragePublishFileProgress_t )
+	STEAM_CALL_RESULT( RemoteStoragePublishFileProgress_t )
 	SteamAPICall_t PublishVideo( EWorkshopVideoProvider eVideoProvider, const char *pchVideoAccount, const char *pchVideoIdentifier, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags ) override;
     // Changed from Steam SDK v1.20, backward compatibility
     SteamAPICall_t PublishVideo( const char *pchVideoURL, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags ) override;
-	CALL_RESULT( RemoteStorageSetUserPublishedFileActionResult_t )
+	STEAM_CALL_RESULT( RemoteStorageSetUserPublishedFileActionResult_t )
     SteamAPICall_t SetUserPublishedFileAction( PublishedFileId_t unPublishedFileId, EWorkshopFileAction eAction ) override;
     // Changed from Steam SDK v1.38a, return type changed and comment out
-	// CALL_RESULT( RemoteStorageEnumeratePublishedFilesByUserActionResult_t )
+	// STEAM_CALL_RESULT( RemoteStorageEnumeratePublishedFilesByUserActionResult_t )
     // SteamAPICall_t SetUserPublishedFileAction( PublishedFileId_t unPublishedFileId, EWorkshopFileAction eAction ) override;
-	CALL_RESULT( RemoteStorageEnumeratePublishedFilesByUserActionResult_t )
+	STEAM_CALL_RESULT( RemoteStorageEnumeratePublishedFilesByUserActionResult_t )
     SteamAPICall_t EnumeratePublishedFilesByUserAction( EWorkshopFileAction eAction, uint32 unStartIndex ) override;
 	// this method enumerates the public view of workshop files
-	CALL_RESULT( RemoteStorageEnumerateWorkshopFilesResult_t )
+	STEAM_CALL_RESULT( RemoteStorageEnumerateWorkshopFilesResult_t )
     SteamAPICall_t EnumeratePublishedWorkshopFiles( EWorkshopEnumerationType eEnumerationType, uint32 unStartIndex, uint32 unCount, uint32 unDays, SteamParamStringArray_t *pTags, SteamParamStringArray_t *pUserTags ) override;
 
-	CALL_RESULT( RemoteStorageDownloadUGCResult_t )
+	STEAM_CALL_RESULT( RemoteStorageDownloadUGCResult_t )
 	SteamAPICall_t UGCDownloadToLocation( UGCHandle_t hContent, const char *pchLocation, uint32 unPriority ) override;
 
 private:

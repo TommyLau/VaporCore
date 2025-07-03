@@ -37,6 +37,13 @@ UGCQueryHandle_t CSteamUGC::CreateQueryAllUGCRequest( EUGCQuery eQueryType, EUGC
     return k_UGCQueryHandleInvalid;
 }
 
+// Query for all matching UGC using the new deep paging interface. Creator app id or consumer app id must be valid and be set to the current running app. pchCursor should be set to NULL or "*" to get the first result set.
+UGCQueryHandle_t CSteamUGC::CreateQueryAllUGCRequest(EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, const char* pchCursor)
+{
+    VLOG_INFO(__FUNCTION__ " - eQueryType: %d, eMatchingeMatchingUGCTypeFileType: %d, nCreatorAppID: %d, nConsumerAppID: %d, pchCursor: %s", eQueryType, eMatchingeMatchingUGCTypeFileType, nCreatorAppID, nConsumerAppID, pchCursor ? pchCursor : "NULL");
+    return k_UGCQueryHandleInvalid;
+}
+
 // Query for the details of the given published file ids (the RequestUGCDetails call is deprecated and replaced with this)
 UGCQueryHandle_t CSteamUGC::CreateQueryUGCDetailsRequest( PublishedFileId_t *pvecPublishedFileID, uint32 unNumPublishedFileIDs )
 {
@@ -317,6 +324,13 @@ bool CSteamUGC::SetItemContent( UGCUpdateHandle_t handle, const char *pszContent
 bool CSteamUGC::SetItemPreview( UGCUpdateHandle_t handle, const char *pszPreviewFile )
 {
     VLOG_INFO(__FUNCTION__ " - handle: %llu, pszPreviewFile: %s", handle, pszPreviewFile ? pszPreviewFile : "NULL");
+    return false;
+}
+
+//  use legacy upload for a single small file. The parameter to SetItemContent() should either be a directory with one file or the full path to the file.  The file must also be less than 10MB in size.
+bool CSteamUGC::SetAllowLegacyUpload( UGCUpdateHandle_t handle, bool bAllowLegacyUpload )
+{
+    VLOG_INFO(__FUNCTION__ " - handle: %llu, bAllowLegacyUpload: %d", handle, bAllowLegacyUpload);
     return false;
 }
 

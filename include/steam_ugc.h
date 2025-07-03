@@ -23,6 +23,7 @@
 #include <isteamugc007.h>
 #include <isteamugc008.h>
 #include <isteamugc009.h>
+#include <isteamugc010.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Steam UGC support API
@@ -35,7 +36,8 @@ class CSteamUGC :
     public ISteamUGC005,
     public ISteamUGC007,
     public ISteamUGC008,
-    public ISteamUGC009
+    public ISteamUGC009,
+    public ISteamUGC010
 {
 public:
 	// Singleton accessor
@@ -52,27 +54,30 @@ public:
 	// Query for all matching UGC. Creator app id or consumer app id must be valid and be set to the current running app. unPage should start at 1.
 	UGCQueryHandle_t CreateQueryAllUGCRequest( EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage ) override;
 
+	// Query for all matching UGC using the new deep paging interface. Creator app id or consumer app id must be valid and be set to the current running app. pchCursor should be set to NULL or "*" to get the first result set.
+	UGCQueryHandle_t CreateQueryAllUGCRequest( EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, const char *pchCursor = NULL ) override;
+
 	// Query for the details of the given published file ids (the RequestUGCDetails call is deprecated and replaced with this)
 	UGCQueryHandle_t CreateQueryUGCDetailsRequest( PublishedFileId_t *pvecPublishedFileID, uint32 unNumPublishedFileIDs ) override;
 
 	// Send the query to Steam
-	CALL_RESULT( SteamUGCQueryCompleted_t )
+	STEAM_CALL_RESULT( SteamUGCQueryCompleted_t )
 	SteamAPICall_t SendQueryUGCRequest( UGCQueryHandle_t handle ) override;
 
 	// Retrieve an individual result after receiving the callback for querying UGC
 	bool GetQueryUGCResult( UGCQueryHandle_t handle, uint32 index, SteamUGCDetails_t *pDetails ) override;
-	bool GetQueryUGCPreviewURL( UGCQueryHandle_t handle, uint32 index, OUT_STRING_COUNT(cchURLSize) char *pchURL, uint32 cchURLSize ) override;
-	bool GetQueryUGCMetadata( UGCQueryHandle_t handle, uint32 index, OUT_STRING_COUNT(cchMetadatasize) char *pchMetadata, uint32 cchMetadatasize ) override;
+	bool GetQueryUGCPreviewURL( UGCQueryHandle_t handle, uint32 index, STEAM_OUT_STRING_COUNT(cchURLSize) char *pchURL, uint32 cchURLSize ) override;
+	bool GetQueryUGCMetadata( UGCQueryHandle_t handle, uint32 index, STEAM_OUT_STRING_COUNT(cchMetadatasize) char *pchMetadata, uint32 cchMetadatasize ) override;
 	bool GetQueryUGCChildren( UGCQueryHandle_t handle, uint32 index, PublishedFileId_t* pvecPublishedFileID, uint32 cMaxEntries ) override;
 	bool GetQueryUGCStatistic( UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint64 *pStatValue ) override;
 	// Changed from Steam SDK v1.38a, backward compatibility
 	bool GetQueryUGCStatistic( UGCQueryHandle_t handle, uint32 index, EItemStatistic eStatType, uint32 *pStatValue ) override;
 	uint32 GetQueryUGCNumAdditionalPreviews( UGCQueryHandle_t handle, uint32 index ) override;
-	bool GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, OUT_STRING_COUNT(cchURLSize) char *pchURLOrVideoID, uint32 cchURLSize, OUT_STRING_COUNT(cchURLSize) char *pchOriginalFileName, uint32 cchOriginalFileNameSize, EItemPreviewType *pPreviewType ) override;
+	bool GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, STEAM_OUT_STRING_COUNT(cchURLSize) char *pchURLOrVideoID, uint32 cchURLSize, STEAM_OUT_STRING_COUNT(cchURLSize) char *pchOriginalFileName, uint32 cchOriginalFileNameSize, EItemPreviewType *pPreviewType ) override;
 	// Changed from Steam SDK v1.37, backward compatibility
-	bool GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, OUT_STRING_COUNT(cchURLSize) char *pchURLOrVideoID, uint32 cchURLSize, bool *pbIsImage ) override;
+	bool GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, STEAM_OUT_STRING_COUNT(cchURLSize) char *pchURLOrVideoID, uint32 cchURLSize, bool *pbIsImage ) override;
 	uint32 GetQueryUGCNumKeyValueTags( UGCQueryHandle_t handle, uint32 index ) override;
-	bool GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, uint32 keyValueTagIndex, OUT_STRING_COUNT(cchKeySize) char *pchKey, uint32 cchKeySize, OUT_STRING_COUNT(cchValueSize) char *pchValue, uint32 cchValueSize ) override;
+	bool GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, uint32 keyValueTagIndex, STEAM_OUT_STRING_COUNT(cchKeySize) char *pchKey, uint32 cchKeySize, STEAM_OUT_STRING_COUNT(cchValueSize) char *pchValue, uint32 cchValueSize ) override;
 
 	// Release the request to free up memory, after retrieving results
 	bool ReleaseQueryUGCRequest( UGCQueryHandle_t handle ) override;
@@ -107,7 +112,7 @@ public:
 	SteamAPICall_t RequestUGCDetails( PublishedFileId_t nPublishedFileID ) override;
 
 	// Steam Workshop Creator API
-	CALL_RESULT( CreateItemResult_t )
+	STEAM_CALL_RESULT( CreateItemResult_t )
 	SteamAPICall_t CreateItem( AppId_t nConsumerAppId, EWorkshopFileType eFileType ) override; // create new item for this app with no content attached yet
 
 	UGCUpdateHandle_t StartItemUpdate( AppId_t nConsumerAppId, PublishedFileId_t nPublishedFileID ) override; // start an UGC item update. Set changed properties before commiting update with CommitItemUpdate()
@@ -120,6 +125,7 @@ public:
 	bool SetItemTags( UGCUpdateHandle_t updateHandle, const SteamParamStringArray_t *pTags ) override; // change the tags of an UGC item
 	bool SetItemContent( UGCUpdateHandle_t handle, const char *pszContentFolder ) override; // update item content from this local folder
 	bool SetItemPreview( UGCUpdateHandle_t handle, const char *pszPreviewFile ) override; //  change preview image file for this item. pszPreviewFile points to local image file, which must be under 1MB in size
+	bool SetAllowLegacyUpload( UGCUpdateHandle_t handle, bool bAllowLegacyUpload ) override; //  use legacy upload for a single small file. The parameter to SetItemContent() should either be a directory with one file or the full path to the file.  The file must also be less than 10MB in size.
 	bool RemoveItemKeyValueTags( UGCUpdateHandle_t handle, const char *pchKey ) override; // remove any existing key-value tags with the specified key
 	bool AddItemKeyValueTag( UGCUpdateHandle_t handle, const char *pchKey, const char *pchValue ) override; // add new key-value tags for the item. Note that there can be multiple values for a tag.
 	bool AddItemPreviewFile( UGCUpdateHandle_t handle, const char *pszPreviewFile, EItemPreviewType type ) override; //  add preview file for this item. pszPreviewFile points to local file, which must be under 1MB in size
@@ -128,22 +134,22 @@ public:
 	bool UpdateItemPreviewVideo( UGCUpdateHandle_t handle, uint32 index, const char *pszVideoID ) override; //  updates an existing preview video for this item
 	bool RemoveItemPreview( UGCUpdateHandle_t handle, uint32 index ) override; // remove a preview by index starting at 0 (previews are sorted)
 
-	CALL_RESULT( SubmitItemUpdateResult_t )
+	STEAM_CALL_RESULT( SubmitItemUpdateResult_t )
 	SteamAPICall_t SubmitItemUpdate( UGCUpdateHandle_t handle, const char *pchChangeNote ) override; // commit update process started with StartItemUpdate()
 	EItemUpdateStatus GetItemUpdateProgress( UGCUpdateHandle_t handle, uint64 *punBytesProcessed, uint64* punBytesTotal ) override;
 
 	// Steam Workshop Consumer API
-	CALL_RESULT( SetUserItemVoteResult_t )
+	STEAM_CALL_RESULT( SetUserItemVoteResult_t )
 	SteamAPICall_t SetUserItemVote( PublishedFileId_t nPublishedFileID, bool bVoteUp ) override;
-	CALL_RESULT( GetUserItemVoteResult_t )
+	STEAM_CALL_RESULT( GetUserItemVoteResult_t )
 	SteamAPICall_t GetUserItemVote( PublishedFileId_t nPublishedFileID ) override;
-	CALL_RESULT( UserFavoriteItemsListChanged_t )
+	STEAM_CALL_RESULT( UserFavoriteItemsListChanged_t )
 	SteamAPICall_t AddItemToFavorites( AppId_t nAppId, PublishedFileId_t nPublishedFileID ) override;
-	CALL_RESULT( UserFavoriteItemsListChanged_t )
+	STEAM_CALL_RESULT( UserFavoriteItemsListChanged_t )
 	SteamAPICall_t RemoveItemFromFavorites( AppId_t nAppId, PublishedFileId_t nPublishedFileID ) override;
-	CALL_RESULT( RemoteStorageSubscribePublishedFileResult_t )
+	STEAM_CALL_RESULT( RemoteStorageSubscribePublishedFileResult_t )
 	SteamAPICall_t SubscribeItem( PublishedFileId_t nPublishedFileID ) override; // subscribe to this item, will be installed ASAP
-	CALL_RESULT( RemoteStorageUnsubscribePublishedFileResult_t )
+	STEAM_CALL_RESULT( RemoteStorageUnsubscribePublishedFileResult_t )
 	SteamAPICall_t UnsubscribeItem( PublishedFileId_t nPublishedFileID ) override; // unsubscribe from this item, will be uninstalled after game quits
 	uint32 GetNumSubscribedItems() override; // number of subscribed items 
 	uint32 GetSubscribedItems( PublishedFileId_t* pvecPublishedFileID, uint32 cMaxEntries ) override; // all subscribed item PublishFileIDs
@@ -153,7 +159,7 @@ public:
 
 	// get info about currently installed content on disc for items that have k_EItemStateInstalled set
 	// if k_EItemStateLegacyItem is set, pchFolder contains the path to the legacy file itself (not a folder)
-	bool GetItemInstallInfo( PublishedFileId_t nPublishedFileID, uint64 *punSizeOnDisk, OUT_STRING_COUNT( cchFolderSize ) char *pchFolder, uint32 cchFolderSize, uint32 *punTimeStamp ) override;
+	bool GetItemInstallInfo( PublishedFileId_t nPublishedFileID, uint64 *punSizeOnDisk, STEAM_OUT_STRING_COUNT( cchFolderSize ) char *pchFolder, uint32 cchFolderSize, uint32 *punTimeStamp ) override;
 	// Get info about the item on disk.  If you are supporting items published through the legacy RemoteStorage APIs then *pbLegacyItem will be set to true
 	// and pchFolder will contain the full path to the file rather than the containing folder.
 	// Changed from Steam SDK v1.33, backward compatibility
@@ -180,31 +186,31 @@ public:
 	void SuspendDownloads( bool bSuspend ) override;
 
 	// usage tracking
-	CALL_RESULT( StartPlaytimeTrackingResult_t )
+	STEAM_CALL_RESULT( StartPlaytimeTrackingResult_t )
 	SteamAPICall_t StartPlaytimeTracking( PublishedFileId_t *pvecPublishedFileID, uint32 unNumPublishedFileIDs ) override;
-	CALL_RESULT( StopPlaytimeTrackingResult_t )
+	STEAM_CALL_RESULT( StopPlaytimeTrackingResult_t )
 	SteamAPICall_t StopPlaytimeTracking( PublishedFileId_t *pvecPublishedFileID, uint32 unNumPublishedFileIDs ) override;
-	CALL_RESULT( StopPlaytimeTrackingResult_t )
+	STEAM_CALL_RESULT( StopPlaytimeTrackingResult_t )
 	SteamAPICall_t StopPlaytimeTrackingForAllItems() override;
 
 	// parent-child relationship or dependency management
-	CALL_RESULT( AddUGCDependencyResult_t )
+	STEAM_CALL_RESULT( AddUGCDependencyResult_t )
 	SteamAPICall_t AddDependency( PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID ) override;
-	CALL_RESULT( RemoveUGCDependencyResult_t )
+	STEAM_CALL_RESULT( RemoveUGCDependencyResult_t )
 	SteamAPICall_t RemoveDependency( PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID ) override;
 
 	// add/remove app dependence/requirements (usually DLC)
-	CALL_RESULT( AddAppDependencyResult_t )
+	STEAM_CALL_RESULT( AddAppDependencyResult_t )
 	SteamAPICall_t AddAppDependency( PublishedFileId_t nPublishedFileID, AppId_t nAppID ) override;
-	CALL_RESULT( RemoveAppDependencyResult_t )
+	STEAM_CALL_RESULT( RemoveAppDependencyResult_t )
 	SteamAPICall_t RemoveAppDependency( PublishedFileId_t nPublishedFileID, AppId_t nAppID ) override;
 	// request app dependencies. note that whatever callback you register for GetAppDependenciesResult_t may be called multiple times
 	// until all app dependencies have been returned
-	CALL_RESULT( GetAppDependenciesResult_t )
+	STEAM_CALL_RESULT( GetAppDependenciesResult_t )
 	SteamAPICall_t GetAppDependencies( PublishedFileId_t nPublishedFileID ) override;
 	
 	// delete the item without prompting the user
-	CALL_RESULT( DeleteItemResult_t )
+	STEAM_CALL_RESULT( DeleteItemResult_t )
 	SteamAPICall_t DeleteItem( PublishedFileId_t nPublishedFileID ) override;
 
 private:

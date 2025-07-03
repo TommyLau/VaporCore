@@ -138,11 +138,20 @@ void CSteamHTMLSurface::MouseWheel( HHTMLBrowser unBrowserHandle, int32 nDelta )
     VLOG_INFO(__FUNCTION__ " - Handle: %u, Delta: %d", unBrowserHandle, nDelta);
 }
 
-// keyboard interactions, native keycode is the virtual key code value from your OS
+// keyboard interactions, native keycode is the virtual key code value from your OS, system key flags the key to not
+// be sent as a typed character as well as a key down
+void CSteamHTMLSurface::KeyDown( HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers, bool bIsSystemKey )
+{
+    VLOG_INFO(__FUNCTION__ " - Handle: %u, KeyCode: %u, Modifiers: %d, SystemKey: %s",
+               unBrowserHandle, nNativeKeyCode, eHTMLKeyModifiers, bIsSystemKey ? "true" : "false");
+}
+
+// Changed from Steam SDK v1.43, backward compatibility
 void CSteamHTMLSurface::KeyDown( HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers )
 {
     VLOG_INFO(__FUNCTION__ " - Handle: %u, KeyCode: %u, Modifiers: %d", 
                unBrowserHandle, nNativeKeyCode, eHTMLKeyModifiers);
+    KeyDown(unBrowserHandle, nNativeKeyCode, eHTMLKeyModifiers, false);
 }
 
 void CSteamHTMLSurface::KeyUp( HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers )
@@ -248,6 +257,13 @@ void CSteamHTMLSurface::SetDPIScalingFactor(HHTMLBrowser unBrowserHandle, float 
     VLOG_INFO(__FUNCTION__ " - Handle: %u, DPIScaling: %f", unBrowserHandle, flDPIScaling);
 }
 
+// Open HTML/JS developer tools
+void CSteamHTMLSurface::OpenDeveloperTools( HHTMLBrowser unBrowserHandle )
+{
+    VLOG_INFO(__FUNCTION__ " - Handle: %u", unBrowserHandle);
+}
+
+// CALLBACKS
 //
 //  These set of functions are used as responses to callback requests
 //

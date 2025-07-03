@@ -88,7 +88,7 @@ public:
 		}
 	*/
 	// 
-	CALL_RESULT( LobbyMatchList_t )
+	STEAM_CALL_RESULT( LobbyMatchList_t )
 	SteamAPICall_t RequestLobbyList() override;
 	// Changed from Steam SDK v1.03, backward compatibility
 	void DEPRECATED_RequestLobbyList() override;
@@ -129,7 +129,7 @@ public:
 	// this is an asynchronous request
 	// results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this point
 	// a LobbyEnter_t callback will also be received (since the local user is joining their own lobby)
-	CALL_RESULT( LobbyCreated_t )
+	STEAM_CALL_RESULT( LobbyCreated_t )
 	SteamAPICall_t CreateLobby( ELobbyType eLobbyType, int cMaxMembers ) override;
 	// Changed from Steam SDK v1.05, backward compatibility
 	SteamAPICall_t CreateLobby( ELobbyType eLobbyType ) override;
@@ -140,7 +140,7 @@ public:
 	// this is an asynchronous request
 	// results will be returned by LobbyEnter_t callback & call result, check m_EChatRoomEnterResponse to see if was successful
 	// lobby metadata is available to use immediately on this call completing
-	CALL_RESULT( LobbyEnter_t )
+	STEAM_CALL_RESULT( LobbyEnter_t )
 	SteamAPICall_t JoinLobby( CSteamID steamIDLobby ) override;
 	// Changed from Steam SDK v1.03, backward compatibility
 	void DEPRECATED_JoinLobby( CSteamID steamIDLobby ) override;
@@ -205,7 +205,7 @@ public:
 	// *pSteamIDUser is filled in with the CSteamID of the member
 	// *pvData is filled in with the message itself
 	// return value is the number of bytes written into the buffer
-	int GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, OUT_STRUCT() CSteamID *pSteamIDUser, void *pvData, int cubData, EChatEntryType *peChatEntryType ) override;
+	int GetLobbyChatEntry( CSteamID steamIDLobby, int iChatID, STEAM_OUT_STRUCT() CSteamID *pSteamIDUser, void *pvData, int cubData, EChatEntryType *peChatEntryType ) override;
 
 	// Refreshes metadata for a lobby you're not necessarily in right now
 	// you never do this for lobbies you're a member of, only if your
@@ -221,7 +221,7 @@ public:
 	// either the IP/Port or the steamID of the game server has to be valid, depending on how you want the clients to be able to connect
 	void SetLobbyGameServer( CSteamID steamIDLobby, uint32 unGameServerIP, uint16 unGameServerPort, CSteamID steamIDGameServer ) override;
 	// returns the details of a game server set in a lobby - returns false if there is no game server set, or that lobby doesn't exist
-	bool GetLobbyGameServer( CSteamID steamIDLobby, uint32 *punGameServerIP, uint16 *punGameServerPort, OUT_STRUCT() CSteamID *psteamIDGameServer ) override;
+	bool GetLobbyGameServer( CSteamID steamIDLobby, uint32 *punGameServerIP, uint16 *punGameServerPort, STEAM_OUT_STRUCT() CSteamID *psteamIDGameServer ) override;
 
 	// set the limit on the # of users who can join the lobby
 	bool SetLobbyMemberLimit( CSteamID steamIDLobby, int cMaxMembers ) override;
@@ -425,12 +425,12 @@ public:
 	// Request a new list of servers of a particular type.  These calls each correspond to one of the EMatchMakingType values.
 	// Each call allocates a new asynchronous request object.
 	// Request object must be released by calling ReleaseRequest( hServerListRequest )
-	HServerListRequest RequestInternetServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	HServerListRequest RequestInternetServerList( AppId_t iApp, STEAM_ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
 	HServerListRequest RequestLANServerList( AppId_t iApp, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
-	HServerListRequest RequestFriendsServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
-	HServerListRequest RequestFavoritesServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
-	HServerListRequest RequestHistoryServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
-	HServerListRequest RequestSpectatorServerList( AppId_t iApp, ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	HServerListRequest RequestFriendsServerList( AppId_t iApp, STEAM_ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	HServerListRequest RequestFavoritesServerList( AppId_t iApp, STEAM_ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	HServerListRequest RequestHistoryServerList( AppId_t iApp, STEAM_ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
+	HServerListRequest RequestSpectatorServerList( AppId_t iApp, STEAM_ARRAY_COUNT(nFilters) MatchMakingKeyValuePair_t **ppchFilters, uint32 nFilters, ISteamMatchmakingServerListResponse *pRequestServersResponse ) override;
 
 	// Releases the asynchronous request object and cancels any pending query on it if there's a pending query in progress.
 	// RefreshComplete callback is not posted when request is released.
@@ -574,6 +574,161 @@ private:
     // Delete copy constructor and assignment operator
     CSteamMatchmakingServers(const CSteamMatchmakingServers&) = delete;
     CSteamMatchmakingServers& operator=(const CSteamMatchmakingServers&) = delete;
+};
+
+//-----------------------------------------------------------------------------
+// Purpose: Functions for match making services for clients to get to favorites
+//			and to operate on game lobbies.
+//-----------------------------------------------------------------------------
+class CSteamGameSearch :
+    public ISteamGameSearch
+{
+public:
+	// Singleton accessor
+    static CSteamGameSearch& GetInstance()
+    {
+		static CSteamGameSearch instance;
+		return instance;
+    }
+
+public:
+	// =============================================================================================
+	// Game Player APIs
+
+	// a keyname and a list of comma separated values: one of which is must be found in order for the match to qualify
+	// fails if a search is currently in progress
+	EGameSearchErrorCode_t AddGameSearchParams( const char *pchKeyToFind, const char *pchValuesToFind ) override;
+
+	// all players in lobby enter the queue and await a SearchForGameNotificationCallback_t callback. fails if another search is currently in progress
+	// if not the owner of the lobby or search already in progress this call fails
+	// periodic callbacks will be sent as queue time estimates change
+	EGameSearchErrorCode_t SearchForGameWithLobby( CSteamID steamIDLobby, int nPlayerMin, int nPlayerMax ) override;
+
+	// user enter the queue and await a SearchForGameNotificationCallback_t callback. fails if another search is currently in progress
+	// periodic callbacks will be sent as queue time estimates change
+	EGameSearchErrorCode_t SearchForGameSolo( int nPlayerMin, int nPlayerMax ) override;
+
+	// after receiving SearchForGameResultCallback_t, accept or decline the game
+	// multiple SearchForGameResultCallback_t will follow as players accept game until the host starts or cancels the game
+	EGameSearchErrorCode_t AcceptGame() override;
+	EGameSearchErrorCode_t DeclineGame() override;
+
+	// after receiving GameStartedByHostCallback_t get connection details to server
+	EGameSearchErrorCode_t RetrieveConnectionDetails( CSteamID steamIDHost, char *pchConnectionDetails, int cubConnectionDetails ) override;
+
+	// leaves queue if still waiting
+	EGameSearchErrorCode_t EndGameSearch() override;
+
+	// =============================================================================================
+	// Game Host APIs
+
+	// a keyname and a list of comma separated values: all the values you allow
+	EGameSearchErrorCode_t SetGameHostParams( const char *pchKey, const char *pchValue ) override;
+
+	// set connection details for players once game is found so they can connect to this server
+	EGameSearchErrorCode_t SetConnectionDetails( const char *pchConnectionDetails, int cubConnectionDetails ) override;
+
+	// mark server as available for more players with nPlayerMin,nPlayerMax desired
+	// accept no lobbies with playercount greater than nMaxTeamSize
+	// the set of lobbies returned must be partitionable into teams of no more than nMaxTeamSize
+	// RequestPlayersForGameNotificationCallback_t callback will be sent when the search has started
+	// multple RequestPlayersForGameResultCallback_t callbacks will follow when players are found
+	EGameSearchErrorCode_t RequestPlayersForGame( int nPlayerMin, int nPlayerMax, int nMaxTeamSize ) override;
+
+	// accept the player list and release connection details to players
+	// players will only be given connection details and host steamid when this is called
+	// ( allows host to accept after all players confirm, some confirm, or none confirm. decision is entirely up to the host )
+	EGameSearchErrorCode_t HostConfirmGameStart( uint64 ullUniqueGameID ) override;
+
+	// cancel request and leave the pool of game hosts looking for players
+	// if a set of players has already been sent to host, all players will receive SearchForGameHostFailedToConfirm_t
+	EGameSearchErrorCode_t CancelRequestPlayersForGame() override;
+
+	// submit a result for one player. does not end the game. ullUniqueGameID continues to describe this game
+	EGameSearchErrorCode_t SubmitPlayerResult( uint64 ullUniqueGameID, CSteamID steamIDPlayer, EPlayerResult_t EPlayerResult ) override;
+
+	// ends the game. no further SubmitPlayerResults for ullUniqueGameID will be accepted
+	// any future requests will provide a new ullUniqueGameID
+	EGameSearchErrorCode_t EndGame( uint64 ullUniqueGameID ) override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamGameSearch();
+    ~CSteamGameSearch();
+
+    // Delete copy constructor and assignment operator
+    CSteamGameSearch(const CSteamGameSearch&) = delete;
+    CSteamGameSearch& operator=(const CSteamGameSearch&) = delete;
+};
+
+class CSteamParties :
+    public ISteamParties
+{
+public:
+	// Singleton accessor
+    static CSteamParties& GetInstance()
+    {
+		static CSteamParties instance;
+		return instance;
+    }
+
+public:
+	// =============================================================================================
+	// Party Client APIs
+	
+	// Enumerate any active beacons for parties you may wish to join
+	uint32 GetNumActiveBeacons() override;
+	PartyBeaconID_t GetBeaconByIndex( uint32 unIndex ) override;
+	bool GetBeaconDetails( PartyBeaconID_t ulBeaconID, CSteamID *pSteamIDBeaconOwner, STEAM_OUT_STRUCT() SteamPartyBeaconLocation_t *pLocation, STEAM_OUT_STRING_COUNT(cchMetadata) char *pchMetadata, int cchMetadata ) override;
+
+	// Join an open party. Steam will reserve one beacon slot for your SteamID,
+	// and return the necessary JoinGame string for you to use to connect
+	STEAM_CALL_RESULT( JoinPartyCallback_t )
+	SteamAPICall_t JoinParty( PartyBeaconID_t ulBeaconID ) override;
+
+	// =============================================================================================
+	// Party Host APIs
+
+	// Get a list of possible beacon locations
+	bool GetNumAvailableBeaconLocations( uint32 *puNumLocations ) override;
+	bool GetAvailableBeaconLocations( SteamPartyBeaconLocation_t *pLocationList, uint32 uMaxNumLocations ) override;
+
+	// Create a new party beacon and activate it in the selected location.
+	// unOpenSlots is the maximum number of users that Steam will send to you.
+	// When people begin responding to your beacon, Steam will send you
+	// PartyReservationCallback_t callbacks to let you know who is on the way.
+	STEAM_CALL_RESULT( CreateBeaconCallback_t )
+	SteamAPICall_t CreateBeacon( uint32 unOpenSlots, SteamPartyBeaconLocation_t *pBeaconLocation, const char *pchConnectString, const char *pchMetadata ) override;
+
+	// Call this function when a user that had a reservation (see callback below) 
+	// has successfully joined your party.
+	// Steam will manage the remaining open slots automatically.
+	void OnReservationCompleted( PartyBeaconID_t ulBeacon, CSteamID steamIDUser ) override;
+
+	// To cancel a reservation (due to timeout or user input), call this.
+	// Steam will open a new reservation slot.
+	// Note: The user may already be in-flight to your game, so it's possible they will still connect and try to join your party.
+	void CancelReservation( PartyBeaconID_t ulBeacon, CSteamID steamIDUser ) override;
+
+	// Change the number of open beacon reservation slots.
+	// Call this if, for example, someone without a reservation joins your party (eg a friend, or via your own matchmaking system).
+	STEAM_CALL_RESULT( ChangeNumOpenSlotsCallback_t )
+	SteamAPICall_t ChangeNumOpenSlots( PartyBeaconID_t ulBeacon, uint32 unOpenSlots ) override;
+
+	// Turn off the beacon. 
+	bool DestroyBeacon( PartyBeaconID_t ulBeacon ) override;
+
+	// Utils
+	bool GetBeaconLocationData( SteamPartyBeaconLocation_t BeaconLocation, ESteamPartyBeaconLocationData eData, STEAM_OUT_STRING_COUNT(cchDataStringOut) char *pchDataStringOut, int cchDataStringOut ) override;
+
+private:
+    // Private constructor and destructor for singleton
+    CSteamParties();
+    ~CSteamParties();
+
+    // Delete copy constructor and assignment operator
+    CSteamParties(const CSteamParties&) = delete;
+    CSteamParties& operator=(const CSteamParties&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_MATCHMAKING_H

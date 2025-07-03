@@ -14,6 +14,15 @@
 #endif
 
 //-----------------------------------------------------------------------------
+// Purpose: avatar sizes, used in ISteamFriends::GetFriendAvatar()
+//-----------------------------------------------------------------------------
+enum EAvatarSize
+{
+	k_EAvatarSize32x32 = 0,
+	k_EAvatarSize64x64 = 1,
+};
+
+//-----------------------------------------------------------------------------
 // Purpose: interface to accessing information about individual users,
 //			that can be a friend, in a group, on a game server or in a lobby with the local user
 //-----------------------------------------------------------------------------

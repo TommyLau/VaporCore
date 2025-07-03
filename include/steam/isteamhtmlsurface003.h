@@ -38,7 +38,7 @@ public:
 	// not implement these callback handlers, the browser may appear to hang instead of
 	// navigating to new pages or triggering javascript popups.
 	//
-	CALL_RESULT( HTML_BrowserReady_t )
+	STEAM_CALL_RESULT( HTML_BrowserReady_t )
 	virtual SteamAPICall_t CreateBrowser( const char *pchUserAgent, const char *pchUserCSS ) = 0;
 
 	// Call this when you are done with a html surface, this lets us free the resources being used by it
@@ -129,7 +129,7 @@ public:
 	virtual void JSDialogResponse( HHTMLBrowser unBrowserHandle, bool bResult ) = 0;
 
 	// You MUST call this in response to a HTML_FileOpenDialog_t callback
-	IGNOREATTR()
+	STEAM_IGNOREATTR()
 	virtual void FileLoadDialogResponse( HHTMLBrowser unBrowserHandle, const char **pchSelectedFiles ) = 0;
 };
 

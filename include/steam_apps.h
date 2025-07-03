@@ -99,12 +99,15 @@ public:
 	uint32 GetAppInstallDir( AppId_t appID, char *pchFolder, uint32 cchFolderBufferSize ) override;
 	bool BIsAppInstalled( AppId_t appID ) override; // returns true if that app is installed (not necessarily owned)
 
-	CSteamID GetAppOwner() override; // returns the SteamID of the original owner. If different from current user, it's borrowed
+	// returns the SteamID of the original owner. If this CSteamID is different from ISteamUser::GetSteamID(),
+	// the user has a temporary license borrowed via Family Sharing
+	CSteamID GetAppOwner() override;
 
-	// Returns the associated launch param if the game is run via steam://run/<appid>//?param1=value1;param2=value2;param3=value3 etc.
+	// Returns the associated launch param if the game is run via steam://run/<appid>//?param1=value1&param2=value2&param3=value3 etc.
 	// Parameter names starting with the character '@' are reserved for internal use and will always return and empty string.
 	// Parameter names starting with an underscore '_' are reserved for steam features -- they can be queried by the game,
 	// but it is advised that you not param names beginning with an underscore for your own features.
+	// Check for new launch parameters on callback NewUrlLaunchParameters_t
 	const char *GetLaunchQueryParam( const char *pchKey ) override;
 
 	// get download progress for optional DLC
@@ -119,8 +122,21 @@ public:
 	// member is k_uAppIdInvalid (zero).
 	void RequestAllProofOfPurchaseKeys() override;
 
-	CALL_RESULT( FileDetailsResult_t )
+	STEAM_CALL_RESULT( FileDetailsResult_t )
 	SteamAPICall_t GetFileDetails( const char* pszFileName ) override;
+
+	// Get command line if game was launched via Steam URL, e.g. steam://run/<appid>//<command line>/.
+	// This method of passing a connect string (used when joining via rich presence, accepting an
+	// invite, etc) is preferable to passing the connect string on the operating system command
+	// line, which is a security risk.  In order for rich presence joins to go through this
+	// path and not be placed on the OS command line, you must set a value in your app's
+	// configuration on Steam.  Ask Valve for help with this.
+	//
+	// If game was already running and launched again, the NewUrlLaunchParameters_t will be fired.
+	int GetLaunchCommandLine( char *pszCommandLine, int cubCommandLine ) override;
+
+	// Check if user borrowed this game via Family Sharing, If true, call GetAppOwner() to get the lender SteamID
+	bool BIsSubscribedFromFamilySharing() override;
 
 private:
     // Private constructor and destructor for singleton

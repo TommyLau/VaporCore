@@ -37,7 +37,7 @@ CSteamInventory::~CSteamInventory()
 //  k_EResultServiceUnavailable - ERROR: service temporarily down, you may retry later
 //  k_EResultLimitExceeded - ERROR: operation would exceed per-user inventory limits
 //  k_EResultFail - ERROR: unknown / generic error
-METHOD_DESC(Find out the status of an asynchronous inventory result handle.)
+STEAM_METHOD_DESC(Find out the status of an asynchronous inventory result handle.)
 EResult CSteamInventory::GetResultStatus( SteamInventoryResult_t resultHandle )
 {
 	VLOG_INFO(__FUNCTION__ " - resultHandle: %d", resultHandle);
@@ -46,8 +46,8 @@ EResult CSteamInventory::GetResultStatus( SteamInventoryResult_t resultHandle )
 
 // Copies the contents of a result set into a flat array. The specific
 // contents of the result set depend on which query which was used.
-METHOD_DESC(Copies the contents of a result set into a flat array. The specific contents of the result set depend on which query which was used.)
-bool CSteamInventory::GetResultItems( SteamInventoryResult_t resultHandle, OUT_ARRAY_COUNT( punOutItemsArraySize,Output array) SteamItemDetails_t *pOutItemsArray, uint32 *punOutItemsArraySize )
+STEAM_METHOD_DESC(Copies the contents of a result set into a flat array. The specific contents of the result set depend on which query which was used.)
+bool CSteamInventory::GetResultItems( SteamInventoryResult_t resultHandle, STEAM_OUT_ARRAY_COUNT( punOutItemsArraySize,Output array) SteamItemDetails_t *pOutItemsArray, uint32 *punOutItemsArraySize )
 {
 	VLOG_INFO(__FUNCTION__ " - resultHandle: %d, pOutItemsArray: %p, punOutItemsArraySize: %d", resultHandle, pOutItemsArray, punOutItemsArraySize);
 	return false;
@@ -68,7 +68,7 @@ bool CSteamInventory::GetResultItems( SteamInventoryResult_t resultHandle, OUT_A
 bool CSteamInventory::GetResultItemProperty( SteamInventoryResult_t resultHandle, 
 							uint32 unItemIndex, 
 							const char *pchPropertyName,
-							OUT_STRING_COUNT( punValueBufferSizeOut ) char *pchValueBuffer, uint32 *punValueBufferSizeOut )
+							STEAM_OUT_STRING_COUNT( punValueBufferSizeOut ) char *pchValueBuffer, uint32 *punValueBufferSizeOut )
 {
 	VLOG_INFO(__FUNCTION__ " - resultHandle: %d, unItemIndex: %d, pchPropertyName: %s", 
 		resultHandle, unItemIndex, pchPropertyName ? pchPropertyName : "NULL");
@@ -77,7 +77,7 @@ bool CSteamInventory::GetResultItemProperty( SteamInventoryResult_t resultHandle
 
 // Returns the server time at which the result was generated. Compare against
 // the value of IClientUtils::GetServerRealTime() to determine age.
-METHOD_DESC(Returns the server time at which the result was generated. Compare against the value of IClientUtils::GetServerRealTime() to determine age.)
+STEAM_METHOD_DESC(Returns the server time at which the result was generated. Compare against the value of IClientUtils::GetServerRealTime() to determine age.)
 uint32 CSteamInventory::GetResultTimestamp( SteamInventoryResult_t resultHandle )
 {
 	VLOG_INFO(__FUNCTION__ " - resultHandle: %d", resultHandle);
@@ -87,7 +87,7 @@ uint32 CSteamInventory::GetResultTimestamp( SteamInventoryResult_t resultHandle 
 // Returns true if the result belongs to the target steam ID, false if the
 // result does not. This is important when using DeserializeResult, to verify
 // that a remote player is not pretending to have a different user's inventory.
-METHOD_DESC(Returns true if the result belongs to the target steam ID or false if the result does not. This is important when using DeserializeResult to verify that a remote player is not pretending to have a different users inventory.)
+STEAM_METHOD_DESC(Returns true if the result belongs to the target steam ID or false if the result does not. This is important when using DeserializeResult to verify that a remote player is not pretending to have a different users inventory.)
 bool CSteamInventory::CheckResultSteamID( SteamInventoryResult_t resultHandle, CSteamID steamIDExpected )
 {
 	VLOG_INFO(__FUNCTION__ " - resultHandle: %d, steamIDExpected: %d", resultHandle, steamIDExpected);
@@ -95,7 +95,7 @@ bool CSteamInventory::CheckResultSteamID( SteamInventoryResult_t resultHandle, C
 }
 
 // Destroys a result handle and frees all associated memory.
-METHOD_DESC(Destroys a result handle and frees all associated memory.)
+STEAM_METHOD_DESC(Destroys a result handle and frees all associated memory.)
 void CSteamInventory::DestroyResult( SteamInventoryResult_t resultHandle )
 {
 	VLOG_INFO(__FUNCTION__ " - resultHandle: %d", resultHandle);
@@ -111,7 +111,7 @@ void CSteamInventory::DestroyResult( SteamInventoryResult_t resultHandle )
 // cached results if called too frequently. It is suggested that you call
 // this function only when you are about to display the user's full inventory,
 // or if you expect that the inventory may have changed.
-METHOD_DESC(Captures the entire state of the current users Steam inventory.)
+STEAM_METHOD_DESC(Captures the entire state of the current users Steam inventory.)
 bool CSteamInventory::GetAllItems( SteamInventoryResult_t *pResultHandle )
 {
 	VLOG_INFO(__FUNCTION__ " - pResultHandle: %p", pResultHandle);
@@ -125,8 +125,8 @@ bool CSteamInventory::GetAllItems( SteamInventoryResult_t *pResultHandle )
 // For example, you could call GetItemsByID with the IDs of the user's
 // currently equipped cosmetic items and serialize this to a buffer, and
 // then transmit this buffer to other players upon joining a game.
-METHOD_DESC(Captures the state of a subset of the current users Steam inventory identified by an array of item instance IDs.)
-bool CSteamInventory::GetItemsByID( SteamInventoryResult_t *pResultHandle, ARRAY_COUNT( unCountInstanceIDs ) const SteamItemInstanceID_t *pInstanceIDs, uint32 unCountInstanceIDs )
+STEAM_METHOD_DESC(Captures the state of a subset of the current users Steam inventory identified by an array of item instance IDs.)
+bool CSteamInventory::GetItemsByID( SteamInventoryResult_t *pResultHandle, STEAM_ARRAY_COUNT( unCountInstanceIDs ) const SteamItemInstanceID_t *pInstanceIDs, uint32 unCountInstanceIDs )
 {
 	VLOG_INFO(__FUNCTION__ " - pResultHandle: %p, pInstanceIDs: %p, unCountInstanceIDs: %d", pResultHandle, pInstanceIDs, unCountInstanceIDs);
 	return false;
@@ -147,7 +147,7 @@ bool CSteamInventory::GetItemsByID( SteamInventoryResult_t *pResultHandle, ARRAY
 // recommended to use "GetItemsByID" first to create a minimal result set.
 // Results have a built-in timestamp which will be considered "expired" after
 // an hour has elapsed. See DeserializeResult for expiration handling.
-bool CSteamInventory::SerializeResult( SteamInventoryResult_t resultHandle, OUT_BUFFER_COUNT(punOutBufferSize) void *pOutBuffer, uint32 *punOutBufferSize )
+bool CSteamInventory::SerializeResult( SteamInventoryResult_t resultHandle, STEAM_OUT_BUFFER_COUNT(punOutBufferSize) void *pOutBuffer, uint32 *punOutBufferSize )
 {
 	VLOG_INFO(__FUNCTION__ " - resultHandle: %d, pOutBuffer: %p, punOutBufferSize: %p", resultHandle, pOutBuffer, punOutBufferSize);
 	return false;
@@ -169,7 +169,7 @@ bool CSteamInventory::SerializeResult( SteamInventoryResult_t resultHandle, OUT_
 // ISteamUtils::GetServerRealTime() to determine how old the data is. You could
 // simply ignore the "expired" result code and continue as normal, or you
 // could challenge the player with expired data to send an updated result set.
-bool CSteamInventory::DeserializeResult( SteamInventoryResult_t *pOutResultHandle, BUFFER_COUNT(punOutBufferSize) const void *pBuffer, uint32 unBufferSize, bool bRESERVED_MUST_BE_FALSE )
+bool CSteamInventory::DeserializeResult( SteamInventoryResult_t *pOutResultHandle, STEAM_BUFFER_COUNT(punOutBufferSize) const void *pBuffer, uint32 unBufferSize, bool bRESERVED_MUST_BE_FALSE )
 {
 	VLOG_INFO(__FUNCTION__ " - pOutResultHandle: %p, pBuffer: %p, unBufferSize: %d, bRESERVED_MUST_BE_FALSE: %d", pOutResultHandle, pBuffer, unBufferSize, bRESERVED_MUST_BE_FALSE);
 	return false;
@@ -184,7 +184,7 @@ bool CSteamInventory::DeserializeResult( SteamInventoryResult_t *pOutResultHandl
 // for your game.
 // If punArrayQuantity is not NULL, it should be the same length as pArrayItems and should
 // describe the quantity of each item to generate.
-bool CSteamInventory::GenerateItems( SteamInventoryResult_t *pResultHandle, ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, ARRAY_COUNT(unArrayLength) const uint32 *punArrayQuantity, uint32 unArrayLength )
+bool CSteamInventory::GenerateItems( SteamInventoryResult_t *pResultHandle, STEAM_ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, STEAM_ARRAY_COUNT(unArrayLength) const uint32 *punArrayQuantity, uint32 unArrayLength )
 {
 	VLOG_INFO(__FUNCTION__ " - pResultHandle: %p, pArrayItemDefs: %p, punArrayQuantity: %p, unArrayLength: %d", pResultHandle, pArrayItemDefs, punArrayQuantity, unArrayLength);
 	return false;
@@ -194,7 +194,7 @@ bool CSteamInventory::GenerateItems( SteamInventoryResult_t *pResultHandle, ARRA
 // and grants the items (one time only).  On success, the result set will include items which
 // were granted, if any. If no items were granted because the user isn't eligible for any
 // promotions, this is still considered a success.
-METHOD_DESC(GrantPromoItems() checks the list of promotional items for which the user may be eligible and grants the items (one time only).)
+STEAM_METHOD_DESC(GrantPromoItems() checks the list of promotional items for which the user may be eligible and grants the items (one time only).)
 bool CSteamInventory::GrantPromoItems( SteamInventoryResult_t *pResultHandle )
 {
 	VLOG_INFO(__FUNCTION__ " - pResultHandle: %p", pResultHandle);
@@ -211,7 +211,7 @@ bool CSteamInventory::AddPromoItem( SteamInventoryResult_t *pResultHandle, Steam
 	return false;
 }
 
-bool CSteamInventory::AddPromoItems( SteamInventoryResult_t *pResultHandle, ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, uint32 unArrayLength )
+bool CSteamInventory::AddPromoItems( SteamInventoryResult_t *pResultHandle, STEAM_ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, uint32 unArrayLength )
 {
 	VLOG_INFO(__FUNCTION__ " - pResultHandle: %p, pArrayItemDefs: %p, unArrayLength: %d", pResultHandle, pArrayItemDefs, unArrayLength);
 	return false;
@@ -220,7 +220,7 @@ bool CSteamInventory::AddPromoItems( SteamInventoryResult_t *pResultHandle, ARRA
 // ConsumeItem() removes items from the inventory, permanently. They cannot be recovered.
 // Not for the faint of heart - if your game implements item removal at all, a high-friction
 // UI confirmation process is highly recommended.
-METHOD_DESC(ConsumeItem() removes items from the inventory permanently.)
+STEAM_METHOD_DESC(ConsumeItem() removes items from the inventory permanently.)
 bool CSteamInventory::ConsumeItem( SteamInventoryResult_t *pResultHandle, SteamItemInstanceID_t itemConsume, uint32 unQuantity )
 {
 	VLOG_INFO(__FUNCTION__ " - pResultHandle: %p, itemConsume: %llu, unQuantity: %d", pResultHandle, itemConsume, unQuantity);
@@ -235,7 +235,7 @@ bool CSteamInventory::ConsumeItem( SteamInventoryResult_t *pResultHandle, SteamI
 // Exchange recipes are evaluated atomically by the Inventory Service; if the supplied
 // components do not match the recipe, or do not contain sufficient quantity, the 
 // exchange will fail.
-bool CSteamInventory::ExchangeItems( SteamInventoryResult_t *pResultHandle, ARRAY_COUNT(unArrayGenerateLength) const SteamItemDef_t *pArrayGenerate, ARRAY_COUNT(unArrayGenerateLength) const uint32 *punArrayGenerateQuantity, uint32 unArrayGenerateLength, ARRAY_COUNT(unArrayDestroyLength) const SteamItemInstanceID_t *pArrayDestroy, ARRAY_COUNT(unArrayDestroyLength) const uint32 *punArrayDestroyQuantity, uint32 unArrayDestroyLength )
+bool CSteamInventory::ExchangeItems( SteamInventoryResult_t *pResultHandle, STEAM_ARRAY_COUNT(unArrayGenerateLength) const SteamItemDef_t *pArrayGenerate, STEAM_ARRAY_COUNT(unArrayGenerateLength) const uint32 *punArrayGenerateQuantity, uint32 unArrayGenerateLength, STEAM_ARRAY_COUNT(unArrayDestroyLength) const SteamItemInstanceID_t *pArrayDestroy, STEAM_ARRAY_COUNT(unArrayDestroyLength) const uint32 *punArrayDestroyQuantity, uint32 unArrayDestroyLength )
 {
 	VLOG_INFO(__FUNCTION__ " - pResultHandle: %p, pArrayGenerate: %p, punArrayGenerateQuantity: %p, unArrayGenerateLength: %d, pArrayDestroy: %p, punArrayDestroyQuantity: %p, unArrayDestroyLength: %d", pResultHandle, pArrayGenerate, punArrayGenerateQuantity, unArrayGenerateLength, pArrayDestroy, punArrayDestroyQuantity, unArrayDestroyLength);
 	return false;
@@ -255,7 +255,7 @@ bool CSteamInventory::TransferItemQuantity( SteamInventoryResult_t *pResultHandl
 //
 
 // Deprecated. Calling this method is not required for proper playtime accounting.
-METHOD_DESC( Deprecated method. Playtime accounting is performed on the Steam servers. )
+STEAM_METHOD_DESC( Deprecated method. Playtime accounting is performed on the Steam servers. )
 void CSteamInventory::SendItemDropHeartbeat()
 {
 	VLOG_INFO(__FUNCTION__);
@@ -270,7 +270,7 @@ void CSteamInventory::SendItemDropHeartbeat()
 // to directly control rarity.
 // See your Steamworks configuration to set playtime drop rates for individual itemdefs.
 // The client library will suppress too-frequent calls to this method.
-METHOD_DESC(Playtime credit must be consumed and turned into item drops by your game.)
+STEAM_METHOD_DESC(Playtime credit must be consumed and turned into item drops by your game.)
 bool CSteamInventory::TriggerItemDrop( SteamInventoryResult_t *pResultHandle, SteamItemDef_t dropListDefinition )
 {
 	VLOG_INFO(__FUNCTION__ " - pResultHandle: %p, dropListDefinition: %d", pResultHandle, dropListDefinition);
@@ -278,7 +278,7 @@ bool CSteamInventory::TriggerItemDrop( SteamInventoryResult_t *pResultHandle, St
 }
 
 // Deprecated. This method is not supported.
-bool CSteamInventory::TradeItems( SteamInventoryResult_t *pResultHandle, CSteamID steamIDTradePartner, ARRAY_COUNT(nArrayGiveLength) const SteamItemInstanceID_t *pArrayGive, ARRAY_COUNT(nArrayGiveLength) const uint32 *pArrayGiveQuantity, uint32 nArrayGiveLength, ARRAY_COUNT(nArrayGetLength) const SteamItemInstanceID_t *pArrayGet, ARRAY_COUNT(nArrayGetLength) const uint32 *pArrayGetQuantity, uint32 nArrayGetLength )
+bool CSteamInventory::TradeItems( SteamInventoryResult_t *pResultHandle, CSteamID steamIDTradePartner, STEAM_ARRAY_COUNT(nArrayGiveLength) const SteamItemInstanceID_t *pArrayGive, STEAM_ARRAY_COUNT(nArrayGiveLength) const uint32 *pArrayGiveQuantity, uint32 nArrayGiveLength, STEAM_ARRAY_COUNT(nArrayGetLength) const SteamItemInstanceID_t *pArrayGet, STEAM_ARRAY_COUNT(nArrayGetLength) const uint32 *pArrayGetQuantity, uint32 nArrayGetLength )
 {
 	VLOG_INFO(__FUNCTION__ " - pResultHandle: %p, steamIDTradePartner: %d, pArrayGive: %p, pArrayGiveQuantity: %p, nArrayGiveLength: %d, pArrayGet: %p, pArrayGetQuantity: %p, nArrayGetLength: %d", pResultHandle, steamIDTradePartner, pArrayGive, pArrayGiveQuantity, nArrayGiveLength, pArrayGet, pArrayGetQuantity, nArrayGetLength);
 	return false;
@@ -298,7 +298,7 @@ bool CSteamInventory::TradeItems( SteamInventoryResult_t *pResultHandle, CSteamI
 // Every time new item definitions are available (eg, from the dynamic addition of new
 // item types while players are still in-game), a SteamInventoryDefinitionUpdate_t
 // callback will be fired.
-METHOD_DESC(LoadItemDefinitions triggers the automatic load and refresh of item definitions.)
+STEAM_METHOD_DESC(LoadItemDefinitions triggers the automatic load and refresh of item definitions.)
 bool CSteamInventory::LoadItemDefinitions()
 {
 	VLOG_INFO(__FUNCTION__);
@@ -310,7 +310,9 @@ bool CSteamInventory::LoadItemDefinitions()
 // If pItemDefIDs is null, the call will return true and *punItemDefIDsArraySize will
 // contain the total size necessary for a subsequent call. Otherwise, the call will
 // return false if and only if there is not enough space in the output array.
-bool CSteamInventory::GetItemDefinitionIDs( OUT_ARRAY_COUNT(punItemDefIDsArraySize,List of item definition IDs) SteamItemDef_t *pItemDefIDs, DESC(Size of array is passed in and actual size used is returned in this param) uint32 *punItemDefIDsArraySize )
+bool CSteamInventory::GetItemDefinitionIDs(
+                                            STEAM_OUT_ARRAY_COUNT(punItemDefIDsArraySize,List of item definition IDs) SteamItemDef_t *pItemDefIDs,
+											STEAM_DESC(Size of array is passed in and actual size used is returned in this param) uint32 *punItemDefIDsArraySize )
 {
 	VLOG_INFO(__FUNCTION__ " - pItemDefIDs: %p, punItemDefIDsArraySize: %p", pItemDefIDs, punItemDefIDsArraySize);
 	return false;
@@ -325,9 +327,10 @@ bool CSteamInventory::GetItemDefinitionIDs( OUT_ARRAY_COUNT(punItemDefIDsArraySi
 // suggested buffer size. Otherwise it will be the number of bytes actually copied
 // to pchValueBuffer. If the results do not fit in the given buffer, partial 
 // results may be copied.
-bool CSteamInventory::GetItemDefinitionProperty( SteamItemDef_t iDefinition, const char *pchPropertyName, OUT_STRING_COUNT(punValueBufferSizeOut) char *pchValueBuffer, uint32 *punValueBufferSize )
+bool CSteamInventory::GetItemDefinitionProperty( SteamItemDef_t iDefinition, const char *pchPropertyName,
+                                                 STEAM_OUT_STRING_COUNT(punValueBufferSizeOut) char *pchValueBuffer, uint32 *punValueBufferSizeOut )
 {
-	VLOG_INFO(__FUNCTION__ " - iDefinition: %d, pchPropertyName: %s, pchValueBuffer: %p, punValueBufferSize: %p", iDefinition, pchPropertyName ? pchPropertyName : "NULL", pchValueBuffer, punValueBufferSize);
+	VLOG_INFO(__FUNCTION__ " - iDefinition: %d, pchPropertyName: %s, pchValueBuffer: %p, punValueBufferSize: %p", iDefinition, pchPropertyName ? pchPropertyName : "NULL", pchValueBuffer, punValueBufferSizeOut);
 	return false;
 }
 
@@ -345,8 +348,8 @@ SteamAPICall_t CSteamInventory::RequestEligiblePromoItemDefinitionsIDs( CSteamID
 // manually granted via the AddPromoItems() call.
 bool CSteamInventory::GetEligiblePromoItemDefinitionIDs(
     CSteamID steamID,
-    OUT_ARRAY_COUNT(punItemDefIDsArraySize,List of item definition IDs) SteamItemDef_t *pItemDefIDs,
-    DESC(Size of array is passed in and actual size used is returned in this param) uint32 *punItemDefIDsArraySize )
+    STEAM_OUT_ARRAY_COUNT(punItemDefIDsArraySize,List of item definition IDs) SteamItemDef_t *pItemDefIDs,
+    STEAM_DESC(Size of array is passed in and actual size used is returned in this param) uint32 *punItemDefIDsArraySize )
 {
     VLOG_INFO(__FUNCTION__ " - steamID: %llu, pItemDefIDs: %p, punItemDefIDsArraySize: %p", 
               steamID.ConvertToUint64(), pItemDefIDs, punItemDefIDsArraySize);
@@ -358,7 +361,7 @@ bool CSteamInventory::GetEligiblePromoItemDefinitionIDs(
 // 
 // Once the purchase has been authorized and completed by the user, the callback SteamInventoryResultReady_t 
 // will be posted.
-SteamAPICall_t CSteamInventory::StartPurchase( ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, ARRAY_COUNT(unArrayLength) const uint32 *punArrayQuantity, uint32 unArrayLength )
+SteamAPICall_t CSteamInventory::StartPurchase( STEAM_ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, STEAM_ARRAY_COUNT(unArrayLength) const uint32 *punArrayQuantity, uint32 unArrayLength )
 {
     VLOG_INFO(__FUNCTION__ " - pArrayItemDefs: %p, punArrayQuantity: %p, unArrayLength: %d", pArrayItemDefs, punArrayQuantity, unArrayLength);
     return k_uAPICallInvalid;
@@ -380,20 +383,37 @@ uint32 CSteamInventory::GetNumItemsWithPrices()
 
 // Returns item definition ids and their prices in the user's local currency.
 // Need to call RequestPrices() first.
-bool CSteamInventory::GetItemsWithPrices( ARRAY_COUNT(unArrayLength) OUT_ARRAY_COUNT(pArrayItemDefs, Items with prices) SteamItemDef_t *pArrayItemDefs,
-                                         ARRAY_COUNT(unArrayLength) OUT_ARRAY_COUNT(pPrices, List of prices for the given item defs) uint64 *pPrices,
-                                         uint32 unArrayLength )
+bool CSteamInventory::GetItemsWithPrices( STEAM_ARRAY_COUNT(unArrayLength) STEAM_OUT_ARRAY_COUNT(pArrayItemDefs, Items with prices) SteamItemDef_t *pArrayItemDefs,
+                                          STEAM_ARRAY_COUNT(unArrayLength) STEAM_OUT_ARRAY_COUNT(pPrices, List of prices for the given item defs) uint64 *pCurrentPrices,
+                                          STEAM_ARRAY_COUNT(unArrayLength) STEAM_OUT_ARRAY_COUNT(pPrices, List of prices for the given item defs) uint64 *pBasePrices,
+                                          uint32 unArrayLength )
+{
+    VLOG_INFO(__FUNCTION__ " - pArrayItemDefs: %p, pCurrentPrices: %p, pBasePrices: %p, unArrayLength: %d", pArrayItemDefs, pCurrentPrices, pBasePrices, unArrayLength);
+    return false;
+}
+
+// Changed from Steam SDK v1.43, backward compatibility
+bool CSteamInventory::GetItemsWithPrices( STEAM_ARRAY_COUNT(unArrayLength) STEAM_OUT_ARRAY_COUNT(pArrayItemDefs, Items with prices) SteamItemDef_t *pArrayItemDefs,
+                                          STEAM_ARRAY_COUNT(unArrayLength) STEAM_OUT_ARRAY_COUNT(pPrices, List of prices for the given item defs) uint64 *pPrices,
+                                          uint32 unArrayLength )
 {
     VLOG_INFO(__FUNCTION__ " - pArrayItemDefs: %p, pPrices: %p, unArrayLength: %d", pArrayItemDefs, pPrices, unArrayLength);
-    return false;
+    return GetItemsWithPrices(pArrayItemDefs, pPrices, nullptr, unArrayLength);
 }
 
 // Retrieves the price for the item definition id
 // Returns false if there is no price stored for the item definition.
+bool CSteamInventory::GetItemPrice( SteamItemDef_t iDefinition, uint64 *pCurrentPrice, uint64 *pBasePrice )
+{
+    VLOG_INFO(__FUNCTION__ " - iDefinition: %d, pCurrentPrice: %p, pBasePrice: %p", iDefinition, pCurrentPrice, pBasePrice);
+    return false;
+}
+
+// Changed from Steam SDK v1.43, backward compatibility
 bool CSteamInventory::GetItemPrice( SteamItemDef_t iDefinition, uint64 *pPrice )
 {
     VLOG_INFO(__FUNCTION__ " - iDefinition: %d, pPrice: %p", iDefinition, pPrice);
-    return false;
+    return GetItemPrice(iDefinition, pPrice, nullptr);
 }
 
 // Create a request to update properties on items

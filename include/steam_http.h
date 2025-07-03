@@ -16,13 +16,15 @@
 #include <isteamclient.h>
 #include <isteamhttp.h>
 #include <isteamhttp001.h>
+#include <isteamhttp002.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to http client
 //-----------------------------------------------------------------------------
 class CSteamHTTP :
     public ISteamHTTP,
-    public ISteamHTTP001
+    public ISteamHTTP001,
+    public ISteamHTTP002
 {
 public:
 	// Singleton accessor

@@ -129,7 +129,7 @@ bool CSteamHTTP::GetHTTPResponseBodySize( HTTPRequestHandle hRequest, uint32 *un
 }
 
 // Gets the body data from a HTTP response given a handle from HTTPRequestCompleted_t, will return false if the 
-// handle is invalid or if the provided buffer is not the correct size.  Use BGetHTTPResponseBodySize first to find out
+// handle is invalid or is to a streaming response, or if the provided buffer is not the correct size.  Use BGetHTTPResponseBodySize first to find out
 // the correct buffer size to use.
 bool CSteamHTTP::GetHTTPResponseBodyData( HTTPRequestHandle hRequest, uint8 *pBodyDataBuffer, uint32 unBufferSize )
 {

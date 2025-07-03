@@ -16,13 +16,15 @@
 #include <isteamclient.h>
 #include <isteaminventory.h>
 #include <isteaminventory001.h>
+#include <isteaminventory002.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Steam Inventory query and manipulation API
 //-----------------------------------------------------------------------------
 class CSteamInventory :
 	public ISteamInventory,
-    public ISteamInventory001
+    public ISteamInventory001,
+    public ISteamInventory002
 {
 public:
 	// Singleton accessor
@@ -48,14 +50,14 @@ public:
 	//  k_EResultServiceUnavailable - ERROR: service temporarily down, you may retry later
 	//  k_EResultLimitExceeded - ERROR: operation would exceed per-user inventory limits
 	//  k_EResultFail - ERROR: unknown / generic error
-	METHOD_DESC(Find out the status of an asynchronous inventory result handle.)
+	STEAM_METHOD_DESC(Find out the status of an asynchronous inventory result handle.)
 	EResult GetResultStatus( SteamInventoryResult_t resultHandle ) override;
 
 	// Copies the contents of a result set into a flat array. The specific
 	// contents of the result set depend on which query which was used.
-	METHOD_DESC(Copies the contents of a result set into a flat array. The specific contents of the result set depend on which query which was used.)
+	STEAM_METHOD_DESC(Copies the contents of a result set into a flat array. The specific contents of the result set depend on which query which was used.)
 	bool GetResultItems( SteamInventoryResult_t resultHandle,
-                         OUT_ARRAY_COUNT( punOutItemsArraySize,Output array) SteamItemDetails_t *pOutItemsArray,
+                         STEAM_OUT_ARRAY_COUNT( punOutItemsArraySize,Output array) SteamItemDetails_t *pOutItemsArray,
                          uint32 *punOutItemsArraySize ) override;
 
 	// In combination with GetResultItems, you can use GetResultItemProperty to retrieve
@@ -73,21 +75,21 @@ public:
 	bool GetResultItemProperty( SteamInventoryResult_t resultHandle, 
 	                            uint32 unItemIndex, 
                                 const char *pchPropertyName,
-                                OUT_STRING_COUNT( punValueBufferSizeOut ) char *pchValueBuffer, uint32 *punValueBufferSizeOut ) override;
+                                STEAM_OUT_STRING_COUNT( punValueBufferSizeOut ) char *pchValueBuffer, uint32 *punValueBufferSizeOut ) override;
 
 	// Returns the server time at which the result was generated. Compare against
 	// the value of IClientUtils::GetServerRealTime() to determine age.
-	METHOD_DESC(Returns the server time at which the result was generated. Compare against the value of IClientUtils::GetServerRealTime() to determine age.)
+	STEAM_METHOD_DESC(Returns the server time at which the result was generated. Compare against the value of IClientUtils::GetServerRealTime() to determine age.)
 	uint32 GetResultTimestamp( SteamInventoryResult_t resultHandle ) override;
 
 	// Returns true if the result belongs to the target steam ID, false if the
 	// result does not. This is important when using DeserializeResult, to verify
 	// that a remote player is not pretending to have a different user's inventory.
-	METHOD_DESC(Returns true if the result belongs to the target steam ID or false if the result does not. This is important when using DeserializeResult to verify that a remote player is not pretending to have a different users inventory.)
+	STEAM_METHOD_DESC(Returns true if the result belongs to the target steam ID or false if the result does not. This is important when using DeserializeResult to verify that a remote player is not pretending to have a different users inventory.)
 	bool CheckResultSteamID( SteamInventoryResult_t resultHandle, CSteamID steamIDExpected ) override;
 
 	// Destroys a result handle and frees all associated memory.
-	METHOD_DESC(Destroys a result handle and frees all associated memory.)
+	STEAM_METHOD_DESC(Destroys a result handle and frees all associated memory.)
 	void DestroyResult( SteamInventoryResult_t resultHandle ) override;
 
 
@@ -101,7 +103,7 @@ public:
 	// cached results if called too frequently. It is suggested that you call
 	// this function only when you are about to display the user's full inventory,
 	// or if you expect that the inventory may have changed.
-	METHOD_DESC(Captures the entire state of the current users Steam inventory.)
+	STEAM_METHOD_DESC(Captures the entire state of the current users Steam inventory.)
 	bool GetAllItems( SteamInventoryResult_t *pResultHandle ) override;
 
 
@@ -112,8 +114,8 @@ public:
 	// For example, you could call GetItemsByID with the IDs of the user's
 	// currently equipped cosmetic items and serialize this to a buffer, and
 	// then transmit this buffer to other players upon joining a game.
-	METHOD_DESC(Captures the state of a subset of the current users Steam inventory identified by an array of item instance IDs.)
-	bool GetItemsByID( SteamInventoryResult_t *pResultHandle, ARRAY_COUNT( unCountInstanceIDs ) const SteamItemInstanceID_t *pInstanceIDs, uint32 unCountInstanceIDs ) override;
+	STEAM_METHOD_DESC(Captures the state of a subset of the current users Steam inventory identified by an array of item instance IDs.)
+	bool GetItemsByID( SteamInventoryResult_t *pResultHandle, STEAM_ARRAY_COUNT( unCountInstanceIDs ) const SteamItemInstanceID_t *pInstanceIDs, uint32 unCountInstanceIDs ) override;
 
 
 	// RESULT SERIALIZATION AND AUTHENTICATION
@@ -131,7 +133,7 @@ public:
 	// recommended to use "GetItemsByID" first to create a minimal result set.
 	// Results have a built-in timestamp which will be considered "expired" after
 	// an hour has elapsed. See DeserializeResult for expiration handling.
-	bool SerializeResult( SteamInventoryResult_t resultHandle, OUT_BUFFER_COUNT(punOutBufferSize) void *pOutBuffer, uint32 *punOutBufferSize ) override;
+	bool SerializeResult( SteamInventoryResult_t resultHandle, STEAM_OUT_BUFFER_COUNT(punOutBufferSize) void *pOutBuffer, uint32 *punOutBufferSize ) override;
 
 	// Deserializes a result set and verifies the signature bytes. Returns false
 	// if bRequireFullOnlineVerify is set but Steam is running in Offline mode.
@@ -149,7 +151,7 @@ public:
 	// ISteamUtils::GetServerRealTime() to determine how old the data is. You could
 	// simply ignore the "expired" result code and continue as normal, or you
 	// could challenge the player with expired data to send an updated result set.
-	bool DeserializeResult( SteamInventoryResult_t *pOutResultHandle, BUFFER_COUNT(punOutBufferSize) const void *pBuffer, uint32 unBufferSize, bool bRESERVED_MUST_BE_FALSE = false ) override;
+	bool DeserializeResult( SteamInventoryResult_t *pOutResultHandle, STEAM_BUFFER_COUNT(punOutBufferSize) const void *pBuffer, uint32 unBufferSize, bool bRESERVED_MUST_BE_FALSE = false ) override;
 
 	
 	// INVENTORY ASYNC MODIFICATION
@@ -161,13 +163,13 @@ public:
 	// for your game.
 	// If punArrayQuantity is not NULL, it should be the same length as pArrayItems and should
 	// describe the quantity of each item to generate.
-	bool GenerateItems( SteamInventoryResult_t *pResultHandle, ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, ARRAY_COUNT(unArrayLength) const uint32 *punArrayQuantity, uint32 unArrayLength ) override;
+	bool GenerateItems( SteamInventoryResult_t *pResultHandle, STEAM_ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, STEAM_ARRAY_COUNT(unArrayLength) const uint32 *punArrayQuantity, uint32 unArrayLength ) override;
 
 	// GrantPromoItems() checks the list of promotional items for which the user may be eligible
 	// and grants the items (one time only).  On success, the result set will include items which
 	// were granted, if any. If no items were granted because the user isn't eligible for any
 	// promotions, this is still considered a success.
-	METHOD_DESC(GrantPromoItems() checks the list of promotional items for which the user may be eligible and grants the items (one time only).)
+	STEAM_METHOD_DESC(GrantPromoItems() checks the list of promotional items for which the user may be eligible and grants the items (one time only).)
 	bool GrantPromoItems( SteamInventoryResult_t *pResultHandle ) override;
 
 	// AddPromoItem() / AddPromoItems() are restricted versions of GrantPromoItems(). Instead of
@@ -175,12 +177,12 @@ public:
 	// definition or set of item definitions. This can be useful if your game has custom UI for
 	// showing a specific promo item to the user.
 	bool AddPromoItem( SteamInventoryResult_t *pResultHandle, SteamItemDef_t itemDef ) override;
-	bool AddPromoItems( SteamInventoryResult_t *pResultHandle, ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, uint32 unArrayLength ) override;
+	bool AddPromoItems( SteamInventoryResult_t *pResultHandle, STEAM_ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, uint32 unArrayLength ) override;
 
 	// ConsumeItem() removes items from the inventory, permanently. They cannot be recovered.
 	// Not for the faint of heart - if your game implements item removal at all, a high-friction
 	// UI confirmation process is highly recommended.
-	METHOD_DESC(ConsumeItem() removes items from the inventory permanently.)
+	STEAM_METHOD_DESC(ConsumeItem() removes items from the inventory permanently.)
 	bool ConsumeItem( SteamInventoryResult_t *pResultHandle, SteamItemInstanceID_t itemConsume, uint32 unQuantity ) override;
 
 	// ExchangeItems() is an atomic combination of item generation and consumption. 
@@ -192,8 +194,8 @@ public:
 	// components do not match the recipe, or do not contain sufficient quantity, the 
 	// exchange will fail.
 	bool ExchangeItems( SteamInventoryResult_t *pResultHandle,
-                        ARRAY_COUNT(unArrayGenerateLength) const SteamItemDef_t *pArrayGenerate, ARRAY_COUNT(unArrayGenerateLength) const uint32 *punArrayGenerateQuantity, uint32 unArrayGenerateLength,
-                        ARRAY_COUNT(unArrayDestroyLength) const SteamItemInstanceID_t *pArrayDestroy, ARRAY_COUNT(unArrayDestroyLength) const uint32 *punArrayDestroyQuantity, uint32 unArrayDestroyLength ) override;
+                        STEAM_ARRAY_COUNT(unArrayGenerateLength) const SteamItemDef_t *pArrayGenerate, STEAM_ARRAY_COUNT(unArrayGenerateLength) const uint32 *punArrayGenerateQuantity, uint32 unArrayGenerateLength,
+                        STEAM_ARRAY_COUNT(unArrayDestroyLength) const SteamItemInstanceID_t *pArrayDestroy, STEAM_ARRAY_COUNT(unArrayDestroyLength) const uint32 *punArrayDestroyQuantity, uint32 unArrayDestroyLength ) override;
 	
 
 	// TransferItemQuantity() is intended for use with items which are "stackable" (can have
@@ -207,7 +209,7 @@ public:
 	//
 
 	// Deprecated. Calling this method is not required for proper playtime accounting.
-	METHOD_DESC( Deprecated method. Playtime accounting is performed on the Steam servers. )
+	STEAM_METHOD_DESC( Deprecated method. Playtime accounting is performed on the Steam servers. )
 	void SendItemDropHeartbeat() override;
 
 	// Playtime credit must be consumed and turned into item drops by your game. Only item
@@ -219,14 +221,14 @@ public:
 	// to directly control rarity.
 	// See your Steamworks configuration to set playtime drop rates for individual itemdefs.
 	// The client library will suppress too-frequent calls to this method.
-	METHOD_DESC(Playtime credit must be consumed and turned into item drops by your game.)
+	STEAM_METHOD_DESC(Playtime credit must be consumed and turned into item drops by your game.)
 	bool TriggerItemDrop( SteamInventoryResult_t *pResultHandle, SteamItemDef_t dropListDefinition ) override;
 
 
 	// Deprecated. This method is not supported.
 	bool TradeItems( SteamInventoryResult_t *pResultHandle, CSteamID steamIDTradePartner,
-                     ARRAY_COUNT(nArrayGiveLength) const SteamItemInstanceID_t *pArrayGive, ARRAY_COUNT(nArrayGiveLength) const uint32 *pArrayGiveQuantity, uint32 nArrayGiveLength,
-                     ARRAY_COUNT(nArrayGetLength) const SteamItemInstanceID_t *pArrayGet, ARRAY_COUNT(nArrayGetLength) const uint32 *pArrayGetQuantity, uint32 nArrayGetLength ) override;
+                     STEAM_ARRAY_COUNT(nArrayGiveLength) const SteamItemInstanceID_t *pArrayGive, STEAM_ARRAY_COUNT(nArrayGiveLength) const uint32 *pArrayGiveQuantity, uint32 nArrayGiveLength,
+                     STEAM_ARRAY_COUNT(nArrayGetLength) const SteamItemInstanceID_t *pArrayGet, STEAM_ARRAY_COUNT(nArrayGetLength) const uint32 *pArrayGetQuantity, uint32 nArrayGetLength ) override;
 
 
 	// ITEM DEFINITIONS
@@ -243,7 +245,7 @@ public:
 	// Every time new item definitions are available (eg, from the dynamic addition of new
 	// item types while players are still in-game), a SteamInventoryDefinitionUpdate_t
 	// callback will be fired.
-	METHOD_DESC(LoadItemDefinitions triggers the automatic load and refresh of item definitions.)
+	STEAM_METHOD_DESC(LoadItemDefinitions triggers the automatic load and refresh of item definitions.)
 	bool LoadItemDefinitions() override;
 
 	// GetItemDefinitionIDs returns the set of all defined item definition IDs (which are
@@ -252,8 +254,8 @@ public:
 	// contain the total size necessary for a subsequent call. Otherwise, the call will
 	// return false if and only if there is not enough space in the output array.
 	bool GetItemDefinitionIDs(
-                               OUT_ARRAY_COUNT(punItemDefIDsArraySize,List of item definition IDs) SteamItemDef_t *pItemDefIDs,
-                               DESC(Size of array is passed in and actual size used is returned in this param) uint32 *punItemDefIDsArraySize ) override;
+                               STEAM_OUT_ARRAY_COUNT(punItemDefIDsArraySize,List of item definition IDs) SteamItemDef_t *pItemDefIDs,
+                               STEAM_DESC(Size of array is passed in and actual size used is returned in this param) uint32 *punItemDefIDsArraySize ) override;
 
 	// GetItemDefinitionProperty returns a string property from a given item definition.
 	// Note that some properties (for example, "name") may be localized and will depend
@@ -265,12 +267,12 @@ public:
 	// to pchValueBuffer. If the results do not fit in the given buffer, partial 
 	// results may be copied.
 	bool GetItemDefinitionProperty( SteamItemDef_t iDefinition, const char *pchPropertyName,
-                                    OUT_STRING_COUNT(punValueBufferSizeOut) char *pchValueBuffer, uint32 *punValueBufferSizeOut ) override;
+                                    STEAM_OUT_STRING_COUNT(punValueBufferSizeOut) char *pchValueBuffer, uint32 *punValueBufferSizeOut ) override;
 
 	// Request the list of "eligible" promo items that can be manually granted to the given
 	// user.  These are promo items of type "manual" that won't be granted automatically.
 	// An example usage of this is an item that becomes available every week.
-	CALL_RESULT( SteamInventoryEligiblePromoItemDefIDs_t )
+	STEAM_CALL_RESULT( SteamInventoryEligiblePromoItemDefIDs_t )
 	SteamAPICall_t RequestEligiblePromoItemDefinitionsIDs( CSteamID steamID ) override;
 
 	// After handling a SteamInventoryEligiblePromoItemDefIDs_t call result, use this
@@ -278,19 +280,19 @@ public:
 	// manually granted via the AddPromoItems() call.
 	bool GetEligiblePromoItemDefinitionIDs(
 		CSteamID steamID,
-		OUT_ARRAY_COUNT(punItemDefIDsArraySize,List of item definition IDs) SteamItemDef_t *pItemDefIDs,
-		DESC(Size of array is passed in and actual size used is returned in this param) uint32 *punItemDefIDsArraySize ) override;
+		STEAM_OUT_ARRAY_COUNT(punItemDefIDsArraySize,List of item definition IDs) SteamItemDef_t *pItemDefIDs,
+		STEAM_DESC(Size of array is passed in and actual size used is returned in this param) uint32 *punItemDefIDsArraySize ) override;
 
 	// Starts the purchase process for the given item definitions.  The callback SteamInventoryStartPurchaseResult_t
 	// will be posted if Steam was able to initialize the transaction.
 	// 
 	// Once the purchase has been authorized and completed by the user, the callback SteamInventoryResultReady_t 
 	// will be posted.
-	CALL_RESULT( SteamInventoryStartPurchaseResult_t )
-	SteamAPICall_t StartPurchase( ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, ARRAY_COUNT(unArrayLength) const uint32 *punArrayQuantity, uint32 unArrayLength ) override;
+	STEAM_CALL_RESULT( SteamInventoryStartPurchaseResult_t )
+	SteamAPICall_t StartPurchase( STEAM_ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, STEAM_ARRAY_COUNT(unArrayLength) const uint32 *punArrayQuantity, uint32 unArrayLength ) override;
 
 	// Request current prices for all applicable item definitions
-	CALL_RESULT( SteamInventoryRequestPricesResult_t )
+	STEAM_CALL_RESULT( SteamInventoryRequestPricesResult_t )
 	SteamAPICall_t RequestPrices() override;
 
 	// Returns the number of items with prices.  Need to call RequestPrices() first.
@@ -298,12 +300,19 @@ public:
 
 	// Returns item definition ids and their prices in the user's local currency.
 	// Need to call RequestPrices() first.
-	bool GetItemsWithPrices( ARRAY_COUNT(unArrayLength) OUT_ARRAY_COUNT(pArrayItemDefs, Items with prices) SteamItemDef_t *pArrayItemDefs,
-							 ARRAY_COUNT(unArrayLength) OUT_ARRAY_COUNT(pPrices, List of prices for the given item defs) uint64 *pPrices,
+	bool GetItemsWithPrices( STEAM_ARRAY_COUNT(unArrayLength) STEAM_OUT_ARRAY_COUNT(pArrayItemDefs, Items with prices) SteamItemDef_t *pArrayItemDefs,
+							 STEAM_ARRAY_COUNT(unArrayLength) STEAM_OUT_ARRAY_COUNT(pPrices, List of prices for the given item defs) uint64 *pCurrentPrices,
+							 STEAM_ARRAY_COUNT(unArrayLength) STEAM_OUT_ARRAY_COUNT(pPrices, List of prices for the given item defs) uint64 *pBasePrices,
+							 uint32 unArrayLength ) override;
+	// Changed from Steam SDK v1.43, backward compatibility
+	bool GetItemsWithPrices( STEAM_ARRAY_COUNT(unArrayLength) STEAM_OUT_ARRAY_COUNT(pArrayItemDefs, Items with prices) SteamItemDef_t *pArrayItemDefs,
+							 STEAM_ARRAY_COUNT(unArrayLength) STEAM_OUT_ARRAY_COUNT(pPrices, List of prices for the given item defs) uint64 *pPrices,
 							 uint32 unArrayLength ) override;
 
 	// Retrieves the price for the item definition id
 	// Returns false if there is no price stored for the item definition.
+	bool GetItemPrice( SteamItemDef_t iDefinition, uint64 *pCurrentPrice, uint64 *pBasePrice ) override;
+	// Changed from Steam SDK v1.43, backward compatibility
 	bool GetItemPrice( SteamItemDef_t iDefinition, uint64 *pPrice ) override;
 
 	// Create a request to update properties on items

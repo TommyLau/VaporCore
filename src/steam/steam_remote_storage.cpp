@@ -304,7 +304,7 @@ bool CSteamRemoteStorage::GetUGCDownloadProgress( UGCHandle_t hContent, int32 *p
 }
 
 // Gets metadata for a file after it has been downloaded. This is the same metadata given in the RemoteStorageDownloadUGCResult_t call result
-bool CSteamRemoteStorage::GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, char **ppchName, int32 *pnFileSizeInBytes, OUT_STRUCT() CSteamID *pSteamIDOwner )
+bool CSteamRemoteStorage::GetUGCDetails( UGCHandle_t hContent, AppId_t *pnAppID, char **ppchName, int32 *pnFileSizeInBytes, STEAM_OUT_STRUCT() CSteamID *pSteamIDOwner )
 {
     // TODO: Implement
     VLOG_INFO(__FUNCTION__ " - Content: %d", hContent);

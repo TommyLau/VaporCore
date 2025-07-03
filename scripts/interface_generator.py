@@ -624,7 +624,7 @@ void {self.class_name}::ReleaseInstance()
     
     def _extract_parameter_name(self, param):
         """Extract the actual parameter name from a parameter declaration, ignoring annotations"""
-        # Remove annotations like OUT_ARRAY_COUNT(...), DESC(...), BUFFER_COUNT(...), etc.
+        # Remove annotations like STEAM_OUT_ARRAY_COUNT(...), DESC(...), STEAM_BUFFER_COUNT(...), etc.
         import re
         
         # Remove all annotation patterns

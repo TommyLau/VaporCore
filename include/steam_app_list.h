@@ -37,7 +37,7 @@ public:
     uint32 GetNumInstalledApps() override;
     uint32 GetInstalledApps(AppId_t* pvecAppID, uint32 unMaxAppIDs) override;
 
-    int GetAppName(AppId_t nAppID, OUT_STRING() char* pchName, int cchNameMax) override; // returns -1 if no name was found
+    int GetAppName(AppId_t nAppID, STEAM_OUT_STRING() char* pchName, int cchNameMax) override; // returns -1 if no name was found
     int GetAppInstallDir(AppId_t nAppID, char* pchDirectory, int cchNameMax) override; // returns -1 if no dir was found
 
     int GetAppBuildId(AppId_t nAppID) override; // return the buildid of this app, may change at any time based on backend updates to the game

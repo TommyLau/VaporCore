@@ -400,18 +400,14 @@ bool CSteamGameServer::RequestUserGroupStatus( CSteamID steamIDUser, CSteamID st
     return false;
 }
 
-//
-// Query steam for server data
-//
 
-// Ask for the gameplay stats for the server. Results returned in a callback
+// these two functions s are deprecated, and will not return results
+// they will be removed in a future version of the SDK
 void CSteamGameServer::GetGameplayStats( )
 {
     VLOG_INFO(__FUNCTION__);
 }
 
-// Gets the reputation score for the game server. This API also checks if the server or some
-// other server on the same IP is banned from the Steam master servers.
 SteamAPICall_t CSteamGameServer::GetServerReputation( )
 {
     VLOG_INFO(__FUNCTION__);

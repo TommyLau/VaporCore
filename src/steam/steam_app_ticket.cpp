@@ -12,40 +12,19 @@
 #include "vapor_base.h"
 #include "steam_app_ticket.h"
 
-// Static instance
-CSteamAppTicket* CSteamAppTicket::s_pInstance = nullptr;
-
 CSteamAppTicket::CSteamAppTicket()
 {
-    VLOG_INFO("CSteamAppTicket constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamAppTicket::~CSteamAppTicket()
 {
-    VLOG_INFO("CSteamAppTicket destructor called");
-}
-
-// Helper methods
-CSteamAppTicket* CSteamAppTicket::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamAppTicket();
-    }
-    return s_pInstance;
-}
-
-void CSteamAppTicket::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
+    VLOG_INFO(__FUNCTION__);
 }
 
 uint32 CSteamAppTicket::GetAppOwnershipTicketData( uint32 nAppID, void *pvBuffer, uint32 cbBufferLength, uint32 *piAppId, uint32 *piSteamId, uint32 *piSignature, uint32 *pcbSignature )
 {
-    VLOG_DEBUG("GetAppOwnershipTicketData called - AppID: %d, BufferSize: %d", nAppID, cbBufferLength);
+    VLOG_INFO(__FUNCTION__ " - AppID: %d, BufferSize: %d, piAppId: %p, piSteamId: %p, piSignature: %p, pcbSignature: %p",
+              nAppID, cbBufferLength, piAppId, piSteamId, piSignature, pcbSignature);
     return 0;
 }

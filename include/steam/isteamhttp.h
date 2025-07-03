@@ -13,7 +13,7 @@
 #pragma once
 #endif
 
-#include "isteamclient.h"
+#include "steam_api_common.h"
 #include "steamhttpenums.h"
 
 // Handle to a HTTP Request handle
@@ -131,7 +131,8 @@ public:
 	// Set the extra user agent info for a request, this doesn't clobber the normal user agent, it just adds the extra info on the end
 	virtual bool SetHTTPRequestUserAgentInfo( HTTPRequestHandle hRequest, const char *pchUserAgentInfo ) = 0;
 
-	// Set that https request should require verified SSL certificate via machines certificate trust store
+	// Disable or re-enable verification of SSL/TLS certificates.
+	// By default, certificates are checked for all HTTPS requests.
 	virtual bool SetHTTPRequestRequiresVerifiedCertificate( HTTPRequestHandle hRequest, bool bRequireVerifiedCertificate ) = 0;
 
 	// Set an absolute timeout on the HTTP request, this is just a total time timeout different than the network activity timeout
@@ -142,7 +143,17 @@ public:
 	virtual bool GetHTTPRequestWasTimedOut( HTTPRequestHandle hRequest, bool *pbWasTimedOut ) = 0;
 };
 
-#define STEAMHTTP_INTERFACE_VERSION "STEAMHTTP_INTERFACE_VERSION002"
+#define STEAMHTTP_INTERFACE_VERSION "STEAMHTTP_INTERFACE_VERSION003"
+
+#ifndef STEAM_API_EXPORTS // Added by Tommy
+// Global interface accessor
+inline ISteamHTTP *SteamHTTP();
+STEAM_DEFINE_USER_INTERFACE_ACCESSOR( ISteamHTTP *, SteamHTTP, STEAMHTTP_INTERFACE_VERSION );
+
+// Global accessor for the gameserver client
+inline ISteamHTTP *SteamGameServerHTTP();
+STEAM_DEFINE_GAMESERVER_INTERFACE_ACCESSOR( ISteamHTTP *, SteamGameServerHTTP, STEAMHTTP_INTERFACE_VERSION );
+#endif // STEAM_API_EXPORTS
 
 // callbacks
 #if defined( VALVE_CALLBACK_PACK_SMALL )
@@ -150,7 +161,7 @@ public:
 #elif defined( VALVE_CALLBACK_PACK_LARGE )
 #pragma pack( push, 8 )
 #else
-#error isteamclient.h must be included
+#error steam_api_common.h should define VALVE_CALLBACK_PACK_xxx
 #endif 
 
 struct HTTPRequestCompleted_t

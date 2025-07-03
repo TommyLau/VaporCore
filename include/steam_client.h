@@ -28,6 +28,7 @@ class ISteamUnifiedMessages;
 #include <isteamclient014.h>
 #include <isteamclient015.h>
 #include <isteamclient016.h>
+#include <isteamclient017.h>
 
 #include "steam_user.h"
 #include "steam_game_server.h"
@@ -52,6 +53,7 @@ class ISteamUnifiedMessages;
 #include "steam_inventory.h"
 #include "steam_video.h"
 #include "steam_parental_settings.h"
+#include "steam_input.h"
 
 // Steam pipe state enumeration
 enum ESteamPipe {
@@ -80,7 +82,8 @@ class CSteamClient :
     public ISteamClient012,
     public ISteamClient014,
     public ISteamClient015,
-    public ISteamClient016
+    public ISteamClient016,
+    public ISteamClient017
 {
 public:
 	// Singleton accessor
@@ -170,8 +173,11 @@ public:
 	// user screenshots
 	ISteamScreenshots *GetISteamScreenshots( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
+	// game search
+	ISteamGameSearch *GetISteamGameSearch( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
 	// Deprecated. Applications should use SteamAPI_RunCallbacks() or SteamGameServer_RunCallbacks() instead.
-	// Changed from Steam SDK v1.36, backward compatibility
+	// Deprecated from Steam SDK v1.36, backward compatibility
 	STEAM_PRIVATE_API( void RunFrame() override; )
 
 	// returns the number of IPC calls made since the last time this function was called
@@ -197,7 +203,7 @@ public:
 	// Removed from Steam SDK v1.42, backward compatibility
 	ISteamUnifiedMessages *GetISteamUnifiedMessages( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
-	// Exposes the ISteamController interface
+	// Exposes the ISteamController interface - deprecated in favor of Steam Input
 	ISteamController *GetISteamController( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
 	// Exposes the ISteamUGC interface
@@ -236,6 +242,12 @@ public:
 	// Parental controls
 	ISteamParentalSettings *GetISteamParentalSettings( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
+	// Exposes the Steam Input interface for controller support
+	ISteamInput *GetISteamInput( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	// Steam Parties interface
+	ISteamParties *GetISteamParties( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
 private:
     // Private constructor and destructor for singleton
     CSteamClient();
@@ -262,6 +274,7 @@ private:
     CSteamUtils& m_steamUtils;
     CSteamMasterServerUpdater& m_steamMasterServerUpdater;
     CSteamMatchmaking& m_steamMatchmaking;
+	CSteamGameSearch& m_steamGameSearch;
     CSteamUserStats& m_steamUserStats;
     CSteamGameServerStats& m_steamGameServerStats;
     CSteamApps& m_steamApps;
@@ -280,6 +293,8 @@ private:
     CSteamInventory& m_steamInventory;
     CSteamVideo& m_steamVideo;
     CSteamParentalSettings& m_steamParentalSettings;
+    CSteamInput& m_steamInput;
+    CSteamParties& m_steamParties;
     
     // Initialization counter
     uintp m_uCallCounter;    // Tracks API calls

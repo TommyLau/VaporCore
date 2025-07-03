@@ -51,22 +51,28 @@ public:
 
 #define STEAMMUSIC_INTERFACE_VERSION "STEAMMUSIC_INTERFACE_VERSION001"
 
+#ifndef STEAM_API_EXPORTS // Added by Tommy
+// Global interface accessor
+inline ISteamMusic *SteamMusic();
+STEAM_DEFINE_USER_INTERFACE_ACCESSOR( ISteamMusic *, SteamMusic, STEAMMUSIC_INTERFACE_VERSION );
+#endif // STEAM_API_EXPORTS
+
 // callbacks
 #if defined( VALVE_CALLBACK_PACK_SMALL )
 #pragma pack( push, 4 )
 #elif defined( VALVE_CALLBACK_PACK_LARGE )
 #pragma pack( push, 8 )
 #else
-#error isteamclient.h must be included
+#error steam_api_common.h should define VALVE_CALLBACK_PACK_xxx
 #endif 
 
 
-DEFINE_CALLBACK( PlaybackStatusHasChanged_t, k_iSteamMusicCallbacks + 1 )
-END_DEFINE_CALLBACK_0()
+STEAM_CALLBACK_BEGIN( PlaybackStatusHasChanged_t, k_iSteamMusicCallbacks + 1 )
+STEAM_CALLBACK_END(0)
 
-DEFINE_CALLBACK( VolumeHasChanged_t, k_iSteamMusicCallbacks + 2 )
- 	CALLBACK_MEMBER( 0,	float, m_flNewVolume )
-END_DEFINE_CALLBACK_1()
+STEAM_CALLBACK_BEGIN( VolumeHasChanged_t, k_iSteamMusicCallbacks + 2 )
+ 	STEAM_CALLBACK_MEMBER( 0,	float, m_flNewVolume )
+STEAM_CALLBACK_END(1)
 
 #pragma pack( pop )
 

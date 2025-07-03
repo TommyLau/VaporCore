@@ -12,16 +12,6 @@
 #include "vapor_base.h"
 #include "steam_friends.h"
 
-//-----------------------------------------------------------------------------
-// Purpose: avatar sizes, used in ISteamFriends::GetFriendAvatar()
-//-----------------------------------------------------------------------------
-// Removed from Steam SDK v1.11, backward compatibility
-enum EAvatarSize
-{
-	k_EAvatarSize32x32 = 0,
-	k_EAvatarSize64x64 = 1,
-};
-
 CSteamFriends::CSteamFriends()
 {
     VLOG_INFO(__FUNCTION__);
@@ -129,7 +119,7 @@ int CSteamFriends::GetFriendAvatar( CSteamID steamIDFriend )
 }
 
 // returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
-bool CSteamFriends::GetFriendGamePlayed( CSteamID steamIDFriend, OUT_STRUCT() FriendGameInfo_t *pFriendGameInfo )
+bool CSteamFriends::GetFriendGamePlayed( CSteamID steamIDFriend, STEAM_OUT_STRUCT() FriendGameInfo_t *pFriendGameInfo )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu, GameID: %llu", steamIDFriend.ConvertToUint64(), pFriendGameInfo->m_gameID);
     return false;
@@ -157,6 +147,7 @@ int CSteamFriends::GetFriendSteamLevel( CSteamID steamIDFriend )
 }
 
 // Returns nickname the current user has set for the specified player. Returns NULL if the no nickname has been set for that player.
+// DEPRECATED: GetPersonaName follows the Steam nickname preferences, so apps shouldn't need to care about nicknames explicitly.
 const char *CSteamFriends::GetPlayerNickname( CSteamID steamIDPlayer )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDPlayer.ConvertToUint64());
@@ -274,7 +265,8 @@ void CSteamFriends::SetInGameVoiceSpeaking( CSteamID steamIDUser, bool bSpeaking
 }
 
 // activates the game overlay, with an optional dialog to open 
-// valid options are "Friends", "Community", "Players", "Settings", "OfficialGameGroup", "Stats", "Achievements"
+// valid options include "Friends", "Community", "Players", "Settings", "OfficialGameGroup", "Stats", "Achievements",
+// "chatroomgroup/nnnn"
 void CSteamFriends::ActivateGameOverlay( const char *pchDialog )
 {
     VLOG_INFO(__FUNCTION__ " - Dialog: %s", pchDialog ? pchDialog : "null");
@@ -298,9 +290,16 @@ void CSteamFriends::ActivateGameOverlayToUser( const char *pchDialog, CSteamID s
 
 // activates game overlay web browser directly to the specified URL
 // full address with protocol type is required, e.g. http://www.steamgames.com/
+void CSteamFriends::ActivateGameOverlayToWebPage( const char *pchURL, EActivateGameOverlayToWebPageMode eMode )
+{
+    VLOG_INFO(__FUNCTION__ " - URL: %s, Mode: %d", pchURL ? pchURL : "null", eMode);
+}
+
+// Changed from Steam SDK v1.43, backward compatibility
 void CSteamFriends::ActivateGameOverlayToWebPage( const char *pchURL )
 {
     VLOG_INFO(__FUNCTION__ " - URL: %s", pchURL ? pchURL : "null");
+    ActivateGameOverlayToWebPage(pchURL, k_EActivateGameOverlayToWebPageMode_Default);
 }
 
 // activates game overlay to store page for app
@@ -450,10 +449,10 @@ void CSteamFriends::RequestFriendRichPresence( CSteamID steamIDFriend )
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDFriend.ConvertToUint64());
 }
 
-// rich invite support
-// if the target accepts the invite, the pchConnectString gets added to the command-line for launching the game
-// if the game is already running, a GameRichPresenceJoinRequested_t callback is posted containing the connect string
-// invites can only be sent to friends
+// Rich invite support.
+// If the target accepts the invite, a GameRichPresenceJoinRequested_t callback is posted containing the connect string.
+// (Or you can configure yout game so that it is passed on the command line instead.  This is a deprecated path; ask us if you really need this.)
+// Invites can only be sent to friends.
 bool CSteamFriends::InviteUserToGame( CSteamID steamIDFriend, const char *pchConnectString )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu, ConnectString: %s", steamIDFriend.ConvertToUint64(), pchConnectString ? pchConnectString : "null");
@@ -522,7 +521,7 @@ bool CSteamFriends::SendClanChatMessage( CSteamID steamIDClanChat, const char *p
     return false;
 }
 
-int CSteamFriends::GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *peChatEntryType, OUT_STRUCT() CSteamID *psteamidChatter )
+int CSteamFriends::GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *peChatEntryType, STEAM_OUT_STRUCT() CSteamID *psteamidChatter )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Message: %d", steamIDClanChat.ConvertToUint64(), iMessage);
     return 0;
@@ -602,4 +601,16 @@ bool CSteamFriends::IsClanOfficialGameGroup( CSteamID steamIDClan )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
     return false;
+}
+
+/// Return the number of chats (friends or chat rooms) with unread messages.
+/// A "priority" message is one that would generate some sort of toast or
+/// notification, and depends on user settings.
+///
+/// You can register for UnreadChatMessagesChanged_t callbacks to know when this
+/// has potentially changed.
+int CSteamFriends::GetNumChatsWithUnreadPriorityMessages()
+{
+    VLOG_INFO(__FUNCTION__);
+    return 0;
 }

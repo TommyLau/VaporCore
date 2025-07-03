@@ -151,6 +151,13 @@ S_API class ISteamScreenshots * SteamAPI_ISteamClient_GetISteamScreenshots(intpt
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamScreenshots(hSteamuser, hSteamPipe, pchVersion);
 }
 
+S_API class ISteamGameSearch * SteamAPI_ISteamClient_GetISteamGameSearch(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamGameSearch(hSteamuser, hSteamPipe, pchVersion);
+}
+
 S_API uint32 SteamAPI_ISteamClient_GetIPCCallCount(intptr_t instancePtr)
 {
     VLOG_INFO(__FUNCTION__);
@@ -240,6 +247,20 @@ S_API class ISteamParentalSettings * SteamAPI_ISteamClient_GetISteamParentalSett
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamParentalSettings(hSteamuser, hSteamPipe, pchVersion);
+}
+
+S_API class ISteamInput * SteamAPI_ISteamClient_GetISteamInput(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamInput(hSteamUser, hSteamPipe, pchVersion);
+}
+
+S_API class ISteamParties * SteamAPI_ISteamClient_GetISteamParties(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamParties(hSteamUser, hSteamPipe, pchVersion);
 }
 
 
@@ -448,6 +469,13 @@ S_API bool SteamAPI_ISteamUser_BIsPhoneRequiringVerification(intptr_t instancePt
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUser*>(instancePtr)->BIsPhoneRequiringVerification();
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUser_GetMarketEligibility(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUser*>(instancePtr)->GetMarketEligibility();
 }
 
 
@@ -665,11 +693,11 @@ S_API void SteamAPI_ISteamFriends_ActivateGameOverlayToUser(intptr_t instancePtr
     reinterpret_cast<ISteamFriends*>(instancePtr)->ActivateGameOverlayToUser(pchDialog, steamID);
 }
 
-S_API void SteamAPI_ISteamFriends_ActivateGameOverlayToWebPage(intptr_t instancePtr, const char * pchURL)
+S_API void SteamAPI_ISteamFriends_ActivateGameOverlayToWebPage(intptr_t instancePtr, const char * pchURL, EActivateGameOverlayToWebPageMode eMode)
 {
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
-    reinterpret_cast<ISteamFriends*>(instancePtr)->ActivateGameOverlayToWebPage(pchURL);
+    reinterpret_cast<ISteamFriends*>(instancePtr)->ActivateGameOverlayToWebPage(pchURL, eMode);
 }
 
 S_API void SteamAPI_ISteamFriends_ActivateGameOverlayToStore(intptr_t instancePtr, AppId_t nAppID, EOverlayToStoreFlag eFlag)
@@ -957,6 +985,13 @@ S_API bool SteamAPI_ISteamFriends_IsClanOfficialGameGroup(intptr_t instancePtr, 
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamFriends*>(instancePtr)->IsClanOfficialGameGroup(steamIDClan);
+}
+
+S_API int SteamAPI_ISteamFriends_GetNumChatsWithUnreadPriorityMessages(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamFriends*>(instancePtr)->GetNumChatsWithUnreadPriorityMessages();
 }
 
 
@@ -1657,6 +1692,198 @@ S_API void SteamAPI_ISteamMatchmakingServers_CancelServerQuery(intptr_t instance
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamMatchmakingServers*>(instancePtr)->CancelServerQuery(hServerQuery);
+}
+
+
+//-----------------------------------------------------------------------------
+// ISteamGameSearch flat API implementations
+//-----------------------------------------------------------------------------
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_AddGameSearchParams(intptr_t instancePtr, const char * pchKeyToFind, const char * pchValuesToFind)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->AddGameSearchParams(pchKeyToFind, pchValuesToFind);
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_SearchForGameWithLobby(intptr_t instancePtr, class CSteamID steamIDLobby, int nPlayerMin, int nPlayerMax)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->SearchForGameWithLobby(steamIDLobby, nPlayerMin, nPlayerMax);
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_SearchForGameSolo(intptr_t instancePtr, int nPlayerMin, int nPlayerMax)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->SearchForGameSolo(nPlayerMin, nPlayerMax);
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_AcceptGame(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->AcceptGame();
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_DeclineGame(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->DeclineGame();
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_RetrieveConnectionDetails(intptr_t instancePtr, class CSteamID steamIDHost, char * pchConnectionDetails, int cubConnectionDetails)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->RetrieveConnectionDetails(steamIDHost, pchConnectionDetails, cubConnectionDetails);
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_EndGameSearch(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->EndGameSearch();
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_SetGameHostParams(intptr_t instancePtr, const char * pchKey, const char * pchValue)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->SetGameHostParams(pchKey, pchValue);
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_SetConnectionDetails(intptr_t instancePtr, const char * pchConnectionDetails, int cubConnectionDetails)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->SetConnectionDetails(pchConnectionDetails, cubConnectionDetails);
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_RequestPlayersForGame(intptr_t instancePtr, int nPlayerMin, int nPlayerMax, int nMaxTeamSize)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->RequestPlayersForGame(nPlayerMin, nPlayerMax, nMaxTeamSize);
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_HostConfirmGameStart(intptr_t instancePtr, uint64 ullUniqueGameID)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->HostConfirmGameStart(ullUniqueGameID);
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_CancelRequestPlayersForGame(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->CancelRequestPlayersForGame();
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_SubmitPlayerResult(intptr_t instancePtr, uint64 ullUniqueGameID, class CSteamID steamIDPlayer, EPlayerResult_t EPlayerResult)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->SubmitPlayerResult(ullUniqueGameID, steamIDPlayer, EPlayerResult);
+}
+
+S_API EGameSearchErrorCode_t SteamAPI_ISteamGameSearch_EndGame(intptr_t instancePtr, uint64 ullUniqueGameID)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EGameSearchErrorCode_Failed_Offline;
+    return reinterpret_cast<ISteamGameSearch*>(instancePtr)->EndGame(ullUniqueGameID);
+}
+
+
+//-----------------------------------------------------------------------------
+// ISteamParties flat API implementations
+//-----------------------------------------------------------------------------
+
+S_API uint32 SteamAPI_ISteamParties_GetNumActiveBeacons(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamParties*>(instancePtr)->GetNumActiveBeacons();
+}
+
+S_API PartyBeaconID_t SteamAPI_ISteamParties_GetBeaconByIndex(intptr_t instancePtr, uint32 unIndex)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamParties*>(instancePtr)->GetBeaconByIndex(unIndex);
+}
+
+S_API bool SteamAPI_ISteamParties_GetBeaconDetails(intptr_t instancePtr, PartyBeaconID_t ulBeaconID, class CSteamID * pSteamIDBeaconOwner, struct SteamPartyBeaconLocation_t * pLocation, char * pchMetadata, int cchMetadata)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamParties*>(instancePtr)->GetBeaconDetails(ulBeaconID, pSteamIDBeaconOwner, pLocation, pchMetadata, cchMetadata);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamParties_JoinParty(intptr_t instancePtr, PartyBeaconID_t ulBeaconID)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamParties*>(instancePtr)->JoinParty(ulBeaconID);
+}
+
+S_API bool SteamAPI_ISteamParties_GetNumAvailableBeaconLocations(intptr_t instancePtr, uint32 * puNumLocations)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamParties*>(instancePtr)->GetNumAvailableBeaconLocations(puNumLocations);
+}
+
+S_API bool SteamAPI_ISteamParties_GetAvailableBeaconLocations(intptr_t instancePtr, struct SteamPartyBeaconLocation_t * pLocationList, uint32 uMaxNumLocations)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamParties*>(instancePtr)->GetAvailableBeaconLocations(pLocationList, uMaxNumLocations);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamParties_CreateBeacon(intptr_t instancePtr, uint32 unOpenSlots, struct SteamPartyBeaconLocation_t * pBeaconLocation, const char * pchConnectString, const char * pchMetadata)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamParties*>(instancePtr)->CreateBeacon(unOpenSlots, pBeaconLocation, pchConnectString, pchMetadata);
+}
+
+S_API void SteamAPI_ISteamParties_OnReservationCompleted(intptr_t instancePtr, PartyBeaconID_t ulBeacon, class CSteamID steamIDUser)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamParties*>(instancePtr)->OnReservationCompleted(ulBeacon, steamIDUser);
+}
+
+S_API void SteamAPI_ISteamParties_CancelReservation(intptr_t instancePtr, PartyBeaconID_t ulBeacon, class CSteamID steamIDUser)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamParties*>(instancePtr)->CancelReservation(ulBeacon, steamIDUser);
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamParties_ChangeNumOpenSlots(intptr_t instancePtr, PartyBeaconID_t ulBeacon, uint32 unOpenSlots)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamParties*>(instancePtr)->ChangeNumOpenSlots(ulBeacon, unOpenSlots);
+}
+
+S_API bool SteamAPI_ISteamParties_DestroyBeacon(intptr_t instancePtr, PartyBeaconID_t ulBeacon)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamParties*>(instancePtr)->DestroyBeacon(ulBeacon);
+}
+
+S_API bool SteamAPI_ISteamParties_GetBeaconLocationData(intptr_t instancePtr, struct SteamPartyBeaconLocation_t BeaconLocation, ESteamPartyBeaconLocationData eData, char * pchDataStringOut, int cchDataStringOut)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamParties*>(instancePtr)->GetBeaconLocationData(BeaconLocation, eData, pchDataStringOut, cchDataStringOut);
 }
 
 
@@ -2542,6 +2769,20 @@ S_API SteamAPICall_t SteamAPI_ISteamApps_GetFileDetails(intptr_t instancePtr, co
     return reinterpret_cast<ISteamApps*>(instancePtr)->GetFileDetails(pszFileName);
 }
 
+S_API int SteamAPI_ISteamApps_GetLaunchCommandLine(intptr_t instancePtr, char * pszCommandLine, int cubCommandLine)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamApps*>(instancePtr)->GetLaunchCommandLine(pszCommandLine, cubCommandLine);
+}
+
+S_API bool SteamAPI_ISteamApps_BIsSubscribedFromFamilySharing(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamApps*>(instancePtr)->BIsSubscribedFromFamilySharing();
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamNetworking flat API implementations
@@ -3248,6 +3489,242 @@ S_API bool SteamAPI_ISteamHTTP_GetHTTPRequestWasTimedOut(intptr_t instancePtr, H
 
 
 //-----------------------------------------------------------------------------
+// ISteamInput flat API implementations
+//-----------------------------------------------------------------------------
+
+S_API bool SteamAPI_ISteamInput_Init(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->Init();
+}
+
+S_API bool SteamAPI_ISteamInput_Shutdown(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->Shutdown();
+}
+
+S_API void SteamAPI_ISteamInput_RunFrame(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamInput*>(instancePtr)->RunFrame();
+}
+
+S_API int SteamAPI_ISteamInput_GetConnectedControllers(intptr_t instancePtr, InputHandle_t * handlesOut)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetConnectedControllers(handlesOut);
+}
+
+S_API InputActionSetHandle_t SteamAPI_ISteamInput_GetActionSetHandle(intptr_t instancePtr, const char * pszActionSetName)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetActionSetHandle(pszActionSetName);
+}
+
+S_API void SteamAPI_ISteamInput_ActivateActionSet(intptr_t instancePtr, InputHandle_t inputHandle, InputActionSetHandle_t actionSetHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamInput*>(instancePtr)->ActivateActionSet(inputHandle, actionSetHandle);
+}
+
+S_API InputActionSetHandle_t SteamAPI_ISteamInput_GetCurrentActionSet(intptr_t instancePtr, InputHandle_t inputHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetCurrentActionSet(inputHandle);
+}
+
+S_API void SteamAPI_ISteamInput_ActivateActionSetLayer(intptr_t instancePtr, InputHandle_t inputHandle, InputActionSetHandle_t actionSetLayerHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamInput*>(instancePtr)->ActivateActionSetLayer(inputHandle, actionSetLayerHandle);
+}
+
+S_API void SteamAPI_ISteamInput_DeactivateActionSetLayer(intptr_t instancePtr, InputHandle_t inputHandle, InputActionSetHandle_t actionSetLayerHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamInput*>(instancePtr)->DeactivateActionSetLayer(inputHandle, actionSetLayerHandle);
+}
+
+S_API void SteamAPI_ISteamInput_DeactivateAllActionSetLayers(intptr_t instancePtr, InputHandle_t inputHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamInput*>(instancePtr)->DeactivateAllActionSetLayers(inputHandle);
+}
+
+S_API int SteamAPI_ISteamInput_GetActiveActionSetLayers(intptr_t instancePtr, InputHandle_t inputHandle, InputActionSetHandle_t * handlesOut)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetActiveActionSetLayers(inputHandle, handlesOut);
+}
+
+S_API InputDigitalActionHandle_t SteamAPI_ISteamInput_GetDigitalActionHandle(intptr_t instancePtr, const char * pszActionName)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetDigitalActionHandle(pszActionName);
+}
+
+S_API struct InputDigitalActionData_t SteamAPI_ISteamInput_GetDigitalActionData(intptr_t instancePtr, InputHandle_t inputHandle, InputDigitalActionHandle_t digitalActionHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return {};
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetDigitalActionData(inputHandle, digitalActionHandle);
+}
+
+S_API int SteamAPI_ISteamInput_GetDigitalActionOrigins(intptr_t instancePtr, InputHandle_t inputHandle, InputActionSetHandle_t actionSetHandle, InputDigitalActionHandle_t digitalActionHandle, EInputActionOrigin * originsOut)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetDigitalActionOrigins(inputHandle, actionSetHandle, digitalActionHandle, originsOut);
+}
+
+S_API InputAnalogActionHandle_t SteamAPI_ISteamInput_GetAnalogActionHandle(intptr_t instancePtr, const char * pszActionName)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetAnalogActionHandle(pszActionName);
+}
+
+S_API struct InputAnalogActionData_t SteamAPI_ISteamInput_GetAnalogActionData(intptr_t instancePtr, InputHandle_t inputHandle, InputAnalogActionHandle_t analogActionHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return {};
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetAnalogActionData(inputHandle, analogActionHandle);
+}
+
+S_API int SteamAPI_ISteamInput_GetAnalogActionOrigins(intptr_t instancePtr, InputHandle_t inputHandle, InputActionSetHandle_t actionSetHandle, InputAnalogActionHandle_t analogActionHandle, EInputActionOrigin * originsOut)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetAnalogActionOrigins(inputHandle, actionSetHandle, analogActionHandle, originsOut);
+}
+
+S_API const char * SteamAPI_ISteamInput_GetGlyphForActionOrigin(intptr_t instancePtr, EInputActionOrigin eOrigin)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetGlyphForActionOrigin(eOrigin);
+}
+
+S_API const char * SteamAPI_ISteamInput_GetStringForActionOrigin(intptr_t instancePtr, EInputActionOrigin eOrigin)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetStringForActionOrigin(eOrigin);
+}
+
+S_API void SteamAPI_ISteamInput_StopAnalogActionMomentum(intptr_t instancePtr, InputHandle_t inputHandle, InputAnalogActionHandle_t eAction)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamInput*>(instancePtr)->StopAnalogActionMomentum(inputHandle, eAction);
+}
+
+S_API struct InputMotionData_t SteamAPI_ISteamInput_GetMotionData(intptr_t instancePtr, InputHandle_t inputHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return {};
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetMotionData(inputHandle);
+}
+
+S_API void SteamAPI_ISteamInput_TriggerVibration(intptr_t instancePtr, InputHandle_t inputHandle, unsigned short usLeftSpeed, unsigned short usRightSpeed)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamInput*>(instancePtr)->TriggerVibration(inputHandle, usLeftSpeed, usRightSpeed);
+}
+
+S_API void SteamAPI_ISteamInput_SetLEDColor(intptr_t instancePtr, InputHandle_t inputHandle, uint8 nColorR, uint8 nColorG, uint8 nColorB, unsigned int nFlags)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamInput*>(instancePtr)->SetLEDColor(inputHandle, nColorR, nColorG, nColorB, nFlags);
+}
+
+S_API void SteamAPI_ISteamInput_TriggerHapticPulse(intptr_t instancePtr, InputHandle_t inputHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamInput*>(instancePtr)->TriggerHapticPulse(inputHandle, eTargetPad, usDurationMicroSec);
+}
+
+S_API void SteamAPI_ISteamInput_TriggerRepeatedHapticPulse(intptr_t instancePtr, InputHandle_t inputHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec, unsigned short usOffMicroSec, unsigned short unRepeat, unsigned int nFlags)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamInput*>(instancePtr)->TriggerRepeatedHapticPulse(inputHandle, eTargetPad, usDurationMicroSec, usOffMicroSec, unRepeat, nFlags);
+}
+
+S_API bool SteamAPI_ISteamInput_ShowBindingPanel(intptr_t instancePtr, InputHandle_t inputHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->ShowBindingPanel(inputHandle);
+}
+
+S_API ESteamInputType SteamAPI_ISteamInput_GetInputTypeForHandle(intptr_t instancePtr, InputHandle_t inputHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_ESteamInputType_Unknown;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetInputTypeForHandle(inputHandle);
+}
+
+S_API InputHandle_t SteamAPI_ISteamInput_GetControllerForGamepadIndex(intptr_t instancePtr, int nIndex)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetControllerForGamepadIndex(nIndex);
+}
+
+S_API int SteamAPI_ISteamInput_GetGamepadIndexForController(intptr_t instancePtr, InputHandle_t ulinputHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetGamepadIndexForController(ulinputHandle);
+}
+
+S_API const char * SteamAPI_ISteamInput_GetStringForXboxOrigin(intptr_t instancePtr, EXboxOrigin eOrigin)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetStringForXboxOrigin(eOrigin);
+}
+
+S_API const char * SteamAPI_ISteamInput_GetGlyphForXboxOrigin(intptr_t instancePtr, EXboxOrigin eOrigin)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetGlyphForXboxOrigin(eOrigin);
+}
+
+S_API EInputActionOrigin SteamAPI_ISteamInput_GetActionOriginFromXboxOrigin(intptr_t instancePtr, InputHandle_t inputHandle, EXboxOrigin eOrigin)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EInputActionOrigin_None;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetActionOriginFromXboxOrigin(inputHandle, eOrigin);
+}
+
+S_API EInputActionOrigin SteamAPI_ISteamInput_TranslateActionOrigin(intptr_t instancePtr, ESteamInputType eDestinationInputType, EInputActionOrigin eSourceOrigin)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EInputActionOrigin_None;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->TranslateActionOrigin(eDestinationInputType, eSourceOrigin);
+}
+
+
+//-----------------------------------------------------------------------------
 // ISteamController flat API implementations
 //-----------------------------------------------------------------------------
 
@@ -3277,13 +3754,6 @@ S_API int SteamAPI_ISteamController_GetConnectedControllers(intptr_t instancePtr
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamController*>(instancePtr)->GetConnectedControllers(handlesOut);
-}
-
-S_API bool SteamAPI_ISteamController_ShowBindingPanel(intptr_t instancePtr, ControllerHandle_t controllerHandle)
-{
-    VLOG_INFO(__FUNCTION__);
-    if (!instancePtr) return false;
-    return reinterpret_cast<ISteamController*>(instancePtr)->ShowBindingPanel(controllerHandle);
 }
 
 S_API ControllerActionSetHandle_t SteamAPI_ISteamController_GetActionSetHandle(intptr_t instancePtr, const char * pszActionSetName)
@@ -3377,11 +3847,32 @@ S_API int SteamAPI_ISteamController_GetAnalogActionOrigins(intptr_t instancePtr,
     return reinterpret_cast<ISteamController*>(instancePtr)->GetAnalogActionOrigins(controllerHandle, actionSetHandle, analogActionHandle, originsOut);
 }
 
+S_API const char * SteamAPI_ISteamController_GetGlyphForActionOrigin(intptr_t instancePtr, EControllerActionOrigin eOrigin)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetGlyphForActionOrigin(eOrigin);
+}
+
+S_API const char * SteamAPI_ISteamController_GetStringForActionOrigin(intptr_t instancePtr, EControllerActionOrigin eOrigin)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetStringForActionOrigin(eOrigin);
+}
+
 S_API void SteamAPI_ISteamController_StopAnalogActionMomentum(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t eAction)
 {
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamController*>(instancePtr)->StopAnalogActionMomentum(controllerHandle, eAction);
+}
+
+S_API struct ControllerMotionData_t SteamAPI_ISteamController_GetMotionData(intptr_t instancePtr, ControllerHandle_t controllerHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return {};
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetMotionData(controllerHandle);
 }
 
 S_API void SteamAPI_ISteamController_TriggerHapticPulse(intptr_t instancePtr, ControllerHandle_t controllerHandle, ESteamControllerPad eTargetPad, unsigned short usDurationMicroSec)
@@ -3412,11 +3903,18 @@ S_API void SteamAPI_ISteamController_SetLEDColor(intptr_t instancePtr, Controlle
     reinterpret_cast<ISteamController*>(instancePtr)->SetLEDColor(controllerHandle, nColorR, nColorG, nColorB, nFlags);
 }
 
-S_API int SteamAPI_ISteamController_GetGamepadIndexForController(intptr_t instancePtr, ControllerHandle_t ulControllerHandle)
+S_API bool SteamAPI_ISteamController_ShowBindingPanel(intptr_t instancePtr, ControllerHandle_t controllerHandle)
 {
     VLOG_INFO(__FUNCTION__);
-    if (!instancePtr) return 0;
-    return reinterpret_cast<ISteamController*>(instancePtr)->GetGamepadIndexForController(ulControllerHandle);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamController*>(instancePtr)->ShowBindingPanel(controllerHandle);
+}
+
+S_API ESteamInputType SteamAPI_ISteamController_GetInputTypeForHandle(intptr_t instancePtr, ControllerHandle_t controllerHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return ESteamInputType::k_ESteamInputType_Unknown;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetInputTypeForHandle(controllerHandle);
 }
 
 S_API ControllerHandle_t SteamAPI_ISteamController_GetControllerForGamepadIndex(intptr_t instancePtr, int nIndex)
@@ -3426,46 +3924,39 @@ S_API ControllerHandle_t SteamAPI_ISteamController_GetControllerForGamepadIndex(
     return reinterpret_cast<ISteamController*>(instancePtr)->GetControllerForGamepadIndex(nIndex);
 }
 
-S_API struct ControllerMotionData_t SteamAPI_ISteamController_GetMotionData(intptr_t instancePtr, ControllerHandle_t controllerHandle)
+S_API int SteamAPI_ISteamController_GetGamepadIndexForController(intptr_t instancePtr, ControllerHandle_t ulControllerHandle)
 {
     VLOG_INFO(__FUNCTION__);
-    if (!instancePtr) return {};
-    return reinterpret_cast<ISteamController*>(instancePtr)->GetMotionData(controllerHandle);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetGamepadIndexForController(ulControllerHandle);
 }
 
-S_API bool SteamAPI_ISteamController_ShowDigitalActionOrigins(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle, float flScale, float flXPosition, float flYPosition)
-{
-    VLOG_INFO(__FUNCTION__);
-    if (!instancePtr) return false;
-    return reinterpret_cast<ISteamController*>(instancePtr)->ShowDigitalActionOrigins(controllerHandle, digitalActionHandle, flScale, flXPosition, flYPosition);
-}
-
-S_API bool SteamAPI_ISteamController_ShowAnalogActionOrigins(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle, float flScale, float flXPosition, float flYPosition)
-{
-    VLOG_INFO(__FUNCTION__);
-    if (!instancePtr) return false;
-    return reinterpret_cast<ISteamController*>(instancePtr)->ShowAnalogActionOrigins(controllerHandle, analogActionHandle, flScale, flXPosition, flYPosition);
-}
-
-S_API const char * SteamAPI_ISteamController_GetStringForActionOrigin(intptr_t instancePtr, EControllerActionOrigin eOrigin)
+S_API const char * SteamAPI_ISteamController_GetStringForXboxOrigin(intptr_t instancePtr, EXboxOrigin eOrigin)
 {
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
-    return reinterpret_cast<ISteamController*>(instancePtr)->GetStringForActionOrigin(eOrigin);
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetStringForXboxOrigin(eOrigin);
 }
 
-S_API const char * SteamAPI_ISteamController_GetGlyphForActionOrigin(intptr_t instancePtr, EControllerActionOrigin eOrigin)
+S_API const char * SteamAPI_ISteamController_GetGlyphForXboxOrigin(intptr_t instancePtr, EXboxOrigin eOrigin)
 {
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return nullptr;
-    return reinterpret_cast<ISteamController*>(instancePtr)->GetGlyphForActionOrigin(eOrigin);
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetGlyphForXboxOrigin(eOrigin);
 }
 
-S_API ESteamInputType SteamAPI_ISteamController_GetInputTypeForHandle(intptr_t instancePtr, ControllerHandle_t controllerHandle)
+S_API EControllerActionOrigin SteamAPI_ISteamController_GetActionOriginFromXboxOrigin(intptr_t instancePtr, ControllerHandle_t controllerHandle, EXboxOrigin eOrigin)
 {
     VLOG_INFO(__FUNCTION__);
-    if (!instancePtr) return ESteamInputType::k_ESteamInputType_Unknown;
-    return reinterpret_cast<ISteamController*>(instancePtr)->GetInputTypeForHandle(controllerHandle);
+    if (!instancePtr) return k_EControllerActionOrigin_None;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetActionOriginFromXboxOrigin(controllerHandle, eOrigin);
+}
+
+S_API EControllerActionOrigin SteamAPI_ISteamController_TranslateActionOrigin(intptr_t instancePtr, ESteamInputType eDestinationInputType, EControllerActionOrigin eSourceOrigin)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_EControllerActionOrigin_None;
+    return reinterpret_cast<ISteamController*>(instancePtr)->TranslateActionOrigin(eDestinationInputType, eSourceOrigin);
 }
 
 
@@ -3485,6 +3976,13 @@ S_API UGCQueryHandle_t SteamAPI_ISteamUGC_CreateQueryAllUGCRequest(intptr_t inst
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_UGCQueryHandleInvalid;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->CreateQueryAllUGCRequest(eQueryType, eMatchingeMatchingUGCTypeFileType, nCreatorAppID, nConsumerAppID, unPage);
+}
+
+S_API UGCQueryHandle_t SteamAPI_ISteamUGC_CreateQueryAllUGCRequest0(intptr_t instancePtr, EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, const char * pchCursor)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_UGCQueryHandleInvalid;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->CreateQueryAllUGCRequest(eQueryType, eMatchingeMatchingUGCTypeFileType, nCreatorAppID, nConsumerAppID, pchCursor);
 }
 
 S_API UGCQueryHandle_t SteamAPI_ISteamUGC_CreateQueryUGCDetailsRequest(intptr_t instancePtr, PublishedFileId_t * pvecPublishedFileID, uint32 unNumPublishedFileIDs)
@@ -3765,6 +4263,13 @@ S_API bool SteamAPI_ISteamUGC_SetItemPreview(intptr_t instancePtr, UGCUpdateHand
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetItemPreview(handle, pszPreviewFile);
+}
+
+S_API bool SteamAPI_ISteamUGC_SetAllowLegacyUpload(intptr_t instancePtr, UGCUpdateHandle_t handle, bool bAllowLegacyUpload)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->SetAllowLegacyUpload(handle, bAllowLegacyUpload);
 }
 
 S_API bool SteamAPI_ISteamUGC_RemoveItemKeyValueTags(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchKey)
@@ -4162,11 +4667,11 @@ S_API void SteamAPI_ISteamHTMLSurface_MouseWheel(intptr_t instancePtr, HHTMLBrow
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->MouseWheel(unBrowserHandle, nDelta);
 }
 
-S_API void SteamAPI_ISteamHTMLSurface_KeyDown(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers)
+S_API void SteamAPI_ISteamHTMLSurface_KeyDown(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers, bool bIsSystemKey)
 {
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
-    reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->KeyDown(unBrowserHandle, nNativeKeyCode, eHTMLKeyModifiers);
+    reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->KeyDown(unBrowserHandle, nNativeKeyCode, eHTMLKeyModifiers, bIsSystemKey);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_KeyUp(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers)
@@ -4272,6 +4777,13 @@ S_API void SteamAPI_ISteamHTMLSurface_SetDPIScalingFactor(intptr_t instancePtr, 
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->SetDPIScalingFactor(unBrowserHandle, flDPIScaling);
+}
+
+S_API void SteamAPI_ISteamHTMLSurface_OpenDeveloperTools(intptr_t instancePtr, HHTMLBrowser unBrowserHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamHTMLSurface*>(instancePtr)->OpenDeveloperTools(unBrowserHandle);
 }
 
 S_API void SteamAPI_ISteamHTMLSurface_AllowStartRequest(intptr_t instancePtr, HHTMLBrowser unBrowserHandle, bool bAllowed)
@@ -4489,18 +5001,18 @@ S_API uint32 SteamAPI_ISteamInventory_GetNumItemsWithPrices(intptr_t instancePtr
     return reinterpret_cast<ISteamInventory*>(instancePtr)->GetNumItemsWithPrices();
 }
 
-S_API bool SteamAPI_ISteamInventory_GetItemsWithPrices(intptr_t instancePtr, SteamItemDef_t * pArrayItemDefs, uint64 * pPrices, uint32 unArrayLength)
+S_API bool SteamAPI_ISteamInventory_GetItemsWithPrices(intptr_t instancePtr, SteamItemDef_t * pArrayItemDefs, uint64 * pCurrentPrices, uint64 * pBasePrices, uint32 unArrayLength)
 {
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
-    return reinterpret_cast<ISteamInventory*>(instancePtr)->GetItemsWithPrices(pArrayItemDefs, pPrices, unArrayLength);
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->GetItemsWithPrices(pArrayItemDefs, pCurrentPrices, pBasePrices, unArrayLength);
 }
 
-S_API bool SteamAPI_ISteamInventory_GetItemPrice(intptr_t instancePtr, SteamItemDef_t iDefinition, uint64 * pPrice)
+S_API bool SteamAPI_ISteamInventory_GetItemPrice(intptr_t instancePtr, SteamItemDef_t iDefinition, uint64 * pCurrentPrice, uint64 * pBasePrice)
 {
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
-    return reinterpret_cast<ISteamInventory*>(instancePtr)->GetItemPrice(iDefinition, pPrice);
+    return reinterpret_cast<ISteamInventory*>(instancePtr)->GetItemPrice(iDefinition, pCurrentPrice, pBasePrice);
 }
 
 S_API SteamInventoryUpdateHandle_t SteamAPI_ISteamInventory_StartUpdateProperties(intptr_t instancePtr)
@@ -5023,6 +5535,20 @@ S_API SteamAPICall_t SteamAPI_ISteamGameServerStats_StoreUserStats(intptr_t inst
 //-----------------------------------------------------------------------------
 // Preserved existing functions
 //-----------------------------------------------------------------------------
+
+S_API bool SteamAPI_ISteamController_ShowDigitalActionOrigins(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle, float flScale, float flXPosition, float flYPosition)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamController006*>(instancePtr)->ShowDigitalActionOrigins(controllerHandle, digitalActionHandle, flScale, flXPosition, flYPosition);
+}
+
+S_API bool SteamAPI_ISteamController_ShowAnalogActionOrigins(intptr_t instancePtr, ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle, float flScale, float flXPosition, float flYPosition)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamController006*>(instancePtr)->ShowAnalogActionOrigins(controllerHandle, analogActionHandle, flScale, flXPosition, flYPosition);
+}
 
 S_API class ISteamUnifiedMessages * SteamAPI_ISteamClient_GetISteamUnifiedMessages(intptr_t instancePtr, HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char * pchVersion)
 {

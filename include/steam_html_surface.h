@@ -17,6 +17,7 @@
 #include <isteamhtmlsurface.h>
 #include <isteamhtmlsurface002.h>
 #include <isteamhtmlsurface003.h>
+#include <isteamhtmlsurface004.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for displaying HTML pages and interacting with them
@@ -24,7 +25,8 @@
 class CSteamHTMLSurface :
 	public ISteamHTMLSurface,
     public ISteamHTMLSurface002,
-    public ISteamHTMLSurface003
+    public ISteamHTMLSurface003,
+    public ISteamHTMLSurface004
 {
 public:
 	// Singleton accessor
@@ -52,7 +54,7 @@ public:
 	// not implement these callback handlers, the browser may appear to hang instead of
 	// navigating to new pages or triggering javascript popups.
 	//
-	CALL_RESULT( HTML_BrowserReady_t )
+	STEAM_CALL_RESULT( HTML_BrowserReady_t )
 	SteamAPICall_t CreateBrowser( const char *pchUserAgent, const char *pchUserCSS ) override;
 
 	// Call this when you are done with a html surface, this lets us free the resources being used by it
@@ -87,7 +89,10 @@ public:
 	// nDelta is pixels of scroll
 	void MouseWheel( HHTMLBrowser unBrowserHandle, int32 nDelta ) override;
 
-	// keyboard interactions, native keycode is the virtual key code value from your OS
+	// keyboard interactions, native keycode is the virtual key code value from your OS, system key flags the key to not
+	// be sent as a typed character as well as a key down
+	void KeyDown( HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers, bool bIsSystemKey = false ) override;
+	// Changed from Steam SDK v1.43, backward compatibility
 	void KeyDown( HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers ) override;
 	void KeyUp( HHTMLBrowser unBrowserHandle, uint32 nNativeKeyCode, EHTMLKeyModifiers eHTMLKeyModifiers ) override;
 	// cUnicodeChar is the unicode character point for this keypress (and potentially multiple chars per press)
@@ -131,6 +136,9 @@ public:
 	// Specifies the ratio between physical and logical pixels.
 	void SetDPIScalingFactor( HHTMLBrowser unBrowserHandle, float flDPIScaling ) override;
 
+	// Open HTML/JS developer tools
+	void OpenDeveloperTools( HHTMLBrowser unBrowserHandle ) override;
+
 	// CALLBACKS
 	//
 	//  These set of functions are used as responses to callback requests
@@ -147,7 +155,7 @@ public:
 	void JSDialogResponse( HHTMLBrowser unBrowserHandle, bool bResult ) override;
 
 	// You MUST call this in response to a HTML_FileOpenDialog_t callback
-	IGNOREATTR()
+	STEAM_IGNOREATTR()
 	void FileLoadDialogResponse( HHTMLBrowser unBrowserHandle, const char **pchSelectedFiles ) override;
 
 private:

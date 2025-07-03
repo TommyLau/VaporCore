@@ -23,6 +23,7 @@ CSteamClient::CSteamClient()
     , m_steamUtils(CSteamUtils::GetInstance())
     , m_steamMasterServerUpdater(CSteamMasterServerUpdater::GetInstance())
     , m_steamMatchmaking(*CSteamMatchmaking::GetInstance())
+    , m_steamGameSearch(CSteamGameSearch::GetInstance())
     , m_steamUserStats(CSteamUserStats::GetInstance())
     , m_steamGameServerStats(CSteamGameServerStats::GetInstance())
     , m_steamApps(CSteamApps::GetInstance())
@@ -41,6 +42,8 @@ CSteamClient::CSteamClient()
     , m_steamInventory(CSteamInventory::GetInstance())
     , m_steamVideo(CSteamVideo::GetInstance())
     , m_steamParentalSettings(CSteamParentalSettings::GetInstance())
+    , m_steamInput(CSteamInput::GetInstance())
+    , m_steamParties(CSteamParties::GetInstance())
     , m_uCallCounter(0)
 {
     VLOG_INFO(__FUNCTION__);
@@ -369,8 +372,27 @@ ISteamMatchmakingServers *CSteamClient::GetISteamMatchmakingServers( HSteamUser 
 // returns the a generic interface
 void *CSteamClient::GetISteamGenericInterface( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
-    // TODO: Implement generic interface lookup
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamUser, hSteamPipe, pchVersion);
+
+    if (!pchVersion) {
+        VLOG_ERROR(__FUNCTION__ " - Invalid version string (null)");
+        return nullptr;
+    }
+
+    if (m_mapSteamPipes.count(hSteamPipe) == 0) {
+        return nullptr;
+    }
+
+    // Check server?
+    // if (m_mapSteamPipes[hSteamPipe] == ESteamPipe::k_ESteamPipeServer) {
+    
+    // Just for testing
+    if (strstr(pchVersion, "STEAMINPUT_INTERFACE_VERSION") == pchVersion) {
+        return GetISteamInput(hSteamUser, hSteamPipe, pchVersion);
+    }
+
+    // TODO: Implement other interfaces
+    VLOG_ERROR(__FUNCTION__ " - Unknown interface version '%s', returning nullptr", pchVersion);
     return nullptr;
 }
 
@@ -555,6 +577,24 @@ ISteamScreenshots *CSteamClient::GetISteamScreenshots( HSteamUser hSteamuser, HS
     }
 }
 
+// game search
+ISteamGameSearch *CSteamClient::GetISteamGameSearch( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
+{
+    VLOG_INFO(__FUNCTION__ " - hSteamuser: %d, hSteamPipe: %d, pchVersion: %s", hSteamuser, hSteamPipe, pchVersion);
+
+    if (!pchVersion) {
+        VLOG_ERROR(__FUNCTION__ " - Invalid version string (null)");
+        return nullptr;
+    }
+
+    if (strcmp(pchVersion, STEAMGAMESEARCH_INTERFACE_VERSION) == 0) {
+        return static_cast<ISteamGameSearch*>(&m_steamGameSearch);
+    } else {
+        VLOG_ERROR(__FUNCTION__ " - Unknown interface version '%s', returning " STEAMGAMESEARCH_INTERFACE_VERSION, pchVersion);
+        return static_cast<ISteamGameSearch*>(&m_steamGameSearch);
+    }
+}
+
 // Deprecated. Applications should use SteamAPI_RunCallbacks() or SteamGameServer_RunCallbacks() instead.
 // Changed from Steam SDK v1.36, backward compatibility
 void CSteamClient::RunFrame()
@@ -650,7 +690,7 @@ ISteamUnifiedMessages* CSteamClient::GetISteamUnifiedMessages(HSteamUser hSteamu
 }
 
 
-// Exposes the ISteamController interface
+// Exposes the ISteamController interface - deprecated in favor of Steam Input
 ISteamController* CSteamClient::GetISteamController(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamUser, hSteamPipe, pchVersion);
@@ -895,5 +935,47 @@ ISteamParentalSettings *CSteamClient::GetISteamParentalSettings( HSteamUser hSte
         VLOG_ERROR(__FUNCTION__ " - Unknown interface version '%s', returning " STEAMPARENTALSETTINGS_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
         return static_cast<ISteamParentalSettings*>(&m_steamParentalSettings);
+    }
+}
+
+// Exposes the Steam Input interface for controller support
+ISteamInput* CSteamClient::GetISteamInput(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+{
+    VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamUser, hSteamPipe, pchVersion);
+
+    if (!pchVersion) {
+        VLOG_ERROR(__FUNCTION__ " - Invalid version string (null)");
+        return nullptr;
+    }
+
+    // Return the appropriate interface version based on the version string
+    // Cast to specific interface first for proper vtable mapping, then to ISteamInput*
+    if (strcmp(pchVersion, STEAMINPUT_INTERFACE_VERSION) == 0) {
+        return static_cast<ISteamInput*>(&m_steamInput);
+    } else {
+        VLOG_ERROR(__FUNCTION__ " - Unknown interface version '%s', returning " STEAMINPUT_INTERFACE_VERSION, pchVersion);
+        // Return the latest interface as fallback
+        return static_cast<ISteamInput*>(&m_steamInput);
+    }
+}
+
+// Steam Parties interface
+ISteamParties* CSteamClient::GetISteamParties(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+{
+    VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamUser, hSteamPipe, pchVersion);
+
+    if (!pchVersion) {
+        VLOG_ERROR(__FUNCTION__ " - Invalid version string (null)");
+        return nullptr;
+    }
+
+    // Return the appropriate interface version based on the version string
+    // This interface only has one version (002)
+    if (strcmp(pchVersion, STEAMPARTIES_INTERFACE_VERSION) == 0) {
+        return static_cast<ISteamParties*>(&m_steamParties);
+    } else {
+        VLOG_ERROR(__FUNCTION__ " - Unknown interface version '%s', returning " STEAMPARTIES_INTERFACE_VERSION, pchVersion);
+        // Return the latest interface as fallback
+        return static_cast<ISteamParties*>(&m_steamParties);
     }
 }

@@ -24,6 +24,7 @@
 #include <isteamuser016.h>
 #include <isteamuser017.h>
 #include <isteamuser018.h>
+#include <isteamuser019.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for accessing and manipulating a steam account
@@ -39,7 +40,8 @@ class CSteamUser :
     public ISteamUser014,
     public ISteamUser016,
     public ISteamUser017,
-    public ISteamUser018
+    public ISteamUser018,
+    public ISteamUser019
 {
 public:
 	// Singleton accessor
@@ -202,7 +204,7 @@ public:
 	// Requests a ticket encrypted with an app specific shared key
 	// pDataToInclude, cbDataToInclude will be encrypted into the ticket
 	// ( This is asynchronous, you must wait for the ticket to be completed by the server )
-	CALL_RESULT( EncryptedAppTicketResponse_t )
+	STEAM_CALL_RESULT( EncryptedAppTicketResponse_t )
 	SteamAPICall_t RequestEncryptedAppTicket( void *pDataToInclude, int cbDataToInclude ) override;
 
 	// retrieve a finished ticket
@@ -226,7 +228,7 @@ public:
 	// or else immediately navigate to the result URL using a hidden browser window.
 	// NOTE 2: The resulting authorization cookie has an expiration time of one day,
 	// so it would be a good idea to request and visit a new auth URL every 12 hours.
-	CALL_RESULT( StoreAuthURLResponse_t )
+	STEAM_CALL_RESULT( StoreAuthURLResponse_t )
 	SteamAPICall_t RequestStoreAuthURL( const char *pchRedirectURL ) override;
 
 	// gets whether the users phone number is verified 
@@ -240,6 +242,9 @@ public:
 
 	// gets whether the users phone number is awaiting (re)verification
 	bool BIsPhoneRequiringVerification() override;
+
+	STEAM_CALL_RESULT( MarketEligibilityResponse_t )
+	SteamAPICall_t GetMarketEligibility() override;
 
 private:
     // Private constructor and destructor for singleton

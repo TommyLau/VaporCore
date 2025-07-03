@@ -13,7 +13,7 @@
 #pragma once
 #endif
 
-#include "isteamclient.h"
+#include "steam_api_common.h"
 
 const uint32 k_nScreenshotMaxTaggedUsers = 32;
 const uint32 k_nScreenshotMaxTaggedPublishedFiles = 32;
@@ -84,13 +84,19 @@ public:
 
 #define STEAMSCREENSHOTS_INTERFACE_VERSION "STEAMSCREENSHOTS_INTERFACE_VERSION003"
 
+#ifndef STEAM_API_EXPORTS // Added by Tommy
+// Global interface accessor
+inline ISteamScreenshots *SteamScreenshots();
+STEAM_DEFINE_USER_INTERFACE_ACCESSOR( ISteamScreenshots *, SteamScreenshots, STEAMSCREENSHOTS_INTERFACE_VERSION );
+#endif // STEAM_API_EXPORTS
+
 // callbacks
 #if defined( VALVE_CALLBACK_PACK_SMALL )
 #pragma pack( push, 4 )
 #elif defined( VALVE_CALLBACK_PACK_LARGE )
 #pragma pack( push, 8 )
 #else
-#error isteamclient.h must be included
+#error steam_api_common.h should define VALVE_CALLBACK_PACK_xxx
 #endif 
 //-----------------------------------------------------------------------------
 // Purpose: Screenshot successfully written or otherwise added to the library
@@ -114,6 +120,5 @@ struct ScreenshotRequested_t
 };
 
 #pragma pack( pop )
-
 
 #endif // ISTEAMSCREENSHOTS_H

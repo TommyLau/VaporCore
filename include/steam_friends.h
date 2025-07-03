@@ -24,6 +24,7 @@
 #include <isteamfriends011.h>
 #include <isteamfriends013.h>
 #include <isteamfriends014.h>
+#include <isteamfriends015.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: interface to accessing information about individual users,
@@ -39,7 +40,8 @@ class CSteamFriends :
 	public ISteamFriends009,
 	public ISteamFriends011,
 	public ISteamFriends013,
-    public ISteamFriends014
+    public ISteamFriends014,
+    public ISteamFriends015
 {
 public:
 	// Singleton accessor
@@ -65,7 +67,7 @@ public:
 	//
 	// If the name change fails to happen on the server, then an additional global PersonaStateChange_t will be posted
 	// to change the name back, in addition to the SetPersonaNameResponse_t callback.
-	CALL_RESULT( SetPersonaNameResponse_t )
+	STEAM_CALL_RESULT( SetPersonaNameResponse_t )
 	SteamAPICall_t SetPersonaName( const char *pchPersonaName ) override;
 	// Changed from Steam SDK v1.20, backward compatibility
 	void DEPRECATED_SetPersonaName( const char *pchPersonaName ) override;
@@ -104,7 +106,7 @@ public:
 	int GetFriendAvatar( CSteamID steamIDFriend ) override;
 
 	// returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
-	bool GetFriendGamePlayed( CSteamID steamIDFriend, OUT_STRUCT() FriendGameInfo_t *pFriendGameInfo ) override;
+	bool GetFriendGamePlayed( CSteamID steamIDFriend, STEAM_OUT_STRUCT() FriendGameInfo_t *pFriendGameInfo ) override;
 	// Changed from Steam SDK v1.04, backward compatibility
 	bool GetFriendGamePlayed( CSteamID steamIDFriend, uint64 *pulGameID, uint32 *punGameIP, uint16 *pusGamePort, uint16 *pusQueryPort ) override;
 	// accesses old friends names - returns an empty string when their are no more items in the history
@@ -113,6 +115,7 @@ public:
 	int GetFriendSteamLevel( CSteamID steamIDFriend ) override;
 
 	// Returns nickname the current user has set for the specified player. Returns NULL if the no nickname has been set for that player.
+	// DEPRECATED: GetPersonaName follows the Steam nickname preferences, so apps shouldn't need to care about nicknames explicitly.
 	const char *GetPlayerNickname( CSteamID steamIDPlayer ) override;
 
 	// friend grouping (tag) apis
@@ -125,7 +128,7 @@ public:
 	// returns the number of members in a given friends group
 	int GetFriendsGroupMembersCount( FriendsGroupID_t friendsGroupID ) override;
 	// gets up to nMembersCount members of the given friends group, if fewer exist than requested those positions' SteamIDs will be invalid
-	void GetFriendsGroupMembersList( FriendsGroupID_t friendsGroupID, OUT_ARRAY_CALL(nMembersCount, GetFriendsGroupMembersCount, friendsGroupID ) CSteamID *pOutSteamIDMembers, int nMembersCount ) override;
+	void GetFriendsGroupMembersList( FriendsGroupID_t friendsGroupID, STEAM_OUT_ARRAY_CALL(nMembersCount, GetFriendsGroupMembersCount, friendsGroupID ) CSteamID *pOutSteamIDMembers, int nMembersCount ) override;
 
 	// returns true if the specified user meets any of the criteria specified in iFriendFlags
 	// iFriendFlags can be the union (binary or, |) of one or more k_EFriendFlags values
@@ -155,7 +158,8 @@ public:
 	void SetInGameVoiceSpeaking( CSteamID steamIDUser, bool bSpeaking ) override;
 
 	// activates the game overlay, with an optional dialog to open 
-	// valid options are "Friends", "Community", "Players", "Settings", "OfficialGameGroup", "Stats", "Achievements"
+	// valid options include "Friends", "Community", "Players", "Settings", "OfficialGameGroup", "Stats", "Achievements",
+	// "chatroomgroup/nnnn"
 	void ActivateGameOverlay( const char *pchDialog ) override;
 
 	// activates game overlay to a specific place
@@ -173,6 +177,8 @@ public:
 
 	// activates game overlay web browser directly to the specified URL
 	// full address with protocol type is required, e.g. http://www.steamgames.com/
+	void ActivateGameOverlayToWebPage( const char *pchURL, EActivateGameOverlayToWebPageMode eMode = k_EActivateGameOverlayToWebPageMode_Default ) override;
+	// Changed from Steam SDK v1.43, backward compatibility
 	void ActivateGameOverlayToWebPage( const char *pchURL ) override;
 
 	// activates game overlay to store page for app
@@ -210,7 +216,7 @@ public:
 	// you can only ask about clans that a user is a member of
 	// note that this won't download avatars automatically; if you get an officer,
 	// and no avatar image is available, call RequestUserInformation( steamID, false ) to download the avatar
-	CALL_RESULT( ClanOfficerListResponse_t )
+	STEAM_CALL_RESULT( ClanOfficerListResponse_t )
 	SteamAPICall_t RequestClanOfficerList( CSteamID steamIDClan ) override;
 
 	// iteration of clan officers - can only be done when a RequestClanOfficerList() call has completed
@@ -244,10 +250,10 @@ public:
 	// Requests rich presence for a specific user.
 	void RequestFriendRichPresence( CSteamID steamIDFriend ) override;
 
-	// rich invite support
-	// if the target accepts the invite, the pchConnectString gets added to the command-line for launching the game
-	// if the game is already running, a GameRichPresenceJoinRequested_t callback is posted containing the connect string
-	// invites can only be sent to friends
+	// Rich invite support.
+	// If the target accepts the invite, a GameRichPresenceJoinRequested_t callback is posted containing the connect string.
+	// (Or you can configure yout game so that it is passed on the command line instead.  This is a deprecated path; ask us if you really need this.)
+	// Invites can only be sent to friends.
 	bool InviteUserToGame( CSteamID steamIDFriend, const char *pchConnectString ) override;
 
 	// recently-played-with friends iteration
@@ -262,13 +268,13 @@ public:
 	// this allows in-game access to group (clan) chats from in the game
 	// the behavior is somewhat sophisticated, because the user may or may not be already in the group chat from outside the game or in the overlay
 	// use ActivateGameOverlayToUser( "chat", steamIDClan ) to open the in-game overlay version of the chat
-	CALL_RESULT( JoinClanChatRoomCompletionResult_t )
+	STEAM_CALL_RESULT( JoinClanChatRoomCompletionResult_t )
 	SteamAPICall_t JoinClanChatRoom( CSteamID steamIDClan ) override;
 	bool LeaveClanChatRoom( CSteamID steamIDClan ) override;
 	int GetClanChatMemberCount( CSteamID steamIDClan ) override;
 	CSteamID GetChatMemberByIndex( CSteamID steamIDClan, int iUser ) override;
 	bool SendClanChatMessage( CSteamID steamIDClanChat, const char *pchText ) override;
-	int GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *peChatEntryType, OUT_STRUCT() CSteamID *psteamidChatter ) override;
+	int GetClanChatMessage( CSteamID steamIDClanChat, int iMessage, void *prgchText, int cchTextMax, EChatEntryType *peChatEntryType, STEAM_OUT_STRUCT() CSteamID *psteamidChatter ) override;
 	bool IsClanChatAdmin( CSteamID steamIDClanChat, CSteamID steamIDUser ) override;
 
 	// interact with the Steam (game overlay / desktop)
@@ -283,15 +289,23 @@ public:
 	int GetFriendMessage( CSteamID steamIDFriend, int iMessageID, void *pvData, int cubData, EChatEntryType *peChatEntryType ) override;
 
 	// following apis
-	CALL_RESULT( FriendsGetFollowerCount_t )
+	STEAM_CALL_RESULT( FriendsGetFollowerCount_t )
 	SteamAPICall_t GetFollowerCount( CSteamID steamID ) override;
-	CALL_RESULT( FriendsIsFollowing_t )
+	STEAM_CALL_RESULT( FriendsIsFollowing_t )
 	SteamAPICall_t IsFollowing( CSteamID steamID ) override;
-	CALL_RESULT( FriendsEnumerateFollowingList_t )
+	STEAM_CALL_RESULT( FriendsEnumerateFollowingList_t )
 	SteamAPICall_t EnumerateFollowingList( uint32 unStartIndex ) override;
 
 	bool IsClanPublic( CSteamID steamIDClan ) override;
 	bool IsClanOfficialGameGroup( CSteamID steamIDClan ) override;
+
+	/// Return the number of chats (friends or chat rooms) with unread messages.
+	/// A "priority" message is one that would generate some sort of toast or
+	/// notification, and depends on user settings.
+	///
+	/// You can register for UnreadChatMessagesChanged_t callbacks to know when this
+	/// has potentially changed.
+	int GetNumChatsWithUnreadPriorityMessages() override;
 
 private:
     // Private constructor and destructor for singleton

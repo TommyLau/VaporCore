@@ -25,19 +25,25 @@
 class CSteamAppTicket :
     public ISteamAppTicket
 {
-private:
-    // Singleton instance
-    static CSteamAppTicket* s_pInstance;
+public:
+	// Singleton accessor
+    static CSteamAppTicket& GetInstance()
+    {
+		static CSteamAppTicket instance;
+		return instance;
+    }
 
 public:
+    uint32 GetAppOwnershipTicketData( uint32 nAppID, void *pvBuffer, uint32 cbBufferLength, uint32 *piAppId, uint32 *piSteamId, uint32 *piSignature, uint32 *pcbSignature ) override;
+
+private:
+    // Private constructor and destructor for singleton
     CSteamAppTicket();
     ~CSteamAppTicket();
 
-    // Helper methods
-    static CSteamAppTicket* GetInstance();
-    static void ReleaseInstance();
-
-    uint32 GetAppOwnershipTicketData( uint32 nAppID, void *pvBuffer, uint32 cbBufferLength, uint32 *piAppId, uint32 *piSteamId, uint32 *piSignature, uint32 *pcbSignature ) override;
+    // Delete copy constructor and assignment operator
+    CSteamAppTicket(const CSteamAppTicket&) = delete;
+    CSteamAppTicket& operator=(const CSteamAppTicket&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_APP_TICKET_H
