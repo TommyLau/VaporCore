@@ -131,8 +131,7 @@ S_API void S_CALLTYPE SteamAPI_SetMiniDumpComment( const char *pchMsg )
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamClient *S_CALLTYPE SteamClient() {
     VLOG_INFO(__FUNCTION__);
-    // TODO: SteamClient017 here, to be updated to macro later when we have more version
-    return static_cast<ISteamClient*>(SteamInternal_CreateInterface(STEAMCLIENT_INTERFACE_VERSION));
+    return static_cast<ISteamClient*>(SteamInternal_CreateInterface(STEAMCLIENT_INTERFACE_VERSION_017));
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
@@ -144,8 +143,7 @@ S_API ISteamUser *S_CALLTYPE SteamUser() {
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamFriends *S_CALLTYPE SteamFriends() {
     VLOG_INFO(__FUNCTION__);
-    // TODO: SteamFriends015 here, to be updated to macro later when we have more version
-    return CSteamClient::GetInstance().GetISteamFriends(g_hSteamPipe, g_hSteamUser, STEAMFRIENDS_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamFriends(g_hSteamPipe, g_hSteamUser, STEAMFRIENDS_INTERFACE_VERSION_015);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
@@ -203,8 +201,7 @@ S_API ISteamScreenshots *S_CALLTYPE SteamScreenshots() {
 // Removed from Steam SDK v1.37, backward compatibility
 S_API ISteamHTTP *S_CALLTYPE SteamHTTP() {
     VLOG_INFO(__FUNCTION__);
-    // TODO: SteamHTTP002 here, to be updated to macro later when we have more version
-    return CSteamClient::GetInstance().GetISteamHTTP(g_hSteamPipe, g_hSteamUser, STEAMHTTP_INTERFACE_VERSION);
+    return CSteamClient::GetInstance().GetISteamHTTP(g_hSteamPipe, g_hSteamUser, STEAMHTTP_INTERFACE_VERSION_002);
 }
 
 // Removed from Steam SDK v1.37, backward compatibility
