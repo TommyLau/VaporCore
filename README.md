@@ -6,20 +6,22 @@ VaporCore is a comprehensive Steam API emulator that provides a compatible inter
 
 - **Complete Steam API Implementation**: Full implementations of major Steam interfaces with backward compatibility
 - **Multi-Architecture Support**: x86 and x64 builds
-- **Advanced Logging System**: Configurable debug logging with multiple levels
+- **Advanced Logging System**: Configurable debug logging with multiple levels (DEBUG, INFO, WARNING, ERROR)
 - **File Storage Emulation**: Local file storage system emulating Steam Cloud
 - **Thread-Safe Design**: Meyer's Singleton pattern with proper synchronization
 - **Callback Management**: Full Steam callback and call result system
 - **Configuration System**: INI-based configuration for customization
 - **Multi-Version Support**: Backward compatibility with older Steam SDK versions
 - **Debug and Release Builds**: Optimized configurations for development and production
+- **Automatic API Generation**: Python-based tools for generating flat API implementations
 
 ## Requirements
 
 - **CMake**: 3.20 or higher
 - **Compiler**: Visual Studio 2022 with C++ development tools
 - **Platform**: Windows 10/11
-- **C++ Standard**: C++11 or higher
+- **C++ Standard**: C++17 or higher
+- **Python**: 3.6 or higher (for API generation tools)
 
 ## Building
 
@@ -99,15 +101,17 @@ language=english
 The build script automatically generates version information:
 - **Base version** is read from `include/version.h.in`
 - **Build number** is automatically generated from Git commit count
-- **Final version** format: `MAJOR.MINOR.PATCH.BUILD` (e.g., `0.0.1.123`)
+- **Final version** format: `MAJOR.MINOR.PATCH.BUILD` (e.g., `0.1.43.93`)
 - Use `build.bat no-version` to skip automatic version generation
 
 ### Logging
-Enable debug logging by defining `VAPORCORE_ENABLE_LOGGING=1` during compilation. Logs are written to `vaporcore_log.txt` with configurable levels:
-- **DEBUG**: Detailed function call traces
-- **INFO**: General operational information  
-- **WARNING**: Non-critical issues
+VaporCore uses a sophisticated logging system with multiple levels:
+- **INFO**: General operational information and state changes
+- **DEBUG**: Detailed function call traces and parameter values
+- **WARNING**: Non-critical issues and potential problems
 - **ERROR**: Critical errors and failures
+
+Logs are written to `vaporcore_log.txt` by default.
 
 ## Project Structure
 
@@ -115,6 +119,7 @@ Enable debug logging by defining `VAPORCORE_ENABLE_LOGGING=1` during compilation
 VaporCore/
 ├── src/
 │   ├── steam/                      # Steam API interface implementations
+│   │   ├── steam_api_flat.cpp      # Flat API implementations (auto-generated)
 │   │   ├── steam_client.cpp        # ISteamClient main coordinator
 │   │   ├── steam_user.cpp          # ISteamUser authentication
 │   │   ├── steam_friends.cpp       # ISteamFriends social features
@@ -129,15 +134,18 @@ VaporCore/
 │       ├── vapor_base.cpp          # Core utilities and synchronization
 │       ├── vapor_logger.cpp        # Advanced logging system
 │       ├── vapor_config.cpp        # Configuration management
-│       ├── vapor_file_storage.cpp  # Local file storage backend
-│       └── steam_callback_mgr.cpp  # Callback management system
-├── include/                        # Header files
-│   ├── steam_*.h                   # Steam interface declarations
-│   ├── vapor_*.h                   # VaporCore system headers
-│   └── steam/                      # Steam SDK headers
-│       └── *.h                     # Official Steam API headers
-├── resources/                      # Build resources
-│   └── version.rc                  # Windows version information
+│       └── vapor_file_storage.cpp  # Local file storage backend
+├── include/
+│   ├── steam/                      # Steam interface headers
+│   │   ├── steam_api_flat.h        # Flat API declarations (auto-generated)
+│   │   ├── isteamclient.h          # Steam client interface
+│   │   └── ...                     # Other interface headers
+│   ├── sdk/                        # Steam SDK versions
+│   │   └── [version]/              # SDK files by version number
+│   └── vapor/                      # VaporCore system headers
+├── scripts/
+│   ├── generate_flat_api.py        # Flat API generator script
+│   └── ...                         # Other utility scripts
 ├── build/                          # Build output directory
 ├── scripts/                        # Build and utility scripts
 ├── CMakeLists.txt                  # Root CMake configuration
@@ -145,51 +153,48 @@ VaporCore/
 └── README.md                       # This file
 ```
 
+## Development Tools
+
+### Flat API Generator
+The `generate_flat_api.py` script automates the generation of Steam flat API implementations:
+- Automatically finds the latest SDK version
+- Generates `steam_api_flat.h` and `steam_api_flat.cpp`
+- Handles enum types and proper type casting
+- Preserves existing implementations when regenerating
+- Provides detailed logging of the generation process
+
+Usage:
+```bash
+python scripts/generate_flat_api.py
+```
+
 ## API Coverage
 
-VaporCore provides comprehensive implementations of major Steam interfaces with full backward compatibility:
+VaporCore implements all major Steam interfaces including:
 
 ### Core Interfaces
-- **ISteamClient** (v007-v016): Main client interface and factory
-- **ISteamUser** (v009-v018): User authentication and account management
-- **ISteamFriends** (v004-v014): Friends list, avatars, and social features
-- **ISteamUtils** (v002, v004-v007): System utilities and Steam integration
+- **ISteamClient**: Main client interface and factory
+- **ISteamUser**: User authentication and account management
+- **ISteamFriends**: Friends list and social features
+- **ISteamUtils**: System utilities and Steam integration
+- **ISteamParentalSettings**: Parental control features
 
 ### Application & Content
-- **ISteamApps** (v001-v006): Application management and DLC
-- **ISteamUserStats** (v003-v010): Achievements, leaderboards, and statistics
-- **ISteamRemoteStorage** (v002, v004-v012): Cloud storage and file management
-- **ISteamScreenshots** (v001-v002): Screenshot capture and sharing
-- **ISteamUGC** (v001-v007): User-generated content and Workshop
-- **ISteamInventory**: Item inventory and trading
-- **ISteamVideo**: Video content playback
+- **ISteamApps**: Application management and DLC
+- **ISteamUserStats**: Achievements and statistics
+- **ISteamRemoteStorage**: Cloud storage and file management
+- **ISteamUGC**: User-generated content
+- **ISteamInventory**: Item inventory system
 
-### Multiplayer & Networking  
-- **ISteamMatchmaking** (v002, v004, v006-v008): Game server browser and lobbies
-- **ISteamNetworking** (v001-v004): P2P networking and messaging
-- **ISteamGameServer** (v004-v011): Dedicated server functionality
-- **ISteamGameServerStats**: Server-side statistics
-- **ISteamGameCoordinator**: Game coordinator messaging
+### Multiplayer & Networking
+- **ISteamMatchmaking**: Game server browser and lobbies
+- **ISteamNetworking**: P2P networking and messaging
+- **ISteamGameServer**: Dedicated server functionality
 
-### Media & Input
-- **ISteamMusic**: Music player integration
-- **ISteamMusicRemote**: Remote music control
-- **ISteamController**: Steam Controller input
-- **ISteamHTMLSurface** (v002-latest): HTML rendering for overlays
-
-### Additional Services
-- **ISteamHTTP** (v001-latest): HTTP request functionality
-- **ISteamUnifiedMessages**: Unified messaging system
-- **ISteamAppList**: Application enumeration
-- **ISteamAppTicket**: Application ownership verification
-- **ISteamMasterServerUpdater**: Legacy master server (deprecated)
-
-### Advanced Features
-- **Thread-Safe Architecture**: Global and per-interface synchronization
-- **Meyer's Singleton Pattern**: Modern C++ singleton implementation for core systems
-- **Callback System**: Full Steam callback and call result management
-- **Multi-Version Support**: Automatic interface version detection and compatibility
-- **Local Storage Backend**: Complete file system emulation for Steam Cloud
-- **Configuration Management**: Flexible INI-based configuration system
-
-All interfaces include comprehensive logging, error handling, and maintain compatibility with games across different Steam SDK versions.
+### Additional Features
+- **Thread Safety**: Global and per-interface synchronization
+- **Singleton Pattern**: Modern C++ singleton implementation
+- **Callback System**: Full Steam callback management
+- **Multi-Version Support**: SDK version compatibility
+- **Local Storage**: File system emulation
+- **Configuration**: Flexible INI-based system
