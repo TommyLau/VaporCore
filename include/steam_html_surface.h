@@ -13,7 +13,6 @@
 #pragma once
 #endif
 
-#include <isteamclient.h>
 #include <isteamhtmlsurface.h>
 #include <isteamhtmlsurface002.h>
 #include <isteamhtmlsurface003.h>

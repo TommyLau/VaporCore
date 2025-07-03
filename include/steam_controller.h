@@ -13,7 +13,6 @@
 #pragma once
 #endif
 
-#include <isteamclient.h>
 #include <isteamcontroller.h>
 #include <isteamcontroller001.h>
 #include <isteamcontroller003.h>

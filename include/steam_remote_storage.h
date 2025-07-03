@@ -13,7 +13,6 @@
 #pragma once
 #endif
 
-#include <isteamclient.h>
 #include <isteamremotestorage.h>
 #include <isteamremotestorage002.h>
 #include <isteamremotestorage004.h>

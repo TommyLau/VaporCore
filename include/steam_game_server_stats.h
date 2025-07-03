@@ -13,7 +13,6 @@
 #pragma once
 #endif
 
-//#include <steamtypes.h>
 #include <isteamgameserverstats.h>
 
 //-----------------------------------------------------------------------------

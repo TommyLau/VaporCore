@@ -189,6 +189,7 @@ uint32 CSteamApps::GetAppInstallDir( AppId_t appID, char *pchFolder, uint32 cchF
     return 0;
 }
 
+// returns true if that app is installed (not necessarily owned)
 bool CSteamApps::BIsAppInstalled( AppId_t appID )
 {
     VLOG_INFO(__FUNCTION__ " - AppID: %u", appID);
@@ -237,6 +238,7 @@ void CSteamApps::RequestAllProofOfPurchaseKeys()
     VLOG_INFO(__FUNCTION__);
 }
 
+STEAM_CALL_RESULT( FileDetailsResult_t )
 SteamAPICall_t CSteamApps::GetFileDetails( const char* pszFileName )
 {
     VLOG_INFO(__FUNCTION__ " - FileName: %s", pszFileName ? pszFileName : "null");

@@ -37,6 +37,12 @@ void CSteamMasterServerUpdater::SetHeartbeatInterval( int iHeartbeatInterval )
     VLOG_INFO(__FUNCTION__ " - Interval: %d", iHeartbeatInterval);
 }
 
+// These are used when you've elected to multiplex the game server's UDP socket
+// rather than having the master server updater use its own sockets.
+// 
+// Source games use this to simplify the job of the server admins, so they 
+// don't have to open up more ports on their firewalls.
+
 // Call this when a packet that starts with 0xFFFFFFFF comes in. That means
 // it's for us.
 bool CSteamMasterServerUpdater::HandleIncomingPacket( const void *pData, int cbData, uint32 srcIP, uint16 srcPort )

@@ -61,6 +61,7 @@ int32 CSteamRemoteStorage::FileRead( const char *pchFile, void *pvData, int32 cu
     return m_fileStorage.ReadFile(pchFile, pvData, static_cast<size_t>(cubDataToRead));
 }
 
+STEAM_CALL_RESULT( RemoteStorageFileWriteAsyncComplete_t )
 SteamAPICall_t CSteamRemoteStorage::FileWriteAsync( const char *pchFile, const void *pvData, uint32 cubData )
 {
     VAPORCORE_LOCK_GUARD();
@@ -68,6 +69,7 @@ SteamAPICall_t CSteamRemoteStorage::FileWriteAsync( const char *pchFile, const v
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoteStorageFileReadAsyncComplete_t )
 SteamAPICall_t CSteamRemoteStorage::FileReadAsync( const char *pchFile, uint32 nOffset, uint32 cubToRead )
 {
     VAPORCORE_LOCK_GUARD();
@@ -103,6 +105,7 @@ bool CSteamRemoteStorage::FileDelete( const char *pchFile )
     return m_fileStorage.DeleteFile(pchFile);
 }
 
+STEAM_CALL_RESULT( RemoteStorageFileShareResult_t )
 SteamAPICall_t CSteamRemoteStorage::FileShare( const char *pchFile )
 {
     // TODO: Implement
@@ -279,6 +282,7 @@ void CSteamRemoteStorage::SetCloudEnabledForApp( bool bEnabled )
 // Downloads a UGC file.  A priority value of 0 will download the file immediately,
 // otherwise it will wait to download the file until all downloads with a lower priority
 // value are completed.  Downloads with equal priority will occur simultaneously.
+STEAM_CALL_RESULT( RemoteStorageDownloadUGCResult_t )
 SteamAPICall_t CSteamRemoteStorage::UGCDownload( UGCHandle_t hContent, uint32 unPriority )
 {
     // TODO: Implement
@@ -380,6 +384,7 @@ SteamAPICall_t CSteamRemoteStorage::UpdatePublishedFile( RemoteStorageUpdatePubl
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoteStoragePublishFileProgress_t )
 SteamAPICall_t CSteamRemoteStorage::PublishWorkshopFile( const char *pchFile, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags, EWorkshopFileType eWorkshopFileType )
 {
     // TODO: Implement
@@ -436,6 +441,7 @@ bool CSteamRemoteStorage::UpdatePublishedFileTags( PublishedFileUpdateHandle_t u
     return false;
 }
 
+STEAM_CALL_RESULT( RemoteStorageUpdatePublishedFileResult_t )
 SteamAPICall_t CSteamRemoteStorage::CommitPublishedFileUpdate( PublishedFileUpdateHandle_t updateHandle )
 {
     // TODO: Implement
@@ -446,6 +452,7 @@ SteamAPICall_t CSteamRemoteStorage::CommitPublishedFileUpdate( PublishedFileUpda
 // Gets published file details for the given publishedfileid.  If unMaxSecondsOld is greater than 0,
 // cached data may be returned, depending on how long ago it was cached.  A value of 0 will force a refresh.
 // A value of k_WorkshopForceLoadPublishedFileDetailsFromCache will use cached data if it exists, no matter how old it is.
+STEAM_CALL_RESULT( RemoteStorageGetPublishedFileDetailsResult_t )
 SteamAPICall_t CSteamRemoteStorage::GetPublishedFileDetails( PublishedFileId_t unPublishedFileId, uint32 unMaxSecondsOld )
 {
     // TODO: Implement
@@ -453,7 +460,7 @@ SteamAPICall_t CSteamRemoteStorage::GetPublishedFileDetails( PublishedFileId_t u
     return 0;
 }
 
-// Changed from Steam SDK v1.25, backward compatibility
+STEAM_CALL_RESULT( RemoteStorageDeletePublishedFileResult_t )
 SteamAPICall_t CSteamRemoteStorage::GetPublishedFileDetails( PublishedFileId_t unPublishedFileId )
 {
     // TODO: Implement
@@ -469,6 +476,7 @@ SteamAPICall_t CSteamRemoteStorage::DeletePublishedFile( PublishedFileId_t unPub
 }
 
 // enumerate the files that the current user published with this app
+STEAM_CALL_RESULT( RemoteStorageEnumerateUserPublishedFilesResult_t )
 SteamAPICall_t CSteamRemoteStorage::EnumerateUserPublishedFiles( uint32 unStartIndex )
 {
     // TODO: Implement
@@ -476,6 +484,7 @@ SteamAPICall_t CSteamRemoteStorage::EnumerateUserPublishedFiles( uint32 unStartI
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoteStorageSubscribePublishedFileResult_t )
 SteamAPICall_t CSteamRemoteStorage::SubscribePublishedFile( PublishedFileId_t unPublishedFileId )
 {
     // TODO: Implement
@@ -483,6 +492,7 @@ SteamAPICall_t CSteamRemoteStorage::SubscribePublishedFile( PublishedFileId_t un
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoteStorageEnumerateUserSubscribedFilesResult_t )
 SteamAPICall_t CSteamRemoteStorage::EnumerateUserSubscribedFiles( uint32 unStartIndex )
 {
     // TODO: Implement
@@ -490,6 +500,7 @@ SteamAPICall_t CSteamRemoteStorage::EnumerateUserSubscribedFiles( uint32 unStart
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoteStorageUnsubscribePublishedFileResult_t )
 SteamAPICall_t CSteamRemoteStorage::UnsubscribePublishedFile( PublishedFileId_t unPublishedFileId )
 {
     // TODO: Implement
@@ -504,6 +515,7 @@ bool CSteamRemoteStorage::UpdatePublishedFileSetChangeDescription( PublishedFile
     return false;
 }
 
+STEAM_CALL_RESULT( RemoteStorageGetPublishedItemVoteDetailsResult_t )
 SteamAPICall_t CSteamRemoteStorage::GetPublishedItemVoteDetails( PublishedFileId_t unPublishedFileId )
 {
     // TODO: Implement
@@ -511,6 +523,7 @@ SteamAPICall_t CSteamRemoteStorage::GetPublishedItemVoteDetails( PublishedFileId
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoteStorageUpdateUserPublishedItemVoteResult_t )
 SteamAPICall_t CSteamRemoteStorage::UpdateUserPublishedItemVote( PublishedFileId_t unPublishedFileId, bool bVoteUp )
 {
     // TODO: Implement
@@ -518,6 +531,7 @@ SteamAPICall_t CSteamRemoteStorage::UpdateUserPublishedItemVote( PublishedFileId
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoteStorageGetPublishedItemVoteDetailsResult_t )
 SteamAPICall_t CSteamRemoteStorage::GetUserPublishedItemVoteDetails( PublishedFileId_t unPublishedFileId )
 {
     // TODO: Implement
@@ -525,6 +539,7 @@ SteamAPICall_t CSteamRemoteStorage::GetUserPublishedItemVoteDetails( PublishedFi
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoteStorageEnumerateUserPublishedFilesResult_t )
 SteamAPICall_t CSteamRemoteStorage::EnumerateUserSharedWorkshopFiles( CSteamID steamId, uint32 unStartIndex, SteamParamStringArray_t *pRequiredTags, SteamParamStringArray_t *pExcludedTags )
 {
     // TODO: Implement
@@ -532,6 +547,7 @@ SteamAPICall_t CSteamRemoteStorage::EnumerateUserSharedWorkshopFiles( CSteamID s
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoteStoragePublishFileProgress_t )
 SteamAPICall_t CSteamRemoteStorage::PublishVideo( EWorkshopVideoProvider eVideoProvider, const char *pchVideoAccount, const char *pchVideoIdentifier, const char *pchPreviewFile, AppId_t nConsumerAppId, const char *pchTitle, const char *pchDescription, ERemoteStoragePublishedFileVisibility eVisibility, SteamParamStringArray_t *pTags )
 {
     // TODO: Implement
@@ -548,6 +564,7 @@ SteamAPICall_t CSteamRemoteStorage::PublishVideo( const char *pchVideoURL, const
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoteStorageSetUserPublishedFileActionResult_t )
 SteamAPICall_t CSteamRemoteStorage::SetUserPublishedFileAction( PublishedFileId_t unPublishedFileId, EWorkshopFileAction eAction )
 {
     // TODO: Implement
@@ -555,6 +572,7 @@ SteamAPICall_t CSteamRemoteStorage::SetUserPublishedFileAction( PublishedFileId_
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoteStorageEnumeratePublishedFilesByUserActionResult_t )
 SteamAPICall_t CSteamRemoteStorage::EnumeratePublishedFilesByUserAction( EWorkshopFileAction eAction, uint32 unStartIndex )
 {
     // TODO: Implement
@@ -563,6 +581,7 @@ SteamAPICall_t CSteamRemoteStorage::EnumeratePublishedFilesByUserAction( EWorksh
 }
 
 // this method enumerates the public view of workshop files
+STEAM_CALL_RESULT( RemoteStorageEnumerateWorkshopFilesResult_t )
 SteamAPICall_t CSteamRemoteStorage::EnumeratePublishedWorkshopFiles( EWorkshopEnumerationType eEnumerationType, uint32 unStartIndex, uint32 unCount, uint32 unDays, SteamParamStringArray_t *pTags, SteamParamStringArray_t *pUserTags )
 {
     // TODO: Implement
@@ -570,6 +589,7 @@ SteamAPICall_t CSteamRemoteStorage::EnumeratePublishedWorkshopFiles( EWorkshopEn
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoteStorageDownloadUGCResult_t )
 SteamAPICall_t CSteamRemoteStorage::UGCDownloadToLocation( UGCHandle_t hContent, const char *pchLocation, uint32 unPriority )
 {
     // TODO: Implement

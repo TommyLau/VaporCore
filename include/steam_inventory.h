@@ -13,7 +13,6 @@
 #pragma once
 #endif
 
-#include <isteamclient.h>
 #include <isteaminventory.h>
 #include <isteaminventory001.h>
 #include <isteaminventory002.h>

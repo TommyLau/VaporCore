@@ -408,6 +408,7 @@ void CSteamGameServer::GetGameplayStats( )
     VLOG_INFO(__FUNCTION__);
 }
 
+STEAM_CALL_RESULT( GSReputation_t )
 SteamAPICall_t CSteamGameServer::GetServerReputation( )
 {
     VLOG_INFO(__FUNCTION__);
@@ -480,6 +481,7 @@ void CSteamGameServer::ForceHeartbeat()
 }
 
 // associate this game server with this clan for the purposes of computing player compat
+STEAM_CALL_RESULT( AssociateWithClanResult_t )
 SteamAPICall_t CSteamGameServer::AssociateWithClan( CSteamID steamIDClan )
 {
     VLOG_INFO(__FUNCTION__ " - Clan: %llu", steamIDClan.GetAccountID());
@@ -487,6 +489,7 @@ SteamAPICall_t CSteamGameServer::AssociateWithClan( CSteamID steamIDClan )
 }
 
 // ask if any of the current players dont want to play with this new player - or vice versa
+STEAM_CALL_RESULT( ComputeNewPlayerCompatibilityResult_t )
 SteamAPICall_t CSteamGameServer::ComputeNewPlayerCompatibility( CSteamID steamIDNewPlayer )
 {
     VLOG_INFO(__FUNCTION__ " - NewPlayer: %llu", steamIDNewPlayer.GetAccountID());

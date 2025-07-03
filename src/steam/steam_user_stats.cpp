@@ -167,6 +167,7 @@ const char* CSteamUserStats::GetAchievementName(uint32 iAchievement)
 // returns a UserStatsReceived_t received when completed
 // if the other user has no stats, UserStatsReceived_t.m_eResult will be set to k_EResultFail
 // these stats won't be auto-updated; you'll need to call RequestUserStats() again to refresh any data
+STEAM_CALL_RESULT( UserStatsReceived_t )
 SteamAPICall_t CSteamUserStats::RequestUserStats( CSteamID steamIDUser )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDUser.ConvertToUint64());
@@ -210,6 +211,7 @@ bool CSteamUserStats::ResetAllStats( bool bAchievementsToo )
 
 // asks the Steam back-end for a leaderboard by name, and will create it if it's not yet
 // This call is asynchronous, with the result returned in LeaderboardFindResult_t
+STEAM_CALL_RESULT(LeaderboardFindResult_t)
 SteamAPICall_t CSteamUserStats::FindOrCreateLeaderboard( const char *pchLeaderboardName, ELeaderboardSortMethod eLeaderboardSortMethod, ELeaderboardDisplayType eLeaderboardDisplayType )
 {
     VLOG_INFO(__FUNCTION__ " - Name: %s, Sort: %d, Display: %d", 
@@ -219,6 +221,7 @@ SteamAPICall_t CSteamUserStats::FindOrCreateLeaderboard( const char *pchLeaderbo
 
 // as above, but won't create the leaderboard if it's not found
 // This call is asynchronous, with the result returned in LeaderboardFindResult_t
+STEAM_CALL_RESULT( LeaderboardFindResult_t )
 SteamAPICall_t CSteamUserStats::FindLeaderboard( const char *pchLeaderboardName )
 {
     VLOG_INFO(__FUNCTION__ " - Name: %s", pchLeaderboardName ? pchLeaderboardName : "null");
@@ -261,6 +264,7 @@ ELeaderboardDisplayType CSteamUserStats::GetLeaderboardDisplayType( SteamLeaderb
 // k_ELeaderboardDataRequestGlobalAroundUser requests rows around the current user, nRangeStart being negate
 //   e.g. DownloadLeaderboardEntries( hLeaderboard, k_ELeaderboardDataRequestGlobalAroundUser, -3, 3 ) will return 7 rows, 3 before the user, 3 after
 // k_ELeaderboardDataRequestFriends requests all the rows for friends of the current user 
+STEAM_CALL_RESULT( LeaderboardScoresDownloaded_t )
 SteamAPICall_t CSteamUserStats::DownloadLeaderboardEntries( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardDataRequest eLeaderboardDataRequest, int nRangeStart, int nRangeEnd )
 {
     VLOG_INFO(__FUNCTION__ " - Leaderboard: %u, Request: %d, Range: %d-%d", hSteamLeaderboard, eLeaderboardDataRequest, nRangeStart, nRangeEnd);
@@ -271,6 +275,7 @@ SteamAPICall_t CSteamUserStats::DownloadLeaderboardEntries( SteamLeaderboard_t h
 // if a user doesn't have a leaderboard entry, they won't be included in the result
 // a max of 100 users can be downloaded at a time, with only one outstanding call at a time
 STEAM_METHOD_DESC(Downloads leaderboard entries for an arbitrary set of users - ELeaderboardDataRequest is k_ELeaderboardDataRequestUsers)
+STEAM_CALL_RESULT( LeaderboardScoresDownloaded_t )
 SteamAPICall_t CSteamUserStats::DownloadLeaderboardEntriesForUsers( SteamLeaderboard_t hSteamLeaderboard,
 	                                                                STEAM_ARRAY_COUNT_D(cUsers, Array of users to retrieve) CSteamID *prgUsers, int cUsers )
 {
@@ -302,6 +307,7 @@ bool CSteamUserStats::GetDownloadedLeaderboardEntry( SteamLeaderboardEntries_t h
 // This call is asynchronous, with the result returned in LeaderboardScoreUploaded_t
 // Details are extra game-defined information regarding how the user got that score
 // pScoreDetails points to an array of int32's, cScoreDetailsCount is the number of int32's in the list
+STEAM_CALL_RESULT( LeaderboardScoreUploaded_t )
 SteamAPICall_t CSteamUserStats::UploadLeaderboardScore( SteamLeaderboard_t hSteamLeaderboard, ELeaderboardUploadScoreMethod eLeaderboardUploadScoreMethod, int32 nScore, const int32 *pScoreDetails, int cScoreDetailsCount )
 {
     VLOG_INFO(__FUNCTION__ " - Leaderboard: %u, Score: %d, Details: %d", hSteamLeaderboard, nScore, cScoreDetailsCount);
@@ -318,6 +324,7 @@ SteamAPICall_t CSteamUserStats::UploadLeaderboardScore( SteamLeaderboard_t hStea
 // Attaches a piece of user generated content the user's entry on a leaderboard.
 // hContent is a handle to a piece of user generated content that was shared using ISteamUserRemoteStorage::FileShare().
 // This call is asynchronous, with the result returned in LeaderboardUGCSet_t.
+STEAM_CALL_RESULT( LeaderboardUGCSet_t )
 SteamAPICall_t CSteamUserStats::AttachLeaderboardUGC( SteamLeaderboard_t hSteamLeaderboard, UGCHandle_t hUGC )
 {
     VLOG_INFO(__FUNCTION__ " - Leaderboard: %u, UGC: %u", hSteamLeaderboard, hUGC);
@@ -326,6 +333,7 @@ SteamAPICall_t CSteamUserStats::AttachLeaderboardUGC( SteamLeaderboard_t hSteamL
 
 // Retrieves the number of players currently playing your game (online + offline)
 // This call is asynchronous, with the result returned in NumberOfCurrentPlayers_t
+STEAM_CALL_RESULT( NumberOfCurrentPlayers_t )
 SteamAPICall_t CSteamUserStats::GetNumberOfCurrentPlayers()
 {
     VLOG_INFO(__FUNCTION__);
@@ -335,6 +343,7 @@ SteamAPICall_t CSteamUserStats::GetNumberOfCurrentPlayers()
 // Requests that Steam fetch data on the percentage of players who have received each achievement
 // for the game globally.
 // This call is asynchronous, with the result returned in GlobalAchievementPercentagesReady_t.
+STEAM_CALL_RESULT( GlobalAchievementPercentagesReady_t )
 SteamAPICall_t CSteamUserStats::RequestGlobalAchievementPercentages()
 {
     VLOG_INFO(__FUNCTION__);
@@ -370,6 +379,7 @@ bool CSteamUserStats::GetAchievementAchievedPercent( const char *pchName, float 
 // This call is asynchronous, with the results returned in GlobalStatsReceived_t.
 // nHistoryDays specifies how many days of day-by-day history to retrieve in addition
 // to the overall totals. The limit is 60.
+STEAM_CALL_RESULT( GlobalStatsReceived_t )
 SteamAPICall_t CSteamUserStats::RequestGlobalStats( int nHistoryDays )
 {
     VLOG_INFO(__FUNCTION__ " - History: %d", nHistoryDays);

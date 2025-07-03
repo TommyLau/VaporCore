@@ -183,6 +183,7 @@ bool CSteamUtils::BOverlayNeedsPresent()
 //   k_ECheckFileSignatureFileNotFound - The file does not exist on disk.
 //   k_ECheckFileSignatureInvalidSignature - The file exists, and the signing tab has been set for this file, but the file is either not signed or the signature does not match.
 //   k_ECheckFileSignatureValidSignature - The file is signed and the signature is valid.
+STEAM_CALL_RESULT( CheckFileSignature_t )
 SteamAPICall_t CSteamUtils::CheckFileSignature( const char *szFileName )
 {
     VLOG_INFO(__FUNCTION__ " - file: %s", szFileName ? szFileName : "null");

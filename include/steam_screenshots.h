@@ -13,7 +13,6 @@
 #pragma once
 #endif
 
-#include <isteamremotestorage.h>
 #include <isteamscreenshots.h>
 #include <isteamscreenshots001.h>
 #include <isteamscreenshots002.h>

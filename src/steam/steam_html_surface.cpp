@@ -48,6 +48,7 @@ bool CSteamHTMLSurface::Shutdown()
 // not implement these callback handlers, the browser may appear to hang instead of
 // navigating to new pages or triggering javascript popups.
 //
+STEAM_CALL_RESULT( HTML_BrowserReady_t )
 SteamAPICall_t CSteamHTMLSurface::CreateBrowser( const char *pchUserAgent, const char *pchUserCSS )
 {
     VLOG_INFO(__FUNCTION__ " - UserAgent: %s", pchUserAgent ? pchUserAgent : "null");
@@ -287,6 +288,7 @@ void CSteamHTMLSurface::JSDialogResponse( HHTMLBrowser unBrowserHandle, bool bRe
 }
 
 // You MUST call this in response to a HTML_FileOpenDialog_t callback
+STEAM_IGNOREATTR()
 void CSteamHTMLSurface::FileLoadDialogResponse( HHTMLBrowser unBrowserHandle, const char **pchSelectedFiles )
 {
     VLOG_INFO(__FUNCTION__ " - Handle: %u", unBrowserHandle);

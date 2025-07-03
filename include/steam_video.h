@@ -13,7 +13,6 @@
 #pragma once
 #endif
 
-#include <isteamclient.h>
 #include <isteamvideo.h>
 #include <isteamvideo001.h>
 

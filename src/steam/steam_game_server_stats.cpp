@@ -93,6 +93,7 @@ bool CSteamGameServerStats::ClearUserAchievement( CSteamID steamIDUser, const ch
 // uploaded has been rejected, either because they broke constraints
 // or were out of date. In this case the server sends back updated values.
 // The stats should be re-iterated to keep in sync.
+STEAM_CALL_RESULT( GSStatsStored_t )
 SteamAPICall_t CSteamGameServerStats::StoreUserStats( CSteamID steamIDUser )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDUser.ConvertToUint64());

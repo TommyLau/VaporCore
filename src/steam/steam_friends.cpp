@@ -366,6 +366,7 @@ bool CSteamFriends::RequestUserInformation( CSteamID steamIDUser, bool bRequireN
 // you can only ask about clans that a user is a member of
 // note that this won't download avatars automatically; if you get an officer,
 // and no avatar image is available, call RequestUserInformation( steamID, false ) to download the avatar
+STEAM_CALL_RESULT( ClanOfficerListResponse_t )
 SteamAPICall_t CSteamFriends::RequestClanOfficerList( CSteamID steamIDClan )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
@@ -491,6 +492,7 @@ AppId_t CSteamFriends::GetFriendCoplayGame( CSteamID steamIDFriend )
 // this allows in-game access to group (clan) chats from in the game
 // the behavior is somewhat sophisticated, because the user may or may not be already in the group chat from outside the game or in the overlay
 // use ActivateGameOverlayToUser( "chat", steamIDClan ) to open the in-game overlay version of the chat
+STEAM_CALL_RESULT( JoinClanChatRoomCompletionResult_t )
 SteamAPICall_t CSteamFriends::JoinClanChatRoom( CSteamID steamIDClan )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDClan.ConvertToUint64());
@@ -573,18 +575,21 @@ int CSteamFriends::GetFriendMessage( CSteamID steamIDFriend, int iMessageID, voi
 }
 
 // following apis
+STEAM_CALL_RESULT( FriendsGetFollowerCount_t )
 SteamAPICall_t CSteamFriends::GetFollowerCount( CSteamID steamID )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamID.ConvertToUint64());
     return 0;
 }
 
+STEAM_CALL_RESULT( FriendsIsFollowing_t )
 SteamAPICall_t CSteamFriends::IsFollowing( CSteamID steamID )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamID.ConvertToUint64());
     return 0;
 }
 
+STEAM_CALL_RESULT( FriendsEnumerateFollowingList_t )
 SteamAPICall_t CSteamFriends::EnumerateFollowingList( uint32 unStartIndex )
 {
     VLOG_INFO(__FUNCTION__ " - StartIndex: %d", unStartIndex);

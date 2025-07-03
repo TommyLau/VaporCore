@@ -52,6 +52,9 @@ CSteamParties::~CSteamParties()
     VLOG_INFO(__FUNCTION__);
 }
 
+// game server favorites storage
+// saves basic details about a multiplayer game server locally
+
 // returns the number of favorites servers the user has stored
 int CSteamMatchmaking::GetFavoriteGameCount()
 {
@@ -111,6 +114,7 @@ bool CSteamMatchmaking::RemoveFavoriteGame( AppId_t nAppID, uint32 nIP, uint16 n
     }
 */
 // 
+STEAM_CALL_RESULT( LobbyMatchList_t )
 SteamAPICall_t CSteamMatchmaking::RequestLobbyList()
 {
     VLOG_INFO(__FUNCTION__);
@@ -201,6 +205,7 @@ CSteamID CSteamMatchmaking::GetLobbyByIndex( int iLobby )
 // this is an asynchronous request
 // results will be returned by LobbyCreated_t callback and call result; lobby is joined & ready to use at this point
 // a LobbyEnter_t callback will also be received (since the local user is joining their own lobby)
+STEAM_CALL_RESULT( LobbyCreated_t )
 SteamAPICall_t CSteamMatchmaking::CreateLobby( ELobbyType eLobbyType, int cMaxMembers )
 {
     VLOG_INFO(__FUNCTION__ " - LobbyType = %d, MaxMembers = %d", eLobbyType, cMaxMembers);
@@ -224,6 +229,7 @@ void CSteamMatchmaking::CreateLobby( bool bPrivate )
 // this is an asynchronous request
 // results will be returned by LobbyEnter_t callback & call result, check m_EChatRoomEnterResponse to see if was successful
 // lobby metadata is available to use immediately on this call completing
+STEAM_CALL_RESULT( LobbyEnter_t )
 SteamAPICall_t CSteamMatchmaking::JoinLobby( CSteamID steamIDLobby )
 {
     VLOG_INFO(__FUNCTION__ " - Lobby = %llu", steamIDLobby.GetAccountID());

@@ -80,12 +80,17 @@ S_API bool S_CALLTYPE SteamInternal_GameServer_Init( uint32 unIP, uint16 usPort,
     return true;
 }
 
-// Initialize ISteamGameServer interface object, and set server properties which may not be changed.
+// Initialize SteamGameServer client and interface objects, and set server properties which may not be changed.
 //
 // After calling this function, you should set any additional server parameters, and then
 // call ISteamGameServer::LogOnAnonymous() or ISteamGameServer::LogOn()
 //
 // - usSteamPort is the local port used to communicate with the steam servers.
+//   NOTE: unless you are using ver old Steam client binaries, this parameter is ignored, and
+//         you should pass 0.  Gameservers now always use WebSockets to talk to Steam.
+//         This protocol is TCP-based and thus always uses an ephemeral local port.
+//         Older steam client binaries used UDP to talk to Steam, and this argument was useful.
+//         A future version of the SDK will remove this argument.
 // - usGamePort is the port that clients will connect to for gameplay.
 // - usQueryPort is the port that will manage server browser related duties and info
 //		pings from clients.  If you pass MASTERSERVERUPDATERPORT_USEGAMESOCKETSHARE for usQueryPort, then it

@@ -596,7 +596,7 @@ ISteamGameSearch *CSteamClient::GetISteamGameSearch( HSteamUser hSteamuser, HSte
 }
 
 // Deprecated. Applications should use SteamAPI_RunCallbacks() or SteamGameServer_RunCallbacks() instead.
-// Changed from Steam SDK v1.36, backward compatibility
+// Deprecated from Steam SDK v1.36, backward compatibility
 void CSteamClient::RunFrame()
 {
     VLOG_INFO(__FUNCTION__);
@@ -669,7 +669,7 @@ void *CSteamClient::DEPRECATED_GetISteamUnifiedMessages( HSteamUser hSteamuser, 
 }
 
 // Removed from Steam SDK v1.42, backward compatibility
-ISteamUnifiedMessages* CSteamClient::GetISteamUnifiedMessages(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamUnifiedMessages* CSteamClient::GetISteamUnifiedMessages( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -691,7 +691,7 @@ ISteamUnifiedMessages* CSteamClient::GetISteamUnifiedMessages(HSteamUser hSteamu
 
 
 // Exposes the ISteamController interface - deprecated in favor of Steam Input
-ISteamController* CSteamClient::GetISteamController(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamController* CSteamClient::GetISteamController( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -718,7 +718,7 @@ ISteamController* CSteamClient::GetISteamController(HSteamUser hSteamUser, HStea
 }
 
 // Exposes the ISteamUGC interface 
-ISteamUGC* CSteamClient::GetISteamUGC(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamUGC* CSteamClient::GetISteamUGC( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -753,7 +753,7 @@ ISteamUGC* CSteamClient::GetISteamUGC(HSteamUser hSteamUser, HSteamPipe hSteamPi
 }
 
 // returns app list interface, only available on specially registered apps
-ISteamAppList* CSteamClient::GetISteamAppList(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamAppList* CSteamClient::GetISteamAppList( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -774,7 +774,7 @@ ISteamAppList* CSteamClient::GetISteamAppList(HSteamUser hSteamUser, HSteamPipe 
 }
 
 // Music Player
-ISteamMusic* CSteamClient::GetISteamMusic(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamMusic* CSteamClient::GetISteamMusic( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -795,7 +795,7 @@ ISteamMusic* CSteamClient::GetISteamMusic(HSteamUser hSteamuser, HSteamPipe hSte
 }
 
 // Music Player Remote
-ISteamMusicRemote* CSteamClient::GetISteamMusicRemote(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamMusicRemote* CSteamClient::GetISteamMusicRemote( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -816,7 +816,7 @@ ISteamMusicRemote* CSteamClient::GetISteamMusicRemote(HSteamUser hSteamuser, HSt
 }
 
 // html page display
-ISteamHTMLSurface* CSteamClient::GetISteamHTMLSurface(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamHTMLSurface* CSteamClient::GetISteamHTMLSurface( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -842,7 +842,7 @@ ISteamHTMLSurface* CSteamClient::GetISteamHTMLSurface(HSteamUser hSteamuser, HSt
 
 // Helper functions for internal Steam usage
 // Deprecated from Steam SDK v1.37, backward compatibility
-void CSteamClient::DEPRECATED_Set_SteamAPI_CPostAPIResultInProcess(void (*func)())
+void CSteamClient::DEPRECATED_Set_SteamAPI_CPostAPIResultInProcess( void (*func)() )
 {
     VLOG_INFO(__FUNCTION__);
 }
@@ -854,7 +854,7 @@ void CSteamClient::Set_SteamAPI_CPostAPIResultInProcess(SteamAPI_PostAPIResultIn
 }
 
 // Deprecated from Steam SDK v1.37, backward compatibility
-void CSteamClient::DEPRECATED_Remove_SteamAPI_CPostAPIResultInProcess(void (*func)())
+void CSteamClient::DEPRECATED_Remove_SteamAPI_CPostAPIResultInProcess( void (*func)() )
 {
     VLOG_INFO(__FUNCTION__);
 }
@@ -872,7 +872,7 @@ void CSteamClient::Set_SteamAPI_CCheckCallbackRegisteredInProcess(SteamAPI_Check
 }
 
 // inventory
-ISteamInventory* CSteamClient::GetISteamInventory(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamInventory* CSteamClient::GetISteamInventory( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -895,7 +895,7 @@ ISteamInventory* CSteamClient::GetISteamInventory(HSteamUser hSteamuser, HSteamP
 }
 
 // Video
-ISteamVideo* CSteamClient::GetISteamVideo(HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamVideo* CSteamClient::GetISteamVideo( HSteamUser hSteamuser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamuser, hSteamPipe, pchVersion);
 
@@ -939,7 +939,7 @@ ISteamParentalSettings *CSteamClient::GetISteamParentalSettings( HSteamUser hSte
 }
 
 // Exposes the Steam Input interface for controller support
-ISteamInput* CSteamClient::GetISteamInput(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamInput* CSteamClient::GetISteamInput( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamUser, hSteamPipe, pchVersion);
 
@@ -960,7 +960,7 @@ ISteamInput* CSteamClient::GetISteamInput(HSteamUser hSteamUser, HSteamPipe hSte
 }
 
 // Steam Parties interface
-ISteamParties* CSteamClient::GetISteamParties(HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char* pchVersion)
+ISteamParties* CSteamClient::GetISteamParties( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
 {
     VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamUser, hSteamPipe, pchVersion);
 

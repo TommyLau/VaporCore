@@ -52,6 +52,7 @@ UGCQueryHandle_t CSteamUGC::CreateQueryUGCDetailsRequest( PublishedFileId_t *pve
 }
 
 // Send the query to Steam
+STEAM_CALL_RESULT( SteamUGCQueryCompleted_t )
 SteamAPICall_t CSteamUGC::SendQueryUGCRequest( UGCQueryHandle_t handle )
 {
     VLOG_INFO(__FUNCTION__ " - handle: %d", handle);
@@ -258,6 +259,7 @@ SteamAPICall_t CSteamUGC::RequestUGCDetails( PublishedFileId_t nPublishedFileID 
 // Steam Workshop Creator API
 
 // create new item for this app with no content attached yet
+STEAM_CALL_RESULT( CreateItemResult_t )
 SteamAPICall_t CSteamUGC::CreateItem( AppId_t nConsumerAppId, EWorkshopFileType eFileType )
 {
     VLOG_INFO(__FUNCTION__ " - nConsumerAppId: %d, eFileType: %d", nConsumerAppId, eFileType);
@@ -384,6 +386,7 @@ bool CSteamUGC::RemoveItemPreview( UGCUpdateHandle_t handle, uint32 index )
 }
 
 // commit update process started with StartItemUpdate()
+STEAM_CALL_RESULT( SubmitItemUpdateResult_t )
 SteamAPICall_t CSteamUGC::SubmitItemUpdate( UGCUpdateHandle_t handle, const char *pchChangeNote )
 {
     VLOG_INFO(__FUNCTION__ " - handle: %llu, pchChangeNote: %s", handle, pchChangeNote ? pchChangeNote : "NULL");
@@ -397,25 +400,28 @@ EItemUpdateStatus CSteamUGC::GetItemUpdateProgress( UGCUpdateHandle_t handle, ui
 }
 
 // Steam Workshop Consumer API
-
+STEAM_CALL_RESULT( SetUserItemVoteResult_t )
 SteamAPICall_t CSteamUGC::SetUserItemVote( PublishedFileId_t nPublishedFileID, bool bVoteUp )
 {
     VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu, bVoteUp: %s", nPublishedFileID, bVoteUp ? "true" : "false");
     return 0;
 }
 
+STEAM_CALL_RESULT( GetUserItemVoteResult_t )
 SteamAPICall_t CSteamUGC::GetUserItemVote( PublishedFileId_t nPublishedFileID )
 {
     VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu", nPublishedFileID);
     return 0;
 }
 
+STEAM_CALL_RESULT( UserFavoriteItemsListChanged_t )
 SteamAPICall_t CSteamUGC::AddItemToFavorites( AppId_t nAppId, PublishedFileId_t nPublishedFileID )
 {
     VLOG_INFO(__FUNCTION__ " - nAppId: %d, nPublishedFileID: %llu", nAppId, nPublishedFileID);
     return 0;
 }
 
+STEAM_CALL_RESULT( UserFavoriteItemsListChanged_t )
 SteamAPICall_t CSteamUGC::RemoveItemFromFavorites( AppId_t nAppId, PublishedFileId_t nPublishedFileID )
 {
     VLOG_INFO(__FUNCTION__ " - nAppId: %d, nPublishedFileID: %llu", nAppId, nPublishedFileID);
@@ -423,6 +429,7 @@ SteamAPICall_t CSteamUGC::RemoveItemFromFavorites( AppId_t nAppId, PublishedFile
 }
 
 // subscribe to this item, will be installed ASAP
+STEAM_CALL_RESULT( RemoteStorageSubscribePublishedFileResult_t )
 SteamAPICall_t CSteamUGC::SubscribeItem( PublishedFileId_t nPublishedFileID )
 {
     VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu", nPublishedFileID);
@@ -430,6 +437,7 @@ SteamAPICall_t CSteamUGC::SubscribeItem( PublishedFileId_t nPublishedFileID )
 }
 
 // unsubscribe from this item, will be uninstalled after game quits
+STEAM_CALL_RESULT( RemoteStorageUnsubscribePublishedFileResult_t )
 SteamAPICall_t CSteamUGC::UnsubscribeItem( PublishedFileId_t nPublishedFileID )
 {
     VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu", nPublishedFileID);
@@ -519,18 +527,21 @@ void CSteamUGC::SuspendDownloads( bool bSuspend )
 }
 
 // usage tracking
+STEAM_CALL_RESULT( StartPlaytimeTrackingResult_t )
 SteamAPICall_t CSteamUGC::StartPlaytimeTracking( PublishedFileId_t *pvecPublishedFileID, uint32 unNumPublishedFileIDs )
 {
     VLOG_INFO(__FUNCTION__ " - pvecPublishedFileID: %p, unNumPublishedFileIDs: %d", pvecPublishedFileID, unNumPublishedFileIDs);
     return 0;
 }
 
+STEAM_CALL_RESULT( StopPlaytimeTrackingResult_t )
 SteamAPICall_t CSteamUGC::StopPlaytimeTracking( PublishedFileId_t *pvecPublishedFileID, uint32 unNumPublishedFileIDs )
 {
     VLOG_INFO(__FUNCTION__ " - pvecPublishedFileID: %p, unNumPublishedFileIDs: %d", pvecPublishedFileID, unNumPublishedFileIDs);
     return 0;
 }
 
+STEAM_CALL_RESULT( StopPlaytimeTrackingResult_t )
 SteamAPICall_t CSteamUGC::StopPlaytimeTrackingForAllItems()
 {
     VLOG_INFO(__FUNCTION__);
@@ -538,12 +549,14 @@ SteamAPICall_t CSteamUGC::StopPlaytimeTrackingForAllItems()
 }
 
 // parent-child relationship or dependency management
+STEAM_CALL_RESULT( AddUGCDependencyResult_t )
 SteamAPICall_t CSteamUGC::AddDependency( PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID )
 {
     VLOG_INFO(__FUNCTION__ " - nParentPublishedFileID: %llu, nChildPublishedFileID: %llu", nParentPublishedFileID, nChildPublishedFileID);
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoveUGCDependencyResult_t )
 SteamAPICall_t CSteamUGC::RemoveDependency( PublishedFileId_t nParentPublishedFileID, PublishedFileId_t nChildPublishedFileID )
 {
     VLOG_INFO(__FUNCTION__ " - nParentPublishedFileID: %llu, nChildPublishedFileID: %llu", nParentPublishedFileID, nChildPublishedFileID);
@@ -551,12 +564,14 @@ SteamAPICall_t CSteamUGC::RemoveDependency( PublishedFileId_t nParentPublishedFi
 }
 
 // add/remove app dependence/requirements (usually DLC)
+STEAM_CALL_RESULT( AddAppDependencyResult_t )
 SteamAPICall_t CSteamUGC::AddAppDependency( PublishedFileId_t nPublishedFileID, AppId_t nAppID )
 {
     VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu, nAppID: %u", nPublishedFileID, nAppID);
     return 0;
 }
 
+STEAM_CALL_RESULT( RemoveAppDependencyResult_t )
 SteamAPICall_t CSteamUGC::RemoveAppDependency( PublishedFileId_t nPublishedFileID, AppId_t nAppID )
 {
     VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu, nAppID: %u", nPublishedFileID, nAppID);
@@ -564,7 +579,7 @@ SteamAPICall_t CSteamUGC::RemoveAppDependency( PublishedFileId_t nPublishedFileI
 }
 
 // request app dependencies. note that whatever callback you register for GetAppDependenciesResult_t may be called multiple times
-// until all app dependencies have been returned
+// until all app dependencies have been returned	STEAM_CALL_RESULT( GetAppDependenciesResult_t )
 SteamAPICall_t CSteamUGC::GetAppDependencies( PublishedFileId_t nPublishedFileID )
 {
     VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu", nPublishedFileID);
@@ -572,6 +587,7 @@ SteamAPICall_t CSteamUGC::GetAppDependencies( PublishedFileId_t nPublishedFileID
 }
 
 // delete the item without prompting the user
+STEAM_CALL_RESULT( DeleteItemResult_t )
 SteamAPICall_t CSteamUGC::DeleteItem( PublishedFileId_t nPublishedFileID )
 {
     VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu", nPublishedFileID);

@@ -35,7 +35,7 @@ uint32 CSteamAppList::GetInstalledApps(AppId_t* pvecAppID, uint32 unMaxAppIDs)
 }
 
 // returns -1 if no name was found
-int CSteamAppList::GetAppName(AppId_t nAppID, char* pchName, int cchNameMax)
+int CSteamAppList::GetAppName(AppId_t nAppID, STEAM_OUT_STRING() char* pchName, int cchNameMax)
 {
     VLOG_INFO(__FUNCTION__ " - AppID: %d, MaxNameLength: %d", nAppID, cchNameMax);
     return -1;

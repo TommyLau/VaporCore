@@ -13,7 +13,6 @@
 #pragma once
 #endif
 
-#include <isteamclient.h>
 #include <isteamgamecoordinator.h>
 
 //-----------------------------------------------------------------------------
@@ -24,9 +23,14 @@ class CSteamGameCoordinator :
     public ISteamGameCoordinator
 {
 public:
-    CSteamGameCoordinator();
-    ~CSteamGameCoordinator();
+    // Singleton accessor
+    static CSteamGameCoordinator& GetInstance()
+    {
+		static CSteamGameCoordinator instance;
+		return instance;
+    }
 
+public:
     // sends a message to the Game Coordinator
     EGCResults SendMessage( uint32 unMsgType, const void *pubData, uint32 cubData ) override;
 
@@ -39,13 +43,15 @@ public:
 	// and the message remains at the head of the queue.
     EGCResults RetrieveMessage( uint32 *punMsgType, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize ) override; 
 
-    // Helper methods
-    static CSteamGameCoordinator* GetInstance();
-    static void ReleaseInstance();
 
 private:
-    // Singleton instance
-    static CSteamGameCoordinator* s_pInstance;
+    // Private constructor and destructor for singleton
+    CSteamGameCoordinator();
+    ~CSteamGameCoordinator();
+
+    // Delete copy constructor and assignment operator
+    CSteamGameCoordinator(const CSteamGameCoordinator&) = delete;
+    CSteamGameCoordinator& operator=(const CSteamGameCoordinator&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_GAME_COORDINATOR_H

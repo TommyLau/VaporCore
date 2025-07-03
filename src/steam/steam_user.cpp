@@ -295,6 +295,7 @@ void CSteamUser::AdvertiseGame( CSteamID steamIDGameServer, uint32 unIPServer, u
 // Requests a ticket encrypted with an app specific shared key
 // pDataToInclude, cbDataToInclude will be encrypted into the ticket
 // ( This is asynchronous, you must wait for the ticket to be completed by the server )
+STEAM_CALL_RESULT( EncryptedAppTicketResponse_t )
 SteamAPICall_t CSteamUser::RequestEncryptedAppTicket( void *pDataToInclude, int cbDataToInclude )
 {
     VLOG_INFO(__FUNCTION__ " - Data: %s, Size: %d", pDataToInclude, cbDataToInclude);
@@ -334,6 +335,7 @@ int CSteamUser::GetPlayerSteamLevel()
 // or else immediately navigate to the result URL using a hidden browser window.
 // NOTE 2: The resulting authorization cookie has an expiration time of one day,
 // so it would be a good idea to request and visit a new auth URL every 12 hours.
+STEAM_CALL_RESULT( StoreAuthURLResponse_t )
 SteamAPICall_t CSteamUser::RequestStoreAuthURL( const char *pchRedirectURL )
 {
     VLOG_INFO(__FUNCTION__ " - RedirectURL: %s", pchRedirectURL);

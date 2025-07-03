@@ -120,6 +120,93 @@ S_API void S_CALLTYPE SteamAPI_SetMiniDumpComment( const char *pchMsg )
     VLOG_INFO(__FUNCTION__ " - Comment: %s", pchMsg);
 }
 
+//----------------------------------------------------------------------------------------------------------------------------------------------------------//
+//	steamclient.dll private wrapper functions
+//
+//	The following functions are part of abstracting API access to the steamclient.dll, but should only be used in very specific cases
+//----------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+// SteamAPI_IsSteamRunning() returns true if Steam is currently running
+S_API bool S_CALLTYPE SteamAPI_IsSteamRunning()
+{
+    VLOG_INFO(__FUNCTION__);
+    return true;
+}
+
+// Pumps out all the steam messages, calling registered callbacks.
+// NOT THREADSAFE - do not call from multiple threads simultaneously.
+S_API void Steam_RunCallbacks( HSteamPipe hSteamPipe, bool bGameServerCallbacks )
+{
+    // TODO: Implement Steam_RunCallbacks
+    VLOG_INFO(__FUNCTION__ " - Steam Pipe: %d, Game Server Callbacks: %d", hSteamPipe, bGameServerCallbacks);
+}
+
+// register the callback funcs to use to interact with the steam dll
+S_API void Steam_RegisterInterfaceFuncs( void *hModule )
+{
+    // TODO: Implement Steam_RegisterInterfaceFuncs
+    VLOG_INFO(__FUNCTION__ " - Module: %p", hModule);
+}
+
+// returns the HSteamUser of the last user to dispatch a callback
+S_API HSteamUser Steam_GetHSteamUserCurrent()
+{
+    VLOG_INFO(__FUNCTION__);
+    // TODO: Implement Steam_GetHSteamUserCurrent
+    return g_hSteamUser;
+}
+
+// returns the filename path of the current running Steam process, used if you need to load an explicit steam dll by name.
+// DEPRECATED - implementation is Windows only, and the path returned is a UTF-8 string which must be converted to UTF-16 for use with Win32 APIs
+S_API const char *SteamAPI_GetSteamInstallPath()
+{
+    VLOG_INFO(__FUNCTION__);
+    // TODO: Implement SteamAPI_GetSteamInstallPath
+    static const char* steamPath = "C:\\Program Files (x86)\\Steam";
+    return steamPath;
+}
+
+// sets whether or not Steam_RunCallbacks() should do a try {} catch (...) {} around calls to issuing callbacks
+S_API void SteamAPI_SetTryCatchCallbacks( bool bTryCatchCallbacks ) {
+    VLOG_INFO(__FUNCTION__ " - Try Catch Callbacks: %d", bTryCatchCallbacks);
+    // TODO: Implement SteamAPI_SetTryCatchCallbacks
+}
+
+// backwards compat export, passes through to SteamAPI_ variants
+S_API HSteamPipe GetHSteamPipe() {
+    VLOG_INFO(__FUNCTION__);
+    return g_hSteamPipe;
+}
+
+S_API HSteamUser GetHSteamUser() {
+    VLOG_INFO(__FUNCTION__ " - SteamUser: %d", g_hSteamUser);
+    return g_hSteamUser;
+}
+
+// exists only for backwards compat with code written against older SDKs
+S_API bool S_CALLTYPE SteamAPI_InitSafe() {
+    VLOG_INFO(__FUNCTION__);
+    return SteamAPI_Init();
+}
+
+// this should be called before the game initialized the steam APIs
+// pchDate should be of the format "Mmm dd yyyy" (such as from the __ DATE __ macro )
+// pchTime should be of the format "hh:mm:ss" (such as from the __ TIME __ macro )
+// bFullMemoryDumps (Win32 only) -- writes out a uuid-full.dmp in the client/dumps folder
+// pvContext-- can be NULL, will be the void * context passed into m_pfnPreMinidumpCallback
+// PFNPreMinidumpCallback m_pfnPreMinidumpCallback   -- optional callback which occurs just before a .dmp file is written during a crash.  Applications can hook this to allow adding additional information into the .dmp comment stream.
+// Steam SDK v1.09
+// S_API void SteamAPI_UseBreakpadCrashHandler( char const *pchVersion, char const *pchDate, char const *pchTime )
+// Steam SDK v1.10
+S_API void S_CALLTYPE SteamAPI_UseBreakpadCrashHandler( char const *pchVersion, char const *pchDate, char const *pchTime, bool bFullMemoryDumps, void *pvContext, PFNPreMinidumpCallback m_pfnPreMinidumpCallback )
+{
+    VLOG_INFO(__FUNCTION__ " - Version: %s, Date: %s, Time: %s", pchVersion, pchDate, pchTime);
+}
+
+S_API void S_CALLTYPE SteamAPI_SetBreakpadAppID( uint32 unAppID )
+{
+    VLOG_INFO(__FUNCTION__ " - AppID: %u", unAppID);
+}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 // Global accessors for Steamworks C++ APIs. See individual isteam*.h files for details.
@@ -264,115 +351,4 @@ S_API ISteamVideo *S_CALLTYPE SteamVideo()
 {
     VLOG_INFO(__FUNCTION__);
     return CSteamClient::GetInstance().GetISteamVideo(g_hSteamPipe, g_hSteamUser, STEAMVIDEO_INTERFACE_VERSION_001);
-}
-
-//----------------------------------------------------------------------------------------------------------------------------------------------------------//
-//	steam callback and call-result helpers
-//
-//	The following macros and classes are used to register your application for
-//	callbacks and call-results, which are delivered in a predictable manner.
-//
-//	STEAM_CALLBACK macros are meant for use inside of a C++ class definition.
-//	They map a Steam notification callback directly to a class member function
-//	which is automatically prototyped as "void func( callback_type *pParam )".
-//
-//	CCallResult is used with specific Steam APIs that return "result handles".
-//	The handle can be passed to a CCallResult object's Set function, along with
-//	an object pointer and member-function pointer. The member function will
-//	be executed once the results of the Steam API call are available.
-//
-//	CCallback and CCallbackManual classes can be used instead of STEAM_CALLBACK
-//	macros if you require finer control over registration and unregistration.
-//
-//	Callbacks and call-results are queued automatically and are only
-//	delivered/executed when your application calls SteamAPI_RunCallbacks().
-//----------------------------------------------------------------------------------------------------------------------------------------------------------//
-
-
-//----------------------------------------------------------------------------------------------------------------------------------------------------------//
-//	steamclient.dll private wrapper functions
-//
-//	The following functions are part of abstracting API access to the steamclient.dll, but should only be used in very specific cases
-//----------------------------------------------------------------------------------------------------------------------------------------------------------//
-
-// SteamAPI_IsSteamRunning() returns true if Steam is currently running
-S_API bool S_CALLTYPE SteamAPI_IsSteamRunning()
-{
-    VLOG_INFO(__FUNCTION__);
-    return true;
-}
-
-// Pumps out all the steam messages, calling registered callbacks.
-// NOT THREADSAFE - do not call from multiple threads simultaneously.
-S_API void Steam_RunCallbacks( HSteamPipe hSteamPipe, bool bGameServerCallbacks )
-{
-    // TODO: Implement Steam_RunCallbacks
-    VLOG_INFO(__FUNCTION__ " - Steam Pipe: %d, Game Server Callbacks: %d", hSteamPipe, bGameServerCallbacks);
-}
-
-// register the callback funcs to use to interact with the steam dll
-S_API void Steam_RegisterInterfaceFuncs( void *hModule )
-{
-    // TODO: Implement Steam_RegisterInterfaceFuncs
-    VLOG_INFO(__FUNCTION__ " - Module: %p", hModule);
-}
-
-// returns the HSteamUser of the last user to dispatch a callback
-S_API HSteamUser Steam_GetHSteamUserCurrent()
-{
-    VLOG_INFO(__FUNCTION__);
-    // TODO: Implement Steam_GetHSteamUserCurrent
-    return g_hSteamUser;
-}
-
-// returns the filename path of the current running Steam process, used if you need to load an explicit steam dll by name.
-// DEPRECATED - implementation is Windows only, and the path returned is a UTF-8 string which must be converted to UTF-16 for use with Win32 APIs
-S_API const char *SteamAPI_GetSteamInstallPath()
-{
-    VLOG_INFO(__FUNCTION__);
-    // TODO: Implement SteamAPI_GetSteamInstallPath
-    static const char* steamPath = "C:\\Program Files (x86)\\Steam";
-    return steamPath;
-}
-
-// sets whether or not Steam_RunCallbacks() should do a try {} catch (...) {} around calls to issuing callbacks
-S_API void SteamAPI_SetTryCatchCallbacks( bool bTryCatchCallbacks ) {
-    VLOG_INFO(__FUNCTION__ " - Try Catch Callbacks: %d", bTryCatchCallbacks);
-    // TODO: Implement SteamAPI_SetTryCatchCallbacks
-}
-
-// backwards compat export, passes through to SteamAPI_ variants
-S_API HSteamPipe GetHSteamPipe() {
-    VLOG_INFO(__FUNCTION__);
-    return g_hSteamPipe;
-}
-
-S_API HSteamUser GetHSteamUser() {
-    VLOG_INFO(__FUNCTION__ " - SteamUser: %d", g_hSteamUser);
-    return g_hSteamUser;
-}
-
-// exists only for backwards compat with code written against older SDKs
-S_API bool S_CALLTYPE SteamAPI_InitSafe() {
-    VLOG_INFO(__FUNCTION__);
-    return SteamAPI_Init();
-}
-
-// this should be called before the game initialized the steam APIs
-// pchDate should be of the format "Mmm dd yyyy" (such as from the __ DATE __ macro )
-// pchTime should be of the format "hh:mm:ss" (such as from the __ TIME __ macro )
-// bFullMemoryDumps (Win32 only) -- writes out a uuid-full.dmp in the client/dumps folder
-// pvContext-- can be NULL, will be the void * context passed into m_pfnPreMinidumpCallback
-// PFNPreMinidumpCallback m_pfnPreMinidumpCallback   -- optional callback which occurs just before a .dmp file is written during a crash.  Applications can hook this to allow adding additional information into the .dmp comment stream.
-// Steam SDK v1.09
-// S_API void SteamAPI_UseBreakpadCrashHandler( char const *pchVersion, char const *pchDate, char const *pchTime )
-// Steam SDK v1.10
-S_API void S_CALLTYPE SteamAPI_UseBreakpadCrashHandler( char const *pchVersion, char const *pchDate, char const *pchTime, bool bFullMemoryDumps, void *pvContext, PFNPreMinidumpCallback m_pfnPreMinidumpCallback )
-{
-    VLOG_INFO(__FUNCTION__ " - Version: %s, Date: %s, Time: %s", pchVersion, pchDate, pchTime);
-}
-
-S_API void S_CALLTYPE SteamAPI_SetBreakpadAppID( uint32 unAppID )
-{
-    VLOG_INFO(__FUNCTION__ " - AppID: %u", unAppID);
 }

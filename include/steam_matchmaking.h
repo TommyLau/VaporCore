@@ -13,7 +13,6 @@
 #pragma once
 #endif
 
-#include <isteamclient.h>
 #include <isteammatchmaking.h>
 #include <isteammatchmaking002.h>
 #include <isteammatchmaking004.h>

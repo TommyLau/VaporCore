@@ -12,30 +12,27 @@
 #include "vapor_base.h"
 #include "steam_game_coordinator.h"
 
-// Static instance
-CSteamGameCoordinator* CSteamGameCoordinator::s_pInstance = nullptr;
-
 CSteamGameCoordinator::CSteamGameCoordinator()
 {
-    VLOG_INFO("CSteamGameCoordinator constructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 CSteamGameCoordinator::~CSteamGameCoordinator()
 {
-    VLOG_INFO("CSteamGameCoordinator destructor called");
+    VLOG_INFO(__FUNCTION__);
 }
 
 // sends a message to the Game Coordinator
 EGCResults CSteamGameCoordinator::SendMessage( uint32 unMsgType, const void *pubData, uint32 cubData )
 {
-    VLOG_DEBUG("SendMessage called - MsgType: %d, DataSize: %d", unMsgType, cubData);
+    VLOG_INFO(__FUNCTION__ " - MsgType: %d, DataSize: %d", unMsgType, cubData);
     return EGCResults::k_EGCResultOK;
 }
 
 // returns true if there is a message waiting from the game coordinator
 bool CSteamGameCoordinator::IsMessageAvailable( uint32 *pcubMsgSize )
 {
-    VLOG_DEBUG("IsMessageAvailable called - MsgSize: %d", *pcubMsgSize);
+    VLOG_INFO(__FUNCTION__ " - MsgSize: %d", *pcubMsgSize);
     return false;
 }
 
@@ -45,25 +42,6 @@ bool CSteamGameCoordinator::IsMessageAvailable( uint32 *pcubMsgSize )
 // and the message remains at the head of the queue.
 EGCResults CSteamGameCoordinator::RetrieveMessage( uint32 *punMsgType, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize )
 {
-    VLOG_DEBUG("RetrieveMessage called - MsgType: %d, DataSize: %d", *punMsgType, *pcubMsgSize);
+    VLOG_INFO(__FUNCTION__ " - MsgType: %d, DataSize: %d", *punMsgType, *pcubMsgSize);
     return EGCResults::k_EGCResultOK;
-}
-
-// Helper methods
-CSteamGameCoordinator* CSteamGameCoordinator::GetInstance()
-{
-    if (!s_pInstance)
-    {
-        s_pInstance = new CSteamGameCoordinator();
-    }
-    return s_pInstance;
-}
-
-void CSteamGameCoordinator::ReleaseInstance()
-{
-    if (s_pInstance)
-    {
-        delete s_pInstance;
-        s_pInstance = nullptr;
-    }
 }

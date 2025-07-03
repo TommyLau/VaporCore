@@ -47,7 +47,9 @@ EResult CSteamInventory::GetResultStatus( SteamInventoryResult_t resultHandle )
 // Copies the contents of a result set into a flat array. The specific
 // contents of the result set depend on which query which was used.
 STEAM_METHOD_DESC(Copies the contents of a result set into a flat array. The specific contents of the result set depend on which query which was used.)
-bool CSteamInventory::GetResultItems( SteamInventoryResult_t resultHandle, STEAM_OUT_ARRAY_COUNT( punOutItemsArraySize,Output array) SteamItemDetails_t *pOutItemsArray, uint32 *punOutItemsArraySize )
+bool CSteamInventory::GetResultItems( SteamInventoryResult_t resultHandle,
+                                      STEAM_OUT_ARRAY_COUNT( punOutItemsArraySize,Output array) SteamItemDetails_t *pOutItemsArray,
+									  uint32 *punOutItemsArraySize )
 {
 	VLOG_INFO(__FUNCTION__ " - resultHandle: %d, pOutItemsArray: %p, punOutItemsArraySize: %d", resultHandle, pOutItemsArray, punOutItemsArraySize);
 	return false;
@@ -235,7 +237,9 @@ bool CSteamInventory::ConsumeItem( SteamInventoryResult_t *pResultHandle, SteamI
 // Exchange recipes are evaluated atomically by the Inventory Service; if the supplied
 // components do not match the recipe, or do not contain sufficient quantity, the 
 // exchange will fail.
-bool CSteamInventory::ExchangeItems( SteamInventoryResult_t *pResultHandle, STEAM_ARRAY_COUNT(unArrayGenerateLength) const SteamItemDef_t *pArrayGenerate, STEAM_ARRAY_COUNT(unArrayGenerateLength) const uint32 *punArrayGenerateQuantity, uint32 unArrayGenerateLength, STEAM_ARRAY_COUNT(unArrayDestroyLength) const SteamItemInstanceID_t *pArrayDestroy, STEAM_ARRAY_COUNT(unArrayDestroyLength) const uint32 *punArrayDestroyQuantity, uint32 unArrayDestroyLength )
+bool CSteamInventory::ExchangeItems( SteamInventoryResult_t *pResultHandle,
+                                     STEAM_ARRAY_COUNT(unArrayGenerateLength) const SteamItemDef_t *pArrayGenerate, STEAM_ARRAY_COUNT(unArrayGenerateLength) const uint32 *punArrayGenerateQuantity, uint32 unArrayGenerateLength,
+									 STEAM_ARRAY_COUNT(unArrayDestroyLength) const SteamItemInstanceID_t *pArrayDestroy, STEAM_ARRAY_COUNT(unArrayDestroyLength) const uint32 *punArrayDestroyQuantity, uint32 unArrayDestroyLength )
 {
 	VLOG_INFO(__FUNCTION__ " - pResultHandle: %p, pArrayGenerate: %p, punArrayGenerateQuantity: %p, unArrayGenerateLength: %d, pArrayDestroy: %p, punArrayDestroyQuantity: %p, unArrayDestroyLength: %d", pResultHandle, pArrayGenerate, punArrayGenerateQuantity, unArrayGenerateLength, pArrayDestroy, punArrayDestroyQuantity, unArrayDestroyLength);
 	return false;
@@ -337,6 +341,7 @@ bool CSteamInventory::GetItemDefinitionProperty( SteamItemDef_t iDefinition, con
 // Request the list of "eligible" promo items that can be manually granted to the given
 // user.  These are promo items of type "manual" that won't be granted automatically.
 // An example usage of this is an item that becomes available every week.
+STEAM_CALL_RESULT( SteamInventoryEligiblePromoItemDefIDs_t )
 SteamAPICall_t CSteamInventory::RequestEligiblePromoItemDefinitionsIDs( CSteamID steamID )
 {
     VLOG_INFO(__FUNCTION__ " - steamID: %llu", steamID.ConvertToUint64());
@@ -361,6 +366,7 @@ bool CSteamInventory::GetEligiblePromoItemDefinitionIDs(
 // 
 // Once the purchase has been authorized and completed by the user, the callback SteamInventoryResultReady_t 
 // will be posted.
+STEAM_CALL_RESULT( SteamInventoryStartPurchaseResult_t )
 SteamAPICall_t CSteamInventory::StartPurchase( STEAM_ARRAY_COUNT(unArrayLength) const SteamItemDef_t *pArrayItemDefs, STEAM_ARRAY_COUNT(unArrayLength) const uint32 *punArrayQuantity, uint32 unArrayLength )
 {
     VLOG_INFO(__FUNCTION__ " - pArrayItemDefs: %p, punArrayQuantity: %p, unArrayLength: %d", pArrayItemDefs, punArrayQuantity, unArrayLength);
@@ -368,6 +374,7 @@ SteamAPICall_t CSteamInventory::StartPurchase( STEAM_ARRAY_COUNT(unArrayLength) 
 }
 
 // Request current prices for all applicable item definitions
+STEAM_CALL_RESULT( SteamInventoryRequestPricesResult_t )
 SteamAPICall_t CSteamInventory::RequestPrices()
 {
     VLOG_INFO(__FUNCTION__);

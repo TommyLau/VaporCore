@@ -13,7 +13,6 @@
 #pragma once
 #endif
 
-#include <isteamclient.h>
 #include <isteamgamestats.h>
 
 //-----------------------------------------------------------------------------
@@ -23,9 +22,14 @@ class CSteamGameStats :
     public ISteamGameStats
 {
 public:
-    CSteamGameStats();
-    ~CSteamGameStats();
+    // Singleton accessor
+    static CSteamGameStats& GetInstance()
+    {
+		static CSteamGameStats instance;
+		return instance;
+    }
 
+public:
 	SteamAPICall_t GetNewSession( int8 nAccountType, uint64 ulAccountID, int32 nAppID, RTime32 rtTimeStarted ) override;
 	SteamAPICall_t EndSession( uint64 ulSessionID, RTime32 rtTimeEnded, int nReasonCode ) override;
 	EResult AddSessionAttributeInt( uint64 ulSessionID, const char* pstrName, int32 nData ) override;
@@ -42,13 +46,14 @@ public:
 	EResult AddSessionAttributeInt64( uint64 ulSessionID, const char *pstrName, int64 llData ) override;
 	EResult AddRowAttributeInt64( uint64 ulRowID, const char *pstrName, int64 llData ) override;
 
-    // Helper methods
-    static CSteamGameStats* GetInstance();
-    static void ReleaseInstance();
-
 private:
-    // Singleton instance
-    static CSteamGameStats* s_pInstance;
+    // Private constructor and destructor for singleton
+    CSteamGameStats();
+    ~CSteamGameStats();
+
+    // Delete copy constructor and assignment operator
+    CSteamGameStats(const CSteamGameStats&) = delete;
+    CSteamGameStats& operator=(const CSteamGameStats&) = delete;
 };
 
 #endif // VAPORCORE_STEAM_GAME_STATS_H
