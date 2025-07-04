@@ -7,13 +7,11 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef ISTEAMCLIENT_H
-#define ISTEAMCLIENT_H
+#ifndef ISTEAMCLIENT018_H
+#define ISTEAMCLIENT018_H
 #ifdef _WIN32
 #pragma once
 #endif
-
-#include "steam_api_common.h"
 
 //-----------------------------------------------------------------------------
 // Purpose: Interface to creating a new steam instance, or to
@@ -25,7 +23,7 @@
 //			or if you want to implement a multiplexed gameserver where a single process
 //			is handling multiple games at once with independent gameserver SteamIDs.
 //-----------------------------------------------------------------------------
-class ISteamClient
+class ISteamClient018
 {
 public:
 	// Creates a communication pipe to the Steam client.
@@ -157,22 +155,8 @@ public:
 	// Steam Parties interface
 	virtual ISteamParties *GetISteamParties( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
 
-	// Steam Remote Play interface
-	virtual ISteamRemotePlay *GetISteamRemotePlay( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) = 0;
-
 };
-#define STEAMCLIENT_INTERFACE_VERSION		"SteamClient019"
 
-#ifndef STEAM_API_EXPORTS
+#define STEAMCLIENT_INTERFACE_VERSION_018 "SteamClient018"
 
-// Global ISteamClient interface accessor
-inline ISteamClient *SteamClient();
-STEAM_DEFINE_INTERFACE_ACCESSOR( ISteamClient *, SteamClient, SteamInternal_CreateInterface( STEAMCLIENT_INTERFACE_VERSION ) );
-
-// The internal ISteamClient used for the gameserver interface.
-// (This is actually the same thing.  You really shouldn't need to access any of this stuff directly.)
-inline ISteamClient *SteamGameServerClient() { return SteamClient(); }
-
-#endif
-
-#endif // ISTEAMCLIENT_H
+#endif // ISTEAMCLIENT018_H

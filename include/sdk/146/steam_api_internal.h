@@ -1,11 +1,11 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright Valve Corporation, All rights reserved. ====================
+//
+// Internal implementation details of the steamworks SDK.
+//
+// You should be able to figure out how to use the SDK by reading
+// steam_api_common.h, and should not need to understand anything in here.
+// 
+//-----------------------------------------------------------------------------
 
 #ifdef STEAM_CALLBACK_BEGIN
 #error "This file should only be included from steam_api_common.h"

@@ -1,11 +1,15 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright Valve Corporation, All rights reserved. ====================
+//
+// This header includes *all* of the interfaces and callback structures
+// in the Steamworks SDK, and some high level functions to control the SDK
+// (init, shutdown, etc) that you probably only need in one or two files.
+//
+// To save your compile times, we recommend that you not include this file
+// in header files.  Instead, include the specific headers for the interfaces
+// and callback structures you need.  The one file you might consider including
+// in your precompiled header (e.g. stdafx.h) is steam_api_common.h
+//
+//=============================================================================
 
 #ifndef STEAM_API_H
 #define STEAM_API_H

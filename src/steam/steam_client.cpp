@@ -44,6 +44,7 @@ CSteamClient::CSteamClient()
     , m_steamParentalSettings(CSteamParentalSettings::GetInstance())
     , m_steamInput(CSteamInput::GetInstance())
     , m_steamParties(CSteamParties::GetInstance())
+    , m_steamRemotePlay(CSteamRemotePlay::GetInstance())
     , m_uCallCounter(0)
 {
     VLOG_INFO(__FUNCTION__);
@@ -993,5 +994,26 @@ ISteamParties* CSteamClient::GetISteamParties( HSteamUser hSteamUser, HSteamPipe
         VLOG_ERROR(__FUNCTION__ " - Unknown interface version '%s', returning " STEAMPARTIES_INTERFACE_VERSION, pchVersion);
         // Return the latest interface as fallback
         return static_cast<ISteamParties*>(&m_steamParties);
+    }
+}
+
+// Steam Remote Play interface
+ISteamRemotePlay* CSteamClient::GetISteamRemotePlay( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion )
+{
+    VLOG_INFO(__FUNCTION__ " - hSteamUser: %u, hSteamPipe: %u, pchVersion: %s", hSteamUser, hSteamPipe, pchVersion);
+
+    if (!pchVersion) {
+        VLOG_ERROR(__FUNCTION__ " - Invalid version string (null)");
+        return nullptr;
+    }
+
+    // Return the appropriate interface version based on the version string
+    // This interface only has one version (001)
+    if (strcmp(pchVersion, STEAMREMOTEPLAY_INTERFACE_VERSION) == 0) {
+        return static_cast<ISteamRemotePlay*>(&m_steamRemotePlay);
+    } else {
+        VLOG_ERROR(__FUNCTION__ " - Unknown interface version '%s', returning " STEAMREMOTEPLAY_INTERFACE_VERSION, pchVersion);
+        // Return the latest interface as fallback
+        return static_cast<ISteamRemotePlay*>(&m_steamRemotePlay);
     }
 }

@@ -15,6 +15,7 @@
 
 #include <isteamnetworkingsockets.h>
 #include <isteamnetworkingsockets002.h>
+#include <isteamnetworkingsockets003.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: hand out a reasonable "future proof" view of an app ownership ticket
@@ -24,7 +25,8 @@
 //-----------------------------------------------------------------------------
 class CSteamNetworkingSockets :
     public ISteamNetworkingSockets,
-    public ISteamNetworkingSockets002
+    public ISteamNetworkingSockets002,
+    public ISteamNetworkingSockets003
 {
 public:
 	// Singleton accessor

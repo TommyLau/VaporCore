@@ -154,12 +154,16 @@ public:
 	EInputActionOrigin GetActionOriginFromXboxOrigin( InputHandle_t inputHandle, EXboxOrigin eOrigin ) override;
 
 	// Convert an origin to another controller type - for inputs not present on the other controller type this will return k_EInputActionOrigin_None
-	// When a new input type is added you will be able to pass in k_ESteamInputType_Unknown amd the closest origin that your version of the SDK regonized will be returned
+	// When a new input type is added you will be able to pass in k_ESteamInputType_Unknown and the closest origin that your version of the SDK recognized will be returned
 	// ex: if a Playstation 5 controller was released this function would return Playstation 4 origins.
 	EInputActionOrigin TranslateActionOrigin( ESteamInputType eDestinationInputType, EInputActionOrigin eSourceOrigin ) override;
 
 	// Get the binding revision for a given device. Returns false if the handle was not valid or if a mapping is not yet loaded for the device
 	bool GetDeviceBindingRevision( InputHandle_t inputHandle, int *pMajor, int *pMinor ) override;
+
+	// Get the Steam Remote Play session ID associated with a device, or 0 if there is no session associated with it
+	// See isteamremoteplay.h for more information on Steam Remote Play sessions
+	uint32 GetRemotePlaySessionID( InputHandle_t inputHandle ) override;
 
 private:
     // Private constructor and destructor for singleton

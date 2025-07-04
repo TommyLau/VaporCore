@@ -1,11 +1,11 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright 1996-2018, Valve Corporation, All rights reserved. =======
+//
+// Purpose: Steam Input is a flexible input API that supports over three hundred devices including all 
+//          common variants of Xbox, Playstation, Nintendo Switch Pro, and Steam Controllers.
+//			For more info including a getting started guide for developers 
+//			please visit: https://partner.steamgames.com/doc/features/steam_controller
+//
+//=============================================================================
 
 #ifndef ISTEAMINPUT_H
 #define ISTEAMINPUT_H

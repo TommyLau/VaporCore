@@ -1,11 +1,10 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+﻿//====== Copyright Valve Corporation, All rights reserved. ====================
+//
+// Internal low-level access to Steamworks interfaces.
+//
+// Most users of the Steamworks SDK do not need to include this file.
+// You should only include this if you are doing something special.
+//=============================================================================
 
 #ifndef ISTEAMCLIENT_H
 #define ISTEAMCLIENT_H

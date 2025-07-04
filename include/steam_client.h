@@ -29,6 +29,7 @@ class ISteamUnifiedMessages;
 #include <isteamclient015.h>
 #include <isteamclient016.h>
 #include <isteamclient017.h>
+#include <isteamclient018.h>
 
 #include "steam_user.h"
 #include "steam_game_server.h"
@@ -56,6 +57,7 @@ class ISteamUnifiedMessages;
 #include "steam_input.h"
 #include "steam_networking_sockets.h"
 #include "steam_networking_utils.h"
+#include "steam_remote_play.h"
 
 // Steam pipe state enumeration
 enum ESteamPipe {
@@ -85,7 +87,8 @@ class CSteamClient :
     public ISteamClient014,
     public ISteamClient015,
     public ISteamClient016,
-    public ISteamClient017
+    public ISteamClient017,
+    public ISteamClient018
 {
 public:
 	// Singleton accessor
@@ -250,6 +253,9 @@ public:
 	// Steam Parties interface
 	ISteamParties *GetISteamParties( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
 
+	// Steam Remote Play interface
+	ISteamRemotePlay *GetISteamRemotePlay( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
 private:
     // Private constructor and destructor for singleton
     CSteamClient();
@@ -297,6 +303,7 @@ private:
     CSteamParentalSettings& m_steamParentalSettings;
     CSteamInput& m_steamInput;
     CSteamParties& m_steamParties;
+	CSteamRemotePlay& m_steamRemotePlay;
     
     // Initialization counter
     uintp m_uCallCounter;    // Tracks API calls

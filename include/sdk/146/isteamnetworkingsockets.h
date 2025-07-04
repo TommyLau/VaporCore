@@ -1,11 +1,16 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//====== Copyright Valve Corporation, All rights reserved. ====================
+//
+// Networking API similar to Berkeley sockets, but for games.
+// - connection-oriented API (like TCP, not UDP)
+// - but unlike TCP, it's message-oriented, not stream-oriented
+// - mix of reliable and unreliable messages
+// - fragmentation and reassembly
+// - Supports connectivity over plain UDPv4
+// - Also supports SDR ("Steam Datagram Relay") connections, which are
+//   addressed by SteamID.  There is a "P2P" use case and also a "hosted
+//   dedicated server" use case.
+//
+//=============================================================================
 
 #ifndef ISTEAMNETWORKINGSOCKETS
 #define ISTEAMNETWORKINGSOCKETS
@@ -485,8 +490,7 @@ public:
 	virtual void RunCallbacks( ISteamNetworkingSocketsCallbacks *pCallbacks ) = 0;
 #endif
 protected:
-	// Commented out by Tommy
-	// ~ISteamNetworkingSockets(); // Silence some warnings
+	~ISteamNetworkingSockets(); // Silence some warnings
 };
 #define STEAMNETWORKINGSOCKETS_INTERFACE_VERSION "SteamNetworkingSockets004"
 

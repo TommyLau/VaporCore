@@ -272,7 +272,7 @@ EInputActionOrigin CSteamInput::GetActionOriginFromXboxOrigin(InputHandle_t inpu
 }
 
 // Convert an origin to another controller type - for inputs not present on the other controller type this will return k_EInputActionOrigin_None
-// When a new input type is added you will be able to pass in k_ESteamInputType_Unknown amd the closest origin that your version of the SDK regonized will be returned
+// When a new input type is added you will be able to pass in k_ESteamInputType_Unknown and the closest origin that your version of the SDK recognized will be returned
 // ex: if a Playstation 5 controller was released this function would return Playstation 4 origins.
 EInputActionOrigin CSteamInput::TranslateActionOrigin(ESteamInputType eDestinationInputType, EInputActionOrigin eSourceOrigin)
 {
@@ -285,4 +285,12 @@ bool CSteamInput::GetDeviceBindingRevision(InputHandle_t inputHandle, int *pMajo
 {
     VLOG_INFO(__FUNCTION__);
     return false; // Return false since binding revision is not implemented
+}
+
+// Get the Steam Remote Play session ID associated with a device, or 0 if there is no session associated with it
+// See isteamremoteplay.h for more information on Steam Remote Play sessions
+uint32 CSteamInput::GetRemotePlaySessionID(InputHandle_t inputHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    return 0;
 }

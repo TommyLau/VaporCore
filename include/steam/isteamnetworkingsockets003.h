@@ -7,15 +7,21 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#ifndef ISTEAMNETWORKINGSOCKETS
-#define ISTEAMNETWORKINGSOCKETS
+#ifndef ISTEAMNETWORKINGSOCKETS003_H
+#define ISTEAMNETWORKINGSOCKETS003_H
 #ifdef _WIN32
 #pragma once
 #endif
 
-#include "steamnetworkingtypes.h"
-
-class ISteamNetworkingSocketsCallbacks;
+/*
+ * VaporCore Steam API Implementation
+ * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
+ * 
+ * This file is part of VaporCore.
+ * 
+ * Author: Tommy Lau <tommy.lhg@gmail.com>
+ */
+class ISteamNetworkingSockets003Callbacks;
 struct SteamNetAuthenticationStatus_t;
 
 //-----------------------------------------------------------------------------
@@ -31,7 +37,7 @@ struct SteamNetAuthenticationStatus_t;
 /// one-to-one with an underlying UDP socket.  An attempt has been made to
 /// keep the semantics as similar to the standard socket model when appropriate,
 /// but some deviations do exist.
-class ISteamNetworkingSockets
+class ISteamNetworkingSockets003
 {
 public:
 
@@ -486,114 +492,9 @@ public:
 #endif
 protected:
 	// Commented out by Tommy
-	// ~ISteamNetworkingSockets(); // Silence some warnings
-};
-#define STEAMNETWORKINGSOCKETS_INTERFACE_VERSION "SteamNetworkingSockets004"
-
-extern "C" {
-
-// Global accessor.
-#if defined( STEAMNETWORKINGSOCKETS_PARTNER )
-
-	// Standalone lib.  Use different symbol name, so that we can dynamically switch between steamclient.dll
-	// and the standalone lib
-	STEAMNETWORKINGSOCKETS_INTERFACE ISteamNetworkingSockets *SteamNetworkingSockets_Lib();
-	STEAMNETWORKINGSOCKETS_INTERFACE ISteamNetworkingSockets *SteamGameServerNetworkingSockets_Lib();
-	inline ISteamNetworkingSockets *SteamNetworkingSockets() { return SteamNetworkingSockets_Lib(); }
-	inline ISteamNetworkingSockets *SteamGameServerNetworkingSockets() { return SteamGameServerNetworkingSockets_Lib(); }
-
-#elif defined( STEAMNETWORKINGSOCKETS_OPENSOURCE )
-
-	// Opensource GameNetworkingSockets
-	STEAMNETWORKINGSOCKETS_INTERFACE ISteamNetworkingSockets *SteamNetworkingSockets();
-
-#else
-
-	// Steamworks SDK
-	inline ISteamNetworkingSockets *SteamNetworkingSockets();
-	STEAM_DEFINE_USER_INTERFACE_ACCESSOR( ISteamNetworkingSockets *, SteamNetworkingSockets, STEAMNETWORKINGSOCKETS_INTERFACE_VERSION );
-	inline ISteamNetworkingSockets *SteamGameServerNetworkingSockets();
-	STEAM_DEFINE_GAMESERVER_INTERFACE_ACCESSOR( ISteamNetworkingSockets *, SteamGameServerNetworkingSockets, STEAMNETWORKINGSOCKETS_INTERFACE_VERSION );
-#endif
-
-/// Callback struct used to notify when a connection has changed state
-#if defined( VALVE_CALLBACK_PACK_SMALL )
-#pragma pack( push, 4 )
-#elif defined( VALVE_CALLBACK_PACK_LARGE )
-#pragma pack( push, 8 )
-#else
-#error "Must define VALVE_CALLBACK_PACK_SMALL or VALVE_CALLBACK_PACK_LARGE"
-#endif
-
-/// This callback is posted whenever a connection is created, destroyed, or changes state.
-/// The m_info field will contain a complete description of the connection at the time the
-/// change occurred and the callback was posted.  In particular, m_eState will have the
-/// new connection state.
-///
-/// You will usually need to listen for this callback to know when:
-/// - A new connection arrives on a listen socket.
-///   m_info.m_hListenSocket will be set, m_eOldState = k_ESteamNetworkingConnectionState_None,
-///   and m_info.m_eState = k_ESteamNetworkingConnectionState_Connecting.
-///   See ISteamNetworkigSockets::AcceptConnection.
-/// - A connection you initiated has been accepted by the remote host.
-///   m_eOldState = k_ESteamNetworkingConnectionState_Connecting, and
-///   m_info.m_eState = k_ESteamNetworkingConnectionState_Connected.
-///   Some connections might transition to k_ESteamNetworkingConnectionState_FindingRoute first.
-/// - A connection has been actively rejected or closed by the remote host.
-///   m_eOldState = k_ESteamNetworkingConnectionState_Connecting or k_ESteamNetworkingConnectionState_Connected,
-///   and m_info.m_eState = k_ESteamNetworkingConnectionState_ClosedByPeer.  m_info.m_eEndReason
-///   and m_info.m_szEndDebug will have for more details.
-///   NOTE: upon receiving this callback, you must still destroy the connection using
-///   ISteamNetworkingSockets::CloseConnection to free up local resources.  (The details
-///   passed to the function are not used in this case, since the connection is already closed.)
-/// - A problem was detected with the connection, and it has been closed by the local host.
-///   The most common failure is timeout, but other configuration or authentication failures
-///   can cause this.  m_eOldState = k_ESteamNetworkingConnectionState_Connecting or
-///   k_ESteamNetworkingConnectionState_Connected, and m_info.m_eState = k_ESteamNetworkingConnectionState_ProblemDetectedLocally.
-///   m_info.m_eEndReason and m_info.m_szEndDebug will have for more details.
-///   NOTE: upon receiving this callback, you must still destroy the connection using
-///   ISteamNetworkingSockets::CloseConnection to free up local resources.  (The details
-///   passed to the function are not used in this case, since the connection is already closed.)
-///
-/// Remember that callbacks are posted to a queue, and networking connections can
-/// change at any time.  It is possible that the connection has already changed
-/// state by the time you process this callback.
-///
-/// Also note that callbacks will be posted when connections are created and destroyed by your own API calls.
-struct SteamNetConnectionStatusChangedCallback_t
-{ 
-	enum { k_iCallback = k_iSteamNetworkingSocketsCallbacks + 1 };
-
-	/// Connection handle
-	HSteamNetConnection m_hConn;
-
-	/// Full connection info
-	SteamNetConnectionInfo_t m_info;
-
-	/// Previous state.  (Current state is in m_info.m_eState)
-	ESteamNetworkingConnectionState m_eOldState;
+	// ~ISteamNetworkingSockets003(); // Silence some warnings
 };
 
-/// A struct used to describe our readiness to participate in authenticated,
-/// encrypted communication.  In order to do this we need:
-///
-/// - The list of trusted CA certificates that might be relevant for this
-///   app.
-/// - A valid certificate issued by a CA.
-struct SteamNetAuthenticationStatus_t
-{ 
-	enum { k_iCallback = k_iSteamNetworkingSocketsCallbacks + 2 };
+#define STEAMNETWORKINGSOCKETS_INTERFACE_VERSION_003 "SteamNetworkingSockets003"
 
-	/// Status
-	ESteamNetworkingAvailability m_eAvail;
-
-	/// Non-localized English language status.  For diagnostic/debugging
-	/// purposes only.
-	char m_debugMsg[ 256 ];
-};
-
-#pragma pack( pop )
-
-}
-
-#endif // ISTEAMNETWORKINGSOCKETS
+#endif // ISTEAMNETWORKINGSOCKETS003_H

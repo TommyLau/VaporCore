@@ -259,6 +259,13 @@ S_API class ISteamParties * SteamAPI_ISteamClient_GetISteamParties(intptr_t inst
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamParties(hSteamUser, hSteamPipe, pchVersion);
 }
 
+S_API class ISteamRemotePlay * SteamAPI_ISteamClient_GetISteamRemotePlay(intptr_t instancePtr, HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char * pchVersion)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamRemotePlay(hSteamUser, hSteamPipe, pchVersion);
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamUser flat API implementations
@@ -3754,6 +3761,13 @@ S_API bool SteamAPI_ISteamInput_GetDeviceBindingRevision(intptr_t instancePtr, I
     return reinterpret_cast<ISteamInput*>(instancePtr)->GetDeviceBindingRevision(inputHandle, pMajor, pMinor);
 }
 
+S_API uint32 SteamAPI_ISteamInput_GetRemotePlaySessionID(intptr_t instancePtr, InputHandle_t inputHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetRemotePlaySessionID(inputHandle);
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamController flat API implementations
@@ -5248,6 +5262,53 @@ S_API bool SteamAPI_ISteamParentalSettings_BIsFeatureInBlockList(intptr_t instan
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamParentalSettings*>(instancePtr)->BIsFeatureInBlockList(eFeature);
+}
+
+
+//-----------------------------------------------------------------------------
+// ISteamRemotePlay flat API implementations
+//-----------------------------------------------------------------------------
+
+S_API uint32 SteamAPI_ISteamRemotePlay_GetSessionCount(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamRemotePlay*>(instancePtr)->GetSessionCount();
+}
+
+S_API uint32 SteamAPI_ISteamRemotePlay_GetSessionID(intptr_t instancePtr, int iSessionIndex)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamRemotePlay*>(instancePtr)->GetSessionID(iSessionIndex);
+}
+
+S_API uint64 SteamAPI_ISteamRemotePlay_GetSessionSteamID(intptr_t instancePtr, uint32 unSessionID)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamRemotePlay*>(instancePtr)->GetSessionSteamID(unSessionID).ConvertToUint64();
+}
+
+S_API const char * SteamAPI_ISteamRemotePlay_GetSessionClientName(intptr_t instancePtr, uint32 unSessionID)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return nullptr;
+    return reinterpret_cast<ISteamRemotePlay*>(instancePtr)->GetSessionClientName(unSessionID);
+}
+
+S_API ESteamDeviceFormFactor SteamAPI_ISteamRemotePlay_GetSessionClientFormFactor(intptr_t instancePtr, uint32 unSessionID)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_ESteamDeviceFormFactorUnknown;
+    return reinterpret_cast<ISteamRemotePlay*>(instancePtr)->GetSessionClientFormFactor(unSessionID);
+}
+
+S_API bool SteamAPI_ISteamRemotePlay_BGetSessionClientResolution(intptr_t instancePtr, uint32 unSessionID, int * pnResolutionX, int * pnResolutionY)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamRemotePlay*>(instancePtr)->BGetSessionClientResolution(unSessionID, pnResolutionX, pnResolutionY);
 }
 
 
