@@ -111,10 +111,15 @@ def extract_comment_block_above_class(content, class_name):
     Returns the entire comment block with original formatting preserved.
     Excludes the top copyright header to avoid duplication.
     """
-    # Find the class declaration first
-    class_start = content.find(f'class {class_name}')
-    if class_start == -1:
+    # Find the class declaration first using the same logic as the main function
+    import re
+    class_pattern = rf'\bclass\s+{re.escape(class_name)}\b'
+    class_match = re.search(class_pattern, content)
+    if class_match is None:
+
         return None
+    class_start = class_match.start()
+    class_line = content[:class_start].count('\n') + 1
     
     # Get content before the class
     content_before_class = content[:class_start]
@@ -138,7 +143,6 @@ def extract_comment_block_above_class(content, class_name):
     
     # Start from the end and work backwards, but don't go past copyright header
     start_idx = max(copyright_end_idx + 1, 0) if copyright_end_idx != -1 else 0
-    
     for i in range(len(lines_before) - 1, start_idx - 1, -1):
         line = lines_before[i]
         line_stripped = line.strip()
@@ -166,6 +170,30 @@ def extract_comment_block_above_class(content, class_name):
     return None
 
 
+def remove_forward_declarations(content):
+    """
+    Remove forward declarations like:
+    - class ClassName;
+    - struct StructName;
+    - typedef ... TypeName;
+    """
+    lines = content.split('\n')
+    filtered_lines = []
+    
+    for line in lines:
+        stripped = line.strip()
+        
+        # Skip forward class declarations
+        if (re.match(r'^class\s+\w+\s*;', stripped) or
+            re.match(r'^struct\s+\w+\s*;', stripped) or
+            re.match(r'^typedef\s+.*\s+\w+\s*;', stripped)):
+            continue
+        
+        filtered_lines.append(line)
+    
+    return '\n'.join(filtered_lines)
+
+
 def strip_header_content(content, original_filename, version_num, class_name):
     """
     Strip header content to create a minimal versioned interface file.
@@ -178,9 +206,13 @@ def strip_header_content(content, original_filename, version_num, class_name):
     comment_block = extract_comment_block_above_class(content, class_name)
     
     # Extract class content (from class declaration to the closing brace)
-    class_start = content.find(f'class {class_name}')
-    if class_start == -1:
+    # Use word boundary to avoid matching substrings in other class names
+    import re
+    class_pattern = rf'\bclass\s+{re.escape(class_name)}\b'
+    class_match = re.search(class_pattern, content)
+    if class_match is None:
         raise ValueError(f"Could not find class {class_name} in the file")
+    class_start = class_match.start()
     
     # Find the matching closing brace for the class
     brace_count = 0
@@ -252,6 +284,9 @@ def strip_header_content(content, original_filename, version_num, class_name):
     # Remove enum definitions from within the class scope
     class_content = remove_enums_from_class(class_content)
     
+    # Remove forward declarations from class content
+    class_content = remove_forward_declarations(class_content)
+    
     # Ensure class ends with semicolon
     if not class_content.rstrip().endswith(';'):
         class_content = class_content.rstrip() + ';'
@@ -273,7 +308,11 @@ def strip_header_content(content, original_filename, version_num, class_name):
     
     # Create the stripped content
     if comment_block:
-        comment_section = f"{comment_block}\n"
+        # Also remove forward declarations from comment block area
+        comment_block = remove_forward_declarations(comment_block)
+        # Strip leading/trailing whitespace to avoid extra blank lines
+        comment_block = comment_block.strip()
+        comment_section = f"{comment_block}\n" if comment_block else ""
     else:
         comment_section = ""
     

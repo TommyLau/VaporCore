@@ -382,7 +382,8 @@ class FlatAPIGenerator:
             'ESteamInputType': 'k_ESteamInputType_Unknown',
             'EInputActionOrigin': 'k_EInputActionOrigin_None',
             'EControllerActionOrigin': 'k_EControllerActionOrigin_None',
-            'ESteamDeviceFormFactor': 'k_ESteamDeviceFormFactorUnknown'
+            'ESteamDeviceFormFactor': 'k_ESteamDeviceFormFactorUnknown',
+            'ESteamIPv6ConnectivityState': 'k_ESteamIPv6ConnectivityState_Unknown'
         }
         
         for enum_type, default_val in type_defaults.items():
