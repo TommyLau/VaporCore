@@ -28,6 +28,7 @@ CSteamGameServer::~CSteamGameServer()
 //
 
 // This is called by SteamGameServer_Init, and you will usually not need to call it directly
+// Deprecated from Steam SDK v1.48, backward compatibility
 bool CSteamGameServer::InitGameServer( uint32 unIP, uint16 usGamePort, uint16 usQueryPort, uint32 unFlags, AppId_t nGameAppId, const char *pchVersionString )
 {
     VLOG_INFO(__FUNCTION__ " - IP: %u, GamePort: %u, QueryPort: %u, Flags: %u, AppID: %u, Version: %s", unIP, usGamePort, usQueryPort, unFlags, nGameAppId, pchVersionString ? pchVersionString : "null");

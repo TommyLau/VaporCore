@@ -229,6 +229,7 @@ bool CSteamFriends::GetClanActivityCounts( CSteamID steamIDClan, int *pnOnline, 
     return false;
 }
 // for clans a user is a member of, they will have reasonably up-to-date information, but for others you'll have to download the info to have the latest
+STEAM_CALL_RESULT( DownloadClanActivityCountsResult_t )
 SteamAPICall_t CSteamFriends::DownloadClanActivityCounts( CSteamID *psteamIDClans, int cClansToRequest )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Count: %d", psteamIDClans->ConvertToUint64(), cClansToRequest);
@@ -408,9 +409,15 @@ uint32 CSteamFriends::GetUserRestrictions()
 // Rich Presence data is automatically shared between friends who are in the same game
 // Each user has a set of Key/Value pairs
 // Note the following limits: k_cchMaxRichPresenceKeys, k_cchMaxRichPresenceKeyLength, k_cchMaxRichPresenceValueLength
-// There are two magic keys:
+// There are five magic keys:
 //		"status"  - a UTF-8 string that will show up in the 'view game info' dialog in the Steam friends list
 //		"connect" - a UTF-8 string that contains the command-line for how a friend can connect to a game
+//		"steam_display"				- Names a rich presence localization token that will be displayed in the viewing user's selected language
+//									  in the Steam client UI. For more info: https://partner.steamgames.com/doc/api/ISteamFriends#richpresencelocalization
+//		"steam_player_group"		- When set, indicates to the Steam client that the player is a member of a particular group. Players in the same group
+//									  may be organized together in various places in the Steam UI.
+//		"steam_player_group_size"	- When set, indicates the total number of players in the steam_player_group. The Steam client may use this number to
+//									  display additional information about a group when all of the members are not part of a user's friends list.
 // GetFriendRichPresence() returns an empty string "" if no value is set
 // SetRichPresence() to a NULL or an empty string deletes the key
 // You can iterate the current set of keys for a friend with GetFriendRichPresenceKeyCount()
@@ -618,4 +625,10 @@ int CSteamFriends::GetNumChatsWithUnreadPriorityMessages()
 {
     VLOG_INFO(__FUNCTION__);
     return 0;
+}
+
+// activates game overlay to open the remote play together invite dialog. Invitations will be sent for remote play together
+void CSteamFriends::ActivateGameOverlayRemotePlayTogetherInviteDialog( CSteamID steamIDLobby )
+{
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu", steamIDLobby.ConvertToUint64());
 }

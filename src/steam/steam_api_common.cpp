@@ -34,6 +34,9 @@
 //
 //	Callbacks and call-results are queued automatically and are only
 //	delivered/executed when your application calls SteamAPI_RunCallbacks().
+//
+//  Note that there is an alternative, lower level callback dispatch mechanism.
+//  See SteamAPI_ManualDispatch_Init
 //----------------------------------------------------------------------------------------------------------------------------------------------------------//
 
 // Dispatch all queued Steamworks callbacks.

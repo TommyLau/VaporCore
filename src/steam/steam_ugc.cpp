@@ -31,6 +31,7 @@ UGCQueryHandle_t CSteamUGC::CreateQueryUserUGCRequest( AccountID_t unAccountID, 
 }
 
 // Query for all matching UGC. Creator app id or consumer app id must be valid and be set to the current running app. unPage should start at 1.
+STEAM_FLAT_NAME( CreateQueryAllUGCRequestPage )
 UGCQueryHandle_t CSteamUGC::CreateQueryAllUGCRequest( EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage )
 {
     VLOG_INFO(__FUNCTION__ " - eQueryType: %d, eMatchingeMatchingUGCTypeFileType: %d, nCreatorAppID: %d, nConsumerAppID: %d, unPage: %d", eQueryType, eMatchingeMatchingUGCTypeFileType, nCreatorAppID, nConsumerAppID, unPage);
@@ -38,6 +39,7 @@ UGCQueryHandle_t CSteamUGC::CreateQueryAllUGCRequest( EUGCQuery eQueryType, EUGC
 }
 
 // Query for all matching UGC using the new deep paging interface. Creator app id or consumer app id must be valid and be set to the current running app. pchCursor should be set to NULL or "*" to get the first result set.
+STEAM_FLAT_NAME( CreateQueryAllUGCRequestCursor )
 UGCQueryHandle_t CSteamUGC::CreateQueryAllUGCRequest(EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, const char* pchCursor)
 {
     VLOG_INFO(__FUNCTION__ " - eQueryType: %d, eMatchingeMatchingUGCTypeFileType: %d, nCreatorAppID: %d, nConsumerAppID: %d, pchCursor: %s", eQueryType, eMatchingeMatchingUGCTypeFileType, nCreatorAppID, nConsumerAppID, pchCursor ? pchCursor : "NULL");
@@ -129,6 +131,7 @@ bool CSteamUGC::GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, u
 }
 
 // Return the first value matching the pchKey. Note that a key may map to multiple values.  Returns false if there was an error or no matching value was found.
+STEAM_FLAT_NAME( GetQueryFirstUGCKeyValueTag )
 bool CSteamUGC::GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, const char *pchKey, STEAM_OUT_STRING_COUNT(cchValueSize) char *pchValue, uint32 cchValueSize )
 {
     VLOG_INFO(__FUNCTION__ " - handle: %d, index: %d, pchKey: %s, cchValueSize: %d", handle, index, pchKey ? pchKey : "NULL", cchValueSize);
@@ -256,6 +259,7 @@ bool CSteamUGC::AddRequiredKeyValueTag( UGCQueryHandle_t handle, const char *pKe
 
 // Request full details for one piece of UGC
 // DEPRECATED - Use CreateQueryUGCDetailsRequest call above instead!
+STEAM_CALL_RESULT( SteamUGCRequestUGCDetailsResult_t )
 SteamAPICall_t CSteamUGC::RequestUGCDetails( PublishedFileId_t nPublishedFileID, uint32 unMaxAgeSeconds )
 {
     VLOG_INFO(__FUNCTION__ " - nPublishedFileID: %llu, unMaxAgeSeconds: %d", nPublishedFileID, unMaxAgeSeconds);

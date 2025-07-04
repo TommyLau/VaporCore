@@ -49,12 +49,19 @@ public:
 	bool RequestCurrentStats( ) override;
 
 	// Data accessors
+	STEAM_FLAT_NAME( GetStatInt32 )
 	bool GetStat( const char *pchName, int32 *pData ) override;
+
+	STEAM_FLAT_NAME( GetStatFloat )
 	bool GetStat( const char *pchName, float *pData ) override;
 
 	// Set / update data
+	STEAM_FLAT_NAME( SetStatInt32 )
 	bool SetStat( const char *pchName, int32 nData ) override;
+
+	STEAM_FLAT_NAME( SetStatFloat )
 	bool SetStat( const char *pchName, float fData ) override;
+
 	bool UpdateAvgRateStat( const char *pchName, float flCountThisSession, double dSessionLength ) override;
 
 	// Achievement flag accessors
@@ -109,8 +116,12 @@ public:
 	SteamAPICall_t RequestUserStats( CSteamID steamIDUser ) override;
 
 	// requests stat information for a user, usable after a successful call to RequestUserStats()
+	STEAM_FLAT_NAME( GetUserStatInt32 )
 	bool GetUserStat( CSteamID steamIDUser, const char *pchName, int32 *pData ) override;
+
+	STEAM_FLAT_NAME( GetUserStatFloat )
 	bool GetUserStat( CSteamID steamIDUser, const char *pchName, float *pData ) override;
+
 	bool GetUserAchievement( CSteamID steamIDUser, const char *pchName, bool *pbAchieved ) override;
 	// See notes for GetAchievementAndUnlockTime above
 	bool GetUserAchievementAndUnlockTime( CSteamID steamIDUser, const char *pchName, bool *pbAchieved, uint32 *punUnlockTime ) override;
@@ -224,14 +235,21 @@ public:
 	SteamAPICall_t RequestGlobalStats( int nHistoryDays ) override;
 
 	// Gets the lifetime totals for an aggregated stat
+	STEAM_FLAT_NAME( GetGlobalStatInt64 )
 	bool GetGlobalStat( const char *pchStatName, int64 *pData ) override;
+
+	STEAM_FLAT_NAME( GetGlobalStatDouble )
 	bool GetGlobalStat( const char *pchStatName, double *pData ) override;
 
 	// Gets history for an aggregated stat. pData will be filled with daily values, starting with today.
 	// So when called, pData[0] will be today, pData[1] will be yesterday, and pData[2] will be two days ago, 
 	// etc. cubData is the size in bytes of the pubData buffer. Returns the number of 
 	// elements actually set.
+
+	STEAM_FLAT_NAME( GetGlobalStatHistoryInt64 )
 	int32 GetGlobalStatHistory( const char *pchStatName, STEAM_ARRAY_COUNT(cubData) int64 *pData, uint32 cubData ) override;
+
+	STEAM_FLAT_NAME( GetGlobalStatHistoryDouble )
 	int32 GetGlobalStatHistory( const char *pchStatName, STEAM_ARRAY_COUNT(cubData) double *pData, uint32 cubData ) override;
 
 #ifdef _PS3

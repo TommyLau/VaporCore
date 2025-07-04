@@ -39,6 +39,7 @@ bool CSteamUserStats::RequestCurrentStats( )
 }
 
 // Data accessors
+STEAM_FLAT_NAME( GetStatInt32 )
 bool CSteamUserStats::GetStat( const char *pchName, int32 *pData )
 {
     VLOG_INFO(__FUNCTION__ " - Name: %s", pchName ? pchName : "null");
@@ -46,6 +47,7 @@ bool CSteamUserStats::GetStat( const char *pchName, int32 *pData )
     return false;
 }
 
+STEAM_FLAT_NAME( GetStatFloat )
 bool CSteamUserStats::GetStat( const char *pchName, float *pData )
 {
     VLOG_INFO(__FUNCTION__ " - Name: %s", pchName ? pchName : "null");
@@ -54,12 +56,14 @@ bool CSteamUserStats::GetStat( const char *pchName, float *pData )
 }
 
 // Set / update data
+STEAM_FLAT_NAME( SetStatInt32 )
 bool CSteamUserStats::SetStat( const char *pchName, int32 nData )
 {
     VLOG_INFO(__FUNCTION__ " - Name: %s, Data: %d", pchName ? pchName : "null", nData);
     return true;
 }
 
+STEAM_FLAT_NAME( SetStatFloat )
 bool CSteamUserStats::SetStat( const char *pchName, float fData )
 {
     VLOG_INFO(__FUNCTION__ " - Name: %s, Data: %f", pchName ? pchName : "null", fData);
@@ -175,12 +179,14 @@ SteamAPICall_t CSteamUserStats::RequestUserStats( CSteamID steamIDUser )
 }
 
 // requests stat information for a user, usable after a successful call to RequestUserStats()
+STEAM_FLAT_NAME( GetUserStatInt32 )
 bool CSteamUserStats::GetUserStat( CSteamID steamIDUser, const char *pchName, int32 *pData )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Name: %s", steamIDUser.ConvertToUint64(), pchName ? pchName : "null");
     return false;
 }
 
+STEAM_FLAT_NAME( GetUserStatFloat )
 bool CSteamUserStats::GetUserStat( CSteamID steamIDUser, const char *pchName, float *pData )
 {
     VLOG_INFO(__FUNCTION__ " - SteamID: %llu, Name: %s", steamIDUser.ConvertToUint64(), pchName ? pchName : "null");
@@ -387,12 +393,14 @@ SteamAPICall_t CSteamUserStats::RequestGlobalStats( int nHistoryDays )
 }
 
 // Gets the lifetime totals for an aggregated stat
+STEAM_FLAT_NAME( GetGlobalStatInt64 )
 bool CSteamUserStats::GetGlobalStat( const char *pchStatName, int64 *pData )
 {
     VLOG_INFO(__FUNCTION__ " - Name: %s", pchStatName ? pchStatName : "null");
     return false;
 }
 
+STEAM_FLAT_NAME( GetGlobalStatDouble )
 bool CSteamUserStats::GetGlobalStat( const char *pchStatName, double *pData )
 {
     VLOG_INFO(__FUNCTION__ " - Name: %s", pchStatName ? pchStatName : "null");
@@ -403,12 +411,15 @@ bool CSteamUserStats::GetGlobalStat( const char *pchStatName, double *pData )
 // So when called, pData[0] will be today, pData[1] will be yesterday, and pData[2] will be two days ago, 
 // etc. cubData is the size in bytes of the pubData buffer. Returns the number of 
 // elements actually set.
+
+STEAM_FLAT_NAME( GetGlobalStatHistoryInt64 )
 int32 CSteamUserStats::GetGlobalStatHistory( const char *pchStatName, STEAM_ARRAY_COUNT(cubData) int64 *pData, uint32 cubData )
 {
     VLOG_INFO(__FUNCTION__ " - Name: %s", pchStatName ? pchStatName : "null");
     return 0;
 }
 
+STEAM_FLAT_NAME( GetGlobalStatHistoryDouble )
 int32 CSteamUserStats::GetGlobalStatHistory( const char *pchStatName, STEAM_ARRAY_COUNT(cubData) double *pData, uint32 cubData )
 {
     VLOG_INFO(__FUNCTION__ " - Name: %s", pchStatName ? pchStatName : "null");

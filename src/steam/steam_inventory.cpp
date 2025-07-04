@@ -438,6 +438,8 @@ bool CSteamInventory::RemoveProperty( SteamInventoryUpdateHandle_t handle, Steam
 }
 
 // Accessor methods to set properties on items
+
+STEAM_FLAT_NAME( SetPropertyString )
 bool CSteamInventory::SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, const char *pchPropertyValue )
 {
     VLOG_INFO(__FUNCTION__ " - handle: %llu, nItemID: %llu, pchPropertyName: %s, pchPropertyValue: %s", 
@@ -445,6 +447,7 @@ bool CSteamInventory::SetProperty( SteamInventoryUpdateHandle_t handle, SteamIte
     return false;
 }
 
+STEAM_FLAT_NAME( SetPropertyBool )
 bool CSteamInventory::SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, bool bValue )
 {
     VLOG_INFO(__FUNCTION__ " - handle: %llu, nItemID: %llu, pchPropertyName: %s, bValue: %s", 
@@ -452,6 +455,7 @@ bool CSteamInventory::SetProperty( SteamInventoryUpdateHandle_t handle, SteamIte
     return false;
 }
 
+STEAM_FLAT_NAME( SetPropertyInt64 )
 bool CSteamInventory::SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, int64 nValue )
 {
     VLOG_INFO(__FUNCTION__ " - handle: %llu, nItemID: %llu, pchPropertyName: %s, nValue: %lld", 
@@ -459,6 +463,7 @@ bool CSteamInventory::SetProperty( SteamInventoryUpdateHandle_t handle, SteamIte
     return false;
 }
 
+STEAM_FLAT_NAME( SetPropertyFloat )
 bool CSteamInventory::SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, float flValue )
 {
     VLOG_INFO(__FUNCTION__ " - handle: %llu, nItemID: %llu, pchPropertyName: %s, flValue: %f", 

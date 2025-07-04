@@ -40,11 +40,6 @@ CSteamNetworkingUtils::~CSteamNetworkingUtils()
 /// If cbAllocateBuffer=0, then no buffer is allocated.  m_pData will be NULL,
 /// m_cbSize will be zero, and m_pfnFreeData will be NULL.  You will need to
 /// set each of these.
-///
-/// You can use SteamNetworkingMessage_t::Release to free up the message
-/// bookkeeping object and any associated buffer.  See
-/// ISteamNetworkingSockets::SendMessages for details on reference
-/// counting and ownership.
 SteamNetworkingMessage_t *CSteamNetworkingUtils::AllocateMessage( int cbAllocateBuffer )
 {
     VLOG_INFO(__FUNCTION__ " - cbAllocateBuffer: %d", cbAllocateBuffer);

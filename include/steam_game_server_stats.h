@@ -39,16 +39,25 @@ public:
 	SteamAPICall_t RequestUserStats( CSteamID steamIDUser ) override;
 
 	// requests stat information for a user, usable after a successful call to RequestUserStats()
+	STEAM_FLAT_NAME( GetUserStatInt32 )
 	bool GetUserStat( CSteamID steamIDUser, const char *pchName, int32 *pData ) override;
+
+	STEAM_FLAT_NAME( GetUserStatFloat )
 	bool GetUserStat( CSteamID steamIDUser, const char *pchName, float *pData ) override;
+
 	bool GetUserAchievement( CSteamID steamIDUser, const char *pchName, bool *pbAchieved ) override;
 
 	// Set / update stats and achievements. 
 	// Note: These updates will work only on stats game servers are allowed to edit and only for 
 	// game servers that have been declared as officially controlled by the game creators. 
 	// Set the IP range of your official servers on the Steamworks page
+
+	STEAM_FLAT_NAME( SetUserStatInt32 )
 	bool SetUserStat( CSteamID steamIDUser, const char *pchName, int32 nData ) override;
+
+	STEAM_FLAT_NAME( SetUserStatFloat )
 	bool SetUserStat( CSteamID steamIDUser, const char *pchName, float fData ) override;
+
 	bool UpdateUserAvgRateStat( CSteamID steamIDUser, const char *pchName, float flCountThisSession, double dSessionLength ) override;
 
 	bool SetUserAchievement( CSteamID steamIDUser, const char *pchName ) override;

@@ -319,10 +319,19 @@ public:
 	// Remove the property on the item
 	bool RemoveProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName ) override;
 	// Accessor methods to set properties on items
+
+	STEAM_FLAT_NAME( SetPropertyString )
 	bool SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, const char *pchPropertyValue ) override;
+
+	STEAM_FLAT_NAME( SetPropertyBool )
 	bool SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, bool bValue ) override;
+
+	STEAM_FLAT_NAME( SetPropertyInt64 )
 	bool SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, int64 nValue ) override;
+
+	STEAM_FLAT_NAME( SetPropertyFloat )
 	bool SetProperty( SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, const char *pchPropertyName, float flValue ) override;
+
 	// Submit the update request by handle
 	bool SubmitUpdateProperties( SteamInventoryUpdateHandle_t handle, SteamInventoryResult_t * pResultHandle ) override;
 

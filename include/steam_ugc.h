@@ -54,9 +54,11 @@ public:
 	UGCQueryHandle_t CreateQueryUserUGCRequest( AccountID_t unAccountID, EUserUGCList eListType, EUGCMatchingUGCType eMatchingUGCType, EUserUGCListSortOrder eSortOrder, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage ) override;
 
 	// Query for all matching UGC. Creator app id or consumer app id must be valid and be set to the current running app. unPage should start at 1.
+	STEAM_FLAT_NAME( CreateQueryAllUGCRequestPage )
 	UGCQueryHandle_t CreateQueryAllUGCRequest( EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint32 unPage ) override;
 
 	// Query for all matching UGC using the new deep paging interface. Creator app id or consumer app id must be valid and be set to the current running app. pchCursor should be set to NULL or "*" to get the first result set.
+	STEAM_FLAT_NAME( CreateQueryAllUGCRequestCursor )
 	UGCQueryHandle_t CreateQueryAllUGCRequest( EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, const char *pchCursor = NULL ) override;
 
 	// Query for the details of the given published file ids (the RequestUGCDetails call is deprecated and replaced with this)
@@ -79,8 +81,11 @@ public:
 	// Changed from Steam SDK v1.37, backward compatibility
 	bool GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, STEAM_OUT_STRING_COUNT(cchURLSize) char *pchURLOrVideoID, uint32 cchURLSize, bool *pbIsImage ) override;
 	uint32 GetQueryUGCNumKeyValueTags( UGCQueryHandle_t handle, uint32 index ) override;
+
 	bool GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, uint32 keyValueTagIndex, STEAM_OUT_STRING_COUNT(cchKeySize) char *pchKey, uint32 cchKeySize, STEAM_OUT_STRING_COUNT(cchValueSize) char *pchValue, uint32 cchValueSize ) override;
+
 	// Return the first value matching the pchKey. Note that a key may map to multiple values.  Returns false if there was an error or no matching value was found.
+	STEAM_FLAT_NAME( GetQueryFirstUGCKeyValueTag )
 	bool GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, const char *pchKey, STEAM_OUT_STRING_COUNT(cchValueSize) char *pchValue, uint32 cchValueSize ) override;
 
 	// Release the request to free up memory, after retrieving results
@@ -112,6 +117,7 @@ public:
 
 	// Request full details for one piece of UGC
 	// DEPRECATED - Use CreateQueryUGCDetailsRequest call above instead!
+	STEAM_CALL_RESULT( SteamUGCRequestUGCDetailsResult_t )
 	SteamAPICall_t RequestUGCDetails( PublishedFileId_t nPublishedFileID, uint32 unMaxAgeSeconds ) override;
 	// Changed from Steam SDK v1.29a, backward compatibility
 	SteamAPICall_t RequestUGCDetails( PublishedFileId_t nPublishedFileID ) override;
