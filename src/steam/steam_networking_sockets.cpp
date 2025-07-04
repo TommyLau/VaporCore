@@ -28,14 +28,26 @@ CSteamNetworkingSockets::~CSteamNetworkingSockets()
 /// You must select a specific local port to listen on and set it
 /// the port field of the local address.
 ///
-/// Usually you wil set the IP portion of the address to zero, (SteamNetworkingIPAddr::Clear()).
-/// This means that you will not bind to any particular local interface.  In addition,
-/// if possible the socket will be bound in "dual stack" mode, which means that it can
-/// accept both IPv4 and IPv6 clients.  If you wish to bind a particular interface, then
-/// set the local address to the appropriate IPv4 or IPv6 IP.
+/// Usually you will set the IP portion of the address to zero (SteamNetworkingIPAddr::Clear()).
+/// This means that you will not bind to any particular local interface (i.e. the same
+/// as INADDR_ANY in plain socket code).  Furthermore, if possible the socket will be bound
+/// in "dual stack" mode, which means that it can accept both IPv4 and IPv6 client connections.
+/// If you really do wish to bind a particular interface, then set the local address to the
+/// appropriate IPv4 or IPv6 IP.
+///
+/// If you need to set any initial config options, pass them here.  See
+/// SteamNetworkingConfigValue_t for more about why this is preferable to
+/// setting the options "immediately" after creation.
 ///
 /// When a client attempts to connect, a SteamNetConnectionStatusChangedCallback_t
 /// will be posted.  The connection will be in the connecting state.
+HSteamListenSocket CSteamNetworkingSockets::CreateListenSocketIP( const SteamNetworkingIPAddr &localAddress, int nOptions, const SteamNetworkingConfigValue_t *pOptions )
+{
+    VLOG_INFO(__FUNCTION__ " - localAddress: %08x:%04x", localAddress.GetIPv4(), localAddress.m_port);
+    return 0;
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
 HSteamListenSocket CSteamNetworkingSockets::CreateListenSocketIP( const SteamNetworkingIPAddr &localAddress )
 {
     VLOG_INFO(__FUNCTION__ " - localAddress: %08x:%04x", localAddress.GetIPv4(), localAddress.m_port);
@@ -60,6 +72,17 @@ HSteamListenSocket CSteamNetworkingSockets::CreateListenSocketIP( const SteamNet
 /// distributed through some other out-of-band mechanism), you don't have any
 /// way of knowing who is actually on the other end, and thus are vulnerable to
 /// man-in-the-middle attacks.
+///
+/// If you need to set any initial config options, pass them here.  See
+/// SteamNetworkingConfigValue_t for more about why this is preferable to
+/// setting the options "immediately" after creation.
+HSteamNetConnection CSteamNetworkingSockets::ConnectByIPAddress( const SteamNetworkingIPAddr &address, int nOptions, const SteamNetworkingConfigValue_t *pOptions )
+{
+    VLOG_INFO(__FUNCTION__ " - address: %08x:%04x", address.GetIPv4(), address.m_port);
+    return 0;
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
 HSteamNetConnection CSteamNetworkingSockets::ConnectByIPAddress( const SteamNetworkingIPAddr &address )
 {
     VLOG_INFO(__FUNCTION__ " - address: %08x:%04x", address.GetIPv4(), address.m_port);
@@ -77,6 +100,17 @@ HSteamNetConnection CSteamNetworkingSockets::ConnectByIPAddress( const SteamNetw
 ///
 /// If you use this, you probably want to call ISteamNetworkingUtils::InitRelayNetworkAccess()
 /// when your app initializes
+///
+/// If you need to set any initial config options, pass them here.  See
+/// SteamNetworkingConfigValue_t for more about why this is preferable to
+/// setting the options "immediately" after creation.
+HSteamListenSocket CSteamNetworkingSockets::CreateListenSocketP2P( int nVirtualPort, int nOptions, const SteamNetworkingConfigValue_t *pOptions )
+{
+    VLOG_INFO(__FUNCTION__ " - nVirtualPort: %d, nOptions: %d", nVirtualPort, nOptions);
+    return 0;
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
 HSteamListenSocket CSteamNetworkingSockets::CreateListenSocketP2P( int nVirtualPort )
 {
     VLOG_INFO(__FUNCTION__ " - nVirtualPort: %d", nVirtualPort);
@@ -84,16 +118,23 @@ HSteamListenSocket CSteamNetworkingSockets::CreateListenSocketP2P( int nVirtualP
 }
 
 /// Begin connecting to a server that is identified using a platform-specific identifier.
-/// This requires some sort of third party rendezvous service, and will depend on the
-/// platform and what other libraries and services you are integrating with.
-///
-/// At the time of this writing, there is only one supported rendezvous service: Steam.
-/// Set the SteamID (whether "user" or "gameserver") and Steam will determine if the
-/// client is online and facilitate a relay connection.  Note that all P2P connections on
-/// Steam are currently relayed.
+/// This uses the default rendezvous service, which depends on the platform and library
+/// configuration.  (E.g. on Steam, it goes through the steam backend.)  The traffic is relayed
+/// over the Steam Datagram Relay network.
 ///
 /// If you use this, you probably want to call ISteamNetworkingUtils::InitRelayNetworkAccess()
 /// when your app initializes
+///
+/// If you need to set any initial config options, pass them here.  See
+/// SteamNetworkingConfigValue_t for more about why this is preferable to
+/// setting the options "immediately" after creation.
+HSteamNetConnection CSteamNetworkingSockets::ConnectP2P( const SteamNetworkingIdentity &identityRemote, int nVirtualPort, int nOptions, const SteamNetworkingConfigValue_t *pOptions )
+{
+    VLOG_INFO(__FUNCTION__ " - identityRemote: %d, nVirtualPort: %d, nOptions: %d", identityRemote.m_eType, nVirtualPort, nOptions);
+    return 0;
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
 HSteamNetConnection CSteamNetworkingSockets::ConnectP2P( const SteamNetworkingIdentity &identityRemote, int nVirtualPort )
 {
     VLOG_INFO(__FUNCTION__ " - identityRemote: %d, nVirtualPort: %d", identityRemote.m_eType, nVirtualPort);
@@ -134,6 +175,12 @@ HSteamNetConnection CSteamNetworkingSockets::ConnectP2P( const SteamNetworkingId
 /// Returns k_EResultInvalidState if the connection is not in the appropriate state.
 /// (Remember that the connection state could change in between the time that the
 /// notification being posted to the queue and when it is received by the application.)
+///
+/// A note about connection configuration options.  If you need to set any configuration
+/// options that are common to all connections accepted through a particular listen
+/// socket, consider setting the options on the listen socket, since such options are
+/// inherited automatically.  If you really do need to set options that are connection
+/// specific, it is safe to set them on the connection before accepting the connection.
 EResult CSteamNetworkingSockets::AcceptConnection( HSteamNetConnection hConn )
 {
     VLOG_INFO(__FUNCTION__ " - hConn: %u", hConn);
@@ -234,6 +281,9 @@ bool CSteamNetworkingSockets::GetConnectionName( HSteamNetConnection hPeer, char
 /// sockets that does not write excessively small chunks will 
 /// work without any changes. 
 ///
+/// The pOutMessageNumber is an optional pointer to receive the
+/// message number assigned to the message, if sending was successful.
+///
 /// Returns:
 /// - k_EResultInvalidParam: invalid connection handle, or the individual message is too big.
 ///   (See k_cbMaxSteamNetworkingSocketsMessageSizeSend)
@@ -243,10 +293,54 @@ bool CSteamNetworkingSockets::GetConnectionName( HSteamNetConnection hPeer, char
 ///   we were not ready to send it.
 /// - k_EResultLimitExceeded: there was already too much data queued to be sent.
 ///   (See k_ESteamNetworkingConfig_SendBufferSize)
+EResult CSteamNetworkingSockets::SendMessageToConnection( HSteamNetConnection hConn, const void *pData, uint32 cbData, int nSendFlags, int64 *pOutMessageNumber )
+{
+    VLOG_INFO(__FUNCTION__ " - hConn: %u, cbData: %u, nSendFlags: %d", hConn, cbData, nSendFlags);
+    return k_EResultOK;
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
 EResult CSteamNetworkingSockets::SendMessageToConnection( HSteamNetConnection hConn, const void *pData, uint32 cbData, int nSendFlags )
 {
     VLOG_INFO(__FUNCTION__ " - hConn: %u, cbData: %u, nSendFlags: %d", hConn, cbData, nSendFlags);
     return k_EResultOK;
+}
+
+/// Send one or more messages without copying the message payload.
+/// This is the most efficient way to send messages. To use this
+/// function, you must first allocate a message object using
+/// ISteamNetworkingUtils::AllocateMessage.  (Do not declare one
+/// on the stack or allocate your own.)
+///
+/// You should fill in the message payload.  You can either let
+/// it allocate the buffer for you and then fill in the payload,
+/// or if you already have a buffer allocated, you can just point
+/// m_pData at your buffer and set the callback to the appropriate function
+/// to free it.  Note that if you use your own buffer, it MUST remain valid
+/// until the callback is executed.  And also note that your callback can be
+/// invoked at ant time from any thread (perhaps even before SendMessages
+/// returns!), so it MUST be fast and threadsafe.
+///
+/// You MUST also fill in:
+/// - m_conn - the handle of the connection to send the message to
+/// - m_nFlags - bitmask of k_nSteamNetworkingSend_xxx flags.
+///
+/// All other fields are currently reserved and should not be modified.
+///
+/// The library will take ownership of the message structures.  They may
+/// be modified or become invalid at any time, so you must not read them
+/// after passing them to this function.
+///
+/// pOutMessageNumberOrResult is an optional array that will receive,
+/// for each message, the message number that was assigned to the message
+/// if sending was successful.  If sending failed, then a negative EResult
+/// valid is placed into the array.  For example, the array will hold
+/// -k_EResultInvalidState if the connection was in an invalid state.
+/// See ISteamNetworkingSockets::SendMessageToConnection for possible
+/// failure codes.
+void CSteamNetworkingSockets::SendMessages( int nMessages, SteamNetworkingMessage_t *const *pMessages, int64 *pOutMessageNumberOrResult )
+{
+    VLOG_INFO(__FUNCTION__ " - nMessages: %d", nMessages);
 }
 
 /// Flush any messages waiting on the Nagle timer and send them
@@ -421,31 +515,6 @@ ESteamNetworkingAvailability CSteamNetworkingSockets::GetAuthenticationStatus(St
     return k_ESteamNetworkingAvailability_Failed;
 }
 
-/// Certificate provision by the application.  (On Steam, Steam will handle all this automatically)
-#ifndef STEAMNETWORKINGSOCKETS_STEAM
-
-/// Get blob that describes a certificate request.  You can send this to your game coordinator.
-/// Upon entry, *pcbBlob should contain the size of the buffer.  On successful exit, it will
-/// return the number of bytes that were populated.  You can pass pBlob=NULL to query for the required
-/// size.  (256 bytes is a very conservative estimate.)
-///
-/// Pass this blob to your game coordinator and call SteamDatagram_CreateCert.
-bool CSteamNetworkingSockets::GetCertificateRequest(int *pcbBlob, void *pBlob, SteamNetworkingErrMsg &errMsg)
-{
-    VLOG_INFO(__FUNCTION__);
-    return false;
-}
-
-/// Set the certificate.  The certificate blob should be the output of
-/// SteamDatagram_CreateCert.
-bool CSteamNetworkingSockets::SetCertificate(const void *pCertificate, int cbCertificate, SteamNetworkingErrMsg &errMsg)
-{
-    VLOG_INFO(__FUNCTION__ " - cbCertificate: %d", cbCertificate);
-    return false;
-}
-
-#endif
-
 #ifdef STEAMNETWORKINGSOCKETS_ENABLE_SDR
 
 //
@@ -484,6 +553,17 @@ int CSteamNetworkingSockets::FindRelayAuthTicketForServer( const SteamNetworking
 ///
 /// If you use this, you probably want to call ISteamNetworkingUtils::InitializeRelayNetworkAccess()
 /// when your app initializes
+///
+/// If you need to set any initial config options, pass them here.  See
+/// SteamNetworkingConfigValue_t for more about why this is preferable to
+/// setting the options "immediately" after creation.
+HSteamNetConnection CSteamNetworkingSockets::ConnectToHostedDedicatedServer( const SteamNetworkingIdentity &identityTarget, int nVirtualPort, int nOptions, const SteamNetworkingConfigValue_t *pOptions )
+{
+    VLOG_INFO(__FUNCTION__ " - identityTarget: %d, nVirtualPort: %d, nOptions: %d", identityTarget.m_eType, nVirtualPort, nOptions);
+    return 0;
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
 HSteamNetConnection CSteamNetworkingSockets::ConnectToHostedDedicatedServer( const SteamNetworkingIdentity &identityTarget, int nVirtualPort )
 {
     VLOG_INFO(__FUNCTION__ " - identityTarget: %d, nVirtualPort: %d", identityTarget.m_eType, nVirtualPort);
@@ -559,6 +639,17 @@ bool CSteamNetworkingSockets::GetHostedDedicatedServerAddress002( SteamDatagramH
 /// configured, this call will fail.
 ///
 /// Note that this call MUST be made through the SteamGameServerNetworkingSockets() interface
+///
+/// If you need to set any initial config options, pass them here.  See
+/// SteamNetworkingConfigValue_t for more about why this is preferable to
+/// setting the options "immediately" after creation.
+HSteamListenSocket CSteamNetworkingSockets::CreateHostedDedicatedServerListenSocket( int nVirtualPort, int nOptions, const SteamNetworkingConfigValue_t *pOptions )
+{
+    VLOG_INFO(__FUNCTION__ " - nVirtualPort: %d, nOptions: %d", nVirtualPort, nOptions);
+    return 0;
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
 HSteamListenSocket CSteamNetworkingSockets::CreateHostedDedicatedServerListenSocket( int nVirtualPort )
 {
     VLOG_INFO(__FUNCTION__ " - nVirtualPort: %d", nVirtualPort);
@@ -601,7 +692,113 @@ EResult CSteamNetworkingSockets::GetGameCoordinatorServerLogin( SteamDatagramGam
     return k_EResultOK;
 }
 
+//
+// Relayed connections using custom signaling protocol
+//
+// This is used if you have your own method of sending out-of-band
+// signaling / rendezvous messages through a mutually trusted channel.
+//
+
+/// Create a P2P "client" connection that does signaling over a custom
+/// rendezvous/signaling channel.
+///
+/// pSignaling points to a new object that you create just for this connection.
+/// It must stay valid until Release() is called.  Once you pass the
+/// object to this function, it assumes ownership.  Release() will be called
+/// from within the function call if the call fails.  Furthermore, until Release()
+/// is called, you should be prepared for methods to be invoked on your
+/// object from any thread!  You need to make sure your object is threadsafe!
+/// Furthermore, you should make sure that dispatching the methods is done
+/// as quickly as possible.
+///
+/// This function will immediately construct a connection in the "connecting"
+/// state.  Soon after (perhaps before this function returns, perhaps in another thread),
+/// the connection will begin sending signaling messages by calling
+/// ISteamNetworkingConnectionCustomSignaling::SendSignal.
+///
+/// When the remote peer accepts the connection (See
+/// ISteamNetworkingCustomSignalingRecvContext::OnConnectRequest),
+/// it will begin sending signaling messages.  When these messages are received,
+/// you can pass them to the connection using ReceivedP2PCustomSignal.
+///
+/// If you know the identity of the peer that you expect to be on the other end,
+/// you can pass their identity to improve debug output or just detect bugs.
+/// If you don't know their identity yet, you can pass NULL, and their
+/// identity will be established in the connection handshake.  
+///
+/// If you use this, you probably want to call ISteamNetworkingUtils::InitRelayNetworkAccess()
+/// when your app initializes
+///
+/// If you need to set any initial config options, pass them here.  See
+/// SteamNetworkingConfigValue_t for more about why this is preferable to
+/// setting the options "immediately" after creation.
+HSteamNetConnection CSteamNetworkingSockets::ConnectP2PCustomSignaling( ISteamNetworkingConnectionCustomSignaling *pSignaling, const SteamNetworkingIdentity *pPeerIdentity, int nOptions, const SteamNetworkingConfigValue_t *pOptions )
+{
+    VLOG_INFO(__FUNCTION__);
+    return k_HSteamNetConnection_Invalid;
+}
+
+/// Called when custom signaling has received a message.  When your
+/// signaling channel receives a message, it should save off whatever
+/// routing information was in the envelope into the context object,
+/// and then pass the payload to this function.
+///
+/// A few different things can happen next, depending on the message:
+///
+/// - If the signal is associated with existing connection, it is dealt
+///   with immediately.  If any replies need to be sent, they will be
+///   dispatched using the ISteamNetworkingConnectionCustomSignaling
+///   associated with the connection.
+/// - If the message represents a connection request (and the request
+///   is not redundant for an existing connection), a new connection
+///   will be created, and ReceivedConnectRequest will be called on your
+///   context object to determine how to proceed.
+/// - Otherwise, the message is for a connection that does not
+///   exist (anymore).  In this case, we *may* call SendRejectionReply
+///   on your context object.
+///
+/// In any case, we will not save off pContext or access it after this
+/// function returns.
+///
+/// Returns true if the message was parsed and dispatched without anything
+/// unusual or suspicious happening.  Returns false if there was some problem
+/// with the message that prevented ordinary handling.  (Debug output will
+/// usually have more information.)
+///
+/// If you expect to be using relayed connections, then you probably want
+/// to call ISteamNetworkingUtils::InitRelayNetworkAccess() when your app initializes
+bool CSteamNetworkingSockets::ReceivedP2PCustomSignal( const void *pMsg, int cbMsg, ISteamNetworkingCustomSignalingRecvContext *pContext )
+{
+    VLOG_INFO(__FUNCTION__ " - cbMsg: %d", cbMsg);
+    return false;
+}
+
 #endif // #ifndef STEAMNETWORKINGSOCKETS_ENABLE_SDR
+
+/// Certificate provision by the application.  (On Steam, Steam will handle all this automatically)
+#ifndef STEAMNETWORKINGSOCKETS_STEAM
+
+/// Get blob that describes a certificate request.  You can send this to your game coordinator.
+/// Upon entry, *pcbBlob should contain the size of the buffer.  On successful exit, it will
+/// return the number of bytes that were populated.  You can pass pBlob=NULL to query for the required
+/// size.  (256 bytes is a very conservative estimate.)
+///
+/// Pass this blob to your game coordinator and call SteamDatagram_CreateCert.
+bool CSteamNetworkingSockets::GetCertificateRequest(int *pcbBlob, void *pBlob, SteamNetworkingErrMsg &errMsg)
+{
+    VLOG_INFO(__FUNCTION__);
+    return false;
+}
+
+/// Set the certificate.  The certificate blob should be the output of
+/// SteamDatagram_CreateCert.
+bool CSteamNetworkingSockets::SetCertificate(const void *pCertificate, int cbCertificate, SteamNetworkingErrMsg &errMsg)
+{
+    VLOG_INFO(__FUNCTION__ " - cbCertificate: %d", cbCertificate);
+    return false;
+}
+
+#endif
 
 // Invoke all callbacks queued for this interface.
 // On Steam, callbacks are dispatched via the ordinary Steamworks callbacks mechanism.
@@ -613,4 +810,3 @@ void CSteamNetworkingSockets::RunCallbacks( ISteamNetworkingSocketsCallbacks *pC
     VLOG_INFO(__FUNCTION__);
 }
 #endif
-

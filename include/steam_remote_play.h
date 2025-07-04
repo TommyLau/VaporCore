@@ -30,25 +30,29 @@ public:
     }
 
 public:
- 	// Get the number of currently connected Steam Remote Play sessions
+	// Get the number of currently connected Steam Remote Play sessions
 	uint32 GetSessionCount() override;
 	
 	// Get the currently connected Steam Remote Play session ID at the specified index. Returns zero if index is out of bounds.
-	uint32 GetSessionID( int iSessionIndex ) override;
+	RemotePlaySessionID_t GetSessionID( int iSessionIndex ) override;
 
 	// Get the SteamID of the connected user
-	CSteamID GetSessionSteamID( uint32 unSessionID ) override;
+	CSteamID GetSessionSteamID( RemotePlaySessionID_t unSessionID ) override;
 
 	// Get the name of the session client device
 	// This returns NULL if the sessionID is not valid
-	const char *GetSessionClientName( uint32 unSessionID ) override;
+	const char *GetSessionClientName( RemotePlaySessionID_t unSessionID ) override;
 
 	// Get the form factor of the session client device
-	ESteamDeviceFormFactor GetSessionClientFormFactor( uint32 unSessionID ) override;
+	ESteamDeviceFormFactor GetSessionClientFormFactor( RemotePlaySessionID_t unSessionID ) override;
 
 	// Get the resolution, in pixels, of the session client device
 	// This is set to 0x0 if the resolution is not available
-	bool BGetSessionClientResolution( uint32 unSessionID, int *pnResolutionX, int *pnResolutionY ) override;
+	bool BGetSessionClientResolution( RemotePlaySessionID_t unSessionID, int *pnResolutionX, int *pnResolutionY ) override;
+
+	// Invite a friend to Remote Play Together
+	// This returns false if the invite can't be sent
+	bool BSendRemotePlayTogetherInvite( CSteamID steamIDFriend ) override;
 
 private:
     // Private constructor and destructor for singleton

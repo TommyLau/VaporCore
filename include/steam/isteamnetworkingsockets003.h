@@ -13,17 +13,6 @@
 #pragma once
 #endif
 
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
-class ISteamNetworkingSockets003Callbacks;
-struct SteamNetAuthenticationStatus_t;
-
 //-----------------------------------------------------------------------------
 /// Lower level networking interface that more closely mirrors the standard
 /// Berkeley sockets model.  Sockets are hard!  You should probably only use

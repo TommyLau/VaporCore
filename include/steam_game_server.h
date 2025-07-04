@@ -20,6 +20,7 @@
 #include <isteamgameserver009.h>
 #include <isteamgameserver010.h>
 #include <isteamgameserver011.h>
+#include <isteamgameserver012.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for authenticating users via Steam to play on a game server
@@ -31,7 +32,8 @@ class CSteamGameServer :
 	public ISteamGameServer008,
 	public ISteamGameServer009,
 	public ISteamGameServer010,
-	public ISteamGameServer011
+	public ISteamGameServer011,
+    public ISteamGameServer012
 {
 public:
 	// Singleton accessor
@@ -274,7 +276,9 @@ public:
 	// Returns the public IP of the server according to Steam, useful when the server is 
 	// behind NAT and you want to advertise its IP in a lobby for other clients to directly
 	// connect to
-	uint32 GetPublicIP() override;
+	SteamIPAddress_t GetPublicIP() override;
+	// Changed from Steam SDK v1.47, backward compatibility
+	uint32 GetPublicIP008() override;
 
 // These are in GameSocketShare mode, where instead of ISteamGameServer creating its own
 // socket to talk to the master server on, it lets the game use its socket to forward messages

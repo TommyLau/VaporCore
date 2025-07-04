@@ -30,6 +30,7 @@ class ISteamUnifiedMessages;
 #include <isteamclient016.h>
 #include <isteamclient017.h>
 #include <isteamclient018.h>
+#include <isteamclient019.h>
 
 #include "steam_user.h"
 #include "steam_game_server.h"
@@ -88,7 +89,8 @@ class CSteamClient :
     public ISteamClient015,
     public ISteamClient016,
     public ISteamClient017,
-    public ISteamClient018
+    public ISteamClient018,
+    public ISteamClient019
 {
 public:
 	// Singleton accessor
@@ -135,6 +137,8 @@ public:
 
 	// set the local IP and Port to bind to
 	// this must be set before CreateLocalUser()
+	void SetLocalIPBinding( const SteamIPAddress_t &unIP, uint16 usPort ) override;
+	// Changed from Steam SDK v1.47, backward compatibility
 	void SetLocalIPBinding( uint32 unIP, uint16 usPort ) override; 
 
 	// returns the ISteamFriends interface
@@ -255,6 +259,8 @@ public:
 
 	// Steam Remote Play interface
 	ISteamRemotePlay *GetISteamRemotePlay( HSteamUser hSteamUser, HSteamPipe hSteamPipe, const char *pchVersion ) override;
+
+	STEAM_PRIVATE_API( void DestroyAllInterfaces() override; )
 
 private:
     // Private constructor and destructor for singleton

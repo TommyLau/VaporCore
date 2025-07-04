@@ -418,7 +418,14 @@ SteamAPICall_t CSteamGameServer::GetServerReputation( )
 // Returns the public IP of the server according to Steam, useful when the server is 
 // behind NAT and you want to advertise its IP in a lobby for other clients to directly
 // connect to
-uint32 CSteamGameServer::GetPublicIP()
+SteamIPAddress_t CSteamGameServer::GetPublicIP()
+{
+    VLOG_INFO(__FUNCTION__);
+    return SteamIPAddress_t::IPv4Any();
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
+uint32 CSteamGameServer::GetPublicIP008()
 {
     VLOG_INFO(__FUNCTION__);
     return 0;

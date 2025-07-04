@@ -23,6 +23,7 @@
 #include <isteamugc009.h>
 #include <isteamugc010.h>
 #include <isteamugc012.h>
+#include <isteamugc013.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Steam UGC support API
@@ -37,7 +38,8 @@ class CSteamUGC :
     public ISteamUGC008,
     public ISteamUGC009,
     public ISteamUGC010,
-    public ISteamUGC012
+    public ISteamUGC012,
+    public ISteamUGC013
 {
 public:
 	// Singleton accessor
@@ -86,6 +88,7 @@ public:
 
 	// Options to set for querying UGC
 	bool AddRequiredTag( UGCQueryHandle_t handle, const char *pTagName ) override;
+	bool AddRequiredTagGroup( UGCQueryHandle_t handle, const SteamParamStringArray_t *pTagGroups ) override; // match any of the tags in this group
 	bool AddExcludedTag( UGCQueryHandle_t handle, const char *pTagName ) override;
 	bool SetReturnOnlyIDs( UGCQueryHandle_t handle, bool bReturnOnlyIDs ) override;
 	bool SetReturnKeyValueTags( UGCQueryHandle_t handle, bool bReturnKeyValueTags ) override;

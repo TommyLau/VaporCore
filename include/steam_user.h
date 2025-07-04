@@ -206,7 +206,12 @@ public:
 	STEAM_CALL_RESULT( EncryptedAppTicketResponse_t )
 	SteamAPICall_t RequestEncryptedAppTicket( void *pDataToInclude, int cbDataToInclude ) override;
 
-	// retrieve a finished ticket
+	// Retrieves a finished ticket.
+	// If no ticket is available, or your buffer is too small, returns false.
+	// Upon exit, *pcbTicket will be either the size of the ticket copied into your buffer
+	// (if true was returned), or the size needed (if false was returned).  To determine the
+	// proper size of the ticket, you can pass pTicket=NULL and cbMaxTicket=0; if a ticket
+	// is available, *pcbTicket will contain the size needed, otherwise it will be zero.
 	bool GetEncryptedAppTicket( void *pTicket, int cbMaxTicket, uint32 *pcbTicket ) override;
 
 	// Trading Card badges data access

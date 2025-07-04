@@ -237,6 +237,7 @@ public:
 
 	// Options to set for querying UGC
 	virtual bool AddRequiredTag( UGCQueryHandle_t handle, const char *pTagName ) = 0;
+	virtual bool AddRequiredTagGroup( UGCQueryHandle_t handle, const SteamParamStringArray_t *pTagGroups ) = 0; // match any of the tags in this group
 	virtual bool AddExcludedTag( UGCQueryHandle_t handle, const char *pTagName ) = 0;
 	virtual bool SetReturnOnlyIDs( UGCQueryHandle_t handle, bool bReturnOnlyIDs ) = 0;
 	virtual bool SetReturnKeyValueTags( UGCQueryHandle_t handle, bool bReturnKeyValueTags ) = 0;
@@ -356,7 +357,7 @@ public:
 	virtual SteamAPICall_t DeleteItem( PublishedFileId_t nPublishedFileID ) = 0;
 };
 
-#define STEAMUGC_INTERFACE_VERSION "STEAMUGC_INTERFACE_VERSION013"
+#define STEAMUGC_INTERFACE_VERSION "STEAMUGC_INTERFACE_VERSION014"
 
 #ifndef STEAM_API_EXPORTS // Added by Tommy
 // Global interface accessor

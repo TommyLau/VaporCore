@@ -149,6 +149,13 @@ bool CSteamUGC::AddRequiredTag( UGCQueryHandle_t handle, const char *pTagName )
     return false;
 }
 
+// match any of the tags in this group
+bool CSteamUGC::AddRequiredTagGroup( UGCQueryHandle_t handle, const SteamParamStringArray_t *pTagGroups )
+{
+    VLOG_INFO(__FUNCTION__ " - handle: %d, pTagGroups: %p", handle, pTagGroups);
+    return false;
+}
+
 bool CSteamUGC::AddExcludedTag( UGCQueryHandle_t handle, const char *pTagName )
 {
     VLOG_INFO(__FUNCTION__ " - handle: %d, pTagName: %s", handle, pTagName ? pTagName : "NULL");

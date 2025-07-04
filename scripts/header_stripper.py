@@ -25,8 +25,10 @@ def extract_interface_version(content):
     # Pattern to match interface version definitions
     patterns = [
         r'#define\s+\w*INTERFACE_VERSION\w*\s+"[^"]*(\d{3})"',  # "VERSION004"
+        r'#define\s+\w*INTERFACE_VERSION\s+"[^"]*(\d{3})"',     # "SteamNetworkingSockets004"
         r'#define\s+\w*INTERFACE_VERSION(\d{3})\s+',             # VERSION003
         r'INTERFACE_VERSION(\d{3})',                             # Direct VERSION003
+        r'"[^"]*(\d{3})"',                                       # Generic "Something004" pattern
     ]
     
     for pattern in patterns:
@@ -107,6 +109,7 @@ def extract_comment_block_above_class(content, class_name):
     """
     Extract the complete comment block that appears directly above the class declaration.
     Returns the entire comment block with original formatting preserved.
+    Excludes the top copyright header to avoid duplication.
     """
     # Find the class declaration first
     class_start = content.find(f'class {class_name}')
@@ -117,12 +120,26 @@ def extract_comment_block_above_class(content, class_name):
     content_before_class = content[:class_start]
     lines_before = content_before_class.split('\n')
     
+    # Find the end of the copyright header first (to avoid including it)
+    copyright_end_idx = -1
+    for i, line in enumerate(lines_before):
+        if line.strip().endswith('*/') and i < len(lines_before) // 2:  # Assume copyright is in first half
+            # Check if this could be the end of a copyright block
+            for j in range(max(0, i-10), i):
+                if 'Copyright' in lines_before[j] or 'VaporCore' in lines_before[j]:
+                    copyright_end_idx = i
+                    break
+            if copyright_end_idx != -1:
+                break
+    
     # Work backwards from the class to find the comment block
     comment_lines = []
     found_comment_block = False
     
-    # Start from the end and work backwards
-    for i in range(len(lines_before) - 1, -1, -1):
+    # Start from the end and work backwards, but don't go past copyright header
+    start_idx = max(copyright_end_idx + 1, 0) if copyright_end_idx != -1 else 0
+    
+    for i in range(len(lines_before) - 1, start_idx - 1, -1):
         line = lines_before[i]
         line_stripped = line.strip()
         

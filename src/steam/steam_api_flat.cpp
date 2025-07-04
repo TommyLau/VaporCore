@@ -63,7 +63,7 @@ S_API class ISteamGameServer * SteamAPI_ISteamClient_GetISteamGameServer(intptr_
     return reinterpret_cast<ISteamClient*>(instancePtr)->GetISteamGameServer(hSteamUser, hSteamPipe, pchVersion);
 }
 
-S_API void SteamAPI_ISteamClient_SetLocalIPBinding(intptr_t instancePtr, uint32 unIP, uint16 usPort)
+S_API void SteamAPI_ISteamClient_SetLocalIPBinding(intptr_t instancePtr, const struct SteamIPAddress_t & unIP, uint16 usPort)
 {
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
@@ -1231,6 +1231,13 @@ S_API int SteamAPI_ISteamUtils_FilterText(intptr_t instancePtr, char * pchOutFil
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
     return reinterpret_cast<ISteamUtils*>(instancePtr)->FilterText(pchOutFilteredText, nByteSizeOutFilteredText, pchInputMessage, bLegalOnly);
+}
+
+S_API ESteamIPv6ConnectivityState SteamAPI_ISteamUtils_GetIPv6ConnectivityState(intptr_t instancePtr, ESteamIPv6ConnectivityProtocol eProtocol)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_ESteamIPv6ConnectivityState_Unknown;
+    return reinterpret_cast<ISteamUtils*>(instancePtr)->GetIPv6ConnectivityState(eProtocol);
 }
 
 
@@ -2875,7 +2882,7 @@ S_API bool SteamAPI_ISteamNetworking_AllowP2PPacketRelay(intptr_t instancePtr, b
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->AllowP2PPacketRelay(bAllow);
 }
 
-S_API SNetListenSocket_t SteamAPI_ISteamNetworking_CreateListenSocket(intptr_t instancePtr, int nVirtualP2PPort, uint32 nIP, uint16 nPort, bool bAllowUseOfPacketRelay)
+S_API SNetListenSocket_t SteamAPI_ISteamNetworking_CreateListenSocket(intptr_t instancePtr, int nVirtualP2PPort, struct SteamIPAddress_t nIP, uint16 nPort, bool bAllowUseOfPacketRelay)
 {
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
@@ -2889,7 +2896,7 @@ S_API SNetSocket_t SteamAPI_ISteamNetworking_CreateP2PConnectionSocket(intptr_t 
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->CreateP2PConnectionSocket(steamIDTarget, nVirtualPort, nTimeoutSec, bAllowUseOfPacketRelay);
 }
 
-S_API SNetSocket_t SteamAPI_ISteamNetworking_CreateConnectionSocket(intptr_t instancePtr, uint32 nIP, uint16 nPort, int nTimeoutSec)
+S_API SNetSocket_t SteamAPI_ISteamNetworking_CreateConnectionSocket(intptr_t instancePtr, struct SteamIPAddress_t nIP, uint16 nPort, int nTimeoutSec)
 {
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return 0;
@@ -2945,14 +2952,14 @@ S_API bool SteamAPI_ISteamNetworking_RetrieveData(intptr_t instancePtr, SNetList
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->RetrieveData(hListenSocket, pubDest, cubDest, pcubMsgSize, phSocket);
 }
 
-S_API bool SteamAPI_ISteamNetworking_GetSocketInfo(intptr_t instancePtr, SNetSocket_t hSocket, class CSteamID * pSteamIDRemote, int * peSocketStatus, uint32 * punIPRemote, uint16 * punPortRemote)
+S_API bool SteamAPI_ISteamNetworking_GetSocketInfo(intptr_t instancePtr, SNetSocket_t hSocket, class CSteamID * pSteamIDRemote, int * peSocketStatus, struct SteamIPAddress_t * punIPRemote, uint16 * punPortRemote)
 {
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamNetworking*>(instancePtr)->GetSocketInfo(hSocket, pSteamIDRemote, peSocketStatus, punIPRemote, punPortRemote);
 }
 
-S_API bool SteamAPI_ISteamNetworking_GetListenSocketInfo(intptr_t instancePtr, SNetListenSocket_t hListenSocket, uint32 * pnIP, uint16 * pnPort)
+S_API bool SteamAPI_ISteamNetworking_GetListenSocketInfo(intptr_t instancePtr, SNetListenSocket_t hListenSocket, struct SteamIPAddress_t * pnIP, uint16 * pnPort)
 {
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
@@ -4135,6 +4142,13 @@ S_API bool SteamAPI_ISteamUGC_AddRequiredTag(intptr_t instancePtr, UGCQueryHandl
     return reinterpret_cast<ISteamUGC*>(instancePtr)->AddRequiredTag(handle, pTagName);
 }
 
+S_API bool SteamAPI_ISteamUGC_AddRequiredTagGroup(intptr_t instancePtr, UGCQueryHandle_t handle, const struct SteamParamStringArray_t * pTagGroups)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->AddRequiredTagGroup(handle, pTagGroups);
+}
+
 S_API bool SteamAPI_ISteamUGC_AddExcludedTag(intptr_t instancePtr, UGCQueryHandle_t handle, const char * pTagName)
 {
     VLOG_INFO(__FUNCTION__);
@@ -5311,6 +5325,13 @@ S_API bool SteamAPI_ISteamRemotePlay_BGetSessionClientResolution(intptr_t instan
     return reinterpret_cast<ISteamRemotePlay*>(instancePtr)->BGetSessionClientResolution(unSessionID, pnResolutionX, pnResolutionY);
 }
 
+S_API bool SteamAPI_ISteamRemotePlay_BSendRemotePlayTogetherInvite(intptr_t instancePtr, class CSteamID steamIDFriend)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamRemotePlay*>(instancePtr)->BSendRemotePlayTogetherInvite(steamIDFriend);
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamGameServer flat API implementations
@@ -5568,10 +5589,10 @@ S_API SteamAPICall_t SteamAPI_ISteamGameServer_GetServerReputation(intptr_t inst
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->GetServerReputation();
 }
 
-S_API uint32 SteamAPI_ISteamGameServer_GetPublicIP(intptr_t instancePtr)
+S_API struct SteamIPAddress_t SteamAPI_ISteamGameServer_GetPublicIP(intptr_t instancePtr)
 {
     VLOG_INFO(__FUNCTION__);
-    if (!instancePtr) return 0;
+    if (!instancePtr) return {};
     return reinterpret_cast<ISteamGameServer*>(instancePtr)->GetPublicIP();
 }
 

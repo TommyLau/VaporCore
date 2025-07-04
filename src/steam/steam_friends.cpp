@@ -121,7 +121,7 @@ int CSteamFriends::GetFriendAvatar( CSteamID steamIDFriend )
 // returns true if the friend is actually in a game, and fills in pFriendGameInfo with an extra details 
 bool CSteamFriends::GetFriendGamePlayed( CSteamID steamIDFriend, STEAM_OUT_STRUCT() FriendGameInfo_t *pFriendGameInfo )
 {
-    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, GameID: %llu", steamIDFriend.ConvertToUint64(), pFriendGameInfo->m_gameID);
+    VLOG_INFO(__FUNCTION__ " - SteamID: %llu, GameID: %u", steamIDFriend.ConvertToUint64(), pFriendGameInfo->m_gameID.AppID());
     return false;
 }
 

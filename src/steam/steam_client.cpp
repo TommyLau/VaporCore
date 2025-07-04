@@ -210,6 +210,12 @@ ISteamGameServer *CSteamClient::GetISteamGameServer( HSteamUser hSteamUser, HSte
 
 // set the local IP and Port to bind to
 // this must be set before CreateLocalUser()
+void CSteamClient::SetLocalIPBinding( const SteamIPAddress_t &unIP, uint16 usPort )
+{
+    VLOG_INFO(__FUNCTION__ " - usPort: %u", usPort);
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
 void CSteamClient::SetLocalIPBinding( uint32 unIP, uint16 usPort )
 {
     VLOG_INFO(__FUNCTION__ " - unIP: %u, usPort: %u", unIP, usPort);
@@ -1017,3 +1023,8 @@ ISteamRemotePlay* CSteamClient::GetISteamRemotePlay( HSteamUser hSteamUser, HSte
         return static_cast<ISteamRemotePlay*>(&m_steamRemotePlay);
     }
 }
+
+void CSteamClient::DestroyAllInterfaces()
+{
+    VLOG_INFO(__FUNCTION__);
+} 

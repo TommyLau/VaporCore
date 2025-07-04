@@ -160,6 +160,14 @@ bool CSteamNetworking::AllowP2PPacketRelay( bool bAllow )
 //		pass in 0 if you just want the default local IP
 // unPort is the port to use
 //		pass in 0 if you don't want users to be able to connect via IP/Port, but expect to be always peer-to-peer connections only
+SNetListenSocket_t CSteamNetworking::CreateListenSocket( int nVirtualP2PPort, SteamIPAddress_t nIP, uint16 nPort, bool bAllowUseOfPacketRelay )
+{
+    VLOG_INFO(__FUNCTION__ " - VirtualPort = %d, IP = %u, Port = %u, AllowPacketRelay = %s",
+               nVirtualP2PPort, nIP.m_unIPv4, nPort, bAllowUseOfPacketRelay ? "true" : "false");
+    return 0;
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
 SNetListenSocket_t CSteamNetworking::CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort, bool bAllowUseOfPacketRelay )
 {
     VLOG_INFO(__FUNCTION__ " - VirtualPort = %d, IP = %u, Port = %u, AllowPacketRelay = %s", 
@@ -167,7 +175,7 @@ SNetListenSocket_t CSteamNetworking::CreateListenSocket( int nVirtualP2PPort, ui
     return 0;
 }
 
-// Removed from Steam SDK v1.03, backward compatibility
+// Changed from Steam SDK v1.03, backward compatibility
 SNetListenSocket_t CSteamNetworking::CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort )
 {
     VLOG_INFO(__FUNCTION__ " - VirtualPort = %d, IP = %u, Port = %u", nVirtualP2PPort, nIP, nPort);
@@ -176,8 +184,8 @@ SNetListenSocket_t CSteamNetworking::CreateListenSocket( int nVirtualP2PPort, ui
 
 // creates a socket and begin connection to a remote destination
 // can connect via a known steamID (client or game server), or directly to an IP
-// on success will trigger a SocketConnectCallback_t callback
-// on failure or timeout will trigger a SocketConnectionFailureCallback_t callback
+// on success will trigger a SocketStatusCallback_t callback
+// on failure or timeout will trigger a SocketStatusCallback_t callback with a failure code in m_eSNetSocketState
 SNetSocket_t CSteamNetworking::CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec, bool bAllowUseOfPacketRelay )
 {
     VLOG_INFO(__FUNCTION__ " - Target = %llu, VirtualPort = %d, Timeout = %d, AllowPacketRelay = %s", 
@@ -185,7 +193,7 @@ SNetSocket_t CSteamNetworking::CreateP2PConnectionSocket( CSteamID steamIDTarget
     return 0;
 }
 
-// Removed from Steam SDK v1.03, backward compatibility
+// Changed from Steam SDK v1.03, backward compatibility
 SNetSocket_t CSteamNetworking::CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec )
 {
     VLOG_INFO(__FUNCTION__ " - Target = %llu, VirtualPort = %d, Timeout = %d", 
@@ -193,6 +201,13 @@ SNetSocket_t CSteamNetworking::CreateP2PConnectionSocket( CSteamID steamIDTarget
     return 0;
 }
 
+SNetSocket_t CSteamNetworking::CreateConnectionSocket( SteamIPAddress_t nIP, uint16 nPort, int nTimeoutSec )
+{
+    VLOG_INFO(__FUNCTION__ " - IP = %u, Port = %u, Timeout = %d", nIP.m_unIPv4, nPort, nTimeoutSec);
+    return 0;
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
 SNetSocket_t CSteamNetworking::CreateConnectionSocket( uint32 nIP, uint16 nPort, int nTimeoutSec )
 {
     VLOG_INFO(__FUNCTION__ " - IP = %u, Port = %u, Timeout = %d", nIP, nPort, nTimeoutSec);
@@ -275,6 +290,17 @@ bool CSteamNetworking::RetrieveData( SNetListenSocket_t hListenSocket, void *pub
 }
 
 // returns information about the specified socket, filling out the contents of the pointers
+bool CSteamNetworking::GetSocketInfo( SNetSocket_t hSocket, CSteamID *pSteamIDRemote, int *peSocketStatus, SteamIPAddress_t *punIPRemote, uint16 *punPortRemote )
+{
+    VLOG_INFO(__FUNCTION__ " - Socket = %u", hSocket);
+    if (pSteamIDRemote) *pSteamIDRemote = CSteamID();
+    if (peSocketStatus) *peSocketStatus = 0;
+    if (punIPRemote) punIPRemote->m_unIPv4 = 0;
+    if (punPortRemote) *punPortRemote = 0;
+    return false;
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
 bool CSteamNetworking::GetSocketInfo( SNetSocket_t hSocket, CSteamID *pSteamIDRemote, int *peSocketStatus, uint32 *punIPRemote, uint16 *punPortRemote )
 {
     VLOG_INFO(__FUNCTION__ " - Socket = %u", hSocket);
@@ -287,6 +313,15 @@ bool CSteamNetworking::GetSocketInfo( SNetSocket_t hSocket, CSteamID *pSteamIDRe
 
 // returns which local port the listen socket is bound to
 // *pnIP and *pnPort will be 0 if the socket is set to listen for P2P connections only
+bool CSteamNetworking::GetListenSocketInfo( SNetListenSocket_t hListenSocket, SteamIPAddress_t *pnIP, uint16 *pnPort )
+{
+    VLOG_INFO(__FUNCTION__ " - ListenSocket = %u", hListenSocket);
+    if (pnIP) pnIP->m_unIPv4 = 0;
+    if (pnPort) *pnPort = 0;
+    return false;
+}
+
+// Changed from Steam SDK v1.47, backward compatibility
 bool CSteamNetworking::GetListenSocketInfo( SNetListenSocket_t hListenSocket, uint32 *pnIP, uint16 *pnPort )
 {
     VLOG_INFO(__FUNCTION__ " - ListenSocket = %u", hListenSocket);

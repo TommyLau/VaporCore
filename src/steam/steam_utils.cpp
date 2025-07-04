@@ -302,3 +302,11 @@ int CSteamUtils::FilterText(char* pchOutFilteredText, uint32 nByteSizeOutFiltere
     VLOG_INFO(__FUNCTION__ " - outSize: %u, message: %s, legalOnly: %d", nByteSizeOutFilteredText, pchInputMessage, bLegalOnly);
     return 0;
 }
+
+// Return what we believe your current ipv6 connectivity to "the internet" is on the specified protocol.
+// This does NOT tell you if the Steam client is currently connected to Steam via ipv6.
+ESteamIPv6ConnectivityState CSteamUtils::GetIPv6ConnectivityState(ESteamIPv6ConnectivityProtocol eProtocol)
+{
+    VLOG_INFO(__FUNCTION__ " - protocol: %d", eProtocol);
+    return k_ESteamIPv6ConnectivityState_Unknown;
+}

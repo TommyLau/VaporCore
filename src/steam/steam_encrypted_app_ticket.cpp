@@ -53,6 +53,12 @@ S_API bool SteamEncryptedAppTicket_BUserIsVacBanned( uint8 *rgubTicketDecrypted,
     return true;
 }
 
+S_API bool SteamEncryptedAppTicket_BGetAppDefinedValue( uint8 *rgubTicketDecrypted, uint32 cubTicketDecrypted, uint32 *pValue )
+{
+    VLOG_INFO(__FUNCTION__ " - cubTicketDecrypted: %d", cubTicketDecrypted);
+    return true;
+}
+
 S_API const uint8 *SteamEncryptedAppTicket_GetUserVariableData( uint8 *rgubTicketDecrypted, uint32 cubTicketDecrypted, uint32 *pcubUserData )
 {
     VLOG_INFO(__FUNCTION__ " - cubTicketDecrypted: %d", cubTicketDecrypted);

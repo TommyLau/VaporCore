@@ -18,6 +18,7 @@
 #include <isteamnetworking002.h>
 #include <isteamnetworking003.h>
 #include <isteamnetworking004.h>
+#include <isteamnetworking005.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Functions for making connections and sending data between clients,
@@ -28,7 +29,8 @@ class CSteamNetworking :
 	public ISteamNetworking001,
 	public ISteamNetworking002,
 	public ISteamNetworking003,
-	public ISteamNetworking004
+	public ISteamNetworking004,
+    public ISteamNetworking005
 {
 public:
 	// Singleton accessor
@@ -130,17 +132,21 @@ public:
 	//		pass in 0 if you just want the default local IP
 	// unPort is the port to use
 	//		pass in 0 if you don't want users to be able to connect via IP/Port, but expect to be always peer-to-peer connections only
+	SNetListenSocket_t CreateListenSocket( int nVirtualP2PPort, SteamIPAddress_t nIP, uint16 nPort, bool bAllowUseOfPacketRelay ) override;
+	// Changed from Steam SDK v1.47, backward compatibility
 	SNetListenSocket_t CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort, bool bAllowUseOfPacketRelay ) override;
-	// Removed from Steam SDK v1.03, backward compatibility
+	// Changed from Steam SDK v1.03, backward compatibility
 	SNetListenSocket_t CreateListenSocket( int nVirtualP2PPort, uint32 nIP, uint16 nPort ) override;
 
 	// creates a socket and begin connection to a remote destination
 	// can connect via a known steamID (client or game server), or directly to an IP
-	// on success will trigger a SocketConnectCallback_t callback
-	// on failure or timeout will trigger a SocketConnectionFailureCallback_t callback
+	// on success will trigger a SocketStatusCallback_t callback
+	// on failure or timeout will trigger a SocketStatusCallback_t callback with a failure code in m_eSNetSocketState
 	SNetSocket_t CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec, bool bAllowUseOfPacketRelay ) override;
-	// Removed from Steam SDK v1.03, backward compatibility
+	// Changed from Steam SDK v1.03, backward compatibility
 	SNetSocket_t CreateP2PConnectionSocket( CSteamID steamIDTarget, int nVirtualPort, int nTimeoutSec ) override;
+	SNetSocket_t CreateConnectionSocket( SteamIPAddress_t nIP, uint16 nPort, int nTimeoutSec ) override;
+	// Changed from Steam SDK v1.47, backward compatibility
 	SNetSocket_t CreateConnectionSocket( uint32 nIP, uint16 nPort, int nTimeoutSec ) override;
 
 	// disconnects the connection to the socket, if any, and invalidates the handle
@@ -183,10 +189,14 @@ public:
 	bool RetrieveData( SNetListenSocket_t hListenSocket, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize, SNetSocket_t *phSocket ) override;
 
 	// returns information about the specified socket, filling out the contents of the pointers
+	bool GetSocketInfo( SNetSocket_t hSocket, CSteamID *pSteamIDRemote, int *peSocketStatus, SteamIPAddress_t *punIPRemote, uint16 *punPortRemote ) override;
+	// Changed from Steam SDK v1.47, backward compatibility
 	bool GetSocketInfo( SNetSocket_t hSocket, CSteamID *pSteamIDRemote, int *peSocketStatus, uint32 *punIPRemote, uint16 *punPortRemote ) override;
 
 	// returns which local port the listen socket is bound to
 	// *pnIP and *pnPort will be 0 if the socket is set to listen for P2P connections only
+	bool GetListenSocketInfo( SNetListenSocket_t hListenSocket, SteamIPAddress_t *pnIP, uint16 *pnPort ) override;
+	// Changed from Steam SDK v1.47, backward compatibility
 	bool GetListenSocketInfo( SNetListenSocket_t hListenSocket, uint32 *pnIP, uint16 *pnPort ) override;
 
 	// returns true to describe how the socket ended up connecting

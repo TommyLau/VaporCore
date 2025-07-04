@@ -15,13 +15,15 @@
 
 #include <isteamnetworkingutils.h>
 #include <isteamnetworkingutils001.h>
+#include <isteamnetworkingutils002.h>
 
 //-----------------------------------------------------------------------------
 /// Misc networking utilities for checking the local networking environment
 /// and estimating pings.
 class CSteamNetworkingUtils :
     public ISteamNetworkingUtils,
-    public ISteamNetworkingUtils001
+    public ISteamNetworkingUtils001,
+    public ISteamNetworkingUtils002
 {
 public:
     // Singleton accessor
@@ -32,6 +34,35 @@ public:
     }
 
 public:
+	//
+	// Efficient message sending
+	//
+
+	/// Allocate and initialize a message object.  Usually the reason
+	/// you call this is to pass it to ISteamNetworkingSockets::SendMessages.
+	/// The returned object will have all of the relevant fields cleared to zero.
+	///
+	/// Optionally you can also request that this system allocate space to
+	/// hold the payload itself.  If cbAllocateBuffer is nonzero, the system
+	/// will allocate memory to hold a payload of at least cbAllocateBuffer bytes.
+	/// m_pData will point to the allocated buffer, m_cbSize will be set to the
+	/// size, and m_pfnFreeData will be set to the proper function to free up
+	/// the buffer.
+	///
+	/// If cbAllocateBuffer=0, then no buffer is allocated.  m_pData will be NULL,
+	/// m_cbSize will be zero, and m_pfnFreeData will be NULL.  You will need to
+	/// set each of these.
+	///
+	/// You can use SteamNetworkingMessage_t::Release to free up the message
+	/// bookkeeping object and any associated buffer.  See
+	/// ISteamNetworkingSockets::SendMessages for details on reference
+	/// counting and ownership.
+	SteamNetworkingMessage_t *AllocateMessage( int cbAllocateBuffer ) override;
+
+	//
+	// Access to Steam Datagram Relay (SDR) network
+	//
+
 #ifdef STEAMNETWORKINGSOCKETS_ENABLE_SDR
 
 	//
@@ -221,8 +252,9 @@ public:
 	///
 	/// Except when debugging, you should only use k_ESteamNetworkingSocketsDebugOutputType_Msg
 	/// or k_ESteamNetworkingSocketsDebugOutputType_Warning.  For best performance, do NOT
-	/// request a high detail level and then filter out messages in your callback.  Instead,
-	/// call function function to adjust the desired level of detail.
+	/// request a high detail level and then filter out messages in your callback.  This incurs
+	/// all of the expense of formatting the messages, which are then discarded.  Setting a high
+	/// priority value (low numeric value) here allows the library to avoid doing this work.
 	///
 	/// IMPORTANT: This may be called from a service thread, while we own a mutex, etc.
 	/// Your output function must be threadsafe and fast!  Do not make any other
@@ -247,13 +279,20 @@ public:
 	/// - eScope: Onto what type of object are you applying the setting?
 	/// - scopeArg: Which object you want to change?  (Ignored for global scope).  E.g. connection handle, listen socket handle, interface pointer, etc.
 	/// - eDataType: What type of data is in the buffer at pValue?  This must match the type of the variable exactly!
-	/// - pArg: Value to set it to.  You can pass NULL to remove a non-global sett at this scope,
+	/// - pArg: Value to set it to.  You can pass NULL to remove a non-global setting at this scope,
 	///   causing the value for that object to use global defaults.  Or at global scope, passing NULL
 	///   will reset any custom value and restore it to the system default.
 	///   NOTE: When setting callback functions, do not pass the function pointer directly.
 	///   Your argument should be a pointer to a function pointer.
 	bool SetConfigValue( ESteamNetworkingConfigValue eValue, ESteamNetworkingConfigScope eScopeType, intptr_t scopeObj,
 		ESteamNetworkingConfigDataType eDataType, const void *pArg ) override;
+
+	/// Set a configuration value, using a struct to pass the value.
+	/// (This is just a convenience shortcut; see below for the implementation and
+	/// a little insight into how SteamNetworkingConfigValue_t is used when
+	/// setting config options during listen socket and connection creation.)
+	// Commented out by Tommy
+	// bool SetConfigValueStruct( const SteamNetworkingConfigValue_t &opt, ESteamNetworkingConfigScope eScopeType, intptr_t scopeObj );
 
 	/// Get a configuration value.
 	/// - eValue: which value to fetch
@@ -269,6 +308,9 @@ public:
 	/// pOutNextValue can be used to iterate through all of the known configuration values.
 	/// (Use GetFirstConfigValue() to begin the iteration, will be k_ESteamNetworkingConfig_Invalid on the last value)
 	/// Any of the output parameters can be NULL if you do not need that information.
+	///
+	/// See k_ESteamNetworkingConfig_EnumerateDevVars for some more info about "dev" variables,
+	/// which are usually excluded from the set of variables enumerated using this function.
 	bool GetConfigValueInfo( ESteamNetworkingConfigValue eValue, const char **pOutName, ESteamNetworkingConfigDataType *pOutDataType, ESteamNetworkingConfigScope *pOutScope, ESteamNetworkingConfigValue *pOutNextValue ) override;
 
 	/// Return the lowest numbered configuration value available in the current environment.
