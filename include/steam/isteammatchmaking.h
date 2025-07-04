@@ -627,11 +627,9 @@ public:
 };
 #define STEAMGAMESEARCH_INTERFACE_VERSION "SteamMatchGameSearch001"
 
-#ifndef STEAM_API_EXPORTS // Added by Tommy
 // Global interface accessor
 inline ISteamGameSearch *SteamGameSearch();
 STEAM_DEFINE_USER_INTERFACE_ACCESSOR( ISteamGameSearch *, SteamGameSearch, STEAMGAMESEARCH_INTERFACE_VERSION );
-#endif // STEAM_API_EXPORTS
 
 
 //-----------------------------------------------------------------------------
@@ -726,11 +724,9 @@ public:
 };
 #define STEAMPARTIES_INTERFACE_VERSION "SteamParties002"
 
-#ifndef STEAM_API_EXPORTS // Added by Tommy
 // Global interface accessor
 inline ISteamParties *SteamParties();
 STEAM_DEFINE_USER_INTERFACE_ACCESSOR( ISteamParties *, SteamParties, STEAMPARTIES_INTERFACE_VERSION );
-#endif // STEAM_API_EXPORTS
 
 
 //-----------------------------------------------------------------------------

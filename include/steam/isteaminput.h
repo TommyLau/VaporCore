@@ -612,10 +612,8 @@ public:
 
 #define STEAMINPUT_INTERFACE_VERSION "SteamInput001"
 
-#ifndef STEAM_API_EXPORTS // Added by Tommy
 // Global interface accessor
 inline ISteamInput *SteamInput();
 STEAM_DEFINE_USER_INTERFACE_ACCESSOR( ISteamInput *, SteamInput, STEAMINPUT_INTERFACE_VERSION );
-#endif // STEAM_API_EXPORTS
 
 #endif // ISTEAMINPUT_H
