@@ -1,11 +1,4 @@
-/*
- * VaporCore Steam API Implementation
- * Copyright (c) 2025 Tommy Lau <tommy.lhg@gmail.com>
- * 
- * This file is part of VaporCore.
- * 
- * Author: Tommy Lau <tommy.lhg@gmail.com>
- */
+//============ Copyright (c) Valve Corporation, All rights reserved. ============
 
 #ifndef ISTEAMMUSIC_H
 #define ISTEAMMUSIC_H
@@ -51,11 +44,9 @@ public:
 
 #define STEAMMUSIC_INTERFACE_VERSION "STEAMMUSIC_INTERFACE_VERSION001"
 
-#ifndef STEAM_API_EXPORTS // Added by Tommy
 // Global interface accessor
 inline ISteamMusic *SteamMusic();
 STEAM_DEFINE_USER_INTERFACE_ACCESSOR( ISteamMusic *, SteamMusic, STEAMMUSIC_INTERFACE_VERSION );
-#endif // STEAM_API_EXPORTS
 
 // callbacks
 #if defined( VALVE_CALLBACK_PACK_SMALL )

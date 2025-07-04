@@ -54,6 +54,8 @@ class ISteamUnifiedMessages;
 #include "steam_video.h"
 #include "steam_parental_settings.h"
 #include "steam_input.h"
+#include "steam_networking_sockets.h"
+#include "steam_networking_utils.h"
 
 // Steam pipe state enumeration
 enum ESteamPipe {
