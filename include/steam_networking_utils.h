@@ -14,12 +14,14 @@
 #endif
 
 #include <isteamnetworkingutils.h>
+#include <isteamnetworkingutils001.h>
 
 //-----------------------------------------------------------------------------
 /// Misc networking utilities for checking the local networking environment
 /// and estimating pings.
 class CSteamNetworkingUtils :
-    public ISteamNetworkingUtils
+    public ISteamNetworkingUtils,
+    public ISteamNetworkingUtils001
 {
 public:
     // Singleton accessor
@@ -33,7 +35,7 @@ public:
 #ifdef STEAMNETWORKINGSOCKETS_ENABLE_SDR
 
 	//
-	// Initialization
+	// Initialization and status check
 	//
 
 	/// If you know that you are going to be using the relay network, call
@@ -42,16 +44,27 @@ public:
 	/// happen the first time you use a feature that requires access to the
 	/// relay network, and that use will be delayed.
 	///
-	/// Returns true if initialization has completed successfully.
-	/// (It will probably return false on the first call.)
-	///
+	/// Use GetRelayNetworkStatus or listen for SteamRelayNetworkStatus_t
+	/// callbacks to know when initialization has completed.
 	/// Typically initialization completes in a few seconds.
 	///
-	/// Note: dedicated servers hosted with Valve do *not* need to call
-	/// this, since they do not make routing decisions.  However, if the
-	/// dedicated server will be using P2P functionality, it will act as
+	/// Note: dedicated servers hosted in known data centers do *not* need
+	/// to call this, since they do not make routing decisions.  However, if
+	/// the dedicated server will be using P2P functionality, it will act as
 	/// a "client" and this should be called.
+	inline void InitRelayNetworkAccess();
+	// Changed from Steam SDK v1.45, backward compatibility
 	inline bool InitializeRelayNetworkAccess();
+
+	/// Fetch current status of the relay network.
+	///
+	/// SteamRelayNetworkStatus_t is also a callback.  It will be triggered on
+	/// both the user and gameserver interfaces any time the status changes, or
+	/// ping measurement starts or stops.
+	///
+	/// SteamRelayNetworkStatus_t::m_eAvail is returned.  If you want
+	/// more details, you can pass a non-NULL value.
+	ESteamNetworkingAvailability GetRelayNetworkStatus( SteamRelayNetworkStatus_t *pDetails ) override;
 
 	//
 	// "Ping location" functions
@@ -68,14 +81,14 @@ public:
 	// This is extremely useful to select peers for matchmaking!
 	//
 	// The markers can also be converted to a string, so they can be transmitted.
-	// We have a separate library you can use on your backend to manipulate
-	// these objects.  (See steamdatagram_ticketgen.h)
+	// We have a separate library you can use on your app's matchmaking/coordinating
+	// server to manipulate these objects.  (See steamdatagram_gamecoordinator.h)
 
 	/// Return location info for the current host.  Returns the approximate
 	/// age of the data, in seconds, or -1 if no data is available.
 	///
 	/// It takes a few seconds to initialize access to the relay network.  If
-	/// you call this very soon after calling InitializeRelayNetworkAccess,
+	/// you call this very soon after calling InitRelayNetworkAccess,
 	/// the data may not be available yet.
 	///
 	/// This always return the most up-to-date information we have available
@@ -126,10 +139,6 @@ public:
 	/// the string.
 	bool ParsePingLocationString( const char *pszString, SteamNetworkPingLocation_t &result ) override;
 
-	//
-	// Initialization / ping measurement status
-	//
-
 	/// Check if the ping data of sufficient recency is available, and if
 	/// it's too old, start refreshing it.
 	///
@@ -145,11 +154,15 @@ public:
 	/// Returns false if sufficiently recent data is not available.  In this
 	/// case, ping measurement is initiated, if it is not already active.
 	/// (You cannot restart a measurement already in progress.)
+	///
+	/// You can use GetRelayNetworkStatus or listen for SteamRelayNetworkStatus_t
+	/// to know when ping measurement completes.
 	bool CheckPingDataUpToDate( float flMaxAgeSeconds ) override;
 
 	/// Return true if we are taking ping measurements to update our ping
 	/// location or select optimal routing.  Ping measurement typically takes
 	/// a few seconds, perhaps up to 10 seconds.
+    // Removed from Steam SDK v1.45, backward compatibility
 	bool IsPingMeasurementInProgress() override;
 
 	//
@@ -221,12 +234,13 @@ public:
 	//
 
 	// Shortcuts for common cases.  (Implemented as inline functions below)
-	bool SetGlobalConfigValueInt32( ESteamNetworkingConfigValue eValue, int32 val );
-	bool SetGlobalConfigValueFloat( ESteamNetworkingConfigValue eValue, float val );
-	bool SetGlobalConfigValueString( ESteamNetworkingConfigValue eValue, const char *val );
-	bool SetConnectionConfigValueInt32( HSteamNetConnection hConn, ESteamNetworkingConfigValue eValue, int32 val );
-	bool SetConnectionConfigValueFloat( HSteamNetConnection hConn, ESteamNetworkingConfigValue eValue, float val );
-	bool SetConnectionConfigValueString( HSteamNetConnection hConn, ESteamNetworkingConfigValue eValue, const char *val );
+	// Commented out by Tommy
+	// bool SetGlobalConfigValueInt32( ESteamNetworkingConfigValue eValue, int32 val );
+	// bool SetGlobalConfigValueFloat( ESteamNetworkingConfigValue eValue, float val );
+	// bool SetGlobalConfigValueString( ESteamNetworkingConfigValue eValue, const char *val );
+	// bool SetConnectionConfigValueInt32( HSteamNetConnection hConn, ESteamNetworkingConfigValue eValue, int32 val );
+	// bool SetConnectionConfigValueFloat( HSteamNetConnection hConn, ESteamNetworkingConfigValue eValue, float val );
+	// bool SetConnectionConfigValueString( HSteamNetConnection hConn, ESteamNetworkingConfigValue eValue, const char *val );
 
 	/// Set a configuration value.
 	/// - eValue: which value is being set

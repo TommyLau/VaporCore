@@ -61,7 +61,7 @@ public:
 	// Enumerate currently connected controllers
 	// handlesOut should point to a STEAM_CONTROLLER_MAX_COUNT sized array of ControllerHandle_t handles
 	// Returns the number of handles written to handlesOut
-	int GetConnectedControllers( ControllerHandle_t *handlesOut ) override;
+	int GetConnectedControllers( STEAM_OUT_ARRAY_COUNT( STEAM_CONTROLLER_MAX_COUNT, Receives list of connected controllers ) ControllerHandle_t *handlesOut ) override;
 
 	//-----------------------------------------------------------------------------
 	// ACTION SETS
@@ -80,7 +80,10 @@ public:
 	void ActivateActionSetLayer( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetLayerHandle ) override;
 	void DeactivateActionSetLayer( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetLayerHandle ) override;
 	void DeactivateAllActionSetLayers( ControllerHandle_t controllerHandle ) override;
-	int GetActiveActionSetLayers( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t *handlesOut ) override;
+	// Enumerate currently active layers
+	// handlesOut should point to a STEAM_CONTROLLER_MAX_ACTIVE_LAYERS sized array of ControllerActionSetHandle_t handles.
+	// Returns the number of handles written to handlesOut
+	int GetActiveActionSetLayers( ControllerHandle_t controllerHandle, STEAM_OUT_ARRAY_COUNT( STEAM_CONTROLLER_MAX_ACTIVE_LAYERS, Receives list of active layers ) ControllerActionSetHandle_t *handlesOut ) override;
 
 	//-----------------------------------------------------------------------------
 	// ACTIONS
@@ -95,7 +98,7 @@ public:
 	// Get the origin(s) for a digital action within an action set. Returns the number of origins supplied in originsOut. Use this to display the appropriate on-screen prompt for the action.
 	// originsOut should point to a STEAM_CONTROLLER_MAX_ORIGINS sized array of EControllerActionOrigin handles. The EControllerActionOrigin enum will get extended as support for new controller controllers gets added to
 	// the Steam client and will exceed the values from this header, please check bounds if you are using a look up table.
-	int GetDigitalActionOrigins( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerDigitalActionHandle_t digitalActionHandle, EControllerActionOrigin *originsOut ) override;
+	int GetDigitalActionOrigins( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerDigitalActionHandle_t digitalActionHandle, STEAM_OUT_ARRAY_COUNT( STEAM_CONTROLLER_MAX_ORIGINS, Receives list of aciton origins ) EControllerActionOrigin *originsOut ) override;
 
 	// Lookup the handle for an analog action. Best to do this once on startup, and store the handles for all future API calls.
 	ControllerAnalogActionHandle_t GetAnalogActionHandle( const char *pszActionName ) override;
@@ -106,7 +109,7 @@ public:
 	// Get the origin(s) for an analog action within an action set. Returns the number of origins supplied in originsOut. Use this to display the appropriate on-screen prompt for the action.
 	// originsOut should point to a STEAM_CONTROLLER_MAX_ORIGINS sized array of EControllerActionOrigin handles. The EControllerActionOrigin enum will get extended as support for new controller controllers gets added to
 	// the Steam client and will exceed the values from this header, please check bounds if you are using a look up table.
-	int GetAnalogActionOrigins( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerAnalogActionHandle_t analogActionHandle, EControllerActionOrigin *originsOut ) override;
+	int GetAnalogActionOrigins( ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerAnalogActionHandle_t analogActionHandle, STEAM_OUT_ARRAY_COUNT( STEAM_CONTROLLER_MAX_ORIGINS, Receives list of action origins ) EControllerActionOrigin *originsOut ) override;
 
 	// Get a local path to art for on-screen glyph for a particular origin - this call is cheap
 	const char *GetGlyphForActionOrigin( EControllerActionOrigin eOrigin ) override;
@@ -180,6 +183,9 @@ public:
 	bool ShowDigitalActionOrigins( ControllerHandle_t controllerHandle, ControllerDigitalActionHandle_t digitalActionHandle, float flScale, float flXPosition, float flYPosition ) override;
 	// Removed from Steam SDK v1.43, backward compatibility
 	bool ShowAnalogActionOrigins( ControllerHandle_t controllerHandle, ControllerAnalogActionHandle_t analogActionHandle, float flScale, float flXPosition, float flYPosition ) override;
+
+	// Get the binding revision for a given device. Returns false if the handle was not valid or if a mapping is not yet loaded for the device
+	bool GetControllerBindingRevision( ControllerHandle_t controllerHandle, int *pMajor, int *pMinor ) override;
 
 private:
     // Private constructor and destructor for singleton

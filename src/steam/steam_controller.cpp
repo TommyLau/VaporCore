@@ -68,7 +68,7 @@ bool CSteamController::GetControllerState(uint32 unControllerIndex, SteamControl
 // Enumerate currently connected controllers
 // handlesOut should point to a STEAM_CONTROLLER_MAX_COUNT sized array of ControllerHandle_t handles
 // Returns the number of handles written to handlesOut
-int CSteamController::GetConnectedControllers(ControllerHandle_t *handlesOut)
+int CSteamController::GetConnectedControllers( STEAM_OUT_ARRAY_COUNT( STEAM_CONTROLLER_MAX_COUNT, Receives list of connected controllers ) ControllerHandle_t *handlesOut )
 {
     VLOG_INFO(__FUNCTION__);
     return 0; // Return 0 since no controllers are connected
@@ -115,7 +115,10 @@ void CSteamController::DeactivateAllActionSetLayers(ControllerHandle_t controlle
     VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
 }
 
-int CSteamController::GetActiveActionSetLayers(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t *handlesOut)
+// Enumerate currently active layers
+// handlesOut should point to a STEAM_CONTROLLER_MAX_ACTIVE_LAYERS sized array of ControllerActionSetHandle_t handles.
+// Returns the number of handles written to handlesOut
+int CSteamController::GetActiveActionSetLayers(ControllerHandle_t controllerHandle, STEAM_OUT_ARRAY_COUNT( STEAM_CONTROLLER_MAX_ACTIVE_LAYERS, Receives list of active layers ) ControllerActionSetHandle_t *handlesOut)
 {
     VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
     return 0; // Return 0 since no layers are active
@@ -145,7 +148,7 @@ ControllerDigitalActionData_t CSteamController::GetDigitalActionData(ControllerH
 // Get the origin(s) for a digital action within an action set. Returns the number of origins supplied in originsOut. Use this to display the appropriate on-screen prompt for the action.
 // originsOut should point to a STEAM_CONTROLLER_MAX_ORIGINS sized array of EControllerActionOrigin handles. The EControllerActionOrigin enum will get extended as support for new controller controllers gets added to
 // the Steam client and will exceed the values from this header, please check bounds if you are using a look up table.
-int CSteamController::GetDigitalActionOrigins(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerDigitalActionHandle_t digitalActionHandle, EControllerActionOrigin *originsOut)
+int CSteamController::GetDigitalActionOrigins(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerDigitalActionHandle_t digitalActionHandle, STEAM_OUT_ARRAY_COUNT( STEAM_CONTROLLER_MAX_ORIGINS, Receives list of aciton origins ) EControllerActionOrigin *originsOut)
 {
     VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
     return 0; // Return 0 since no origins are available
@@ -174,7 +177,7 @@ ControllerAnalogActionData_t CSteamController::GetAnalogActionData(ControllerHan
 // Get the origin(s) for an analog action within an action set. Returns the number of origins supplied in originsOut. Use this to display the appropriate on-screen prompt for the action.
 // originsOut should point to a STEAM_CONTROLLER_MAX_ORIGINS sized array of EControllerActionOrigin handles. The EControllerActionOrigin enum will get extended as support for new controller controllers gets added to
 // the Steam client and will exceed the values from this header, please check bounds if you are using a look up table.
-int CSteamController::GetAnalogActionOrigins(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerAnalogActionHandle_t analogActionHandle, EControllerActionOrigin *originsOut)
+int CSteamController::GetAnalogActionOrigins(ControllerHandle_t controllerHandle, ControllerActionSetHandle_t actionSetHandle, ControllerAnalogActionHandle_t analogActionHandle, STEAM_OUT_ARRAY_COUNT( STEAM_CONTROLLER_MAX_ORIGINS, Receives list of action origins ) EControllerActionOrigin *originsOut)
 {
     VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
     return 0; // Return 0 since no origins are available
@@ -328,4 +331,11 @@ bool CSteamController::ShowAnalogActionOrigins(ControllerHandle_t controllerHand
 {
     VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
     return false; // Return false since overlay functionality is not implemented
+}
+
+// Get the binding revision for a given device. Returns false if the handle was not valid or if a mapping is not yet loaded for the device
+bool CSteamController::GetControllerBindingRevision(ControllerHandle_t controllerHandle, int *pMajor, int *pMinor)
+{
+    VLOG_INFO(__FUNCTION__ " - controller %llu", controllerHandle);
+    return false; // Return false since binding revision is not implemented
 }

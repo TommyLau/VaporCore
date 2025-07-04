@@ -45,6 +45,7 @@
 #include "steam_user_stats.h"
 #include "steam_utils.h"
 #include "steam_video.h"
+#include "steam_tv.h"
 
 // VaporCore callback manager
 #include "vapor_logger.h"

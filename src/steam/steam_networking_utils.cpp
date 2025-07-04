@@ -22,36 +22,20 @@ CSteamNetworkingUtils::~CSteamNetworkingUtils()
     VLOG_INFO(__FUNCTION__);
 }
 
-ISteamNetworkingUtils::~ISteamNetworkingUtils()
-{
-    VLOG_INFO(__FUNCTION__);
-}
-
 #ifdef STEAMNETWORKINGSOCKETS_ENABLE_SDR
 
-//
-// Initialization
-//
-
-/// If you know that you are going to be using the relay network, call
-/// this to initialize the relay network or check if that initialization
-/// has completed.  If you do not call this, the initialization will
-/// happen the first time you use a feature that requires access to the
-/// relay network, and that use will be delayed.
+/// Fetch current status of the relay network.
 ///
-/// Returns true if initialization has completed successfully.
-/// (It will probably return false on the first call.)
+/// SteamRelayNetworkStatus_t is also a callback.  It will be triggered on
+/// both the user and gameserver interfaces any time the status changes, or
+/// ping measurement starts or stops.
 ///
-/// Typically initialization completes in a few seconds.
-///
-/// Note: dedicated servers hosted with Valve do *not* need to call
-/// this, since they do not make routing decisions.  However, if the
-/// dedicated server will be using P2P functionality, it will act as
-/// a "client" and this should be called.
-bool CSteamNetworkingUtils::InitializeRelayNetworkAccess()
+/// SteamRelayNetworkStatus_t::m_eAvail is returned.  If you want
+/// more details, you can pass a non-NULL value.
+ESteamNetworkingAvailability CSteamNetworkingUtils::GetRelayNetworkStatus(SteamRelayNetworkStatus_t *pDetails)
 {
-    VLOG_INFO(__FUNCTION__);
-    return false;
+    VLOG_INFO(__FUNCTION__ " pDetails: %p", pDetails);
+    return k_ESteamNetworkingAvailability_Failed;
 }
 
 //
@@ -69,14 +53,14 @@ bool CSteamNetworkingUtils::InitializeRelayNetworkAccess()
 // This is extremely useful to select peers for matchmaking!
 //
 // The markers can also be converted to a string, so they can be transmitted.
-// We have a separate library you can use on your backend to manipulate
-// these objects.  (See steamdatagram_ticketgen.h)
+// We have a separate library you can use on your app's matchmaking/coordinating
+// server to manipulate these objects.  (See steamdatagram_gamecoordinator.h)
 
 /// Return location info for the current host.  Returns the approximate
 /// age of the data, in seconds, or -1 if no data is available.
 ///
 /// It takes a few seconds to initialize access to the relay network.  If
-/// you call this very soon after calling InitializeRelayNetworkAccess,
+/// you call this very soon after calling InitRelayNetworkAccess,
 /// the data may not be available yet.
 ///
 /// This always return the most up-to-date information we have available
@@ -146,10 +130,6 @@ bool CSteamNetworkingUtils::ParsePingLocationString(const char *pszString, Steam
     return false;
 }
 
-//
-// Initialization / ping measurement status
-//
-
 /// Check if the ping data of sufficient recency is available, and if
 /// it's too old, start refreshing it.
 ///
@@ -165,6 +145,9 @@ bool CSteamNetworkingUtils::ParsePingLocationString(const char *pszString, Steam
 /// Returns false if sufficiently recent data is not available.  In this
 /// case, ping measurement is initiated, if it is not already active.
 /// (You cannot restart a measurement already in progress.)
+///
+/// You can use GetRelayNetworkStatus or listen for SteamRelayNetworkStatus_t
+/// to know when ping measurement completes.
 bool CSteamNetworkingUtils::CheckPingDataUpToDate(float flMaxAgeSeconds)
 {
     VLOG_INFO(__FUNCTION__);
@@ -174,6 +157,7 @@ bool CSteamNetworkingUtils::CheckPingDataUpToDate(float flMaxAgeSeconds)
 /// Return true if we are taking ping measurements to update our ping
 /// location or select optimal routing.  Ping measurement typically takes
 /// a few seconds, perhaps up to 10 seconds.
+// Removed from Steam SDK v1.45, backward compatibility
 bool CSteamNetworkingUtils::IsPingMeasurementInProgress()
 {
     VLOG_INFO(__FUNCTION__);
@@ -266,47 +250,6 @@ void CSteamNetworkingUtils::SetDebugOutputFunction(ESteamNetworkingSocketsDebugO
 {
     VLOG_INFO(__FUNCTION__ " eDetailLevel: %d, pfnFunc: %p", eDetailLevel, pfnFunc);
     // TODO: Implement debug output function setting
-}
-
-//
-// Set and get configuration values, see ESteamNetworkingConfigValue for individual descriptions.
-//
-
-// Shortcuts for common cases.  (Implemented as inline functions below)
-bool CSteamNetworkingUtils::SetGlobalConfigValueInt32(ESteamNetworkingConfigValue eValue, int32 val)
-{
-    VLOG_INFO(__FUNCTION__ " eValue: %d, val: %d", eValue, val);
-    return false; // TODO: Implement
-}
-
-bool CSteamNetworkingUtils::SetGlobalConfigValueFloat(ESteamNetworkingConfigValue eValue, float val)
-{
-    VLOG_INFO(__FUNCTION__ " eValue: %d, val: %f", eValue, val);
-    return false; // TODO: Implement
-}
-
-bool CSteamNetworkingUtils::SetGlobalConfigValueString(ESteamNetworkingConfigValue eValue, const char *val)
-{
-    VLOG_INFO(__FUNCTION__ " eValue: %d, val: %s", eValue, val);
-    return false; // TODO: Implement
-}
-
-bool CSteamNetworkingUtils::SetConnectionConfigValueInt32(HSteamNetConnection hConn, ESteamNetworkingConfigValue eValue, int32 val)
-{
-    VLOG_INFO(__FUNCTION__ " hConn: %d, eValue: %d, val: %d", hConn, eValue, val);
-    return false; // TODO: Implement
-}
-
-bool CSteamNetworkingUtils::SetConnectionConfigValueFloat(HSteamNetConnection hConn, ESteamNetworkingConfigValue eValue, float val)
-{
-    VLOG_INFO(__FUNCTION__ " hConn: %d, eValue: %d, val: %f", hConn, eValue, val);
-    return false; // TODO: Implement
-}
-
-bool CSteamNetworkingUtils::SetConnectionConfigValueString(HSteamNetConnection hConn, ESteamNetworkingConfigValue eValue, const char *val)
-{
-    VLOG_INFO(__FUNCTION__ " hConn: %d, eValue: %d, val: %s", hConn, eValue, val);
-    return false; // TODO: Implement
 }
 
 /// Set a configuration value.

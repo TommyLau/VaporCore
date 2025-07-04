@@ -161,9 +161,11 @@ inline bool CSteamAPIContext::Init()
 	if ( !m_pSteamGameSearch )
 		return false;
 
+#if !defined( IOSALL) // Not yet supported on iOS.
 	m_pSteamMatchmakingServers = ::SteamMatchmakingServers();
 	if ( !m_pSteamMatchmakingServers )
 		return false;
+#endif
 
 	m_pSteamUserStats = ::SteamUserStats();
 	if ( !m_pSteamUserStats )
@@ -209,10 +211,10 @@ inline bool CSteamAPIContext::Init()
 	if ( !m_pSteamMusicRemote )
 		return false;
 
-#ifndef ANDROID // Not yet supported on Android
+#if !defined( ANDROID ) && !defined( IOSALL) // Not yet supported on Android or ios.
 	m_pSteamHTMLSurface = ::SteamHTMLSurface();
 	if ( !m_pSteamHTMLSurface )
-		return false;
+	return false;
 #endif
 
 	m_pSteamInventory = ::SteamInventory();

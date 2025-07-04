@@ -376,3 +376,11 @@ SteamAPICall_t CSteamUser::GetMarketEligibility()
     VLOG_INFO(__FUNCTION__);
     return 0;
 }
+
+// Retrieves anti indulgence / duration control for current user
+STEAM_CALL_RESULT( DurationControl_t )
+SteamAPICall_t CSteamUser::GetDurationControl()
+{
+    VLOG_INFO(__FUNCTION__);
+    return 0;
+}

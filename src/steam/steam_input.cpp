@@ -48,7 +48,7 @@ void CSteamInput::RunFrame()
 // the Steam Input settings in the Steamworks site or users can opt-in in their controller settings in Steam.
 // handlesOut should point to a STEAM_INPUT_MAX_COUNT sized array of InputHandle_t handles
 // Returns the number of handles written to handlesOut
-int CSteamInput::GetConnectedControllers(InputHandle_t* handlesOut)
+int CSteamInput::GetConnectedControllers( STEAM_OUT_ARRAY_COUNT( STEAM_INPUT_MAX_COUNT, Receives list of connected controllers ) InputHandle_t *handlesOut )
 {
     VLOG_INFO(__FUNCTION__);
     return 0;
@@ -95,7 +95,10 @@ void CSteamInput::DeactivateAllActionSetLayers(InputHandle_t inputHandle)
     VLOG_INFO(__FUNCTION__);
 }
 
-int CSteamInput::GetActiveActionSetLayers(InputHandle_t inputHandle, InputActionSetHandle_t* handlesOut)
+// Enumerate currently active layers.
+// handlesOut should point to a STEAM_INPUT_MAX_ACTIVE_LAYERS sized array of ControllerActionSetHandle_t handles
+// Returns the number of handles written to handlesOut
+int CSteamInput::GetActiveActionSetLayers( InputHandle_t inputHandle, STEAM_OUT_ARRAY_COUNT( STEAM_INPUT_MAX_ACTIVE_LAYERS, Receives list of active layers ) InputActionSetHandle_t *handlesOut )
 {
     VLOG_INFO(__FUNCTION__);
     return 0;
@@ -147,7 +150,7 @@ InputAnalogActionData_t CSteamInput::GetAnalogActionData(InputHandle_t inputHand
 // Get the origin(s) for an analog action within an action set. Returns the number of origins supplied in originsOut. Use this to display the appropriate on-screen prompt for the action.
 // originsOut should point to a STEAM_INPUT_MAX_ORIGINS sized array of EInputActionOrigin handles. The EInputActionOrigin enum will get extended as support for new controller controllers gets added to
 // the Steam client and will exceed the values from this header, please check bounds if you are using a look up table.
-int CSteamInput::GetAnalogActionOrigins(InputHandle_t inputHandle, InputActionSetHandle_t actionSetHandle, InputAnalogActionHandle_t analogActionHandle, EInputActionOrigin* originsOut)
+int CSteamInput::GetAnalogActionOrigins( InputHandle_t inputHandle, InputActionSetHandle_t actionSetHandle, InputAnalogActionHandle_t analogActionHandle, STEAM_OUT_ARRAY_COUNT( STEAM_INPUT_MAX_ORIGINS, Receives list of action origins ) EInputActionOrigin *originsOut )
 {
     VLOG_INFO(__FUNCTION__);
     return 0;
@@ -275,4 +278,11 @@ EInputActionOrigin CSteamInput::TranslateActionOrigin(ESteamInputType eDestinati
 {
     VLOG_INFO(__FUNCTION__);
     return k_EInputActionOrigin_None;
+}
+
+// Get the binding revision for a given device. Returns false if the handle was not valid or if a mapping is not yet loaded for the device
+bool CSteamInput::GetDeviceBindingRevision(InputHandle_t inputHandle, int *pMajor, int *pMinor)
+{
+    VLOG_INFO(__FUNCTION__);
+    return false; // Return false since binding revision is not implemented
 }

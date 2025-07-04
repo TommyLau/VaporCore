@@ -7,12 +7,8 @@
  * Author: Tommy Lau <tommy.lhg@gmail.com>
  */
 
-#include <steam_api.h>
-#include <steam_api_flat.h>
-#include <steam_gameserver.h>
-#include <steam_game_server_stats.h>
-
 #include "vapor_base.h"
+#include "steam_api_flat.h"
 
 //-----------------------------------------------------------------------------
 // ISteamClient flat API implementations
@@ -476,6 +472,13 @@ S_API SteamAPICall_t SteamAPI_ISteamUser_GetMarketEligibility(intptr_t instanceP
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return k_uAPICallInvalid;
     return reinterpret_cast<ISteamUser*>(instancePtr)->GetMarketEligibility();
+}
+
+S_API SteamAPICall_t SteamAPI_ISteamUser_GetDurationControl(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return k_uAPICallInvalid;
+    return reinterpret_cast<ISteamUser*>(instancePtr)->GetDurationControl();
 }
 
 
@@ -1200,6 +1203,27 @@ S_API void SteamAPI_ISteamUtils_SetVRHeadsetStreamingEnabled(intptr_t instancePt
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return;
     reinterpret_cast<ISteamUtils*>(instancePtr)->SetVRHeadsetStreamingEnabled(bEnabled);
+}
+
+S_API bool SteamAPI_ISteamUtils_IsSteamChinaLauncher(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUtils*>(instancePtr)->IsSteamChinaLauncher();
+}
+
+S_API bool SteamAPI_ISteamUtils_InitFilterText(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUtils*>(instancePtr)->InitFilterText();
+}
+
+S_API int SteamAPI_ISteamUtils_FilterText(intptr_t instancePtr, char * pchOutFilteredText, uint32 nByteSizeOutFilteredText, const char * pchInputMessage, bool bLegalOnly)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamUtils*>(instancePtr)->FilterText(pchOutFilteredText, nByteSizeOutFilteredText, pchInputMessage, bLegalOnly);
 }
 
 
@@ -3723,6 +3747,13 @@ S_API EInputActionOrigin SteamAPI_ISteamInput_TranslateActionOrigin(intptr_t ins
     return reinterpret_cast<ISteamInput*>(instancePtr)->TranslateActionOrigin(eDestinationInputType, eSourceOrigin);
 }
 
+S_API bool SteamAPI_ISteamInput_GetDeviceBindingRevision(intptr_t instancePtr, InputHandle_t inputHandle, int * pMajor, int * pMinor)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamInput*>(instancePtr)->GetDeviceBindingRevision(inputHandle, pMajor, pMinor);
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamController flat API implementations
@@ -3959,6 +3990,13 @@ S_API EControllerActionOrigin SteamAPI_ISteamController_TranslateActionOrigin(in
     return reinterpret_cast<ISteamController*>(instancePtr)->TranslateActionOrigin(eDestinationInputType, eSourceOrigin);
 }
 
+S_API bool SteamAPI_ISteamController_GetControllerBindingRevision(intptr_t instancePtr, ControllerHandle_t controllerHandle, int * pMajor, int * pMinor)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamController*>(instancePtr)->GetControllerBindingRevision(controllerHandle, pMajor, pMinor);
+}
+
 
 //-----------------------------------------------------------------------------
 // ISteamUGC flat API implementations
@@ -4060,6 +4098,13 @@ S_API bool SteamAPI_ISteamUGC_GetQueryUGCKeyValueTag(intptr_t instancePtr, UGCQu
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCKeyValueTag(handle, index, keyValueTagIndex, pchKey, cchKeySize, pchValue, cchValueSize);
+}
+
+S_API bool SteamAPI_ISteamUGC_GetQueryUGCKeyValueTag0(intptr_t instancePtr, UGCQueryHandle_t handle, uint32 index, const char * pchKey, char * pchValue, uint32 cchValueSize)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->GetQueryUGCKeyValueTag(handle, index, pchKey, pchValue, cchValueSize);
 }
 
 S_API bool SteamAPI_ISteamUGC_ReleaseQueryUGCRequest(intptr_t instancePtr, UGCQueryHandle_t handle)
@@ -4270,6 +4315,13 @@ S_API bool SteamAPI_ISteamUGC_SetAllowLegacyUpload(intptr_t instancePtr, UGCUpda
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamUGC*>(instancePtr)->SetAllowLegacyUpload(handle, bAllowLegacyUpload);
+}
+
+S_API bool SteamAPI_ISteamUGC_RemoveAllItemKeyValueTags(intptr_t instancePtr, UGCUpdateHandle_t handle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamUGC*>(instancePtr)->RemoveAllItemKeyValueTags(handle);
 }
 
 S_API bool SteamAPI_ISteamUGC_RemoveItemKeyValueTags(intptr_t instancePtr, UGCUpdateHandle_t handle, const char * pchKey)
@@ -5095,6 +5147,60 @@ S_API bool SteamAPI_ISteamVideo_GetOPFStringForApp(intptr_t instancePtr, AppId_t
     VLOG_INFO(__FUNCTION__);
     if (!instancePtr) return false;
     return reinterpret_cast<ISteamVideo*>(instancePtr)->GetOPFStringForApp(unVideoAppID, pchBuffer, pnBufferSize);
+}
+
+
+//-----------------------------------------------------------------------------
+// ISteamTV flat API implementations
+//-----------------------------------------------------------------------------
+
+S_API bool SteamAPI_ISteamTV_IsBroadcasting(intptr_t instancePtr, int * pnNumViewers)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return false;
+    return reinterpret_cast<ISteamTV*>(instancePtr)->IsBroadcasting(pnNumViewers);
+}
+
+S_API void SteamAPI_ISteamTV_AddBroadcastGameData(intptr_t instancePtr, const char * pchKey, const char * pchValue)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamTV*>(instancePtr)->AddBroadcastGameData(pchKey, pchValue);
+}
+
+S_API void SteamAPI_ISteamTV_RemoveBroadcastGameData(intptr_t instancePtr, const char * pchKey)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamTV*>(instancePtr)->RemoveBroadcastGameData(pchKey);
+}
+
+S_API void SteamAPI_ISteamTV_AddTimelineMarker(intptr_t instancePtr, const char * pchTemplateName, bool bPersistent, uint8 nColorR, uint8 nColorG, uint8 nColorB)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamTV*>(instancePtr)->AddTimelineMarker(pchTemplateName, bPersistent, nColorR, nColorG, nColorB);
+}
+
+S_API void SteamAPI_ISteamTV_RemoveTimelineMarker(intptr_t instancePtr)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamTV*>(instancePtr)->RemoveTimelineMarker();
+}
+
+S_API uint32 SteamAPI_ISteamTV_AddRegion(intptr_t instancePtr, const char * pchElementName, const char * pchTimelineDataSection, const struct SteamTVRegion_t * pSteamTVRegion, ESteamTVRegionBehavior eSteamTVRegionBehavior)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return 0;
+    return reinterpret_cast<ISteamTV*>(instancePtr)->AddRegion(pchElementName, pchTimelineDataSection, pSteamTVRegion, eSteamTVRegionBehavior);
+}
+
+S_API void SteamAPI_ISteamTV_RemoveRegion(intptr_t instancePtr, uint32 unRegionHandle)
+{
+    VLOG_INFO(__FUNCTION__);
+    if (!instancePtr) return;
+    reinterpret_cast<ISteamTV*>(instancePtr)->RemoveRegion(unRegionHandle);
 }
 
 

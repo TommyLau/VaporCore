@@ -245,6 +245,10 @@ public:
 	STEAM_CALL_RESULT( MarketEligibilityResponse_t )
 	SteamAPICall_t GetMarketEligibility() override;
 
+	// Retrieves anti indulgence / duration control for current user
+	STEAM_CALL_RESULT( DurationControl_t )
+	SteamAPICall_t GetDurationControl() override;
+
 private:
     // Private constructor and destructor for singleton
     CSteamUser();

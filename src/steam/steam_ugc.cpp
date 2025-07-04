@@ -128,6 +128,13 @@ bool CSteamUGC::GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, u
     return false;
 }
 
+// Return the first value matching the pchKey. Note that a key may map to multiple values.  Returns false if there was an error or no matching value was found.
+bool CSteamUGC::GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, const char *pchKey, STEAM_OUT_STRING_COUNT(cchValueSize) char *pchValue, uint32 cchValueSize )
+{
+    VLOG_INFO(__FUNCTION__ " - handle: %d, index: %d, pchKey: %s, cchValueSize: %d", handle, index, pchKey ? pchKey : "NULL", cchValueSize);
+    return false;
+}
+
 // Release the request to free up memory, after retrieving results
 bool CSteamUGC::ReleaseQueryUGCRequest( UGCQueryHandle_t handle )
 {
@@ -333,6 +340,13 @@ bool CSteamUGC::SetItemPreview( UGCUpdateHandle_t handle, const char *pszPreview
 bool CSteamUGC::SetAllowLegacyUpload( UGCUpdateHandle_t handle, bool bAllowLegacyUpload )
 {
     VLOG_INFO(__FUNCTION__ " - handle: %llu, bAllowLegacyUpload: %d", handle, bAllowLegacyUpload);
+    return false;
+}
+
+// remove all existing key-value tags (you can add new ones via the AddItemKeyValueTag function)
+bool CSteamUGC::RemoveAllItemKeyValueTags( UGCUpdateHandle_t handle )
+{
+    VLOG_INFO(__FUNCTION__ " - handle: %llu", handle);
     return false;
 }
 

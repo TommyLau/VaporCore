@@ -22,6 +22,7 @@
 #include <isteamugc008.h>
 #include <isteamugc009.h>
 #include <isteamugc010.h>
+#include <isteamugc012.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Steam UGC support API
@@ -35,7 +36,8 @@ class CSteamUGC :
     public ISteamUGC007,
     public ISteamUGC008,
     public ISteamUGC009,
-    public ISteamUGC010
+    public ISteamUGC010,
+    public ISteamUGC012
 {
 public:
 	// Singleton accessor
@@ -76,6 +78,8 @@ public:
 	bool GetQueryUGCAdditionalPreview( UGCQueryHandle_t handle, uint32 index, uint32 previewIndex, STEAM_OUT_STRING_COUNT(cchURLSize) char *pchURLOrVideoID, uint32 cchURLSize, bool *pbIsImage ) override;
 	uint32 GetQueryUGCNumKeyValueTags( UGCQueryHandle_t handle, uint32 index ) override;
 	bool GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, uint32 keyValueTagIndex, STEAM_OUT_STRING_COUNT(cchKeySize) char *pchKey, uint32 cchKeySize, STEAM_OUT_STRING_COUNT(cchValueSize) char *pchValue, uint32 cchValueSize ) override;
+	// Return the first value matching the pchKey. Note that a key may map to multiple values.  Returns false if there was an error or no matching value was found.
+	bool GetQueryUGCKeyValueTag( UGCQueryHandle_t handle, uint32 index, const char *pchKey, STEAM_OUT_STRING_COUNT(cchValueSize) char *pchValue, uint32 cchValueSize ) override;
 
 	// Release the request to free up memory, after retrieving results
 	bool ReleaseQueryUGCRequest( UGCQueryHandle_t handle ) override;
@@ -124,6 +128,7 @@ public:
 	bool SetItemContent( UGCUpdateHandle_t handle, const char *pszContentFolder ) override; // update item content from this local folder
 	bool SetItemPreview( UGCUpdateHandle_t handle, const char *pszPreviewFile ) override; //  change preview image file for this item. pszPreviewFile points to local image file, which must be under 1MB in size
 	bool SetAllowLegacyUpload( UGCUpdateHandle_t handle, bool bAllowLegacyUpload ) override; //  use legacy upload for a single small file. The parameter to SetItemContent() should either be a directory with one file or the full path to the file.  The file must also be less than 10MB in size.
+	bool RemoveAllItemKeyValueTags( UGCUpdateHandle_t handle ) override; // remove all existing key-value tags (you can add new ones via the AddItemKeyValueTag function)
 	bool RemoveItemKeyValueTags( UGCUpdateHandle_t handle, const char *pchKey ) override; // remove any existing key-value tags with the specified key
 	bool AddItemKeyValueTag( UGCUpdateHandle_t handle, const char *pchKey, const char *pchValue ) override; // add new key-value tags for the item. Note that there can be multiple values for a tag.
 	bool AddItemPreviewFile( UGCUpdateHandle_t handle, const char *pszPreviewFile, EItemPreviewType type ) override; //  add preview file for this item. pszPreviewFile points to local file, which must be under 1MB in size

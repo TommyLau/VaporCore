@@ -44,7 +44,7 @@ public:
 	// the Steam Input settings in the Steamworks site or users can opt-in in their controller settings in Steam.
 	// handlesOut should point to a STEAM_INPUT_MAX_COUNT sized array of InputHandle_t handles
 	// Returns the number of handles written to handlesOut
-	int GetConnectedControllers( InputHandle_t *handlesOut ) override;
+	int GetConnectedControllers( STEAM_OUT_ARRAY_COUNT( STEAM_INPUT_MAX_COUNT, Receives list of connected controllers ) InputHandle_t *handlesOut ) override;
 	
 	//-----------------------------------------------------------------------------
 	// ACTION SETS
@@ -63,7 +63,10 @@ public:
 	void ActivateActionSetLayer( InputHandle_t inputHandle, InputActionSetHandle_t actionSetLayerHandle ) override;
 	void DeactivateActionSetLayer( InputHandle_t inputHandle, InputActionSetHandle_t actionSetLayerHandle ) override;
 	void DeactivateAllActionSetLayers( InputHandle_t inputHandle ) override;
-	int GetActiveActionSetLayers( InputHandle_t inputHandle, InputActionSetHandle_t *handlesOut ) override;
+	// Enumerate currently active layers.
+	// handlesOut should point to a STEAM_INPUT_MAX_ACTIVE_LAYERS sized array of ControllerActionSetHandle_t handles
+	// Returns the number of handles written to handlesOut
+	int GetActiveActionSetLayers( InputHandle_t inputHandle, STEAM_OUT_ARRAY_COUNT( STEAM_INPUT_MAX_ACTIVE_LAYERS, Receives list of active layers ) InputActionSetHandle_t *handlesOut ) override;
 
 	//-----------------------------------------------------------------------------
 	// ACTIONS
@@ -89,12 +92,12 @@ public:
 	// Get the origin(s) for an analog action within an action set. Returns the number of origins supplied in originsOut. Use this to display the appropriate on-screen prompt for the action.
 	// originsOut should point to a STEAM_INPUT_MAX_ORIGINS sized array of EInputActionOrigin handles. The EInputActionOrigin enum will get extended as support for new controller controllers gets added to
 	// the Steam client and will exceed the values from this header, please check bounds if you are using a look up table.
-	int GetAnalogActionOrigins( InputHandle_t inputHandle, InputActionSetHandle_t actionSetHandle, InputAnalogActionHandle_t analogActionHandle, EInputActionOrigin *originsOut ) override;
+	int GetAnalogActionOrigins( InputHandle_t inputHandle, InputActionSetHandle_t actionSetHandle, InputAnalogActionHandle_t analogActionHandle, STEAM_OUT_ARRAY_COUNT( STEAM_INPUT_MAX_ORIGINS, Receives list of action origins ) EInputActionOrigin *originsOut ) override;
 	
-	// Get a local path to art for on-screen glyph for a particular origin - this call is cheap
+	// Get a local path to art for on-screen glyph for a particular origin
 	const char *GetGlyphForActionOrigin( EInputActionOrigin eOrigin ) override;
 	
-	// Returns a localized string (from Steam's language setting) for the specified origin - this call is serialized
+	// Returns a localized string (from Steam's language setting) for the specified origin.
 	const char *GetStringForActionOrigin( EInputActionOrigin eOrigin ) override;
 
 	// Stop analog momentum for the action if it is a mouse action in trackball mode
@@ -140,10 +143,10 @@ public:
 	// Returns the associated gamepad index for the specified controller, if emulating a gamepad or -1 if not associated with an Xinput index
 	int GetGamepadIndexForController( InputHandle_t ulinputHandle ) override;
 	
-	// Returns a localized string (from Steam's language setting) for the specified Xbox controller origin. This function is cheap.
+	// Returns a localized string (from Steam's language setting) for the specified Xbox controller origin.
 	const char *GetStringForXboxOrigin( EXboxOrigin eOrigin ) override;
 
-	// Get a local path to art for on-screen glyph for a particular Xbox controller origin. This function is serialized.
+	// Get a local path to art for on-screen glyph for a particular Xbox controller origin
 	const char *GetGlyphForXboxOrigin( EXboxOrigin eOrigin ) override;
 
 	// Get the equivalent ActionOrigin for a given Xbox controller origin this can be chained with GetGlyphForActionOrigin to provide future proof glyphs for
@@ -154,6 +157,9 @@ public:
 	// When a new input type is added you will be able to pass in k_ESteamInputType_Unknown amd the closest origin that your version of the SDK regonized will be returned
 	// ex: if a Playstation 5 controller was released this function would return Playstation 4 origins.
 	EInputActionOrigin TranslateActionOrigin( ESteamInputType eDestinationInputType, EInputActionOrigin eSourceOrigin ) override;
+
+	// Get the binding revision for a given device. Returns false if the handle was not valid or if a mapping is not yet loaded for the device
+	bool GetDeviceBindingRevision( InputHandle_t inputHandle, int *pMajor, int *pMinor ) override;
 
 private:
     // Private constructor and destructor for singleton
