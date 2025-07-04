@@ -381,7 +381,8 @@ class FlatAPIGenerator:
             'EGameSearchErrorCode_t': 'k_EGameSearchErrorCode_Failed_Offline',
             'ESteamInputType': 'k_ESteamInputType_Unknown',
             'EInputActionOrigin': 'k_EInputActionOrigin_None',
-            'EControllerActionOrigin': 'k_EControllerActionOrigin_None'
+            'EControllerActionOrigin': 'k_EControllerActionOrigin_None',
+            'ESteamDeviceFormFactor': 'k_ESteamDeviceFormFactorUnknown'
         }
         
         for enum_type, default_val in type_defaults.items():
