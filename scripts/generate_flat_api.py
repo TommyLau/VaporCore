@@ -413,13 +413,21 @@ class FlatAPIGenerator:
         if not func.method_name:
             return f"// TODO: Implement {func.function_name}"
         
+        # Check if first parameter is intptr_t to determine if we need reinterpret_cast
+        uses_intptr = len(func.parameters) > 0 and 'intptr_t' in func.parameters[0]
+        first_param_name = "instancePtr" if uses_intptr else func.parameters[0].split()[-1].lstrip('*&')
+        
         # Handle special case for DestructISteamHTMLSurface - method doesn't exist in interface
         if func.method_name == 'DestructISteamHTMLSurface':
-            return f"// reinterpret_cast<{func.interface_name}*>(instancePtr)->{func.method_name}();"
+            if uses_intptr:
+                return f"// reinterpret_cast<{func.interface_name}*>(instancePtr)->{func.method_name}();"
+            else:
+                return f"// {first_param_name}->{func.method_name}();"
         
         # Extract parameter names for the call, handling global enum types
         param_names = []
-        for param in func.parameters[1:]:  # Skip instancePtr
+        start_index = 1  # Always skip the first parameter (instancePtr or object pointer)
+        for param in func.parameters[start_index:]:
             # Extract parameter name (last word before any array brackets or default values)
             param_clean = re.sub(r'\s*=\s*[^,]*', '', param)  # Remove default values
             param_clean = re.sub(r'\[.*?\]', '', param_clean)  # Remove array brackets
@@ -440,12 +448,16 @@ class FlatAPIGenerator:
         
         call_params = ', '.join(param_names)
         
+        # Generate the interface call
+        if uses_intptr:
+            interface_call = f"reinterpret_cast<{func.interface_name}*>(instancePtr)->{func.method_name}({call_params})"
+        else:
+            interface_call = f"{first_param_name}->{func.method_name}({call_params})"
+        
         # Generate the return statement
         if func.return_type.strip() == 'void':
-            return f"reinterpret_cast<{func.interface_name}*>(instancePtr)->{func.method_name}({call_params});"
+            return f"{interface_call};"
         else:
-            base_call = f"reinterpret_cast<{func.interface_name}*>(instancePtr)->{func.method_name}({call_params})"
-            
             # Handle CSteamID to uint64 conversion
             if func.return_type.strip() == 'uint64':
                 # Functions that likely return CSteamID but should return uint64
@@ -455,13 +467,16 @@ class FlatAPIGenerator:
                                                               'GetChatMemberByIndex', 'GetLobbyByIndex',
                                                               'GetLobbyMemberByIndex', 'GetLobbyOwner', 
                                                               'GetAppOwner', 'CreateUnauthenticatedUserConnection']):
-                    return f"return {base_call}.ConvertToUint64();"
+                    return f"return {interface_call}.ConvertToUint64();"
             
-            return f"return {base_call};"
+            return f"return {interface_call};"
     
     def _generate_function_implementation(self, func: FunctionSignature) -> str:
         """Generate the complete function implementation"""
         lines = []
+        
+        # Check if first parameter is intptr_t to determine if we need null check
+        uses_intptr = len(func.parameters) > 0 and 'intptr_t' in func.parameters[0]
         
         # Function signature
         lines.append(func.full_signature.replace(';', ''))
@@ -470,12 +485,13 @@ class FlatAPIGenerator:
         # Debug log
         lines.append('    VLOG_INFO(__FUNCTION__);')
         
-        # Null check for instancePtr
-        default_return = self._get_default_return_value(func.return_type)
-        if func.return_type.strip() == 'void':
-            lines.append('    if (!instancePtr) return;')
-        else:
-            lines.append(f'    if (!instancePtr) return {default_return};')
+        # Null check for instancePtr (only when using intptr_t)
+        if uses_intptr:
+            default_return = self._get_default_return_value(func.return_type)
+            if func.return_type.strip() == 'void':
+                lines.append('    if (!instancePtr) return;')
+            else:
+                lines.append(f'    if (!instancePtr) return {default_return};')
         
         # Function call
         call_line = '    ' + self._generate_function_call(func)
