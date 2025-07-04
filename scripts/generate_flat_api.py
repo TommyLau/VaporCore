@@ -503,12 +503,8 @@ class FlatAPIGenerator:
             ' * Author: Tommy Lau <tommy.lhg@gmail.com>',
             ' */',
             '',
-            '#include <steam_api.h>',
-            '#include <steam_api_flat.h>',
-            '#include <steam_gameserver.h>',
-            '#include <steam_game_server_stats.h>',
-            '',
             '#include "vapor_base.h"',
+            '#include "steam_api_flat.h"',
             '',
         ])
         
